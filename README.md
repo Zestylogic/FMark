@@ -45,6 +45,9 @@ FSharp markdown.
 Global Types
 
 Person1 - Lexer
+
 Person2 - Formatting / print HTML: Header, Paragraph, Lists, Table -> Simple parser
+
 Person3 - Tables: Spreadsheet, DSL
+
 Person4 - Citations (extensible), Table of contents -> Simple Parser
