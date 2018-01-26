@@ -48,7 +48,7 @@ Global Types
 - Person2 - Formatting / print HTML: Header, Paragraph, Lists, Table -> 
 Simple parser `(printHtml : ParsedObj list -> string)`, `(printToFile : string -> ())`
 - Person3 - Tables: Spreadsheet, DSL `(updateTable : Table -> Table)`
-- Person4 - Citations (extensible), Table of contents -> Simple Parser
+- Person4 - Citations (extensible), Table of contents -> Simple Parser `(parse : Token list -> ParseObj list)`
 
 ## Overview
 
