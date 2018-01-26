@@ -43,7 +43,6 @@ FSharp markdown.
 ## Splitting
 
 Global Types
-<h1 opt="hi"> </hi>
 
 Person1 - Lexer
 Person2 - Formatting / print HTML: Header, Paragraph, Lists, Table -> Simple parser
