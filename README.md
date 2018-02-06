@@ -31,7 +31,7 @@ FSharp markdown.
 - Extensible Code
     - Add names to features, so users can render them differently
       such as editing the type of citation used and how to output them.
-- User defined delimiters / patterns -> Ask Tom
+- User defined delimiters / patterns -> Preprocessor
 
 ### Maybe's
 
