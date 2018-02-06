@@ -1,3 +1,5 @@
+module Types
+
 type Token =
     | WORD of string | MISCCHAR of string | NUMBER of string | SPACE | TAB
     | DOT | POUND | PIPE | COLON | EQUAL | MINUS | PLUS | ASTERISK | DASTERISK
