@@ -29,16 +29,15 @@ type ListType = UL | OL
 
 type Line = Element list
 
-type THeader = {HeaderName: WordLst ; Level: int}
+type THeader = {HeaderName: WordLst; Level: int}
 
 type Ttoc = {MaxDepth: int; HeaderLst: THeader list}
 
 type ParedObj =
-    | Code of string * Language
+    | CodeBlock of string
     | Header of THeader
     | List of ListType * Line * Depth: int
     | Paragraph of Line list
     | Quote of Line
-    | Table of cell: Line list
-    | METADATA
+    | Table of Content: Line list * Height: int * Width: int
     | Footnote of ID: int * Line
