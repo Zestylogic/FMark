@@ -16,6 +16,8 @@ type Token =
     | TEXT of string * Format
     | WHITESPACE of size: int
     | NUMBER of int
+    | EQUALLINE of length: int
+    | MINUSLINE of length: int
     | EMPTYLINE
     | SPACE | TAB | DOT | POUND | PIPE | COLON | EQUAL | MINUS | PLUS | ASTERISK
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
