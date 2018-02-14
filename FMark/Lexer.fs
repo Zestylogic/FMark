@@ -19,7 +19,6 @@ let (|LMatch|_|) regex st =
     | None -> None
     | Some (m, grp) ->
         let lchar = String.length m
-        printfn "%A, %A" m grp
         Some (m, grp, {st with Source = st.Source.[lchar..]})
 
 let (|Emphasis|_|) = function
@@ -82,4 +81,6 @@ let tokenize source =
         | _ ->
             let nt, st' = nextToken st
             nt :: tokList |> tokenize' st'
-    tokenize' {Source=source; State=Normal} [] |> List.rev
+    match source with
+    | "" -> [EMPTYLINE]
+    | _ -> tokenize' {Source=source; State=Normal} [] |> List.rev

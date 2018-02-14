@@ -1,8 +1,8 @@
 ﻿open System
-
 open Expecto
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
+    printfn "Welcome to FMark"
+    Tests.runTestsInAssembly Tests.defaultConfig [||] |> ignore
     0
