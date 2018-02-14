@@ -1,10 +1,5 @@
 module Types
 
-type Format = {Bold: bool;
-               Italic: bool;
-               Strike: bool;
-               InlineCode: bool}
-
 type Language =
     | Python
     | FSharp
@@ -13,15 +8,16 @@ type Language =
 
 type Token =
     | CODEBLOCK of string * Language
-    | TEXT of string * Format
+    | LITERAL of string
+    | EMPHASIS of string
+    | STRONG of string
+    | INLINECODE of string
     | WHITESPACE of size: int
     | NUMBER of int
-    | EQUALLINE of length: int
-    | MINUSLINE of length: int
     | EMPTYLINE
-    | SPACE | TAB | DOT | HASH | PIPE | COLON | EQUAL | MINUS | PLUS | ASTERISK
+    | SPACE | TAB | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
-    | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | LABRA | RABRA | LCBRA
+    | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | END
 
 type WordLst = string list
@@ -31,7 +27,7 @@ type URL = string
 type HyperText = WordLst
 
 type Element =
-    | FrmtedWordLst of WordLst * Format
+    | FrmtedWordLst of WordLst
     | Link of HyperText * URL
     | Picture of WordLst * URL
 
