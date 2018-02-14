@@ -103,3 +103,10 @@ val printHtml = ParsedObj list -> string
 
 val printToFile = string -> ()
 ```
+
+## Specification
+
+A reference specification for the simple markdown that we are going to follow can be found
+at [CommonMark](http://spec.commonmark.org/0.27/).
+
+A reference implementation of the simple markdown can be found [here](http://spec.commonmark.org/dingus/).
