@@ -13,15 +13,12 @@ type Language =
 
 type Token =
     | CODEBLOCK of Code: string * Language
-    | TEXT of string
     | FORMATTEDTEXT of string * Format
-    | MISCCHAR of string
-    | NUMBER of string
     | LINK of HyperText: string * Link: string
-    | HEADING of Level: int * Content: string
+    | HEADING of Level: int
     | EQUALLINE of int
     | MINUSLINE of int
-    | PICTURE of HyperText: string * Link: string * Hover: string option
+    | IMAGE of HyperText: string * Link: string * Hover: string option
     | EMPTYLINE
     | SPACE | TAB | DOT | POUND | PIPE | COLON | EQUAL | MINUS | PLUS | ASTERISK
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
