@@ -12,13 +12,10 @@ type Language =
     | C
 
 type Token =
-    | CODEBLOCK of Code: string * Language
-    | FORMATTEDTEXT of string * Format
-    | LINK of HyperText: string * Link: string
-    | HEADING of Level: int
-    | EQUALLINE of int
-    | MINUSLINE of int
-    | IMAGE of HyperText: string * Link: string * Hover: string option
+    | CODEBLOCK of string * Language
+    | TEXT of string * Format
+    | WHITESPACE of size: int
+    | NUMBER of int
     | EMPTYLINE
     | SPACE | TAB | DOT | POUND | PIPE | COLON | EQUAL | MINUS | PLUS | ASTERISK
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
