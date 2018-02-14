@@ -7,39 +7,72 @@ type LexerState = Normal | InCodeBlock | EmptyLine
 
 type LexerData = {Source: string; State: LexerState}
 
-let textRegex = @"[a-zA-Z0-9,. '\-]+"
-let text = @"^"+textRegex
-let italics = @"^(?:\*("+textRegex+")\*|_("+textRegex+")_)"
-let bold = @"^(?:\*\*("+textRegex+")\*\*|__("+textRegex+")__)"
+let textRegex = @"[^#|=\-+*_~\[\]()\\/<>{}`!]+"
+let literal = @"^"+textRegex
+let emphasis = @"^(?:\*("+textRegex+")\*|_("+textRegex+")_)"
+let strong = @"^(?:\*\*("+textRegex+")\*\*|__("+textRegex+")__)"
 let strike = @"^~("+textRegex+")~"
 let emptyLine = "^[ \t]*$"
 
-let (|LMatch|_|) regex str =
-    match String.regexMatch regex str with
+let (|LMatch|_|) regex st =
+    match String.regexMatch regex st.Source with
     | None -> None
     | Some (m, grp) ->
         let lchar = String.length m
         printfn "%A, %A" m grp
-        Some (m, grp, str.[lchar..])
+        Some (m, grp, {st with Source = st.Source.[lchar..]})
+
+let (|Emphasis|_|) = function
+    | LMatch emphasis s -> Some s
+    | _ -> None
+
+let (|Strong|_|) = function
+    | LMatch strong s -> Some s
+    | _ -> None
+
+let (|Literal|_|) = function
+    | LMatch literal s -> Some s
+    | _ -> None
+
+let (|Character|_|) = function
+    | LMatch "^#" _ -> Some HASH
+    | LMatch @"^\|" _ -> Some PIPE
+    | LMatch "^=" _ -> Some EQUAL
+    | LMatch "^-" _ -> Some MINUS
+    | LMatch @"^\+" _ -> Some PLUS
+    | LMatch @"^\*" _ -> Some ASTERISK
+    | LMatch "^_" _ -> Some UNDERSCORE
+    | LMatch "^~" _ -> Some TILDE
+    | LMatch @"^\[" _ -> Some LSBRA
+    | LMatch @"^\]" _ -> Some RSBRA
+    | LMatch @"^\(" _ -> Some LBRA
+    | LMatch @"^\)" _ -> Some RBRA
+    | LMatch @"^\\" _ -> Some BSLASH
+    | LMatch @"^\/" _ -> Some SLASH
+    | LMatch "^<" _ -> Some LABRA
+    | LMatch "^>" _ -> Some RABRA
+    | LMatch "^{" _ -> Some LCBRA
+    | LMatch "^}" _ -> Some RCBRA
+    | LMatch "^`" _ -> Some BACKTICK
+    | LMatch "^!" _ -> Some EXCLAMATION
+    | _ -> None
 
 let retMatch =
     List.reduce (+)
 
 let nextToken st =
     let newSt s = {st with Source = s}
-    let noFormat = {Bold = false; Italic = false; Strike = false; InlineCode = false}
-    match st.Source with
+    match st with
     | LMatch emptyLine (_, _, s) ->
-        EMPTYLINE, newSt s
-    | LMatch "^#" (_, _, s) ->
-        HASH, newSt s
-    | LMatch italics (_, grp, s) ->
-        TEXT (retMatch grp, {noFormat with Italic = true}), newSt s
-    | LMatch bold (_, grp, s) ->
-        TEXT (retMatch grp, {noFormat with Bold = true}), newSt s
-    | LMatch bold (_, grp, s) ->
-        TEXT (retMatch grp, {noFormat with Strike = true}), newSt s
-    | LMatch text (t, _, s) -> TEXT (t, noFormat), newSt s
+        EMPTYLINE, s
+    | Emphasis (_, grp, s) ->
+        retMatch grp |> EMPHASIS, s
+    | Strong (_, grp, s) ->
+        retMatch grp |> STRONG, s
+    | Literal (t, _, s) ->
+        LITERAL t, s
+    | Character tok ->
+        tok, newSt st.Source.[1..]
     | _ -> failwithf "Not Matched"
 
 let tokenize source =

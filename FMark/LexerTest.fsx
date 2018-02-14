@@ -10,6 +10,6 @@ tokenize ""
 
 tokenize "It was a _beautiful_ day Today."
 
-tokenize "# This is a *Title*"
+tokenize "# This is a *Title* [*asldk*](https://github.com)"
 
 tokenize "                            "
