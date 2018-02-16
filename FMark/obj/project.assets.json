@@ -5094,28 +5094,30 @@
     ]
   },
   "packageFolders": {
-    "/home/yannherklotz/.nuget/packages/": {},
-    "/opt/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\yannh\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/yannherklotz/Github/FMark/FMark/FMark.fsproj",
+      "projectUniqueName": "c:\\Users\\yannh\\Github\\FMark\\FMark\\FMark.fsproj",
       "projectName": "FMark",
-      "projectPath": "/home/yannherklotz/Github/FMark/FMark/FMark.fsproj",
-      "packagesPath": "/home/yannherklotz/.nuget/packages/",
-      "outputPath": "/home/yannherklotz/Github/FMark/FMark/obj/",
+      "projectPath": "c:\\Users\\yannh\\Github\\FMark\\FMark\\FMark.fsproj",
+      "packagesPath": "C:\\Users\\yannh\\.nuget\\packages\\",
+      "outputPath": "c:\\Users\\yannh\\Github\\FMark\\FMark\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/opt/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/home/yannherklotz/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\yannh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
