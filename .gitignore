@@ -1,4 +1,5 @@
 bin
+obj
 Debug
 *.cache
 *.pdb
