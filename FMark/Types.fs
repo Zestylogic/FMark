@@ -39,8 +39,8 @@ type THeader = {HeaderName: WordLst; Level: int}
 
 type Ttoc = {MaxDepth: int; HeaderLst: THeader list}
 
-type ParedObj =
-    | CodeBlock of string
+type ParsedObj =
+    | CodeBlock of string * Language
     | Header of THeader
     | List of ListType * Line * Depth: int
     | Paragraph of Line list
