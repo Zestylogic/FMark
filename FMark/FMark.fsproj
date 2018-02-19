@@ -9,6 +9,7 @@
     <Compile Include="EEExtensions.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Preprocessor.fs" />
+    <Compile Include="PreprocessorTest.fs" />
     <Compile Include="Lexer.fs" />
     <Compile Include="LexerTest.fs" />
     <Compile Include="Program.fs" />

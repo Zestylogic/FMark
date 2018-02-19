@@ -17,7 +17,7 @@ also macros that can envelope text, and change it that way.
 An example of this can be seen below.
 
 ```
-`define HELLO Hello, world
+@define HELLO Hello, world
 ```
 
 The code above will replace the macro defined as `HELLO` with the text `Hello, world` 
@@ -25,15 +25,15 @@ anywhere it is referenced.
 
 More complex macros can also be defined however, such as the example below.
 ```
-`define SPECIAL_DIV(INPUT)
+@define SPECIAL_DIV(INPUT)
 <div class="special">INPUT</div>
-`end
+@end
 ```
 
 The above will convert
 
 ```
-Hello, \SPECIAL_DIV(World)
+Hello, SPECIAL_DIV(World)
 ```
 
 to
@@ -43,3 +43,29 @@ Hello, <div class="special">World</div>
 ```
 
 ## Options
+
+## Implementation
+
+### Types
+
+``` fsharp
+type TPreProc =
+    | Source of string list
+    | CodeBlock of string list
+
+type Macro = {Name: string; Parameters: string list; Body: string list}
+```
+
+### Functions
+
+``` fsharp
+val preProcSource: (string list -> Macro list -> string list * Macro list)
+
+val preprocess; (string list -> TPreProc list)
+```
+
+Descriptions of the functions can be seen below.
+
+- `preProcSource`: This function takes in a list of string which represent the source code
+that has been read from the file and a `Macro list` which contains all the macros that
+have been defined already in the file using the syntax above.
