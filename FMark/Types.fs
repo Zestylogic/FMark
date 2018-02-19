@@ -39,11 +39,20 @@ type THeader = {HeaderName: WordLst; Level: int}
 
 type Ttoc = {MaxDepth: int; HeaderLst: THeader list}
 
+type Alignment = Centre | Right | Left
+
+type Cell =
+    | Tokens of Token list * Header: bool * Align:Alignment
+
+type Row =
+    | Cells of Cell list
+
 type ParsedObj =
     | CodeBlock of string * Language
     | Header of THeader
     | List of ListType * Line * Depth: int
     | Paragraph of Line list
     | Quote of Line
-    | Table of Content: Line list * Height: int * Width: int
+    | PreTable of Content: Token list list * Height: int * Width: int
     | Footnote of ID: int * Line
+    | Table of Row list * Height: int * Width: int
