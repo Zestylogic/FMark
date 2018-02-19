@@ -8,14 +8,11 @@ type Language =
 
 type Token =
     | CODEBLOCK of string * Language
-    | LITERAL of string
-    | EMPHASIS of string
-    | STRONG of string
-    | INLINECODE of string
+    | LITERAL
     | WHITESPACE of size: int
-    | NUMBER of int
+    | NUMBER of string
     | EMPTYLINE
-    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK
+    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET
