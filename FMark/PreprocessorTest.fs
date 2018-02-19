@@ -15,12 +15,28 @@ let makeTestList inf outf testf name listOfPairs =
 let makeSimpleTestList f = makeTestList id id f
 
 [<Tests>]
-let identifyBlockTypeTest =
-    makeSimpleTestList identifyBlockType "IdentifyBlockType" [
-        ["Markdown Source"], Source ["Markdown Source"]
-        ["    Code Block"], CodeBlock ("default", ["    Code Block"])
-        ["``` python"; "This is in the code"; "```"], CodeBlock ("python", ["``` python"; "This is in the code"; "```"])
-        
+let identifyTest =
+    makeSimpleTestList identify "Identify" [
+        ["Simple text"], Source ["Simple text"]
+        ["    Code1"], CodeBlock ("", ["    Code1"])
+        ["``` python"], CodeBlock ("python", [])
+        ["~~~ruby"], CodeBlock ("ruby", [])
+    ]
+
+[<Tests>]
+let nextBlockTest =
+    makeSimpleTestList nextBlock "NextBlock" [
+        ["Markdown Source"],
+        (Source ["Markdown Source"], [""])
+
+        ["    Code Block"],
+        (CodeBlock ("default", ["Code Block"]), [""])
+
+        ["``` python"; "This is in the code"; "```"],
+        (CodeBlock ("python", ["This is in the code"]), [""])
+
+        ["```fsharp"; ""; ""; "let x = 2"; ""; "let y = x"; "```"],
+        (CodeBlock ("fsharp", [""; ""; "let x = 2"; ""; "let y = x"]), [""])
     ]
 
 [<Tests>]
