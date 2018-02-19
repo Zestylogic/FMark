@@ -32,11 +32,20 @@ type TListType = | UL | OL
 type TList = {ListType: TListType; ListItem: TListItem list; Depth: int}
 and TListItem = NestedList of TList | StringItem of TLine
 
+type Alignment = Centre | Right | Left
+
+type Cell =
+    | Tokens of Token list * Header: bool * Align:Alignment
+
+type Row =
+    | Cells of Cell list
+
 type ParsedObj =
     | CodeBlock of string * Language
     | Header of THeader
     | List of TList
     | Paragraph of TLine list
     | Quote of TLine
-    | Table of Content: TLine list * Height: int * Width: int
+    | Table of Row list * Height: int * Width: int
+    | PreTable of Content: Token list list * Height: int * Width: int
     | Footnote of ID: int * TLine
