@@ -19,16 +19,20 @@ let (|EmptyLine|NonEmptyLine|) = function
     | RegexMatch @"^\s*$" _ -> EmptyLine
     | _ -> NonEmptyLine
 
-let (|CodeLine|SourceLine|) = function
-    | RegexMatch @"^(?:```*|~~~*|    )" _ -> CodeLine
-    | _ -> SourceLine
+let (|CodeLine|_|) = function
+    | RegexMatch @"^(?:(?:```+|~~~+)[ ]*([a-zA-Z\-_]*)|    )" (_, s, _) ->
+        match s with
+        | [""] -> Some "default"
+        | [a] -> Some a
+        | _ -> Some "default"
+    | _ -> None
 
 let specialChar = "@"
 
 let combine = List.fold (+) ""
 
 let identifyBlockType = function
-    | CodeLine :: _ as c -> CodeBlock ("python", c)
+    | CodeLine lang :: _ as c -> CodeBlock (lang, c)
     | s -> Source s
 
 let rec trimSource = function
