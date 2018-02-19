@@ -18,7 +18,7 @@ type Token =
     | SPACE | TAB | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
-    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | END
+    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | END | COLON
 
 type WordLst = string list
 
@@ -40,7 +40,7 @@ type THeader = {HeaderName: WordLst; Level: int}
 type Ttoc = {MaxDepth: int; HeaderLst: THeader list}
 
 type ParsedObj =
-    | CodeBlock of string
+    | CodeBlock of string * Language
     | Header of THeader
     | List of ListType * Line * Depth: int
     | Paragraph of Line list
