@@ -58,33 +58,33 @@ let right  =  minusX3 @ [COLON]
 let testAlignData = [
     "No alignments.",
     minusX3 @ (PIPE ::minusX3) @ (PIPE ::minusX3),
-    [Left;Left;Left];
+    [Left;Left;Left] |> Ok;
     "Middle right aligned.",
     minusX3 @ (PIPE :: COLON ::minusX3) @ (PIPE ::minusX3) |> List.rev,
-    [Left;Right;Left];
+    [Left;Right;Left] |> Ok;
     "No alignments, superfluous pipes both sides.",
     PIPE ::minusX3 @ (PIPE ::minusX3) @ (PIPE ::minusX3) @ [PIPE],
-    [Left;Left;Left];
+    [Left;Left;Left] |> Ok;
     "All centre aligned, both outside pipes",
     listCopies 3 [PIPE;COLON;MINUS;MINUS;MINUS;COLON] @ [PIPE],   
-    [Centre;Centre;Centre];
+    [Centre;Centre;Centre] |> Ok;
     "All centre aligned, no rhs pipe",
     listCopies 3 [PIPE;COLON;MINUS;MINUS;MINUS;COLON],   
-    [Centre;Centre;Centre];
+    [Centre;Centre;Centre] |> Ok;
     "All centre aligned, no superfluous pipes",
     listCopies 3 [PIPE;COLON;MINUS;MINUS;MINUS;COLON] |> List.tail,   
-    [Centre;Centre;Centre];
+    [Centre;Centre;Centre] |> Ok;
     "Simple all align types",
     minusX3 @ PIPE :: centre @ PIPE :: right,
-    [Left;Centre;Right];
+    [Left;Centre;Right] |> Ok;
     "Complex non-symmetric using all aligns w/o outside pipes",
     minusX3 @ PIPE :: centre @ PIPE :: right @ PIPE::centre @ PIPE::COLON::minusX3  
         @ PIPE :: right @ PIPE :: centre @ PIPE :: right @ PIPE::COLON::minusX3,
-    [Left;Centre;Right;Centre;Left;Right;Centre;Right;Left];
+    [Left;Centre;Right;Centre;Left;Right;Centre;Right;Left] |> Ok;
     "Complex non-symmetric using all aligns with outside pipes",
     PIPE::minusX3 @ PIPE :: centre @ PIPE :: right @ PIPE::centre @ PIPE::COLON::minusX3  
         @ PIPE :: right @ PIPE :: centre @ PIPE :: right @ PIPE::COLON::minusX3 @ [PIPE],
-    [Left;Centre;Right;Centre;Left;Right;Centre;Right;Left]
+    [Left;Centre;Right;Centre;Left;Right;Centre;Right;Left] |> Ok
 ]
 let makeParseAlignmentRowTest = makeEqTest parseAlignmentRow "parseAlignmentRow"
 
@@ -111,7 +111,7 @@ let testTableData = [
     [standardHeader;standardAlign;[LITERAL("Some");PIPE;LITERAL("test");PIPE;LITERAL("stuff")]],
     [standardHeaderA] @ [[Tokens ([LITERAL "Some"],false,Left)
                          ;Tokens ([LITERAL "test"],false,Centre)
-                         ;Tokens ([LITERAL "stuff"],false,Right)]];
+                         ;Tokens ([LITERAL "stuff"],false,Right)]] |> Ok;
     
 ]
 let makeTransformTableTest = makeEqTest transformTable "transformTable"
