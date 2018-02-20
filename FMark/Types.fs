@@ -8,16 +8,15 @@ type Language =
 
 type Token =
     | CODEBLOCK of string * Language
-    | LITERAL
+    | LITERAL of string
     | WHITESPACE of size: int
     | NUMBER of string
-    | EMPTYLINE
     | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET
 
-type TFrmtedString = | Strong of TFrmtedString | Emphasis of TFrmtedString | Literal of string
+type TFrmtedString = | Strong of TFrmtedString | Emphasis of TFrmtedString | Literal of string | Code of string
 type InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
