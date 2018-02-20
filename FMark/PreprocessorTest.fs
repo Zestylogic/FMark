@@ -23,21 +23,21 @@ let identifyTest =
         ["~~~ruby"], CodeBlock ("ruby", [])
     ]
 
-[<Tests>]
-let nextBlockTest =
-    makeSimpleTestList nextBlock "NextBlock" [
-        ["Markdown Source"],
-        (Source ["Markdown Source"], [""])
+// [<Tests>]
+// let nextBlockTest =
+//     makeSimpleTestList nextBlock "NextBlock" [
+//         ["Markdown Source"],
+//         (Source ["Markdown Source"], [""])
 
-        ["    Code Block"],
-        (CodeBlock ("default", ["Code Block"]), [""])
+//         ["    Code Block"],
+//         (CodeBlock ("default", ["Code Block"]), [""])
 
-        ["``` python"; "This is in the code"; "```"],
-        (CodeBlock ("python", ["This is in the code"]), [""])
+//         ["``` python"; "This is in the code"; "```"],
+//         (CodeBlock ("python", ["This is in the code"]), [""])
 
-        ["```fsharp"; ""; ""; "let x = 2"; ""; "let y = x"; "```"],
-        (CodeBlock ("fsharp", [""; ""; "let x = 2"; ""; "let y = x"]), [""])
-    ]
+//         ["```fsharp"; ""; ""; "let x = 2"; ""; "let y = x"; "```"],
+//         (CodeBlock ("fsharp", [""; ""; "let x = 2"; ""; "let y = x"]), [""])
+//     ]
 
 [<Tests>]
 let trimSourceTest =

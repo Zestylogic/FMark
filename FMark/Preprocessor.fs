@@ -24,19 +24,16 @@ let (|EmptyLine|NonEmptyLine|) = function
     | _ -> NonEmptyLine
 
 let (|CodeDelim|_|) = function
-    | RegexMatch @"^(?:```+|~~~+)[ ]*([a-zA-Z\-_]*" (_, s, _) ->
+    | RegexMatch @"^(?:```+|~~~+)[ ]*([a-zA-Z\-_]*)" (_, s, _) ->
         match s with
-        | [a] -> Some a
-        | _ -> Some ""
-    | _ -> None
-
-let (|CodeLine|_|) = function
-    | RegexMatch "^    " _ -> Some ""
+        | [a] -> Some (a, [], Delimited)
+        | _ -> Some ("", [], Delimited)
+    | RegexMatch "^    (.*)" (_, s, _) -> Some ("", s, Space)
     | _ -> None
 
 let identify = function
     | CodeLine l :: _ | CodeDelim l :: _ as x ->
-        CodeBlock (l, [List.head x])
+        l
     | a :: _ -> Source [a]
     | _ -> Source []
 
@@ -44,9 +41,9 @@ let rec trimSource = function
     | EmptyLine :: tl -> trimSource tl
     | s -> s
 
-let nextBlock (source: string list): Block * rest: string list =
-    let init = trimSource source |> identify
-    let nextBlock' (block: Block) (rest: string list) =
+// let nextBlock (source: string list): Block * rest: string list =
+//     let init = trimSource source |> identify
+//     let nextBlock' (block: Block) (rest: string list) =
         
 
 let evalMacros source macros =
