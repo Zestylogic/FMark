@@ -1,6 +1,9 @@
 bin
 obj
 Debug
+packages
+.paket
+paket.lock
 *.cache
 *.pdb
 *.dll
