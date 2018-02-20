@@ -3,84 +3,59 @@ module Lexer
 open EEExtensions
 open Types
 
-type LexerState = Normal | InCodeBlock | EmptyLine
-
-type LexerData = {Source: string; State: LexerState}
-
-let textRegex = @"[^#|=\-+*_~\[\]()\\/<>{}`!]+"
-let literal = @"^"+textRegex
-let emphasis = @"^(?:\*("+textRegex+")\*|_("+textRegex+")_)"
-let strong = @"^(?:\*\*("+textRegex+")\*\*|__("+textRegex+")__)"
-let strike = @"^~("+textRegex+")~"
-let emptyLine = "^[ \t]*$"
-
-let (|LMatch|_|) regex st =
-    match String.regexMatch regex st.Source with
+let (|LMatch|_|) regex s =
+    match String.regexMatch regex s with
     | None -> None
     | Some (m, grp) ->
         let lchar = String.length m
-        Some (m, grp, {st with Source = st.Source.[lchar..]})
+        Some (m, grp, s.[lchar..])
 
-let (|Emphasis|_|) = function
-    | LMatch emphasis s -> Some s
-    | _ -> None
+let charList = ["#", HASH; "|", PIPE; "=", EQUAL; "-", MINUS; "+", PLUS; "*", ASTERISK
+                ".", DOT; "**", DASTERISK; "***", TASTERISK; "_", UNDERSCORE; "__", DUNDERSCORE
+                "___", TUNDERSCORE; "~", TILDE; "~~", DTILDE; "~~~", TTILDE; "[", LSBRA
+                "]", RSBRA; "(", LBRA; ")", RBRA; @"\", BSLASH; "/", SLASH; "<", LABRA
+                ">", RABRA; "{", LCBRA; "}", RCBRA; "`", BACKTICK; "```", TBACKTICK
+                "!", EXCLAMATION; ":", COLON; "^", CARET]
 
-let (|Strong|_|) = function
-    | LMatch strong s -> Some s
-    | _ -> None
+let literalString =
+    let (|CharToEscape|_|) c =
+        let eChar = ["-"; "["; "]"; @"\"]
+        match List.exists ((=) c) eChar with
+        | true -> Some (@"\" + c)
+        | _ -> None
 
-let (|Literal|_|) = function
-    | LMatch literal s -> Some s
-    | _ -> None
+    let chars =
+        List.map (function | CharToEscape c, _ -> c | c, _ -> c) charList
+        |> List.fold (+) ""
 
-let (|Character|_|) = function
-    | LMatch "^#" _ -> Some HASH
-    | LMatch @"^\|" _ -> Some PIPE
-    | LMatch "^=" _ -> Some EQUAL
-    | LMatch "^-" _ -> Some MINUS
-    | LMatch @"^\+" _ -> Some PLUS
-    | LMatch @"^\*" _ -> Some ASTERISK
-    | LMatch "^_" _ -> Some UNDERSCORE
-    | LMatch "^~" _ -> Some TILDE
-    | LMatch @"^\[" _ -> Some LSBRA
-    | LMatch @"^\]" _ -> Some RSBRA
-    | LMatch @"^\(" _ -> Some LBRA
-    | LMatch @"^\)" _ -> Some RBRA
-    | LMatch @"^\\" _ -> Some BSLASH
-    | LMatch @"^\/" _ -> Some SLASH
-    | LMatch "^<" _ -> Some LABRA
-    | LMatch "^>" _ -> Some RABRA
-    | LMatch "^{" _ -> Some LCBRA
-    | LMatch "^}" _ -> Some RCBRA
-    | LMatch "^`" _ -> Some BACKTICK
-    | LMatch "^!" _ -> Some EXCLAMATION
-    | _ -> None
+    "^[^ "+chars+"]+"
 
-let retMatch =
-    List.reduce (+)
+let (|Character|_|) (str: string) =
+    let testStartWith (c, t) =
+        String.startsWith c str, c, t
+    let retLastMatch i = function
+        | true, c, t -> Some (t, str.[String.length c..])
+        | _ -> i
+    List.map testStartWith charList
+    |> List.fold retLastMatch None
 
-let nextToken st =
-    let newSt s = {st with Source = s}
-    match st with
-    | LMatch emptyLine (_, _, s) ->
-        EMPTYLINE, s
-    | Emphasis (_, grp, s) ->
-        retMatch grp |> EMPHASIS, s
-    | Strong (_, grp, s) ->
-        retMatch grp |> STRONG, s
-    | Literal (t, _, s) ->
-        LITERAL t, s
-    | Character tok ->
-        tok, newSt st.Source.[1..]
+let nextToken = function
+    | Character n -> n
+    | LMatch @"^\s+" (m, _, s) ->
+        WHITESPACE (String.length m), s
+    | LMatch "^[0-9]+" (m, _, s) ->
+        NUMBER m, s
+    | LMatch literalString (m, _, s) ->
+        LITERAL m, s
     | _ -> failwithf "Not Matched"
 
 let tokenize source =
-    let rec tokenize' st tokList =
-        match st.Source with
-        | "" -> tokList
+    let rec tokenize' s tokList =
+        match s with
+        | "" -> ENDLINE :: tokList
         | _ ->
-            let nt, st' = nextToken st
+            let nt, st' = nextToken s
             nt :: tokList |> tokenize' st'
     match source with
-    | "" -> [EMPTYLINE]
-    | _ -> tokenize' {Source=source; State=Normal} [] |> List.rev
+    | LMatch @"^\s*$" _ -> [ENDLINE]
+    | _ -> tokenize' source [] |> List.rev
