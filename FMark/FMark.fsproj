@@ -8,7 +8,12 @@
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="Parse.fs" />
+    <Compile Include="ParserTest.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Expecto" Version="5.1.2" />
+    <PackageReference Include="Expecto.FsCheck" Version="5.1.2" />
+  </ItemGroup>
 </Project>
