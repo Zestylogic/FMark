@@ -1,29 +1,37 @@
 module Parse
 open Types
 
-
-let rec parseItem (toks: Token list) : Result<ParsedObj * Token list, string> =
+let rec parseLiteral toks str =
+    let appendString newstr sep retoks = [str;newstr] |> String.concat sep |> parseLiteral retoks
     match toks with
-    | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
-    | LITERAL str :: toks' -> ([str] |> FrmtedWordLst |> List.singleton |> List.singleton |> Paragraph,
-                                toks') |> Ok
-    | EMPHASIS _ :: _ -> "EMPHASIS not implemented" |> Error
-    | STRONG _ :: _ -> "STRONG not implemented" |> Error
-    | INLINECODE str :: toks' -> // todo: include code styles
-            ([str] |> FrmtedWordLst |> List.singleton |> List.singleton |> Paragraph,
-                                toks') |> Ok
-    | WHITESPACE _ :: toks' -> // can't think of whitespace usage
-        parseItem toks'
-        |> Result.bind (fun (po, re) -> (po, re) |> Ok)
-    | EMPTYLNE::EMPTYLNE::NUMBER _::
+    | tlist when List.isEmpty tlist -> (str, None)
+    | ENDLINE :: LITERAL str' :: toks' -> appendString str' "\n" toks'
+    | WHITESPACE _ :: LITERAL str' :: toks' -> appendString str' " " toks'
+    | _ -> (str, Some toks)
 
-    | EMPTYLINE::EMPTYLINE::toks' ->
-        parseItem toks'
-        |> Result.bind (fun (po, re) -> )
-and parseItemList toks : Result<ParsedObj list * Token list, string> =
+let rec parseItem (toks: Token list) : Result<ParsedObj * option<Token list>, string> =
+    match toks with
+    | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), Some toks') |> Ok
+    | ENDLINE _ :: NUMBER _ :: DOT :: WHITESPACE _ :: toks' -> "Lists todo" |> Error
+    | LITERAL str :: toks' ->
+        match parseLiteral toks' str with
+        | lstr, retoks -> (Paragraph([[FrmtedString(Literal lstr)]]), retoks) |> Ok
+    | _ -> "not implemented" |> Error
+
+and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
     parseItem toks
-    | Result.bind (fun (item, ))
+    |> Result.bind (fun (pobj, re) ->
+        match re with
+        | None -> ([pobj], None) |> Ok
+        | Some toks' ->
+            parseItemList toks'
+            |> Result.map(fun (pobjs, re') ->
+                pobj::pobjs, re' )
+        )
 
-// let parse toks =
-//     parseItemList toks
-//     |> Result.bind (fun ())
+let parse toks =
+    parseItemList toks
+    |> Result.bind (fun (pobjs, retoks) ->
+        match retoks with
+        | None -> pobjs |> Ok
+        | Some retoks -> "Some unparsed tokens" |> Error)

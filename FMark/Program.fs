@@ -1,6 +1,9 @@
 ﻿open System
+open ParserTest
+open Expecto
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
+    runParserTest |> ignore
+    //printfn "Hello World from F#!"
     0
