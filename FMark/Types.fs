@@ -8,7 +8,7 @@ type Language =
 
 type Token =
     | CODEBLOCK of string * Language
-    | LITERAL
+    | LITERAL of string
     | WHITESPACE of size: int
     | NUMBER of string
     | EMPTYLINE
