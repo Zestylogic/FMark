@@ -1,4 +1,4 @@
-module Parse
+module Parser
 open Types
 
 let rec parseLiteral toks str =

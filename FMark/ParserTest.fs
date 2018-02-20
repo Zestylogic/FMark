@@ -1,7 +1,7 @@
 module ParserTest
 
 open Types
-open Parse
+open Parser
 open Expecto
 
 let id x = x
