@@ -9,41 +9,42 @@ type Language =
 type Token =
     | CODEBLOCK of string * Language
     | LITERAL of string
-    | EMPHASIS of string
-    | STRONG of string
-    | INLINECODE of string
     | WHITESPACE of size: int
-    | NUMBER of int
-    | EMPTYLINE
-    | SPACE | TAB | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK
+    | NUMBER of string
+    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
-    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | END
+    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET
 
-type WordLst = string list
+type TFrmtedString = | Strong of TFrmtedString | Emphasis of TFrmtedString | Literal of string
+type InlineElement =
+    | FrmtedString of TFrmtedString
+    | Link of HyperText: TFrmtedString * URL: string
+    | Picture of Alt: string * URL: string
+type TLine = InlineElement list
 
-type URL = string
-
-type HyperText = WordLst
-
-type Element =
-    | FrmtedWordLst of WordLst
-    | Link of HyperText * URL
-    | Picture of WordLst * URL
-
-type ListType = UL | OL
-
-type Line = Element list
-
-type THeader = {HeaderName: WordLst; Level: int}
+type THeader = {HeaderName: TLine; Level: int}
 
 type Ttoc = {MaxDepth: int; HeaderLst: THeader list}
 
+type TListType = | UL | OL
+type TList = {ListType: TListType; ListItem: TListItem list; Depth: int}
+and TListItem = NestedList of TList | StringItem of TLine
+
+type Alignment = Centre | Right | Left
+
+type Cell =
+    | Tokens of Token list * Header: bool * Align:Alignment
+
+type Row =
+    | Cells of Cell list
+
 type ParsedObj =
-    | CodeBlock of string
+    | CodeBlock of string * Language
     | Header of THeader
-    | List of ListType * Line * Depth: int
-    | Paragraph of Line list
-    | Quote of Line
-    | Table of Content: Line list * Height: int * Width: int
-    | Footnote of ID: int * Line
+    | List of TList
+    | Paragraph of TLine list
+    | Quote of TLine
+    | Table of Row list * Height: int * Width: int
+    | PreTable of Content: Token list list * Height: int * Width: int
+    | Footnote of ID: int * TLine
