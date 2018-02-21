@@ -94,11 +94,15 @@ let parseLiteralTest =
     ]
 
 [<Tests>]
-let parseInlineElementTest =
+let parseInlineElementsTest =
     makeExpectoTestList id id parseInLineElements "parseInLineElements test" [
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; ENDLINE],
-            ([FrmtedString(Literal "I am")], []), "literal and two ENDLINEs"
+            ([FrmtedString(Literal "I am")], [ENDLINE; ENDLINE]), "literal and two ENDLINEs"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 3; ENDLINE],
+            ([FrmtedString(Literal "I am")], []), "2 whitespaces and 1 newline"
         )
     ]
 let allTestsWithExpecto() =

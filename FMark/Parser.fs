@@ -15,6 +15,23 @@ let rec countENDLINEs toks =
     | ENDLINE :: toks' -> countENDLINEs toks' |> (+) 1
     | _ -> 0
 
+
+/// newline but not new paragraoh
+/// is 2>= spaces and 1 newline
+let (|IsNewTLine|_|) toks =
+    let rec takeAwaySpaces toks =
+        match toks with
+        | WHITESPACE _ :: toks' -> takeAwaySpaces toks'
+        | _ -> toks
+    let leadingSpaces = countSpaces toks
+    match leadingSpaces >=2 with
+    | true ->
+        let toksWOSpaces =  toks |> takeAwaySpaces
+        match countENDLINEs toksWOSpaces = 1 with
+        | true -> toksWOSpaces.[1..] |> Some
+        | false -> None
+    | false -> None
+
 let parseLiteral toks =
     let rec parseLiteral' toks str =
         let appendString newstr sep retoks =
@@ -31,16 +48,14 @@ let parseLiteral toks =
 
 let parseInLineElements toks =
     let rec parseInLineElements' toks =
-        let leadingSpaces = countSpaces toks
         match toks with
         | t when List.isEmpty t -> [], []
-        | _ when leadingSpaces >=2 -> [], toks.[leadingSpaces..] // new TLine equivalent <br>
-        | ENDLINE :: toks' -> parseInLineElements' toks'
+        | IsNewTLine toks' -> [], toks' // new TLine equivalent <br>
         | LITERAL _ :: _ ->
             let pstr, retoks = parseLiteral toks
             let inlines, retoks' = parseInLineElements' retoks
             FrmtedString (Literal pstr) :: inlines, retoks'
-        | _ -> failwithf "this inline element is not implmented"
+        | _ -> [], toks
     parseInLineElements' toks
 
 /// parseParagraph eats ENDLINE
