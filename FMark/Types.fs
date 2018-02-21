@@ -16,7 +16,9 @@ type Token =
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET
 
-type TFrmtedString = | Strong of InlineElement list | Emphasis of InlineElement list | Literal of string | Code of string
+type TFrmtedString =
+    | Strong of InlineElement list | Emphasis of InlineElement list
+    | Literal of string | Code of string
 and InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
