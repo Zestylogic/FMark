@@ -8,6 +8,12 @@ type Block =
 
 type Macro = {Name: string; Parameters: string list; Body: string list}
 
+type MacroToken =
+    | TEXT of string
+    | WORD of string
+    | 
+    | ASSIGN | MACRO | OPENDEF | CLOSEDEF | OPENEVAL | CLOSEEVAL
+
 let (|RegexMatch|_|) regex str =
     match String.regexMatch regex str with
     | None -> None
@@ -36,7 +42,7 @@ let rec trimText = function
 
 let revBlock = function
     | Code (l, c) -> Code (l, List.rev c)
-    | Paragraph s -> List.rev s |> Paragraph    
+    | Paragraph s -> List.rev s |> Paragraph
 
 let parseCodeSpaced code =
     let rec parseCodeSpaced' block rest =

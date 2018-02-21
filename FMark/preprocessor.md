@@ -17,7 +17,13 @@ also macros that can envelope text, and change it that way.
 An example of this can be seen below.
 
 ```
-@define_macro HELLO Hello, world
+{% assign Hello 1 %}
+
+{% macro hello_func(arg1 arg2)
+__Hello__ {{ arg1 }}, welcome to {{ arg2 }}
+%}
+
+@.hello_func(Yann basketball)
 
 @define HELLO2
 Hello, world

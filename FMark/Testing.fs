@@ -59,3 +59,25 @@ let tokenizeTest =
         "***", [TASTERISK; ENDLINE]
         "___", [TUNDERSCORE; ENDLINE]
     ]
+
+[<Tests>]
+let tokenizePropertyTest =
+    let invCharMap =
+        List.map (fun (a, b) -> (b, a)) charList
+        |> Map.ofList
+    let filterTokList tokList =
+        let nTokList = List.collect (function | CODEBLOCK _ | ENDLINE -> [] | a -> [a]) tokList
+        nTokList @ [ENDLINE]
+    let tokListToString tokList =
+        let rec tokListToString' str = function
+            | LITERAL s :: tl -> tokListToString' (str+s) tl
+            | WHITESPACE n :: tl -> tokListToString' (str+(String.replicate n " ")) tl
+            | NUMBER s :: tl -> tokListToString' (str+s) tl
+            | ENDLINE :: tl -> tokListToString' str tl
+            | s :: tl -> tokListToString' (str+invCharMap.[s]) tl
+            | _ -> str
+        tokListToString' "" tokList
+    testProperty "TokenizePropertyTest" <| fun (tokList: Token list) ->
+        let filtered = filterTokList tokList
+        let result = filtered |> tokListToString |> tokenize
+        Expect.equal filtered result
