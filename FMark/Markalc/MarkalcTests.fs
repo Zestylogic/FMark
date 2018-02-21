@@ -2,6 +2,7 @@ module MarkalcTests
 
 open Types
 open Markalc
+open Expression
 open Expecto.ExpectoFsCheck
 open Expecto
 
@@ -12,9 +13,40 @@ let rec listCopies i lst =
     | 0 -> []
     | x when x < 0 -> failwithf "Negative argument: %A" x
     | _ -> lst @ (listCopies (i-1) lst)
+
+let unfoldTuple3 func (a,b,c) =
+   func a b c
+
 let makeEqTest func fname name inp outp =
     testCase name <| fun () ->
     Expect.equal (func inp) outp (sprintf "%s" fname)
+
+let expressionData = [
+    "Simple addition.",
+    [NUMBER("10");PLUS;NUMBER("10")],
+    [20] |> Ok;
+    "Triple addition.",
+    [NUMBER("10");PLUS;NUMBER("10");PLUS;NUMBER("10")],
+    [30] |> Ok;
+    "Simple triple multiplication.",
+    [NUMBER("3");ASTERISK;NUMBER("5");ASTERISK;NUMBER("7")],
+    [105] |> Ok;
+    "Simple division.",
+    [NUMBER("16");SLASH;NUMBER("2")],
+    [8] |> Ok;
+    "Simple modulo.",
+    [NUMBER("3");PERCENT;NUMBER("2")],
+    [1] |> Ok;
+    "Simple subtraction.",
+    [NUMBER("7");MINUS;NUMBER("2")],
+    [5] |> Ok;
+]
+
+let makeExpressionTest = makeEqTest parseExpTop "parseExpTop"
+[<Tests>]
+let expTest =
+    List.map (unfoldTuple3 makeExpressionTest) expressionData
+    |> Expecto.Tests.testList "Expression tests"
 
 let parseDefaultRowData = [(
                            "All Pipes",
@@ -42,9 +74,6 @@ let parseDefaultRowData = [(
 
 
 let makeParseRowTest = makeEqTest parseDefaultRow "parseDefaultRow"
-
-let unfoldTuple3 func (a,b,c) =
-    func a b c
 
 [<Tests>]
 let parseRowTest =

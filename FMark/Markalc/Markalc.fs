@@ -1,22 +1,17 @@
 module Markalc
 
 open Types
-open System.Text.RegularExpressions
+open Expression
+open System
 // Do I want to remove any markdown content? Yes... inline markdown should be unaffected! but perhaps too complicated right now.
-// return everything before the next pipe
-// Possible inputs: | ... |, [], ... |, |
-let rec pipeBeforeAfter before t =
-    match t with
-    //| PIPE :: PIPE :: t' -> if debug then printfn "Double pipe."
-    //                        ([]@before,t') // if PIPE followed by PIPE, 
-    | PIPE :: t' -> (before,t') // If PIPE then token list, return s and everything after the PIPE
-    | x :: t' -> pipeBeforeAfter (x::before) t' // If non-PIPE token then token list, recurse adding the tokens to the before list
-    | [] -> (before,[]) // If no more tokens
-
 // HOF for counting any delimeters
 let countDelim delim tokList =
     List.filter (function | d when d = delim -> true | _ -> false) tokList 
     |> List.length
+let pipeBeforeAfter toks = 
+    match delimBeforeAfter PIPE [] toks with 
+    | Ok(x) -> x
+    | Error(y) -> y
 let makeCellU header tokens  = (tokens,header)
 let makeDefaultCellU = makeCellU false
 let makeHeaderCellU = makeCellU true
@@ -24,7 +19,7 @@ let alignCell alignment cellU = Tokens (fst cellU, snd cellU, alignment)
 // Parse a line into a list of cells
 let parseRowD debug constructCell (row:Token list) =
     let rec parseRow' a row =
-        let b,af = (pipeBeforeAfter [] row) |> (fun (be,af) -> (List.rev be, af))
+        let b,af = (pipeBeforeAfter row) |> (fun (be,af) -> (List.rev be, af))
         if debug then printfn "Row to parse: %A\nBefore: %A, After: %A\n" row b af
         match b,af with
         | ([],[])       -> (constructCell []):: a

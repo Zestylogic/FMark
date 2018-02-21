@@ -14,7 +14,7 @@ type Token =
     | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
-    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET
+    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
 
 type TFrmtedString = | Strong of TFrmtedString | Emphasis of TFrmtedString | Literal of string
 type InlineElement =
