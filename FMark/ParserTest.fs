@@ -33,8 +33,25 @@ let testList =
            [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals with spaces between"
         );
         (
-           [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"; ENDLINE],
+           [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
            [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals with endline"
+        )
+    ]
+
+[<Tests>]
+let countSpaceTest =
+    makeExpectoTestList id id countSpace "countSpace test" [
+        (
+            [WHITESPACE 2; WHITESPACE 4; LITERAL "Mike"],
+            6, "2 WHITESPACE and LITERAL"
+        );
+        (
+            [WHITESPACE 2; DOT; WHITESPACE 4; LITERAL "Mike"],
+            2, "WHITEPSPACE with DOT in between"
+        );
+        (
+            [DOT; DOT; LITERAL "Mike"],
+            0, "No WHITEPSACE"
         )
     ]
 let allTestsWithExpecto() =

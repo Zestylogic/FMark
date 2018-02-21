@@ -1,30 +1,71 @@
 module Parser
 open Types
 
-let rec parseLiteral toks str =
-    let appendString newstr sep retoks = [str;newstr] |> String.concat sep |> parseLiteral retoks
-    match toks with
-    | tlist when List.isEmpty tlist -> (str, None)
-    | ENDLINE :: LITERAL str' :: toks' -> appendString str' "\n" toks'
-    | WHITESPACE _ :: LITERAL str' :: toks' -> appendString str' " " toks'
-    | _ -> (str, Some toks)
 
-let rec parseItem (toks: Token list) : Result<ParsedObj * option<Token list>, string> =
+// helper functions
+let rec countSpace toks =
     match toks with
-    | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), Some toks') |> Ok
+    | WHITESPACE n :: toks' ->  countSpace toks' |> (+) n
+    | _ -> 0
+
+
+let parseLiteral toks =
+    let rec parseLiteral' toks str =
+        let appendString newstr sep retoks =
+            match String.length str with
+            | 0 -> [] | _ -> [str]
+            |> (fun sl -> List.append sl [newstr])
+            |> String.concat sep |> parseLiteral' retoks
+        match toks with
+        | LITERAL str' :: toks' -> appendString str' " " toks'
+        | WHITESPACE _ :: LITERAL str' :: toks' -> appendString str' " " toks'
+        | _ -> (str, toks)
+    parseLiteral' toks ""
+
+let parseInLineElements toks =
+    let rec parseInLineElements' toks =
+        match toks with
+        | t when List.isEmpty t -> [], []
+        | ENDLINE :: toks' -> parseInLineElements' toks'
+        | LITERAL _ :: _ ->
+            let pstr, retoks = parseLiteral toks
+            let inlines, retoks' = parseInLineElements' retoks
+            FrmtedString (Literal pstr) :: inlines, retoks'
+        | _ -> failwithf "this inline element is not implmented"
+    parseInLineElements' toks
+
+/// parseParagraph eats ENDLINE
+let parseParagraph toks =
+    let rec parseParagraph' toks =
+        match toks with
+        | t when List.isEmpty t -> [], []
+        | LITERAL _::toks' ->
+            let inlines, retoks = parseInLineElements toks
+            let lines, retoks' = parseParagraph' retoks
+            inlines:: lines, retoks'
+        | ENDLINE::toks' -> [], toks'
+        | _ -> failwithf "parseParagraph ele not implemented"
+    let prep, retoks = parseParagraph' toks
+    (Paragraph prep, retoks)
+
+
+let rec parseItem (toks: Token list) : Result<ParsedObj * Token list, string> =
+    match toks with
+    | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
     | ENDLINE _ :: NUMBER _ :: DOT :: WHITESPACE _ :: toks' -> "Lists todo" |> Error
     | LITERAL str :: toks' ->
-        match parseLiteral toks' str with
-        | lstr, retoks -> (Paragraph([[FrmtedString(Literal lstr)]]), retoks) |> Ok
+        // match parseLiteral toks with
+        // | lstr, retoks -> (Paragraph([[FrmtedString(Literal lstr)]]), retoks) |> Ok
+        parseParagraph toks |> Ok
     | _ -> "not implemented" |> Error
 
 and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
     parseItem toks
     |> Result.bind (fun (pobj, re) ->
-        match re with
-        | None -> ([pobj], None) |> Ok
-        | Some toks' ->
-            parseItemList toks'
+        match List.isEmpty re with
+        | true -> ([pobj], None) |> Ok
+        | false ->
+            parseItemList re
             |> Result.map(fun (pobjs, re') ->
                 pobj::pobjs, re' )
         )
