@@ -98,7 +98,7 @@ let parseInlineElementsTest =
     makeExpectoTestList id id parseInLineElements "parseInLineElements test" [
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; ENDLINE],
-            ([FrmtedString(Literal "I am")], [ENDLINE; ENDLINE])|>Ok, "literal and two ENDLINEs"
+            ([FrmtedString(Literal "I am")], [])|>Ok, "literal and two ENDLINEs"
         );
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 2; ENDLINE],

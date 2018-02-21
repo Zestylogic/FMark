@@ -6,6 +6,48 @@ open Types
 let SPACE = " "
 let NOSTRING = ""
 
+let stringAllTokens toks =
+    let matchTok i tok =
+        let mappedTok =
+            match tok with
+            | CODEBLOCK _ -> "CODEBLOCK "
+            | LITERAL str-> sprintf "L(%A) " str
+            | WHITESPACE n ->  sprintf "S(%A) " n
+            | NUMBER str -> sprintf "N(%A) " str
+            | HASH -> "# "
+            | PIPE->  "| "
+            | EQUAL-> "= "
+            | MINUS-> "- "
+            | PLUS->  "+ "
+            | ASTERISK-> "* "
+            | DOT-> ". "
+            | DASTERISK-> "** "
+            | TASTERISK-> "*** "
+            | UNDERSCORE-> "_ "
+            | DUNDERSCORE-> "__ "
+            | TUNDERSCORE-> "___ "
+            | TILDE-> "~ "
+            | DTILDE-> "~~ "
+            | TTILDE-> "~~~ "
+            | LSBRA-> "[ "
+            | RSBRA-> "] "
+            | LBRA-> "( "
+            | RBRA-> ") "
+            | BSLASH-> "\ "
+            | SLASH-> "/ "
+            | LABRA-> "< "
+            | RABRA-> "> "
+            | LCBRA -> "{ "
+            | RCBRA -> "} "
+            | BACKTICK -> "` "
+            | TBACKTICK -> "`` "
+            | EXCLAMATION -> "! "
+            | ENDLINE -> "CRLF "
+            | COLON -> ": "
+            | CARET -> "^ "
+        i + mappedTok
+    List.fold matchTok "" toks
+
 /// count continuous spaces
 let rec countSpaces toks =
     match toks with
@@ -86,21 +128,30 @@ let parseInLineElements toks =
         | MatchEmStart toks' ->
             //let pstr, retoks = parseLiteral toks.[2..]
             //let inlines, retoks = parseInLineElements' toks'
+            printfn "em:%A" toks'
             parseInLines toks'
             |> Result.map (fun (inlines, retoks) ->
                 match retoks with
                 | MatchEmEnd retoks' -> (FrmtedString(Emphasis(inlines)), retoks')
                 | _ -> failwithf "underscore not matching")
-        | _ -> "Nothing matched" |> Error
+        | _ -> sprintf "Nothing matched: %A" (stringAllTokens toks) |> Error
     and parseInLines toks =
+        match toks with
+        | [] -> ([], []) |> Ok
+        | _ ->
         parseInLineElements' toks
         |> Result.bind (fun (inLine, retoks) ->
             match retoks with
             | [] -> ([inLine], []) |> Ok
-            | IsNewTLine toks' -> printfn "newTLine"; ([], toks') |> Ok // new TLine equivalent <br>)
+            //| IsNewTLine toks' -> printfn "newTLine"; ([], toks') |> Ok // new TLine equivalent <br>)
+            | MatchNewParagraph toks' -> ([inLine], toks') |> Ok // new TLine equivalent <br>)
+            | IsNewTLine toks' ->
+                parseInLines toks'
+                |> Result.map (fun (inLines, tks)->
+                    inLine::inLines, tks)
             | _ ->
                 parseInLines retoks
-                |> Result.map(fun (inLines, retoks')->
+                |> Result.map (fun (inLines, retoks')->
                     inLine::inLines, retoks'))
     parseInLines toks
 
