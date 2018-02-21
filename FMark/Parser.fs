@@ -3,11 +3,17 @@ open Types
 
 
 // helper functions
-let rec countSpace toks =
+
+/// count continuous spaces
+let rec countSpaces toks =
     match toks with
-    | WHITESPACE n :: toks' ->  countSpace toks' |> (+) n
+    | WHITESPACE n :: toks' -> countSpaces toks' |> (+) n
     | _ -> 0
 
+let rec countENDLINEs toks =
+    match toks with
+    | ENDLINE :: toks' -> countENDLINEs toks' |> (+) 1
+    | _ -> 0
 
 let parseLiteral toks =
     let rec parseLiteral' toks str =
@@ -19,13 +25,16 @@ let parseLiteral toks =
         match toks with
         | LITERAL str' :: toks' -> appendString str' " " toks'
         | WHITESPACE _ :: LITERAL str' :: toks' -> appendString str' " " toks'
-        | _ -> (str, toks)
+        | ENDLINE::LITERAL str'::toks' -> appendString str' " " toks'
+        | _ -> str, toks
     parseLiteral' toks ""
 
 let parseInLineElements toks =
     let rec parseInLineElements' toks =
+        let leadingSpaces = countSpaces toks
         match toks with
         | t when List.isEmpty t -> [], []
+        | _ when leadingSpaces >=2 -> [], toks.[leadingSpaces..] // new TLine equivalent <br>
         | ENDLINE :: toks' -> parseInLineElements' toks'
         | LITERAL _ :: _ ->
             let pstr, retoks = parseLiteral toks

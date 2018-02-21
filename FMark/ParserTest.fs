@@ -26,7 +26,7 @@ let printParsedObj pobj =
 
 [<Tests>]
 /// (input, output, msg)
-let testList =
+let testGlobal =
     makeExpectoTestList id id parse "Literal and space only" [
         (
            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
@@ -40,7 +40,7 @@ let testList =
 
 [<Tests>]
 let countSpaceTest =
-    makeExpectoTestList id id countSpace "countSpace test" [
+    makeExpectoTestList id id countSpaces "countSpace test" [
         (
             [WHITESPACE 2; WHITESPACE 4; LITERAL "Mike"],
             6, "2 WHITESPACE and LITERAL"
@@ -52,6 +52,53 @@ let countSpaceTest =
         (
             [DOT; DOT; LITERAL "Mike"],
             0, "No WHITEPSACE"
+        )
+    ]
+
+[<Tests>]
+let countENDLINEsTest =
+    makeExpectoTestList id id countENDLINEs "countENDLINEs test" [
+        (
+            [ENDLINE; ENDLINE; LITERAL "Mike"],
+            2, "2 ENDLINEs and LITERAL"
+        );
+        (
+            [ENDLINE; DOT; ENDLINE; LITERAL "Mike"],
+            1, "ENDLINE with DOT in between"
+        );
+        (
+            [DOT; DOT; LITERAL "Mike"],
+            0, "No EDNLINE"
+        )
+    ]
+
+[<Tests>]
+let parseLiteralTest =
+    makeExpectoTestList id id parseLiteral "parseLiteral test" [
+        (
+            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
+            ("I am Mike", []), "All valid literal and space"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 4; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
+            ("I am Mike", []), "4 Spaces"
+        );
+        (
+            [LITERAL "I"; ENDLINE; LITERAL "Mike"],
+            ("I Mike", []), "ENDLINE between LITERALs"
+        );
+        (
+            [LITERAL "I"; ENDLINE; ENDLINE; LITERAL "am"],
+            ("I", [ENDLINE; ENDLINE; LITERAL "am"]), "two endlines"
+        )
+    ]
+
+[<Tests>]
+let parseInlineElementTest =
+    makeExpectoTestList id id parseInLineElements "parseInLineElements test" [
+        (
+            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; ENDLINE],
+            ([FrmtedString(Literal "I am")], []), "literal and two ENDLINEs"
         )
     ]
 let allTestsWithExpecto() =
