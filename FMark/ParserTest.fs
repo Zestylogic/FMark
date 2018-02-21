@@ -56,8 +56,8 @@ let countSpaceTest =
     ]
 
 [<Tests>]
-let countENDLINEsTest =
-    makeExpectoTestList id id countENDLINEs "countENDLINEs test" [
+let countNewLinesTest =
+    makeExpectoTestList id id countNewLines "countENDLINEs test" [
         (
             [ENDLINE; ENDLINE; LITERAL "Mike"],
             2, "2 ENDLINEs and LITERAL"
@@ -98,11 +98,20 @@ let parseInlineElementsTest =
     makeExpectoTestList id id parseInLineElements "parseInLineElements test" [
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; ENDLINE],
-            ([FrmtedString(Literal "I am")], [ENDLINE; ENDLINE]), "literal and two ENDLINEs"
+            ([FrmtedString(Literal "I am")], [ENDLINE; ENDLINE])|>Ok, "literal and two ENDLINEs"
         );
         (
-            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 3; ENDLINE],
-            ([FrmtedString(Literal "I am")], []), "2 whitespaces and 1 newline"
+            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 2; ENDLINE],
+            ([FrmtedString(Literal "I am")], [])|>Ok, "2 whitespaces and 1 newline"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; UNDERSCORE],
+            ([FrmtedString(Literal "I "); FrmtedString(Emphasis([FrmtedString (Literal "am")]))], [])|>Ok,
+            "literal and emphasis literal"
+        );(
+            [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; UNDERSCORE; WHITESPACE 2; ENDLINE],
+            ([FrmtedString(Literal "I "); FrmtedString(Emphasis([FrmtedString(Literal "am")]))], [])|>Ok,
+            "literal and emphasis, newTLine"
         )
     ]
 let allTestsWithExpecto() =

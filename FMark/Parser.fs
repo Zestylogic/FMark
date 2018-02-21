@@ -3,6 +3,8 @@ open Types
 
 
 // helper functions
+let SPACE = " "
+let NOSTRING = ""
 
 /// count continuous spaces
 let rec countSpaces toks =
@@ -10,28 +12,55 @@ let rec countSpaces toks =
     | WHITESPACE n :: toks' -> countSpaces toks' |> (+) n
     | _ -> 0
 
-let rec countENDLINEs toks =
+let rec countNewLines toks =
     match toks with
-    | ENDLINE :: toks' -> countENDLINEs toks' |> (+) 1
+    | ENDLINE :: toks' -> countNewLines toks' |> (+) 1
     | _ -> 0
 
 
 /// newline but not new paragraoh
-/// is 2>= spaces and 1 newline
+/// is 2>= spaces and 1 newline, and potential spaces
 let (|IsNewTLine|_|) toks =
     let rec takeAwaySpaces toks =
         match toks with
         | WHITESPACE _ :: toks' -> takeAwaySpaces toks'
         | _ -> toks
-    let leadingSpaces = countSpaces toks
-    match leadingSpaces >=2 with
+    match countSpaces toks >=2 with
     | true ->
         let toksWOSpaces =  toks |> takeAwaySpaces
-        match countENDLINEs toksWOSpaces = 1 with
-        | true -> toksWOSpaces.[1..] |> Some
+        match countNewLines toksWOSpaces = 1 with
+        | true -> toksWOSpaces.[1..] |> takeAwaySpaces |> Some // remove leading spaces in new line
         | false -> None
     | false -> None
 
+let (|IsWordSepAndNewFrmt|_|) toks =
+    match toks with
+    | WHITESPACE _::toks' ->
+        match toks' with
+        | UNDERSCORE::_ | DUNDERSCORE::_ | TUNDERSCORE::_
+        | ASTERISK::_ | DASTERISK::_ | TASTERISK::_
+            -> toks |> Some
+        | _ -> None
+    | _ -> None
+
+let (|MatchEmStart|_|) toks =
+    match toks with
+    | WHITESPACE _:: UNDERSCORE:: _ | WHITESPACE _:: ASTERISK ::_ -> toks.[2..] |> Some
+    | ASTERISK ::_ -> toks.[1..] |> Some
+    | _ -> None
+
+let (|MatchEmEnd|_|) toks =
+    match toks with
+    | UNDERSCORE:: ENDLINE:: _ | UNDERSCORE:: WHITESPACE _:: _ -> toks.[1..] |> Some
+    | [UNDERSCORE] -> [] |> Some
+    | _ -> None
+
+let (|MatchNewParagraph|_|) toks =
+    match countNewLines toks with
+    | n when n>=2 -> toks.[n..] |> Some
+    | _ -> None
+
+/// parse literals, return any unrecognized tokens
 let parseLiteral toks =
     let rec parseLiteral' toks str =
         let appendString newstr sep retoks =
@@ -40,37 +69,63 @@ let parseLiteral toks =
             |> (fun sl -> List.append sl [newstr])
             |> String.concat sep |> parseLiteral' retoks
         match toks with
-        | LITERAL str' :: toks' -> appendString str' " " toks'
-        | WHITESPACE _ :: LITERAL str' :: toks' -> appendString str' " " toks'
-        | ENDLINE::LITERAL str'::toks' -> appendString str' " " toks'
+        | IsWordSepAndNewFrmt retoks -> str+SPACE, retoks
+        | WHITESPACE _:: LITERAL str':: toks' -> appendString str' SPACE toks'
+        | LITERAL str' :: toks' -> appendString str' NOSTRING toks'
+        | ENDLINE::LITERAL str'::toks' -> appendString str' SPACE toks'
         | _ -> str, toks
-    parseLiteral' toks ""
+    parseLiteral' toks NOSTRING
 
 let parseInLineElements toks =
     let rec parseInLineElements' toks =
         match toks with
-        | t when List.isEmpty t -> [], []
-        | IsNewTLine toks' -> [], toks' // new TLine equivalent <br>
         | LITERAL _ :: _ ->
             let pstr, retoks = parseLiteral toks
-            let inlines, retoks' = parseInLineElements' retoks
-            FrmtedString (Literal pstr) :: inlines, retoks'
-        | _ -> [], toks
-    parseInLineElements' toks
+            //let inlines, retoks' = parseInLineElements' retoks
+            (FrmtedString (Literal pstr), retoks) |> Ok
+        | MatchEmStart toks' ->
+            //let pstr, retoks = parseLiteral toks.[2..]
+            //let inlines, retoks = parseInLineElements' toks'
+            parseInLines toks'
+            |> Result.map (fun (inlines, retoks) ->
+                match retoks with
+                | MatchEmEnd retoks' -> (FrmtedString(Emphasis(inlines)), retoks')
+                | _ -> failwithf "underscore not matching")
+        | _ -> "Nothing matched" |> Error
+    and parseInLines toks =
+        parseInLineElements' toks
+        |> Result.bind (fun (inLine, retoks) ->
+            match retoks with
+            | [] -> ([inLine], []) |> Ok
+            | IsNewTLine toks' -> printfn "newTLine"; ([], toks') |> Ok // new TLine equivalent <br>)
+            | _ ->
+                parseInLines retoks
+                |> Result.map(fun (inLines, retoks')->
+                    inLine::inLines, retoks'))
+    parseInLines toks
 
 /// parseParagraph eats ENDLINE
 let parseParagraph toks =
     let rec parseParagraph' toks =
         match toks with
-        | t when List.isEmpty t -> [], []
         | LITERAL _::toks' ->
-            let inlines, retoks = parseInLineElements toks
-            let lines, retoks' = parseParagraph' retoks
-            inlines:: lines, retoks'
-        | ENDLINE::toks' -> [], toks'
+            parseInLineElements toks
+            |> Result.map (fun (inLines, retoks)->
+                (inLines, retoks) )
+        | ENDLINE::toks' -> ([], toks') |> Ok
         | _ -> failwithf "parseParagraph ele not implemented"
-    let prep, retoks = parseParagraph' toks
-    (Paragraph prep, retoks)
+    //let prep, retoks = parseParagraph' toks
+    and parseParagraphs toks =
+        parseParagraph' toks
+        |> Result.bind (fun (p, retoks) ->
+            match retoks with
+            | [] -> ([p], []) |> Ok
+            | MatchNewParagraph retoks' -> ([], retoks') |> Ok
+            | _ ->
+                parseParagraphs retoks
+                |> Result.map (fun (ps, rts) ->
+                    (p::ps, rts)))
+    parseParagraphs toks
 
 
 let rec parseItem (toks: Token list) : Result<ParsedObj * Token list, string> =
@@ -80,7 +135,8 @@ let rec parseItem (toks: Token list) : Result<ParsedObj * Token list, string> =
     | LITERAL str :: toks' ->
         // match parseLiteral toks with
         // | lstr, retoks -> (Paragraph([[FrmtedString(Literal lstr)]]), retoks) |> Ok
-        parseParagraph toks |> Ok
+        parseParagraph toks
+        |> Result.map (fun (p, tks) -> Paragraph p, tks)
     | _ -> "not implemented" |> Error
 
 and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
