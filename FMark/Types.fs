@@ -48,3 +48,12 @@ type ParsedObj =
     | Table of Row list * Height: int * Width: int
     | PreTable of Content: Token list list * Height: int * Width: int
     | Footnote of ID: int * TLine
+
+type Operand =
+    | CellRef of uint32*uint32
+    | Integer of int
+    | Float of float
+
+type Exp =
+    | BinExp of (float->float->float)*Exp*Exp
+    | Op of Operand
