@@ -45,6 +45,7 @@ let stringAllTokens toks =
             | ENDLINE -> "CRLF "
             | COLON -> ": "
             | CARET -> "^ "
+            | PERCENT -> "% "
         i + mappedTok
     List.fold matchTok "" toks
 
