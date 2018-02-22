@@ -90,20 +90,34 @@ let (|Function|_|) = function
 
 let (|ParagraphDef|_|) = function
     | OPENDEF :: KeyWord (Function (a, b, tl)) ->
-        Some (MacroDefinition (a, b, [ParseText ""]), tl)
+        Some ((a, b), tl)
     | _ -> None
 
-let pParse (tList: PToken list): Parse list =
-    let rec pParse' tList pList =
-        match tList with
-        | ParagraphDef (f, CLOSEDEF :: tl) ->
-            f :: pList |> pParse' tl
-        | PTEXT f :: tl ->
-            pParse' tl (ParseText f :: pList)
-        | PENDLINE :: tl ->
-            ParseText "\n" :: pList |> pParse' tl
-        | [] -> pList
+let pParse (tList: PToken list) =
+    let rec pParse' endToken tList pList =
+        let pRec f c tl = f c :: pList |> pParse' endToken tl
+        let recText = pRec ParseText
+        match endToken, tList with
+        | _, ParagraphDef ((a, b), tl) ->
+            let p, tl' = pParse' (Some CLOSEDEF) tl []
+            pRec MacroDefinition (a, b, List.rev p) tl'
+        | _, PTEXT f :: tl ->
+            recText f tl
+        | _, PENDLINE :: tl ->
+            recText "\n" tl
+        | _, MACRO :: tl ->
+            recText "macro" tl
+        | _, PSEMICOLON :: tl ->
+            recText ";" tl
+        | _, PLBRA :: tl ->
+            recText "(" tl
+        | _, PRBRA :: tl ->
+            recText ")" tl
+        | Some e, a :: b when e = a ->
+            pList, b
+        | _, [] -> pList, []
         | _ ->
             printfn "%A\n%A" tList pList
             failwithf "Could not parse tokens" 
-    pParse' tList [] |> List.rev
+    let p, _ = pParse' None tList []
+    List.rev p
