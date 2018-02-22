@@ -50,49 +50,52 @@ let simpleParse txt =
 let expressionData' = [
     "Simple addition.",
     "10+10",
-    [20.0] |> Ok;
+    20.0 |> Ok;
     "Triple addition.",
     "10+10+10",
-    [30.0] |> Ok;
+    30.0 |> Ok;
     "Simple triple multiplication.",
     "3*7*5",
-    [105.0] |> Ok;
+    105.0 |> Ok;
     "Simple division.",
     "16/2",
-    [8.0] |> Ok;
+    8.0 |> Ok;
     "Triple division, test left associativity.",
     "60/2/3",
-    [10.0] |> Ok;
+    10.0 |> Ok;
     "Simple modulo.",
     "3%2",
-    [1.0] |> Ok;
+    1.0 |> Ok;
     "Simple subtraction.",
     "7-2",
-    [5.0] |> Ok;
+    5.0 |> Ok;
     "Triple subtraction.",
     "7-5-2",
-    [0.0] |> Ok;
+    0.0 |> Ok;
     "Bracketed subtraction.",
     "7-(2-1)",
-    [6.0] |> Ok;
+    6.0 |> Ok;
     "Bracketed subtraction then addition.",
     "7-(2-1)+5",
-    [11.0] |> Ok;
+    11.0 |> Ok;
     "7*(2-3)+5",
     "7*(2-3)+5",
-    [-2.0] |> Ok;
+    -2.0 |> Ok;
     "7*2-3+5",
     "7*2-3+5",
-    [16.0] |> Ok;
+    16.0 |> Ok;
     "7*2-(3+5)",
     "7*2-(((((((((3+5)))))))))",
-    [6.0] |> Ok;
+    6.0 |> Ok;
     "Testing cellref evaluation (without table)",
     "1+([1][1]+[1][2])",
-    [3.0] |> Ok;
+    3.0 |> Ok;
     "Left to right evaluation",
     "2 -4 +6 -1 -1- 0 +8",
-    [10.0] |> Ok
+    10.0 |> Ok
+    "Pow test",
+    "2 ^4 +6 -1 -1- 0 +8",
+    28.0 |> Ok
 ]
 let expressionData = List.map (fun (x,y,z) -> (x,y|>simpleParse,z)) expressionData'
 let makeExpressionTest = makeEqTest parseExpTop "parseExpTop"

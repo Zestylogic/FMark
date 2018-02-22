@@ -3,6 +3,7 @@ module Expression
 
 open MarkalcShared
 open Types
+open FsCheck
 
 (* SUPPORTED OPERATIONS:
 BinaryExpressions (in order of precedence): 
@@ -13,100 +14,65 @@ BinaryExpressions (in order of precedence):
     + - Add
     - - Subtract
 *)
-
+// HELPER FUNCTIONS
 let makeFloat i d = 
     sprintf "%A.%A" i d |> float
 let makeInt (i:string) =
     i |> int
 let makeCellRef (row:string,col:string) =
     CellRef (row|>uint32,col|>uint32)
-
-// evaluate single expression recursively
-let rec evalExp e =
+/// Expression parser
+let parseExp toks = 
+    let rec (|Expression|_|) (toks:Token list) =
+        let (|BasePat|_|) (toks:Token list) =
+            match toks with
+            | NUMBER(i) :: DOT :: NUMBER(d) :: after -> (makeFloat i d |> Float |> Op,after) |> Some
+            | NUMBER(i) :: after ->( makeInt i |> float |> Float |> Op,after) |> Some
+            // Parsing in reverse so right and left brackets swapped
+            | RSBRA :: NUMBER(row) :: LSBRA :: RSBRA :: NUMBER(col) :: LSBRA :: after -> ((col,row) |> makeCellRef |> Op,after) |> Some
+            | RBRA :: Expression (x,LBRA::after) -> (x,after) |> Some
+            | _ -> None
+        // Active pattern to construct precedence-aware active patterns; descends recursively until highest precedence match.
+        // Quirk: Returns right-associative results, so parsing in reverse to get left-associativity.
+        let rec (|HOFPat|_|) (|PrevPat|_|) op (t:Token) toks =
+            match toks with
+            | PrevPat (exp1, after) -> 
+                match after with
+                | x :: (HOFPat (|PrevPat|_|) op t (exp2, after')) when x = t -> 
+                    (BinExp (op, exp2, exp1), after') |> Some // exp1 and exp2 swapped because parsing in reverse
+                | _ -> (exp1, after) |> Some
+            | _ -> None
+        let (|ModPat|_|) = (|HOFPat|_|) (|BasePat|_|)( % ) PERCENT
+        let (|PowPat|_|) = (|HOFPat|_|) (|ModPat|_|) ( **) CARET
+        let (|MulPat|_|) = (|HOFPat|_|) (|PowPat|_|) ( * ) ASTERISK
+        let (|DivPat|_|) = (|HOFPat|_|) (|MulPat|_|) ( / ) SLASH
+        let (|SubPat|_|) = (|HOFPat|_|) (|DivPat|_|) ( - ) MINUS
+        let (|AddPat|_|) = (|HOFPat|_|) (|SubPat|_|) ( + ) PLUS
+        match toks with
+        | AddPat x -> Some x
+        | _ -> None
+    match List.rev toks with 
+    | Expression (exp,[]) -> Ok exp
+    | _ ->  sprintf "Not valid expression %A" toks |> Error
+// Recursively evaluate expression AST. CellRef will need access to whole table
+let rec evalExp e = 
     match e with
     | BinExp(f,x,y) -> f (evalExp(x)) (evalExp(y))
     | Op (Float(x)) -> x
     | Op (CellRef(col,row)) -> 1.0
-    | _ -> 2.0
+    | _ -> 13.0
 let toToken x = NUMBER(x|>string)
-
-let evaluatePattern (|ActivePattern|_|) toks =
-    let rWhitespace = function | WHITESPACE(_) -> false | _ -> true 
-    let parseExp = function | ActivePattern exp -> Ok [exp]
-                             | _ ->  sprintf "Not valid expression %A" toks |> Error
-    let expList = List.filter rWhitespace toks |> parseExp
-    match expList with 
-    | Error(e) -> printfn "Error parsing expression: %A" e
-                  Error toks 
-    | Ok(x) ->  List.map (evalExp>>toToken) x |> Ok
-let rec (|Expression|_|) (toks:Token list) = 
-    // Active pattern to match and construct an Integer, Float or CellRef
-    let (|Literal|_|) (toks:Token list) =
-        match toks with
-        | NUMBER(i) :: DOT :: NUMBER(d) :: _ -> makeFloat i d |> Float |> Op |> Some
-        | NUMBER(i) :: _ -> makeInt i |> float |> Float |> Op |> Some
-        | LSBRA :: NUMBER(col) :: RSBRA :: LSBRA :: NUMBER(row) :: RSBRA :: _ -> (col,row) |> makeCellRef |> Op |> Some
-        | _ -> None
-    
-    let (|BinaryPat|_|) func delim (toks:Token list) =
-        match delimSplit true delim toks with
-        | Error(_) -> None
-        | Ok (Expression exp1, Expression exp2) -> BinExp (func,exp1,exp2) |> Some
-        | Ok (_) -> None
-
-    let (|ModPat|_|) = (|BinaryPat|_|) (%) PERCENT
-    let (|MultPat|_|)= (|BinaryPat|_|) (*) ASTERISK
-    let (|DivPat|_|) = (|BinaryPat|_|) (/) SLASH
-    let (|AddPat|_|) = (|BinaryPat|_|) (+) PLUS
-    let (|SubPat|_|) = (|BinaryPat|_|) (-) MINUS
-    
-    let (|BinaryExpression|_|) = function
-        | AddPat m -> m |> Some
-        | SubPat m -> m |> Some
-        | DivPat m -> m |> Some
-        | MultPat m-> m |> Some
-        | ModPat m -> m |> Some
-        | _ -> None
-    // Active pattern to match and construct a bracketed expression
-    let (|BracketPat|_|) (toks:Token list) =
-        match delimSplit true LBRA toks with
-        | Ok (before,after) -> match delimSplit false RBRA after with
-                               | Ok(inside,a) -> match evaluate inside with
-                                                 | Error(_) -> failwith "Mismatched brackets"
-                                                 | Ok(x) -> match before @ x @ a with
-                                                            | Expression(e1) -> e1 |> Some
-                                                            | _ -> failwith "Mismatched brackets"
-                               | Error(_) -> None
-        | _ -> None
-    
-    match toks with
-    | BracketPat m -> m |> Some
-    | BinaryExpression m -> m |> Some
-    | Literal m -> m |> Some
-    | _ -> None
-
-and evaluate toks =
-    evaluatePattern (|Expression|_|) toks
-
 // Parse 1+1 etc, going to have to pass in Table
 let parseExpTop (toks:Token list) =
-    // Remove all whitespace
-    let rWhitespace = function | WHITESPACE(_) -> false | _ -> true
-    let parseExp = function | Expression exp -> Ok [exp]
-                             | _ ->  sprintf "Not valid expression %A" toks |> Error
-   
-    let expList = List.filter rWhitespace toks |> parseExp
-   
-    match expList with 
-    | Error(e) -> printfn "Error parsing expression: %A" e
-                  Error toks 
-    | Ok(x) ->  // printfn "expList has %A elements in." (List.length x) expList only ever has one element in it.
-                List.map evalExp x |> Ok // Convert back into tokens?
-
-
-// let top (toks:Token list) =
-//     // If the first token isn't an EQ, return error
-//     // Although, check for leading/trailing formatters and remove and replace them afterwards.
-//     match toks with
-//     | EQUAL :: _ -> parseExp toks
-//     | x -> Error "Not an expression."
+    List.filter (function | WHITESPACE(_) -> false | _ -> true) toks // Remove whitespace
+    |> parseExp
+    |> function // Perhaps monads not necessary
+       | Error(e) -> printfn "Error parsing expression: %A" e
+                     Error toks 
+       | Ok(x) -> evalExp x |> Ok
+let parseExpression = function 
+    | EQUAL :: tail -> 
+        parseExpTop tail |> function
+            | Ok(x) -> [toToken x] |> Ok
+            | Error(e) -> Error e
+    | toks -> Error toks
