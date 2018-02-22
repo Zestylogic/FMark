@@ -21,17 +21,30 @@ type Operand =
 
 type Exp =
     | AddExp of Exp * Exp
-    | BinExp of (int->int->int)*Exp*Exp
+    | BinExp of (float->float->float)*Exp*Exp
     //| FloatBinaryExpression of (float->float->float Option) * Expression * Expression
     | Op of Operand
 
+let countDelim delim tokList =
+    List.filter (function | d when d = delim -> true | _ -> false) tokList 
+    |> List.length
 // return everything before and after the next delimeter
-// Possible inputs: | ... |, [], ... |, |
-let rec delimBeforeAfter delim before t =
-    match t with
-    | d :: after when d = delim -> Ok (before,after) // If delim then token list, return d and everything after the delim
-    | x :: after -> delimBeforeAfter delim (x::before) after // If non-PIPE token then token list, recurse adding the tokens to the before list
-    | [] -> Error (before,[]) // Did not find delimeter
+let delimSplit last delim t =
+    let rec delimSplitFirst' delim before t =
+        match t with
+        | d :: after when d = delim -> Ok (before,after) // If delim then token list, return d and everything after the delim
+        | x :: after -> delimSplitFirst' delim (x::before) after // If non-PIPE token then token list, recurse adding the tokens to the before list
+        | [] -> Error (before,[]) // Did not find delimeter
+    let rec delimSplitLast' delim before t =
+        match (t, countDelim delim t) with
+        | d :: after,1 when d = delim -> Ok (before,after)
+        | x :: after,_ -> delimSplitLast' delim (x::before) after
+        | [],_ -> Error (before,[])
+    let searchFunc = if last then delimSplitLast' else delimSplitFirst'
+    searchFunc delim [] t
+    |> function
+    | Error(before,a) -> Error(List.rev before,a)
+    | Ok (before,a) -> Ok(List.rev before,a)
 
 let makeFloat i d = 
     sprintf "%A.%A" i d |> float
@@ -61,11 +74,11 @@ let rec (|Expression|_|) (toks:Token list) =
     let (|Literal|_|) (toks:Token list) =
         match toks with
         | NUMBER(i) :: DOT :: NUMBER(d) :: after -> (makeFloat i d |> Float |> Op, after) |> Some
-        | NUMBER(i) :: after -> (makeInt i |> int |> Integer |> Op, after) |> Some
+        | NUMBER(i) :: after -> (makeInt i |> float |> Float |> Op, after) |> Some
         | LSBRA :: NUMBER(col) :: RSBRA :: LSBRA :: NUMBER(row) :: RSBRA :: after -> ((col,row) |> makeCellRef |> Op, after) |> Some
         | _ -> None
     let (|BinaryPat|_|) func delim (toks:Token list) =
-        match delimBeforeAfter delim [] toks with
+        match delimSplit true delim toks with
         | Error(_) -> None
         | Ok (Expression (exp1,_), Expression (exp2,after)) -> (BinExp (func,exp1,exp2),after) |> Some
         | Ok (_) -> None
@@ -85,14 +98,14 @@ let rec (|Expression|_|) (toks:Token list) =
     // Active pattern to match and construct a bracketed expression
     let (|BracketPat|_|) (toks:Token list) =
         match toks with
-        | LBRA :: after -> match delimBeforeAfter RBRA [] after with
+        | LBRA :: after -> match delimSplit true RBRA after with
                            | Error(_) -> failwithf "No right bracket found %A" toks // No right bracket found
                            | Ok (Expression(x), RBRA :: after) -> (x,after) |> Some
                            | Ok (Expression(x), []) -> (x,[]) |> Some
                            | Ok ([],[]) | Ok ([],_) -> None // () can be invalid syntax except for functions
                            | Ok (_) -> failwithf "Catch all for bracket expression triggered with %A" toks
         | _ -> None
-    
+
     match toks with
     | ModPat(m,after) -> (m,after) |> Some
     | MultPat(m,after) -> (m,after) |> Some
@@ -107,9 +120,9 @@ let rec (|Expression|_|) (toks:Token list) =
 let rec evalExp (e:Exp) =
     match e with
     | BinExp(f,x,y) -> f (evalExp(x)) (evalExp(y))
-    | Op (Integer(x)) -> x
-    | Op (CellRef(col,row)) -> 1
-    | _ -> 2
+    | Op (Float(x)) -> x
+    | Op (CellRef(col,row)) -> 1.0
+    | _ -> 2.0
 
 // Parse 1+1 etc, going to have to pass in Table
 let parseExpTop (toks:Token list) =

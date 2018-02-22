@@ -5,11 +5,9 @@ open Expression
 open System
 // Do I want to remove any markdown content? Yes... inline markdown should be unaffected! but perhaps too complicated right now.
 // HOF for counting any delimeters
-let countDelim delim tokList =
-    List.filter (function | d when d = delim -> true | _ -> false) tokList 
-    |> List.length
-let pipeBeforeAfter toks = 
-    match delimBeforeAfter PIPE [] toks with 
+
+let pipeSplit toks = 
+    match delimSplit false PIPE toks with 
     | Ok(x) -> x
     | Error(y) -> y
 let makeCellU header tokens  = (tokens,header)
@@ -19,7 +17,7 @@ let alignCell alignment cellU = Tokens (fst cellU, snd cellU, alignment)
 // Parse a line into a list of cells
 let parseRowD debug constructCell (row:Token list) =
     let rec parseRow' a row =
-        let b,af = (pipeBeforeAfter row) |> (fun (be,af) -> (List.rev be, af))
+        let b,af = pipeSplit row
         if debug then printfn "Row to parse: %A\nBefore: %A, After: %A\n" row b af
         match b,af with
         | ([],[])       -> (constructCell []):: a

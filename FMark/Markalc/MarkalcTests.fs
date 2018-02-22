@@ -24,22 +24,25 @@ let makeEqTest func fname name inp outp =
 let expressionData = [
     "Simple addition.",
     [NUMBER("10");PLUS;NUMBER("10")],
-    [20] |> Ok;
+    [20.0] |> Ok;
     "Triple addition.",
     [NUMBER("10");PLUS;NUMBER("10");PLUS;NUMBER("10")],
-    [30] |> Ok;
+    [30.0] |> Ok;
     "Simple triple multiplication.",
     [NUMBER("3");ASTERISK;NUMBER("5");ASTERISK;NUMBER("7")],
-    [105] |> Ok;
+    [105.0] |> Ok;
     "Simple division.",
     [NUMBER("16");SLASH;NUMBER("2")],
-    [8] |> Ok;
+    [8.0] |> Ok;
+    "Triple division, test left associativity.",
+    [NUMBER("60");SLASH;NUMBER("2");SLASH;NUMBER("3")],
+    [10.0] |> Ok;
     "Simple modulo.",
     [NUMBER("3");PERCENT;NUMBER("2")],
-    [1] |> Ok;
+    [1.0] |> Ok;
     "Simple subtraction.",
     [NUMBER("7");MINUS;NUMBER("2")],
-    [5] |> Ok;
+    [5.0] |> Ok;
 ]
 
 let makeExpressionTest = makeEqTest parseExpTop "parseExpTop"
