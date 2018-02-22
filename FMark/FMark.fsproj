@@ -7,7 +7,14 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
+    <Compile Include="Parser.fs" />
+    <Compile Include="Parsertest.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="expecto" Version="5.1.2" />
+    <PackageReference Include="expecto.fscheck" Version="5.1.2" />
   </ItemGroup>
 
 </Project>
