@@ -21,14 +21,15 @@ let makeEqTest func fname name inp outp =
     testCase name <| fun () ->
     Expect.equal (func inp) outp (sprintf "%s" fname)
 
-/// Return tuple of matched text and everything afterwards, ignoring whitetspace
-let (|RegexMatch|_|) r txt =
-    let m = Regex.Match (txt, "^[\\s]*" + r + "[\\s]*")
-    match m.Success with
-    | true -> (m.Value, txt.Substring(m.Value.Length)) |> Some
-    | false -> None
+
 // Quick parser to generate expression test input
 let simpleParse txt = 
+    /// Return tuple of matched text and everything afterwards, ignoring whitetspace
+    let (|RegexMatch|_|) r txt =
+        let m = Regex.Match (txt, "^[\\s]*" + r + "[\\s]*")
+        match m.Success with
+        | true -> (m.Value, txt.Substring(m.Value.Length)) |> Some
+        | false -> None
     let rec simpleParse' a txt =
         match txt with
         | RegexMatch "[0-9]+" (m,after) -> simpleParse' (NUMBER(m)::a) after
@@ -40,6 +41,8 @@ let simpleParse txt =
         | RegexMatch "\\-" (_,after) -> simpleParse' (MINUS::a) after
         | RegexMatch "\\(" (_,after) -> simpleParse' (LBRA::a) after
         | RegexMatch "\\)" (_,after) -> simpleParse' (RBRA::a) after
+        | RegexMatch "\\[" (_,after) -> simpleParse' (LSBRA::a) after
+        | RegexMatch "\\]" (_,after) -> simpleParse' (RSBRA::a) after
         | "" -> a
         | _ -> failwithf "Unexpected character: %A" txt
     simpleParse' [] txt |> List.rev
@@ -47,40 +50,49 @@ let simpleParse txt =
 let expressionData' = [
     "Simple addition.",
     "10+10",
-    Ok [20.0];
+    [20.0] |> Ok;
     "Triple addition.",
     "10+10+10",
-    Ok [30.0];
+    [30.0] |> Ok;
     "Simple triple multiplication.",
     "3*7*5",
-    [Ok 105.0];
+    [105.0] |> Ok;
     "Simple division.",
     "16/2",
-   Ok  [8.0];
+    [8.0] |> Ok;
     "Triple division, test left associativity.",
     "60/2/3",
-    Ok [10.0];
+    [10.0] |> Ok;
     "Simple modulo.",
     "3%2",
-   Ok  [1.0];
+    [1.0] |> Ok;
     "Simple subtraction.",
     "7-2",
-   Ok  [5.0];
+    [5.0] |> Ok;
     "Triple subtraction.",
     "7-5-2",
-   Ok  [0.0];
+    [0.0] |> Ok;
     "Bracketed subtraction.",
     "7-(2-1)",
-   Ok  [6.0];
+    [6.0] |> Ok;
     "Bracketed subtraction then addition.",
     "7-(2-1)+5",
-    Ok [11.0];
+    [11.0] |> Ok;
     "7*(2-3)+5",
     "7*(2-3)+5",
-    Ok [-2.0];
+    [-2.0] |> Ok;
     "7*2-3+5",
     "7*2-3+5",
-    Ok [16.0];
+    [16.0] |> Ok;
+    "7*2-(3+5)",
+    "7*2-(((((((((3+5)))))))))",
+    [6.0] |> Ok;
+    "Testing cellref evaluation (without table)",
+    "1+([1][1]+[1][2])",
+    [3.0] |> Ok;
+    "Left to right evaluation",
+    "2 -4 +6 -1 -1- 0 +8",
+    [10.0] |> Ok
 ]
 let expressionData = List.map (fun (x,y,z) -> (x,y|>simpleParse,z)) expressionData'
 let makeExpressionTest = makeEqTest parseExpTop "parseExpTop"

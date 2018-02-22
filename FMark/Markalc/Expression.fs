@@ -28,7 +28,17 @@ let rec evalExp e =
     | Op (Float(x)) -> x
     | Op (CellRef(col,row)) -> 1.0
     | _ -> 2.0
-let toNumber x = NUMBER(x|>string)
+let toToken x = NUMBER(x|>string)
+
+let evaluatePattern (|ActivePattern|_|) toks =
+    let rWhitespace = function | WHITESPACE(_) -> false | _ -> true 
+    let parseExp = function | ActivePattern exp -> Ok [exp]
+                             | _ ->  sprintf "Not valid expression %A" toks |> Error
+    let expList = List.filter rWhitespace toks |> parseExp
+    match expList with 
+    | Error(e) -> printfn "Error parsing expression: %A" e
+                  Error toks 
+    | Ok(x) ->  List.map (evalExp>>toToken) x |> Ok
 let rec (|Expression|_|) (toks:Token list) = 
     // Active pattern to match and construct an Integer, Float or CellRef
     let (|Literal|_|) (toks:Token list) =
@@ -49,7 +59,14 @@ let rec (|Expression|_|) (toks:Token list) =
     let (|DivPat|_|) = (|BinaryPat|_|) (/) SLASH
     let (|AddPat|_|) = (|BinaryPat|_|) (+) PLUS
     let (|SubPat|_|) = (|BinaryPat|_|) (-) MINUS
-
+    
+    let (|BinaryExpression|_|) = function
+        | AddPat m -> m |> Some
+        | SubPat m -> m |> Some
+        | DivPat m -> m |> Some
+        | MultPat m-> m |> Some
+        | ModPat m -> m |> Some
+        | _ -> None
     // Active pattern to match and construct a bracketed expression
     let (|BracketPat|_|) (toks:Token list) =
         match delimSplit true LBRA toks with
@@ -61,27 +78,15 @@ let rec (|Expression|_|) (toks:Token list) =
                                                             | _ -> failwith "Mismatched brackets"
                                | Error(_) -> None
         | _ -> None
-
+    
     match toks with
     | BracketPat m -> m |> Some
-    | AddPat m -> m |> Some
-    | SubPat m -> m |> Some
-    | DivPat m -> m |> Some
-    | MultPat m -> m |> Some
-    | ModPat m -> m |> Some
+    | BinaryExpression m -> m |> Some
     | Literal m -> m |> Some
     | _ -> None
 
 and evaluate toks =
-    // Remove all whitespace
-    let rWhitespace = function | WHITESPACE(_) -> false | _ -> true 
-    let parseExp = function | Expression exp -> Ok [exp]
-                             | _ ->  sprintf "Not valid expression %A" toks |> Error
-    let expList = List.filter rWhitespace toks |> parseExp
-    match expList with 
-    | Error(e) -> printfn "Error parsing expression: %A" e
-                  Error toks 
-    | Ok(x) ->  List.map (evalExp>>toNumber) x |> Ok
+    evaluatePattern (|Expression|_|) toks
 
 // Parse 1+1 etc, going to have to pass in Table
 let parseExpTop (toks:Token list) =
