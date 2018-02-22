@@ -19,11 +19,11 @@ An example of this can be seen below.
 ```
 {% assign Hello 1 %}
 
-{% macro hello_func(arg1 arg2)
+{% macro hello_func: arg1 arg2
 __Hello__ {{ arg1 }}, welcome to {{ arg2 }}
 %}
 
-@.hello_func(Yann basketball)
+{{ hello_func: There is nothing to do; This is the world }}
 
 @define HELLO2
 Hello, world

@@ -2,17 +2,20 @@ module Preprocessor
 
 open EEExtensions
 
-type Block =
-    | Paragraph of content: string list
-    | Code of language: string * content: string list
-
 type Macro = {Name: string; Parameters: string list; Body: string list}
 
-type MacroToken =
-    | TEXT of string
-    | WORD of string
-    | 
-    | ASSIGN | MACRO | OPENDEF | CLOSEDEF | OPENEVAL | CLOSEEVAL
+type PToken =
+    | PTEXT of string
+    | MACRO | OPENDEF | CLOSEDEF | OPENINLINEDEF | CLOSEINLINEDEF
+    | OPENEVAL | CLOSEEVAL | PLBRA | PRBRA | PSEMICOLON | PENDLINE
+
+type Parse =
+    | MacroDefinition of name: string * arg: string list * body: Parse list
+    | MacroSubstitution of name: string * arg: string list
+    | ParseText of content: string
+
+let strRest c (str: string) =
+    str.[String.length c..]
 
 let (|RegexMatch|_|) regex str =
     match String.regexMatch regex str with
@@ -21,71 +24,86 @@ let (|RegexMatch|_|) regex str =
         let lchar = String.length m
         Some (m, grp, str.[lchar..])
 
-let (|EmptyLine|NonEmptyLine|) = function
-    | RegexMatch @"^\s*$" _ -> EmptyLine
-    | _ -> NonEmptyLine
-
-let (|CodeDelim|_|) = function
-    | RegexMatch @"^(?:```+|~~~+)[ ]*([a-zA-Z\-_]*)" (_, s, _) ->
-        match s with
-        | [a] -> Some a
-        | _ -> Some ""
+let (|StartsWith|_|) c str =
+    match String.startsWith c str with
+    | true -> strRest c str |> Some
     | _ -> None
 
-let (|CodeSpaced|_|) = function
-    | RegexMatch "^    " (_, _, r) -> Some r
+let (|WhiteSpace|NonWhiteSpace|) = function
+    | RegexMatch @"^\s*$" _ -> WhiteSpace
+    | _ -> NonWhiteSpace
+
+let (|Character|_|) = function
+    | StartsWith "{%" r -> Some (OPENDEF, r)
+    | StartsWith "%}" r -> Some (CLOSEDEF, r)
+    | StartsWith "{!" r -> Some (OPENINLINEDEF, r)
+    | StartsWith "!}" r -> Some (CLOSEINLINEDEF, r)
+    | StartsWith "{{" r -> Some (OPENEVAL, r)
+    | StartsWith "}}" r -> Some (CLOSEEVAL, r)
+    | StartsWith "(" r -> Some (PLBRA, r)
+    | StartsWith ")" r -> Some (PRBRA, r)
+    | StartsWith ";" r -> Some (PSEMICOLON, r)
+    | StartsWith "macro" r -> Some (MACRO, r)
     | _ -> None
 
-let rec trimText = function
-    | EmptyLine :: tl -> trimText tl
-    | t -> t
+let pNextToken str: PToken * string =
+    match str with
+    | Character r -> r
+    | RegexMatch "^.+?(?={%|%}|{{|}}|{!|!}|\\(|\\)|;|macro|$)" (m, _, r) -> PTEXT m, r
+    | _ -> failwithf "Token not found: %s" str
 
-let revBlock = function
-    | Code (l, c) -> Code (l, List.rev c)
-    | Paragraph s -> List.rev s |> Paragraph
+let pTokenize (str: string): PToken list =
+    let rec pTokenize' tList str =
+        match str with
+        | WhiteSpace -> PENDLINE :: tList
+        | _ ->
+            let t, r = pNextToken str
+            pTokenize' (t :: tList) r
+    pTokenize' [] str |> List.rev
 
-let parseCodeSpaced code =
-    let rec parseCodeSpaced' block rest =
-        match block, rest with
-        | Code (l, c), CodeSpaced s :: tl ->
-            parseCodeSpaced' (Code (l, s :: c)) tl
-        | Code (l, c), EmptyLine :: tl ->
-            parseCodeSpaced' (Code (l, "" :: c)) tl
-        | _, _ ->
-            revBlock block, rest
-    parseCodeSpaced' (Code ("", [])) code
+let (|KeyWord|_|) = function
+    | PTEXT WhiteSpace :: MACRO :: tl
+    | MACRO :: tl -> Some tl
+    | _ -> None
 
-let parseCodeDelim code l delim =
-    let triple x =
-        x+x+x
-    let rec parseCodeSpaced' block rest =
-        match block, rest with
-        | Code (l, c), RegexMatch (sprintf "^%s+" (triple delim)) _ :: tl ->
-            revBlock block, tl
-        | Code (l, c), a :: tl ->
-            parseCodeSpaced' (Code (l, a :: c)) tl
-        | _, _ ->
-            revBlock block, rest
-    parseCodeSpaced' (Code (l, [])) code
+let (|VarName|_|) = function
+    | PTEXT n -> String.trim n |> Some
+    | _ -> None
 
-let parseParagraph par =
-    let rec parseParagraph' b r =
-        match b, r with
-        | _, EmptyLine :: r' -> revBlock b, r'
-        | Paragraph p, a :: tl ->
-            parseParagraph' (Paragraph (a :: p)) tl
-        | _, _ ->
-            revBlock b, r
-    parseParagraph' (Paragraph []) par
+let (|ArgList|_|) tList =
+    let rec (|NameList|_|) tList =
+        match tList with
+        | VarName n :: PSEMICOLON :: NameList (nameList, rest) ->
+            Some (n :: nameList, rest)
+        | VarName n :: rest ->
+            Some ([n], rest)
+        | _ -> None
+    match tList with
+    | PLBRA :: NameList (nl, PRBRA :: tl) -> Some (nl, tl)
+    | _ -> None
 
-let nextBlock par =
-    match trimText par with
-    | CodeDelim l :: tl -> parseCodeDelim tl l "`"
-    | CodeSpaced _ :: _ as c -> parseCodeSpaced c
-    | p -> parseParagraph p
+let (|Function|_|) = function
+    | VarName n :: ArgList (nl, (PTEXT WhiteSpace :: tl)) -> Some (n, nl, tl)
+    | VarName n :: ArgList (nl, tl) -> Some (n, nl, tl)
+    | VarName n :: tl -> Some (n, [], tl)
+    | _ -> None
 
-let evalMacros source macros =
-    source, macros
+let (|ParagraphDef|_|) = function
+    | OPENDEF :: KeyWord (Function (a, b, tl)) ->
+        Some (MacroDefinition (a, b, [ParseText ""]), tl)
+    | _ -> None
 
-let preprocess (fileSource: string list) : Block list =
-    [Paragraph [""]]
+let pParse (tList: PToken list): Parse list =
+    let rec pParse' tList pList =
+        match tList with
+        | ParagraphDef (f, CLOSEDEF :: tl) ->
+            f :: pList |> pParse' tl
+        | PTEXT f :: tl ->
+            pParse' tl (ParseText f :: pList)
+        | PENDLINE :: tl ->
+            ParseText "\n" :: pList |> pParse' tl
+        | [] -> pList
+        | _ ->
+            printfn "%A\n%A" tList pList
+            failwithf "Could not parse tokens" 
+    pParse' tList [] |> List.rev
