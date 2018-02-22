@@ -2,17 +2,16 @@ module Preprocessor
 
 open EEExtensions
 
-type Macro = {Name: string; Parameters: string list; Body: string list}
-
 type PToken =
     | PTEXT of string
     | MACRO | OPENDEF | CLOSEDEF | OPENINLINEDEF | CLOSEINLINEDEF
     | OPENEVAL | CLOSEEVAL | PLBRA | PRBRA | PSEMICOLON | PENDLINE
 
-type Parse =
-    | MacroDefinition of name: string * arg: string list * body: Parse list
+type Parser =
+    | MacroDefinition of Macro
     | MacroSubstitution of name: string * arg: string list
     | ParseText of content: string
+and Macro = {Name: string; Args: string list; Body: Parser list}
 
 let strRest c (str: string) =
     str.[String.length c..]
@@ -83,24 +82,32 @@ let (|ArgList|_|) tList =
     | _ -> None
 
 let (|Function|_|) = function
-    | VarName n :: ArgList (nl, (PTEXT WhiteSpace :: tl)) -> Some (n, nl, tl)
+    | VarName n :: ArgList (nl, PTEXT WhiteSpace :: tl) -> Some (n, nl, tl)
     | VarName n :: ArgList (nl, tl) -> Some (n, nl, tl)
     | VarName n :: tl -> Some (n, [], tl)
     | _ -> None
 
-let (|ParagraphDef|_|) = function
-    | OPENDEF :: KeyWord (Function (a, b, tl)) ->
-        Some ((a, b), tl)
+let (|MacroDef|_|) = function
+    | OPENDEF :: KeyWord (Function f) ->
+        Some f
     | _ -> None
 
-let pParse (tList: PToken list) =
+let (|EvalDef|_|) = function
+    | OPENEVAL :: VarName n :: ArgList (nl, PTEXT WhiteSpace :: CLOSEEVAL :: tl) -> Some (n, nl, tl)
+    | OPENEVAL :: VarName n :: ArgList (nl, CLOSEEVAL :: tl) -> Some (n, nl, tl)
+    | OPENEVAL :: VarName n :: CLOSEEVAL :: tl -> Some (n, [], tl)
+    | _ -> None
+
+let pParse tList =
     let rec pParse' endToken tList pList =
         let pRec f c tl = f c :: pList |> pParse' endToken tl
         let recText = pRec ParseText
         match endToken, tList with
-        | _, ParagraphDef ((a, b), tl) ->
+        | _, MacroDef (a, b, tl) ->
             let p, tl' = pParse' (Some CLOSEDEF) tl []
-            pRec MacroDefinition (a, b, List.rev p) tl'
+            pRec MacroDefinition {Name=a; Args=b; Body=List.rev p} tl'
+        | _, EvalDef (n, args, tl) ->
+            pRec MacroSubstitution (n, args) tl
         | _, PTEXT f :: tl ->
             recText f tl
         | _, PENDLINE :: tl ->
@@ -121,3 +128,11 @@ let pParse (tList: PToken list) =
             failwithf "Could not parse tokens" 
     let p, _ = pParse' None tList []
     List.rev p
+
+let replace (pList: Parser list): Parser list =
+    let rec replace' (scope: Macro list) pList =
+        match pList with
+        | MacroDefinition {Name=n; Args=args; Body=p} :: tl ->
+            let nP = replace' scope p
+            replace' ({Name=n; Args=args; Body=nP} :: scope) tl
+    replace' [] pList
