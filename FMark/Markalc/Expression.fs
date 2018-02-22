@@ -37,6 +37,7 @@ let rec (|Expression|_|) (toks:Token list) =
         | NUMBER(i) :: _ -> makeInt i |> float |> Float |> Op |> Some
         | LSBRA :: NUMBER(col) :: RSBRA :: LSBRA :: NUMBER(row) :: RSBRA :: _ -> (col,row) |> makeCellRef |> Op |> Some
         | _ -> None
+    
     let (|BinaryPat|_|) func delim (toks:Token list) =
         match delimSplit true delim toks with
         | Error(_) -> None
@@ -53,7 +54,7 @@ let rec (|Expression|_|) (toks:Token list) =
     let (|BracketPat|_|) (toks:Token list) =
         match delimSplit true LBRA toks with
         | Ok (before,after) -> match delimSplit false RBRA after with
-                               | Ok(inside,a) -> match parseBracket inside with
+                               | Ok(inside,a) -> match evaluate inside with
                                                  | Error(_) -> failwith "Mismatched brackets"
                                                  | Ok(x) -> match before @ x @ a with
                                                             | Expression(e1) -> e1 |> Some
@@ -63,15 +64,15 @@ let rec (|Expression|_|) (toks:Token list) =
 
     match toks with
     | BracketPat m -> m |> Some
-    | ModPat m -> m |> Some
-    | MultPat m -> m |> Some
-    | DivPat m -> m |> Some
     | AddPat m -> m |> Some
     | SubPat m -> m |> Some
+    | DivPat m -> m |> Some
+    | MultPat m -> m |> Some
+    | ModPat m -> m |> Some
     | Literal m -> m |> Some
     | _ -> None
 
-and parseBracket toks =
+and evaluate toks =
     // Remove all whitespace
     let rWhitespace = function | WHITESPACE(_) -> false | _ -> true 
     let parseExp = function | Expression exp -> Ok [exp]
