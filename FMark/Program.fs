@@ -6,7 +6,7 @@ open Types
 let rec parseLine tLst =
     // printf "parseLine\n%A\n" tLst
     match tLst with
-    | UNDERSCORE::LITERAL l::UNDERSCORE::tl -> FrmtedString (Emphasis (Literal l)) :: parseLine tl
+    | UNDERSCORE::LITERAL l::UNDERSCORE::tl -> FrmtedString (Emphasis [FrmtedString (Literal l)]) :: parseLine tl
     | LITERAL l::tl -> FrmtedString (Literal l) :: parseLine tl
     | _::tl -> parseLine tl
     | [] -> []
@@ -29,23 +29,23 @@ let tocGen tokenLst maxDepth =
 // ----------------------------------------------------------------------------------------
 //pick out footnotes and send to footLineParse
 let rec citeParse tocLst =
+    let fit (a,b) c = Footnote(c,a)::citeParse b
     match tocLst with
-    | LSBRA::CARET::NUMBER strkey::RSBRA::tl ->
+    | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
-        | COLON::tail -> citeParseIn tail (int strkey)
+        | COLON::tail -> fit (citeParseIn [] tail) (int key)
         | tail -> citeParse tail // TODO: do something when it is inline?
     | _::tl -> citeParse tl
     | [] -> []
 
 //parse footnotes with parseLine
-and citeParseIn tocLst key :ParsedObj list =
+and citeParseIn tLne tocLst :TLine*Token list =
     match tocLst with
-    | LITERAL lit::tl -> LITERAL lit :: citeParseIn tl
-    | ENDLINE::WHITESPACE 4::tl -> citeParseIn tl
-    | ENDLINE::tl -> Footnote (key,hsdfa) :: citeParse tl
-    | _::tl -> citeParse tl
-    | [] -> []
-
+    | LITERAL lit::tl -> citeParseIn (FrmtedString (Literal lit)::tLne) tl
+    | ENDLINE::WHITESPACE 4::tl -> citeParseIn tLne tl
+    | ENDLINE::tl -> List.rev tLne, tl
+    | _::tl -> citeParseIn tLne tl
+    | [] -> failwithf "this shouldn't happen"
 
 let citeGen footLst =
     List.sortBy (fun (x,_) -> x) footLst
@@ -61,8 +61,8 @@ let main argv =
                         COLON; LITERAL "Second text"; ENDLINE]
     let testTokenLst3 = List.append testTokenLst testTokenLst2
     printf "\n%A\n" (tocParse testTokenLst 0)
-(*    printf "\n%A\n" (citeParse testTokenLst2)
-    printf "\n%A\n" (citeGen (citeParse testTokenLst2))
+    printf "\n%A\n" (citeParse testTokenLst2)
+    printf "\n%A\n" (citeParse testTokenLst2)
     printf "\n%A\n" (tocGen testTokenLst3 3)
-    printf "\n%A\n" (citeGen (citeParse testTokenLst3)) *)
+    printf "\n%A\n" (citeParse testTokenLst3)
     0
