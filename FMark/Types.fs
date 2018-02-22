@@ -54,6 +54,7 @@ type Operand =
     | Integer of int
     | Float of float
 
-type Exp =
-    | BinExp of (float->float->float)*Exp*Exp
+type Expr =
+    | BinExp of (float->float->float)*Expr*Expr
     | Op of Operand
+    | Exp of Expr

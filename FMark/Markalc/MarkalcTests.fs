@@ -43,6 +43,18 @@ let expressionData = [
     "Simple subtraction.",
     [NUMBER("7");MINUS;NUMBER("2")],
     [5.0] |> Ok;
+    "Triple subtraction.",
+    [NUMBER("7");MINUS;NUMBER("5");MINUS;NUMBER("2")],
+    [0.0] |> Ok;
+    "Bracketed subtraction.",
+    [NUMBER("7");MINUS;LBRA;NUMBER("2");MINUS;NUMBER("1");RBRA],
+    [6.0] |> Ok;
+    "Bracketed subtraction then addition.",
+    [NUMBER("7");MINUS;LBRA;NUMBER("2");MINUS;NUMBER("1");RBRA;PLUS;NUMBER("5")],
+    [11.0] |> Ok;
+    "7*(2-3)+5",
+    [NUMBER("7");ASTERISK;LBRA;NUMBER("2");MINUS;NUMBER("3");RBRA;PLUS;NUMBER("5")],
+    [-2.0] |> Ok;
 ]
 
 let makeExpressionTest = makeEqTest parseExpTop "parseExpTop"
