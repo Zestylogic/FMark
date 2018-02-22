@@ -33,34 +33,15 @@ let rec (|Expression|_|) (toks:Token list) =
     // Active pattern to match and construct an Integer, Float or CellRef
     let (|Literal|_|) (toks:Token list) =
         match toks with
-        | NUMBER(i) :: DOT :: NUMBER(d) :: after -> (makeFloat i d |> Float |> Op,after) |> Some
-        | NUMBER(i) :: after -> (makeInt i |> float |> Float |> Op,after) |> Some
-        | LSBRA :: NUMBER(col) :: RSBRA :: LSBRA :: NUMBER(row) :: RSBRA :: after -> ((col,row) |> makeCellRef |> Op,after) |> Some
+        | NUMBER(i) :: DOT :: NUMBER(d) :: _ -> makeFloat i d |> Float |> Op |> Some
+        | NUMBER(i) :: _ -> makeInt i |> float |> Float |> Op |> Some
+        | LSBRA :: NUMBER(col) :: RSBRA :: LSBRA :: NUMBER(row) :: RSBRA :: _ -> (col,row) |> makeCellRef |> Op |> Some
         | _ -> None
     let (|BinaryPat|_|) func delim (toks:Token list) =
         match delimSplit true delim toks with
         | Error(_) -> None
-        | Ok (Expression (exp1,_), Expression (exp2,after)) -> (BinExp (func,exp1,exp2),after) |> Some
+        | Ok (Expression exp1, Expression exp2) -> BinExp (func,exp1,exp2) |> Some
         | Ok (_) -> None
-    
-    // let (|PrimExpr|_|) toks =
-    //     match toks with
-    //     | Literal x -> Some x
-    //     | LBRA :: after ->  match delimSplit false RBRA after with
-    //                         | Ok(Expression(exp),_) -> (exp,after) |> Some
-    //                         | _ -> None
-    //                         //(exp, rst) |> Some
-    //     | _ -> None
-// 
-    // let rec (|BinExpr|_|) (|NextExpr|_|) func delim toks =
-    //     match delimSplit false delim toks with
-    //     | NextExpr (lVal, rhs) ->
-    //         match rhs with
-    //         | BinExpr (|NextExpr|_|) delim func (rVal, rst')
-    //             -> (BinExp (func, lVal, rVal), rst') |> Some
-// 
-    //         | _ -> (lVal, rhs) |> Some
-    //     | _ -> None
 
     let (|ModPat|_|) = (|BinaryPat|_|) (%) PERCENT
     let (|MultPat|_|)= (|BinaryPat|_|) (*) ASTERISK
@@ -70,7 +51,6 @@ let rec (|Expression|_|) (toks:Token list) =
 
     // Active pattern to match and construct a bracketed expression
     let (|BracketPat|_|) (toks:Token list) =
-    // RegexPrefix "\(" (_, Expr (exp, RegexPrefix "\)" (_, rst)) ) -> (exp, rst) |> Some
         match delimSplit true LBRA toks with
         | Ok (before,after) -> match delimSplit false RBRA after with
                                | Ok(inside,a) -> match parseBracket inside with
@@ -89,7 +69,6 @@ let rec (|Expression|_|) (toks:Token list) =
     | AddPat m -> m |> Some
     | SubPat m -> m |> Some
     | Literal m -> m |> Some
-    // | Expression (exp,after) -> (exp, after) |> Some
     | _ -> None
 
 and parseBracket toks =
@@ -107,14 +86,6 @@ and parseBracket toks =
 let parseExpTop (toks:Token list) =
     // Remove all whitespace
     let rWhitespace = function | WHITESPACE(_) -> false | _ -> true
-    // Check that it is a valid expression (?)
-    
-    // let rec parseExp' a toks =
-    //     match toks with
-    //     | [] -> a |> Ok
-    //     | Expression(exp,after) -> parseExp' (exp::a) after
-    //     | _ ->  sprintf "Not valid expression %A" toks |> Error
-    // let parseExp toks = parseExp' [] toks
     let parseExp = function | Expression exp -> Ok [exp]
                              | _ ->  sprintf "Not valid expression %A" toks |> Error
    
