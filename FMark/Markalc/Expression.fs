@@ -1,8 +1,8 @@
 /// This module should parse tokens into an expression
 module Expression
 
+open MarkalcShared
 open Types
-open System.Text.RegularExpressions
 
 (* SUPPORTED OPERATIONS:
 BinaryExpressions (in order of precedence): 
@@ -14,61 +14,12 @@ BinaryExpressions (in order of precedence):
     - - Subtract
 *)
 
-type Operand =
-    | CellRef of uint32*uint32
-    | Integer of int
-    | Float of float
-
-type Exp =
-    | AddExp of Exp * Exp
-    | BinExp of (float->float->float)*Exp*Exp
-    //| FloatBinaryExpression of (float->float->float Option) * Expression * Expression
-    | Op of Operand
-
-let countDelim delim tokList =
-    List.filter (function | d when d = delim -> true | _ -> false) tokList 
-    |> List.length
-// return everything before and after the next delimeter
-let delimSplit last delim t =
-    let rec delimSplitFirst' delim before t =
-        match t with
-        | d :: after when d = delim -> Ok (before,after) // If delim then token list, return d and everything after the delim
-        | x :: after -> delimSplitFirst' delim (x::before) after // If non-PIPE token then token list, recurse adding the tokens to the before list
-        | [] -> Error (before,[]) // Did not find delimeter
-    let rec delimSplitLast' delim before t =
-        match (t, countDelim delim t) with
-        | d :: after,1 when d = delim -> Ok (before,after)
-        | x :: after,_ -> delimSplitLast' delim (x::before) after
-        | [],_ -> Error (before,[])
-    let searchFunc = if last then delimSplitLast' else delimSplitFirst'
-    searchFunc delim [] t
-    |> function
-    | Error(before,a) -> Error(List.rev before,a)
-    | Ok (before,a) -> Ok(List.rev before,a)
-
 let makeFloat i d = 
     sprintf "%A.%A" i d |> float
 let makeInt (i:string) =
     i |> int
 let makeCellRef (row:string,col:string) =
     CellRef (row|>uint32,col|>uint32)
-// let makeFloatOperand i d =
-//     makeFloat i d |> Float
-
-/// Return matched text and remaining text
-let (|RegexMatch|_|) regex input =
-    let m = Regex.Match (input, regex)
-    match m.Success with
-    | true -> (m.Value, input.Substring(m.Value.Length)) |> Some
-    | false -> None
-
-(* Relevant tokens
-EQUAL, MINUS, PLUS, ASTERISK, DOT, CARET, SLASH
-LSBRA, RSBRA, LBRA, RBRA
-NUMBER of string (?)
-LITERAL of string
-
-*)
 let rec (|Expression|_|) (toks:Token list) = 
     // Active pattern to match and construct an Integer, Float or CellRef
     let (|Literal|_|) (toks:Token list) =
@@ -88,13 +39,6 @@ let rec (|Expression|_|) (toks:Token list) =
     let (|DivPat|_|) = (|BinaryPat|_|) (/) SLASH
     let (|AddPat|_|) = (|BinaryPat|_|) (+) PLUS
     let (|SubPat|_|) = (|BinaryPat|_|) (-) MINUS
-    // Active Pattern to match and construct an add expression
-    //let (|AdditionExpression|_|) (toks:Token list) =
-    //    match delimBeforeAfter PLUS [] toks with
-    //    | Error(_) -> None
-    //    | Ok (Expression (exp1,_), Expression (exp2,after)) -> (AddExp (exp1,exp2),after) |> Some
-    //    // | Ok ([],_ | _,[]) -> None // If either of the outputs are empty, no valid add expression present
-    //    | Ok (_) -> None
     // Active pattern to match and construct a bracketed expression
     let (|BracketPat|_|) (toks:Token list) =
         match toks with
@@ -136,24 +80,15 @@ let parseExpTop (toks:Token list) =
         | [] -> a |> Ok // No more tokens, return previously parsed tokens
         | Expression (exp,after) -> parseExp' (exp::a) after
         | _ -> sprintf "Not valid expression %A" toks |> Error
-   
+
     let expList = List.filter rWhitespace toks |> parseExp' [] 
     match expList with 
     | Error(e) -> printfn "Error parsing expression: %A" e
                   Error toks 
-    | Ok(x) -> List.map evalExp x |> Ok
+    | Ok(x) ->  // printfn "expList has %A elements in." (List.length x) expList only ever has one element in it.
+                List.map evalExp x |> Ok // Convert back into tokens?
+let toNumber x = NUMBER(x|>string)
 
-//        | Literal (operand,after) -> parseExp' (operand::a) after
-//        | NUMBER(i) :: after -> parseExp' (Operand(Int (i|>int))) after
-//        | LSBRA :: NUMBER(col) :: RSBRA :: LSBRA :: NUMBER(row) :: RSBRA :: after ->
-//            parseExp' ((col,row) |> CellReference |> Operand)::a after // Match [[0-9]+][[0-9]+], turn into CellReference, append to Expression list
-        //| LBRA :: after -> match after with
-        //                   | // stuff and then stuff and then a right bracket
-        // | Expression(x) :: ASTERISK :: after -> BinaryExpression((*),x,parseExp') // Match binary operators, turn into BinaryExpression, match higher precedences first
-        // | // Match left bracket, parse until find right bracket
-        // | // Match keyword, parse arguments and apply function
-    
-// 
 // let top (toks:Token list) =
 //     // If the first token isn't an EQ, return error
 //     // Although, check for leading/trailing formatters and remove and replace them afterwards.

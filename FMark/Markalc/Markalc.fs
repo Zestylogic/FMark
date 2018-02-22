@@ -1,6 +1,7 @@
 module Markalc
 
 open Types
+open MarkalcShared
 open Expression
 open System
 // Do I want to remove any markdown content? Yes... inline markdown should be unaffected! but perhaps too complicated right now.
