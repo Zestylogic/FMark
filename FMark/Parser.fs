@@ -144,6 +144,7 @@ let parseInLineElements toks =
         |> Result.bind (fun (inLine, retoks) ->
             match retoks with
             | [] -> ([inLine], []) |> Ok
+            | MatchEmEnd _ -> ([inLine], retoks) |> Ok
             //| IsNewTLine toks' -> printfn "newTLine"; ([], toks') |> Ok // new TLine equivalent <br>)
             | MatchNewParagraph toks' -> ([inLine], toks') |> Ok // new TLine equivalent <br>)
             | IsNewTLine toks' ->
