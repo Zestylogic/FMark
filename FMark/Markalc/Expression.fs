@@ -3,7 +3,6 @@ module Expression
 
 open MarkalcShared
 open Types
-open FsCheck
 
 (* SUPPORTED OPERATIONS:
 BinaryExpressions (in order of precedence): 

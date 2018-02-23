@@ -4,7 +4,6 @@ open Types
 open MarkalcShared
 open Expression
 open System
-open FsCheck
 
 type Cell with 
     member c.GetToks = match c with 
