@@ -124,12 +124,8 @@ let parseInLineElements toks =
         match toks with
         | LITERAL _ :: _ ->
             let pstr, retoks = parseLiteral toks
-            //let inlines, retoks' = parseInLineElements' retoks
             (FrmtedString (Literal pstr), retoks) |> Ok
         | MatchEmStart toks' ->
-            //let pstr, retoks = parseLiteral toks.[2..]
-            //let inlines, retoks = parseInLineElements' toks'
-            printfn "em:%A" toks'
             parseInLines toks'
             |> Result.map (fun (inlines, retoks) ->
                 match retoks with
@@ -145,9 +141,8 @@ let parseInLineElements toks =
             match retoks with
             | [] -> ([inLine], []) |> Ok
             | MatchEmEnd _ -> ([inLine], retoks) |> Ok
-            //| IsNewTLine toks' -> printfn "newTLine"; ([], toks') |> Ok // new TLine equivalent <br>)
-            | MatchNewParagraph toks' -> ([inLine], toks') |> Ok // new TLine equivalent <br>)
-            | IsNewTLine toks' ->
+            | MatchNewParagraph toks' -> ([inLine], toks') |> Ok
+            | IsNewTLine toks' -> // new TLine equivalent <br>)
                 parseInLines toks'
                 |> Result.map (fun (inLines, tks)->
                     inLine::inLines, tks)
