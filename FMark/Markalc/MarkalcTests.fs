@@ -6,6 +6,7 @@ open Expression
 open Expecto.ExpectoFsCheck
 open Expecto
 open System.Text.RegularExpressions
+
 /// Helper function to copy a list i times
 let rec listCopies i lst =
     match i with
