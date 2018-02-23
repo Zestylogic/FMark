@@ -4,13 +4,10 @@ open Types
 open MarkalcShared
 open Expression
 open System
-// Do I want to remove any markdown content? Yes... inline markdown should be unaffected! but perhaps too complicated right now.
-// HOF for counting any delimeters
 
 let pipeSplit toks = 
-    match delimSplit false PIPE toks with 
-    | Ok(x) -> x
-    | Error(y) -> y
+    delimSplit false PIPE toks
+
 let makeCellU header tokens  = (tokens,header)
 let makeDefaultCellU = makeCellU false
 let makeHeaderCellU = makeCellU true
@@ -18,20 +15,19 @@ let alignCell alignment cellU = Tokens (fst cellU, snd cellU, alignment)
 // Parse a line into a list of cells
 let parseRowD debug constructCell (row:Token list) =
     let rec parseRow' a row =
-        let b,af = pipeSplit row
-        if debug then printfn "Row to parse: %A\nBefore: %A, After: %A\n" row b af
-        match b,af with
-        | ([],[])       -> (constructCell []):: a
-        | ([],after)    -> if debug then printfn "empty, %A" after
-                           parseRow' ((constructCell [])::a) after // If before is empty, empty cell
-        | (before,[])   -> if debug then printfn "%A, empty" before
-                           (constructCell before) :: a // If after is empty, add before and stop
-        |(before,after) -> if debug then printfn "%A, %A" before after 
-                           parseRow' ((constructCell before) :: a) after
+        match pipeSplit row with
+        | Ok([],[])       -> (constructCell []):: a
+        | Ok([],after)    -> if debug then printfn "empty, %A" after
+                             parseRow' ((constructCell [])::a) after // If before is empty and after is not, empty cell
+        | Ok(before,[])   -> if debug then printfn "%A, empty" before
+                             (constructCell before) :: a // If after is empty, add before and stop
+        | Ok(before,after) -> if debug then printfn "%A, %A" before after 
+                              parseRow' ((constructCell before) :: a) after
+        | Error(_) -> if List.isEmpty row then a else (constructCell row)::a  // If there is content, add it
     parseRow' [] row
 /// TOGGLE DEBUG MODE
 let parseRow constructCell row = parseRowD false constructCell row
-///
+/// 
 let parseNormalRow constructCell row =
     let parseRow' = parseRow constructCell
     // If its the first pipe and there's nothing before it, remove it
@@ -76,7 +72,7 @@ let parseAlignmentRow (row:Token list) =
                 | (_,x) -> sprintf "\':\'s in wrong position %A, %A" toks x |> Error
     let parseRow' = parseRow getAlignment
     // Ignore the first pipe if there is nothing before it
-    match row with
+    match whitespaceFilter row with
     | PIPE :: row' -> parseRow' row'
     | row' -> parseRow' row'
     |> List.rev
@@ -86,8 +82,8 @@ let parseAlignmentRow (row:Token list) =
 let alignCells' alignList (cells:(Token list * bool) list) =
     let lengths = (List.length alignList, List.length cells)
     match (fst lengths - snd lengths) with
-    | x when x > 0 -> cells @ List.replicate x ([], List.head cells |> snd) // If alignList longer than cells, fill in with blank cells
-    | x when x < 0 -> cells.[0..fst lengths] // If cells longer than alignList, ignore the extra cells
+    | x when x > 0 -> cells @ (List.replicate x ([], List.head cells |> snd)) // If alignList longer than cells, fill in with blank cells
+    | x when x < 0 -> cells.[0..fst lengths]// If cells longer than alignList, ignore the extra cells
     | _ -> cells
     |> (List.zip alignList)
     |> List.map (fun (a,uc) -> alignCell a uc)

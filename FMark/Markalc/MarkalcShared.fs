@@ -1,5 +1,7 @@
 module MarkalcShared
-
+open Types
+let whitespaceFilter lst = List.filter (function | WHITESPACE(_) -> false | _ -> true) lst
+// Count number of delim in token list
 let countDelim delim tokList =
     List.filter (function | d when d = delim -> true | _ -> false) tokList 
     |> List.length

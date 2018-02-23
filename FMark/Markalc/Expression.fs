@@ -64,7 +64,7 @@ let rec evalExp e =
 let toToken x = NUMBER(x|>string)
 // Parse 1+1 etc, going to have to pass in Table
 let parseExpTop (toks:Token list) =
-    List.filter (function | WHITESPACE(_) -> false | _ -> true) toks // Remove whitespace
+    whitespaceFilter toks // Remove whitespace
     |> parseExp
     |> function // Perhaps monads not necessary
        | Error(e) -> printfn "Error parsing expression: %A" e

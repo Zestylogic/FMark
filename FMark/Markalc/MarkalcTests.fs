@@ -21,7 +21,6 @@ let makeEqTest func fname name inp outp =
     testCase name <| fun () ->
     Expect.equal (func inp) outp (sprintf "%s" fname)
 
-
 // Quick parser to generate expression test input
 let simpleParse txt = 
     let (|RegexMatch|_|) r txt =
@@ -52,6 +51,7 @@ let simpleParse txt =
         | _ -> failwithf "Unexpected character: %A" txt
     simpleParse' [] txt |> List.rev
 
+let parseY (x,y,z) = x,y|>simpleParse,z
 let expressionData = [
     "Simple addition.",
     "10+10",
@@ -102,8 +102,6 @@ let expressionData = [
     "2 ^4 +6 -1 -1- 0 +8",
     28.0 |> Ok
 ]
-let parseY (x,y,z) = x,y|>simpleParse,z
-// let expressionData = List.map (parseY) expressionData'
 let makeExpressionTest = makeEqTest parseExpTop "parseExpTop"
 [<Tests>]
 let expTest =
@@ -143,9 +141,6 @@ let parseRowTest =
     |> Expecto.Tests.testList "parseDefaultRow tests"
 
 // Test parseAlignmentRow
-let minusX3 = List.replicate 3 MINUS
-let centre = COLON :: minusX3 @ [COLON]
-let right  =  minusX3 @ [COLON]
 let testAlignData = [
     "No alignments.",
     "---|----|---",
