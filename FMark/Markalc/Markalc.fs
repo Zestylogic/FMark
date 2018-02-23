@@ -5,15 +5,21 @@ open MarkalcShared
 open Expression
 open System
 
+let maxRefs = 1000
+
 type Cell with 
     member c.GetToks = match c with 
-                           | Contents(toks,head,align) -> toks
+                           | Contents(toks,_,_) -> toks
     member c.ReplaceTokens t = match c with 
                                | Contents(_,head,align) -> Contents(t,head,align)
 
+type MapContents =
+    | MapTok of Cell
+    | MapExp of Expr * Cell
+
+/// Return everything (before,after) the first PIPE token
 let pipeSplit toks = 
     delimSplit false PIPE toks
-
 let makeCellU header tokens  = (tokens,header)
 let makeDefaultCellU = makeCellU false
 let makeHeaderCellU = makeCellU true
@@ -111,19 +117,19 @@ let transformTable (table:Token list list)  =
     |> List.rev
     |> joinErrorList
 
-
-type MapContents =
-    | MapTok of Cell
-    | MapExp of Expr * Cell
-let rec evalExp map e =
-    match e with
-    | BinExp(f,x,y) -> f (evalExp map x) (evalExp map y)
-    | Op (Float(x)) -> x
-    | Op (CellRef(ref)) -> match Map.tryFind ref map with
-                           | Some(MapExp(e,_)) -> evalExp map e
-                           | _ -> nan // invalid reference
-    | _ -> 13.0
-// Evaluate all expressions inside a cell list list, leave non-expression cells as they are
+let tryEval map e = 
+    let rec evalExp r map e =
+        if r > maxRefs then nan else
+        match e with
+        | BinExp(f,x,y) -> f (evalExp r map x) (evalExp r map y)
+        | Op (Float(x)) -> x
+        | Op (CellRef(ref)) -> match Map.tryFind ref map with
+                               | Some(MapExp(e2,_)) -> evalExp (r+1) map e2
+                               | _ -> nan // invalid reference
+        | _ -> 13.0
+    evalExp 0 map e
+/// Evaluate all expressions inside a cell list list, leave non-expression cells as they are
+/// No invalid expressions should be matched.
 let evaluateCellList cellList = 
     // Iterate over table, must know "where am I?" for each cell
     let innerFold row (s:(CellReference*MapContents) list*uint32) (cell:Cell) =
@@ -143,7 +149,7 @@ let evaluateCellList cellList =
         // convert MapContents from MapExp to MapTok (?)
         let expListEval = function
             | MapTok(c) -> c
-            | MapExp(e,c) -> [evalExp map e |> toToken] |> (c.ReplaceTokens)
+            | MapExp(e,c) -> [tryEval map e |> toToken] |> (c.ReplaceTokens)
         List.map (snd >> expListEval) expList
         |> (Seq.chunkBySize rowLength) 
         |> Seq.toList 
@@ -151,16 +157,10 @@ let evaluateCellList cellList =
 
 // Parse tokens into cell list list
 /// Top level function
-let topLevel (input:Token list list) = 
+let parseEvaluate (input:Token list list) = 
     // Transform Token list list into Cell list list
     transformTable input
     |> function
-    | Error(_) -> input |> Error
-    | Ok(x) -> evaluateCellList x |> Ok
+    | Error(_) -> input |> Error // If there are any errors just return the unchanged Token list list
+    | Ok(x) -> evaluateCellList x |> Ok // Else return Ok and Cell list list
 
-    
-let testExprData = 
-    List.map simpleParse ["=2+2|header2|header3";
-                          ":------|:-----:|------:";
-                          "=[0][0]+1|tesdfst|stduff";
-                          "=2+3|tesdfst|=[1][0]+[0][0]"]

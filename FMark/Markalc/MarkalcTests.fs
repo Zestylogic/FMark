@@ -119,28 +119,59 @@ let testTableData = [
     [[Contents ([LITERAL "header1"],true,Left);Contents ([LITERAL "header2"],true,Centre);Contents ([LITERAL "header3"],true,Right) ]] @
     [[Contents ([LITERAL "Somedfs"],false,Left);Contents ([LITERAL "tesdfst"],false,Centre);Contents ([LITERAL "stduff"],false,Right)]] |> Ok;
 ]
-
+let testExprData = [
+    "Full evaluation test with cell references.",
+    ["=2+2|header2|header3";
+     ":------|:-----:|------:";
+     "=[0][0]+1|tesdfst|stduff";
+     "=2+3|tesdfst|=[1][0]+[0][0]"]|>List.map simpleParse,
+     [[Contents ([NUMBER "4"],true,Left);
+       Contents ([LITERAL "header2"],true,Centre);
+       Contents ([LITERAL "header3"],true,Right)];
+     [Contents ([NUMBER "5"],false,Left);
+      Contents ([LITERAL "tesdfst"],false,Centre);
+      Contents ([LITERAL "stduff"],false,Right)];
+     [Contents ([NUMBER "5"],false,Left);
+      Contents ([LITERAL "tesdfst"],false,Centre);
+      Contents ([NUMBER "9"],false,Right)]] |> Ok;
+    "Circular cell reference.",
+    ["=2+2|header2|header3";
+     ":------|:-----:|------:";
+     "=[0][0]+[2][2]|tesdfst|stduff";
+     "=2+3|tesdfst|=[1][0]+[0][0]"]|>List.map simpleParse,
+     [[Contents ([NUMBER "4"],true,Left);
+       Contents ([LITERAL "header2"],true,Centre);
+       Contents ([LITERAL "header3"],true,Right)];
+     [Contents ([NUMBER "NaN"],false,Left);
+      Contents ([LITERAL "tesdfst"],false,Centre);
+      Contents ([LITERAL "stduff"],false,Right)];
+     [Contents ([NUMBER "5"],false,Left);
+      Contents ([LITERAL "tesdfst"],false,Centre);
+      Contents ([NUMBER "NaN"],false,Right)]] |> Ok
+]
 // ####################### FUNCTIONS #####################
-let makeEqTest func fname name inp outp =
+let EQTest func fname name inp outp =
     testCase name <| fun () ->
     Expect.equal (func inp) outp (sprintf "%s" fname)
 let addTestList test name dataTransform data = 
     (List.map (dataTransform >> (unfoldTuple3 test)) data)
     |> Expecto.Tests.testList name
 
-let makeExpressionTest = makeEqTest parseExpTest "parseExpTop"
-let makeParseRowTest = makeEqTest parseDefaultRow "parseDefaultRow"
-let makeParseAlignmentRowTest = makeEqTest parseAlignmentRow "parseAlignmentRow"
-let makeTransformTableTest = makeEqTest transformTable "transformTable"
+let expressionTest = EQTest parseExpTest "parseExpTop"
+let parseRowTest = EQTest parseDefaultRow "parseDefaultRow"
+let parseAlignmentRowTest = EQTest parseAlignmentRow "parseAlignmentRow"
+let transformTableTest = EQTest transformTable "transformTable"
+let evalTest = EQTest parseEvaluate "evaluation"
 
 // ####################### TESTS ########################
 [<Tests>]
 let tests = 
     testList "Should pass" [
-        addTestList makeExpressionTest "Expression tests" parseY expressionData;
-        addTestList makeParseRowTest "parseDefaultRow tests" parseY parseDefaultRowData;
-        addTestList makeParseAlignmentRowTest "parseAlignmentRow tests" parseY testAlignData;
-        addTestList makeTransformTableTest "transformTable tests" id testTableData;
+        addTestList expressionTest "Expression tests" parseY expressionData;
+        addTestList parseRowTest "parseDefaultRow tests" parseY parseDefaultRowData;
+        addTestList parseAlignmentRowTest "parseAlignmentRow tests" parseY testAlignData;
+        addTestList transformTableTest "transformTable tests" id testTableData;
+        addTestList evalTest "transformTable tests" id testExprData;
 ]
 
 let runTests =
