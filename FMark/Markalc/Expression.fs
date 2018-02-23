@@ -20,7 +20,8 @@ let makeInt (i:string) =
     i |> int
 let makeCellRefOp (row:string,col:string) =
     RowCol(row|>uint32,col|>uint32) |> CellRef |> Op
-/// Expression parser
+
+/// EXPRESSION PARSER
 let parseExp toks = 
     let rec (|Expression|_|) (toks:Token list) =
         let (|BasePat|_|) (toks:Token list) =
@@ -54,12 +55,6 @@ let parseExp toks =
     match List.rev toks with 
     | Expression (exp,[]) -> Ok exp
     | _ ->  sprintf "Not valid expression %A" toks |> Error
-// Recursively evaluate expression AST. CellRef will need access to whole table
-let rec evalExpTest e = 
-    match e with
-    | BinExp(f,x,y) -> f (evalExpTest(x)) (evalExpTest(y))
-    | Op (Float(x)) -> x
-    | _ -> 13.0
 
 let parseExpression toks = 
     match toks with
@@ -69,6 +64,16 @@ let parseExpression toks =
              | Ok(x) ->  Ok x
     | toks -> Error toks
 
+// ################## TEST FUNCTIONS ####################
+// Recursively evaluate expression AST. CellRef will need access to whole table, this is used to test everything else
+let rec evalExpTest e = 
+    match e with
+    | BinExp(f,x,y) -> f (evalExpTest(x)) (evalExpTest(y))
+    | Op (Float(x)) -> x
+    | _ -> 13.0
+
+
+
 // Test evaluation without table
 let parseExpTest (toks:Token list) =
     whitespaceFilter toks // Remove whitespace
@@ -77,5 +82,3 @@ let parseExpTest (toks:Token list) =
        | Error(e) -> printfn "Error parsing expression: %A" e
                      Error toks 
        | Ok(x) -> evalExpTest x |> Ok
-let toToken x = NUMBER(x|>string)
-

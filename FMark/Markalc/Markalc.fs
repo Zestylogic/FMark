@@ -17,40 +17,12 @@ type MapContents =
     | MapTok of Cell
     | MapExp of Expr * Cell
 
+// ################### HELPER FUNCTIONS ###################
 /// Return everything (before,after) the first PIPE token
 let pipeSplit toks = 
     delimSplit false PIPE toks
-let makeCellU header tokens  = (tokens,header)
-let makeDefaultCellU = makeCellU false
-let makeHeaderCellU = makeCellU true
-let alignCell alignment cellU = Contents (fst cellU, snd cellU, alignment)
-// Parse a line into a list of cells
-let parseRowD debug constructCell (row:Token list) =
-    let rec parseRow' a row =
-        match pipeSplit row with
-        | Ok([],[])       -> (constructCell []):: a
-        | Ok([],after)    -> if debug then printfn "empty, %A" after
-                             parseRow' ((constructCell [])::a) after // If before is empty and after is not, empty cell
-        | Ok(before,[])   -> if debug then printfn "%A, empty" before
-                             (constructCell before) :: a // If after is empty, add before and stop
-        | Ok(before,after) -> if debug then printfn "%A, %A" before after 
-                              parseRow' ((constructCell before) :: a) after
-        | Error(_) -> if List.isEmpty row then a else (constructCell row)::a  // If there is content, add it
-    parseRow' [] row
-/// TOGGLE DEBUG MODE
-let parseRow constructCell row = parseRowD false constructCell row
-/// 
-let parseNormalRow constructCell row =
-    let parseRow' = parseRow constructCell
-    // If its the first pipe and there's nothing before it, remove it
-    match row with
-    | PIPE :: row' -> parseRow' row'
-    | row' -> parseRow' row'
-    // If the list only contains one item, add an empty cell on the end (empty cells now added later on...)
-    |> (fun x -> if List.length x = 1 then (constructCell[])::x else x) 
-    |> List.rev
-///
-let parseDefaultRow = parseNormalRow makeDefaultCellU
+// Turn float into token
+let toToken x = NUMBER(x|>string)
 /// Transform Result<Ok,Error> list into Result<Ok list, Error>
 let joinErrorList lst =
     // Filter the list
@@ -66,8 +38,46 @@ let joinErrorList lst =
     match List.filter filt lst with
     | [] -> List.map unpackOks lst |> Ok // If the list is empty there are no errors
     | x  -> List.fold combineErrors (Error "") x
+// Lift first argument to result world
+let liftFirstArg func arg1 arg2 =
+    match arg1 with
+    | Ok(x) -> func x arg2 |> Ok
+    | Error(x) -> Error x
+
+// ####################### CONSTRUCT CELL HELPERS ###################
+let makeCellU header tokens  = (tokens,header)
+let defaultCellU = makeCellU false
+let headCellU = makeCellU true
+let alignCell alignment cellU = Contents (fst cellU, snd cellU, alignment)
+
+// ###################### PARSE TABLE ROWS #####################
+// Parse a line into a list of cells
+let parsePipesD debug constructCell (row:Token list) =
+    let rec parsePipes' a row =
+        match pipeSplit row with
+        | Ok([],[])       -> (constructCell []):: a
+        | Ok([],after)    -> if debug then printfn "empty, %A" after
+                             parsePipes' ((constructCell [])::a) after // If before is empty and after is not, empty cell
+        | Ok(before,[])   -> if debug then printfn "%A, empty" before
+                             (constructCell before) :: a // If after is empty, add before and stop
+        | Ok(before,after) -> if debug then printfn "%A, %A" before after 
+                              parsePipes' ((constructCell before) :: a) after
+        | Error(_) -> if List.isEmpty row then a else (constructCell row)::a  // If there is content, add it
+    parsePipes' [] row
+let parsePipes constructCell row = parsePipesD false constructCell row /// TOGGLE DEBUG MODE
+/// Parse an ordinary row
+let parseRow constructCell row =
+    let parseRow' = parsePipes constructCell
+    // If its the first pipe and there's nothing before it, remove it
+    match row with
+    | PIPE :: row' -> parseRow' row'
+    | row' -> parseRow' row'
+    // If the list only contains one item, add an empty cell on the end (empty cells now added later on...)
+    |> (fun x -> if List.length x = 1 then (constructCell[])::x else x) 
+    |> List.rev
+let parseDefaultRow = parseRow defaultCellU
 /// Parse the second row of the table which defines number of columns and alignment
-let parseAlignmentRow (row:Token list) = 
+let parseAlignRow (row:Token list) = 
     let getAlignment (toks: Token list) =
         let filt = function | COLON -> true | MINUS -> true | _ -> false 
         // Check it has at least three dashes
@@ -82,14 +92,15 @@ let parseAlignmentRow (row:Token list) =
                 | (_,1) when List.head toks = COLON -> Left |> Ok
                 | (_,0) -> Left |> Ok// default is leftAlign
                 | (_,x) -> sprintf "\':\'s in wrong position %A, %A" toks x |> Error
-    let parseRow' = parseRow getAlignment
+    let parseAlign' = parsePipes getAlignment
     // Ignore the first pipe if there is nothing before it
     match whitespaceFilter row with
-    | PIPE :: row' -> parseRow' row'
-    | row' -> parseRow' row'
+    | PIPE :: row' -> parseAlign' row'
+    | row' -> parseAlign' row'
     |> List.rev
     |> joinErrorList
 
+// ################ BUSINESS END ###############
 /// Function which takes a parsed row (list of unalignedcells) and the list of alignments, and will create Cells
 let alignCells' alignList (cells:(Token list * bool) list) =
     let lengths = (List.length alignList, List.length cells)
@@ -100,19 +111,15 @@ let alignCells' alignList (cells:(Token list * bool) list) =
     |> (List.zip alignList)
     |> List.map (fun (a,uc) -> alignCell a uc)
 
-let liftFirstArg func arg1 arg2 =
-    match arg1 with
-    | Ok(x) -> func x arg2 |> Ok
-    | Error(x) -> Error x
 let alignCells = liftFirstArg alignCells'
 /// Separate list of tokens into cells with alignment and header/not-header
 let transformTable (table:Token list list)  = 
     // Deal with first two rows of format: header1 | header2 | header3
     // Second row tells us how many columns and correct alignment
-    let alignments = table.[1] |> parseAlignmentRow
-    let header = List.head table |> parseNormalRow makeHeaderCellU |> alignCells alignments
+    let alignments = table.[1] |> parseAlignRow
+    let header = List.head table |> parseRow headCellU |> alignCells alignments
     // Fold parse normal row for the rest of the table
-    let parseAlignPrepend s x = (parseDefaultRow x |> alignCells alignments) :: s
+    let parseAlignPrepend s x = (parseRow defaultCellU x |> alignCells alignments) :: s
     List.fold parseAlignPrepend [header] table.[2..]
     |> List.rev
     |> joinErrorList
@@ -155,8 +162,8 @@ let evaluateCellList cellList =
         |> Seq.toList 
         |> (List.map (Array.toList))
 
-// Parse tokens into cell list list
 /// Top level function
+/// Parse tokens into cell list list with all Expressions evaluated
 let parseEvaluate (input:Token list list) = 
     // Transform Token list list into Cell list list
     transformTable input

@@ -61,25 +61,25 @@ let expressionData = [
 let parseDefaultRowData = [
     "All Pipes",
     "|hello |mynameis|",
-    [makeDefaultCellU[LITERAL("hello"); WHITESPACE(1)]; makeDefaultCellU[LITERAL("mynameis")]];
+    [defaultCellU[LITERAL("hello"); WHITESPACE(1)]; defaultCellU[LITERAL("mynameis")]];
     "Only middle pipe",
     "hello |my name is",
-    [makeDefaultCellU[LITERAL("hello"); WHITESPACE(1)];makeDefaultCellU[LITERAL("my name is")]];
+    [defaultCellU[LITERAL("hello"); WHITESPACE(1)];defaultCellU[LITERAL("my name is")]];
     "Empty pipes",
     "|||",
-    [makeDefaultCellU[];makeDefaultCellU[]];
+    [defaultCellU[];defaultCellU[]];
     "One pipe",
     "hi|",
-    [makeDefaultCellU[LITERAL("hi")];makeDefaultCellU[]];
+    [defaultCellU[LITERAL("hi")];defaultCellU[]];
     "No end pipe",
     "|hello my |name",
-    [makeDefaultCellU [LITERAL("hello my");WHITESPACE(1)] ; makeDefaultCellU[LITERAL("name")]];
+    [defaultCellU [LITERAL("hello my");WHITESPACE(1)] ; defaultCellU[LITERAL("name")]];
     "No start pipe",
     "hello my |name|",
-    [makeDefaultCellU [LITERAL("hello my");WHITESPACE(1)] ; makeDefaultCellU[LITERAL("name")]];
+    [defaultCellU [LITERAL("hello my");WHITESPACE(1)] ; defaultCellU[LITERAL("name")]];
     "Empty pipes in middle",
     "some test||stuff 0398 test",
-    [makeDefaultCellU [LITERAL("some test")];makeDefaultCellU[] ; makeDefaultCellU[LITERAL("stuff");WHITESPACE(1);NUMBER("0398");WHITESPACE(1);LITERAL("test")]]
+    [defaultCellU [LITERAL("some test")];defaultCellU[] ; defaultCellU[LITERAL("stuff");WHITESPACE(1);NUMBER("0398");WHITESPACE(1);LITERAL("test")]]
 ]
 let testAlignData = [
     "No alignments.",
@@ -159,7 +159,7 @@ let addTestList test name dataTransform data =
 
 let expressionTest = EQTest parseExpTest "parseExpTop"
 let parseRowTest = EQTest parseDefaultRow "parseDefaultRow"
-let parseAlignmentRowTest = EQTest parseAlignmentRow "parseAlignmentRow"
+let parseAlignmentRowTest = EQTest parseAlignRow "parseAlignRow"
 let transformTableTest = EQTest transformTable "transformTable"
 let evalTest = EQTest parseEvaluate "evaluation"
 
