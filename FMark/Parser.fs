@@ -67,32 +67,42 @@ let rec parseLine pLst tLst: TLine*Token list =
         | EmphasisE ttl -> parseLine (FrmtedString (Emphasis text)::pLst) ttl
         | ENDLINE :: ttl -> parseLine (List.append text pLst) ttl
         | [] -> text, []
-        | _ -> failwithf "Unaccepted Emphasis Token"
+        | _ -> failwithf "Unaccepted Emphasis Token, support to be added"
     | NormalWords t :: tl -> parseLine (FrmtedString (Literal t)::pLst) tl
     | _::tl -> parseLine pLst tl
     | [] -> pLst, tLst
 
 let parseLine' tLst = (fun (x,_) -> List.rev x) (parseLine [] tLst)
 
+// --------------------------------------------------------------------------------
 let rec tocParse tocLst depth =
     // Detect hashes with whitespace after it
     // printf "tocParse %A\n%A\n" depth tocLst
     match tocLst with
     | HASH::tl -> tocParse tl (depth+1)
     | WHITESPACE _ ::tl when depth > 0 ->
-        // a bit odd here, maybe replace this by a recursion similar to citeParseIn?
-        let (h,t) = List.splitAt (tl |> List.findIndex (fun x -> x = ENDLINE)) tl
-        {HeaderName = parseLine' h; Level = depth} :: tocParse t 0
+        let ind = tl |> List.tryFindIndex (fun x -> x = ENDLINE)
+        match ind with
+        | Some i ->
+            let (h,t) = List.splitAt i tl
+            {HeaderName = parseLine' h; Level = depth} :: tocParse t 0
+        | None ->
+            [{HeaderName = parseLine' tl; Level = depth}]
     | _::tl -> tocParse tl 0
     | [] -> []
     
 let tocGen tokenLst maxDepth =
-    tocParse tokenLst 0
-    |> List.filter (fun x -> x.Level <= maxDepth)
+    match maxDepth with
+    | 0 -> tocParse tokenLst 0
+    | d when d > 0 ->
+        tocParse tokenLst 0
+        |> List.filter (fun x -> x.Level <= d)
+    | _ -> failwithf "Invalide maxDepth"
 
+// --------------------------------------------------------------------------------
 //pick out footnotes and send to footLineParse
 let rec citeParse tocLst =
-    let recFit (a,b) c = Footnote(c,a)::citeParse b
+    let recFit (a,b) c = (c,a)::citeParse b
     match tocLst with
     | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
@@ -111,8 +121,12 @@ and citeParseIn tLne tocLst :TLine*Token list =
     | _::_ ->
         parseLine [] tocLst
         |> fun(x,y) -> citeParseIn x y
-    | [] -> failwithf "this shouldn't happen"
+    | [] -> tLne, []
 
-let citeGen footLst =
-    List.sortBy (fun (x,_) -> x) footLst
+//type change and sorting
+let citeGen tLst =
+    let ftLst = citeParse tLst
+    List.sortBy (fun (x,_) -> x) ftLst
+    |> List.map (fun (x,y) -> Footnote(x,y))
+
     
