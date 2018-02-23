@@ -11,6 +11,7 @@ type Parser =
     | MacroDefinition of Macro
     | MacroSubstitution of name: string * arg: string list
     | ParseText of content: string
+    | ParseNewLine
 and Macro = {Name: string; Args: string list; Body: Parser list}
 
 let strRest c (str: string) =
@@ -42,7 +43,7 @@ let (|Character|_|) = function
     | StartsWith "(" r -> Some (PLBRA, r)
     | StartsWith ")" r -> Some (PRBRA, r)
     | StartsWith ";" r -> Some (PSEMICOLON, r)
-    | StartsWith "macro" r -> Some (MACRO, r)
+    | RegexMatch "^macro\s+" (_, _, r) -> Some (MACRO, r)
     | _ -> None
 
 let pNextToken str: PToken * string =
@@ -76,9 +77,13 @@ let (|ArgList|_|) tList =
             Some (n :: nameList, rest)
         | VarName n :: rest ->
             Some ([n], rest)
-        | _ -> None
+        | PTEXT WhiteSpace :: tl ->
+            Some ([], tl)
+        | _ ->
+            Some ([], tList)
     match tList with
-    | PLBRA :: NameList (nl, PRBRA :: tl) -> Some (nl, tl)
+    | PLBRA :: NameList (nl, PRBRA :: tl) ->
+        Some (nl, tl)
     | _ -> None
 
 let (|Function|_|) = function
@@ -98,6 +103,20 @@ let (|EvalDef|_|) = function
     | OPENEVAL :: VarName n :: CLOSEEVAL :: tl -> Some (n, [], tl)
     | _ -> None
 
+let (|SChar|_|) = function
+    | PSEMICOLON -> Some ";"
+    | PLBRA -> Some "("
+    | PRBRA -> Some ")"
+    | MACRO -> Some "macro"
+    | _ -> None
+
+let (|SCharWhite|_|) = function
+    | SChar t :: PTEXT (RegexMatch "^\s+" (m, _, r)) :: tl ->
+        Some (t+m, PTEXT r :: tl)
+    | SChar t :: tl ->
+        Some (t, tl)
+    | _ -> None
+
 let pParse tList =
     let rec pParse' endToken tList pList =
         let pRec f c tl = f c :: pList |> pParse' endToken tl
@@ -109,17 +128,11 @@ let pParse tList =
         | _, EvalDef (n, args, tl) ->
             pRec MacroSubstitution (n, args) tl
         | _, PTEXT f :: tl ->
-            recText f tl
+            recText (String.trimStart [|' '|] f) tl
         | _, PENDLINE :: tl ->
-            recText "\n" tl
-        | _, MACRO :: tl ->
-            recText "macro" tl
-        | _, PSEMICOLON :: tl ->
-            recText ";" tl
-        | _, PLBRA :: tl ->
-            recText "(" tl
-        | _, PRBRA :: tl ->
-            recText ")" tl
+            pRec id ParseNewLine tl
+        | _, SCharWhite (c, tl) ->
+            recText c tl
         | Some e, a :: b when e = a ->
             pList, b
         | _, [] -> pList, []
@@ -130,9 +143,58 @@ let pParse tList =
     List.rev p
 
 let replace (pList: Parser list): Parser list =
-    let rec replace' (scope: Macro list) pList =
+
+    let makeDummy (s: string) =
+        {Name=s; Args=[]; Body=[MacroSubstitution (s, [])]}
+
+    let rec replace' pList newPList (scope: Map<string, Macro>) =
+
+        let addScope =
+            List.fold (fun (st: Map<string, Macro>) v -> st.Add(v.Name, v)) scope
+
         match pList with
+
         | MacroDefinition {Name=n; Args=args; Body=p} :: tl ->
-            let nP = replace' scope p
-            replace' ({Name=n; Args=args; Body=nP} :: scope) tl
-    replace' [] pList
+            let newScope =
+                args
+                |> List.map makeDummy
+                |> addScope
+            let nP =
+                replace' p [] newScope
+            let macro = {Name=n; Args=args; Body=nP}
+            scope.Add(n, macro) |> replace' tl newPList
+
+        | MacroSubstitution (n, args) :: tl ->
+            let macro =
+                match scope.TryFind n with
+                | Some m -> m
+                | None ->
+                    failwithf "Key not found"
+            let sub =
+                List.zip macro.Args args
+                |> List.map (fun (p, t) -> {Name=p; Args=[]; Body=[ParseText t]})
+                |> addScope
+                |> replace' macro.Body [] |> List.rev
+            replace' tl (sub @ newPList) scope
+
+        | ParseText t :: tl ->
+            replace' tl (ParseText t :: newPList) scope
+        | ParseNewLine :: tl ->
+            replace' tl (ParseNewLine :: newPList) scope
+        | [] -> newPList
+    replace' pList [] Map.empty<string, Macro> |> List.rev
+
+let prettyPrint pList =
+    List.fold (fun st -> function | ParseText x -> st+x | ParseNewLine -> st+"\n" | _ -> failwithf "Failed to print") "" pList
+
+let toStringList pList =
+    let f st n =
+        match st, n with
+        | _, ParseNewLine ->
+            "" :: st
+        | a :: b, ParseText t ->
+            a+t :: b
+        | _, ParseText t ->
+            [t]
+            
+    List.fold f [] pList |> List.rev
