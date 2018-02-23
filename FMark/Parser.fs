@@ -6,47 +6,46 @@ open Types
 let SPACE = " "
 let NOSTRING = ""
 
+let mapTok = function
+    | CODEBLOCK _ -> "CODEBLOCK" // not supposed to be read be matchTok
+    | LITERAL str-> str
+    | WHITESPACE n -> String.replicate n " "
+    | NUMBER str -> str
+    | HASH -> "#"
+    | PIPE->  "|"
+    | EQUAL-> "="
+    | MINUS-> "-"
+    | PLUS->  "+"
+    | ASTERISK-> "*"
+    | DOT-> "."
+    | DASTERISK-> "**"
+    | TASTERISK-> "***"
+    | UNDERSCORE-> "_"
+    | DUNDERSCORE-> "__"
+    | TUNDERSCORE-> "___"
+    | TILDE-> "~"
+    | DTILDE-> "~~"
+    | TTILDE-> "~~~"
+    | LSBRA-> "["
+    | RSBRA-> "]"
+    | LBRA-> "("
+    | RBRA-> ")"
+    | BSLASH-> "\\"
+    | SLASH-> "/"
+    | LABRA-> "<"
+    | RABRA-> ">"
+    | LCBRA -> "{"
+    | RCBRA -> "}"
+    | BACKTICK -> "`"
+    | TBACKTICK -> "``"
+    | EXCLAMATION -> "!"
+    | ENDLINE -> "\n"
+    | COLON -> ":"
+    | CARET -> "^"
+    | PERCENT -> "%"
 let stringAllTokens toks =
     let matchTok i tok =
-        let mappedTok =
-            match tok with
-            | CODEBLOCK _ -> "CODEBLOCK "
-            | LITERAL str-> sprintf "L(%A) " str
-            | WHITESPACE n ->  sprintf "S(%A) " n
-            | NUMBER str -> sprintf "N(%A) " str
-            | HASH -> "# "
-            | PIPE->  "| "
-            | EQUAL-> "= "
-            | MINUS-> "- "
-            | PLUS->  "+ "
-            | ASTERISK-> "* "
-            | DOT-> ". "
-            | DASTERISK-> "** "
-            | TASTERISK-> "*** "
-            | UNDERSCORE-> "_ "
-            | DUNDERSCORE-> "__ "
-            | TUNDERSCORE-> "___ "
-            | TILDE-> "~ "
-            | DTILDE-> "~~ "
-            | TTILDE-> "~~~ "
-            | LSBRA-> "[ "
-            | RSBRA-> "] "
-            | LBRA-> "( "
-            | RBRA-> ") "
-            | BSLASH-> "\ "
-            | SLASH-> "/ "
-            | LABRA-> "< "
-            | RABRA-> "> "
-            | LCBRA -> "{ "
-            | RCBRA -> "} "
-            | BACKTICK -> "` "
-            | TBACKTICK -> "`` "
-            | EXCLAMATION -> "! "
-            | ENDLINE -> "CRLF "
-            | COLON -> ": "
-            | CARET -> "^ "
-            | PERCENT -> "% "
-        i + mappedTok
+        i + mapTok tok
     List.fold matchTok "" toks
 
 /// count continuous spaces
@@ -119,12 +118,24 @@ let parseLiteral toks =
         | _ -> str, toks
     parseLiteral' toks NOSTRING
 
+let rec parseCode toks =
+    match toks with
+    | BACKTICK::_ -> ("", toks.[1..]) |> Ok
+    | tok::toks' ->
+        parseCode toks'
+        |> Result.map (fun (str, tks) ->
+        mapTok tok + str, tks )
+    | _ -> "BACKTICK is not match for inline code" |> Error
+
 let parseInLineElements toks =
     let rec parseInLineElements' toks =
         match toks with
         | LITERAL _ :: _ ->
             let pstr, retoks = parseLiteral toks
             (FrmtedString (Literal pstr), retoks) |> Ok
+        | BACKTICK:: _ ->
+            parseCode toks.[1..]
+            |> Result.map(fun (str, rtks) -> FrmtedString(Code str), rtks )
         | MatchEmStart toks' ->
             parseInLines toks'
             |> Result.map (fun (inlines, retoks) ->

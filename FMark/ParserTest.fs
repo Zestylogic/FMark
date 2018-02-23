@@ -108,7 +108,8 @@ let parseInlineElementsTest =
             [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; UNDERSCORE],
             ([FrmtedString(Literal "I "); FrmtedString(Emphasis([FrmtedString (Literal "am")]))], [])|>Ok,
             "literal and emphasis literal"
-        );(
+        );
+        (
             [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; UNDERSCORE; WHITESPACE 2; ENDLINE],
             ([FrmtedString(Literal "I "); FrmtedString(Emphasis([FrmtedString(Literal "am")]))], [])|>Ok,
             "literal and emphasis, newTLine"
@@ -117,6 +118,14 @@ let parseInlineElementsTest =
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; ENDLINE; LITERAL "New line"],
             ([FrmtedString(Literal "I am")], [LITERAL "New line"])|>Ok, "Two paragraphs"
         );
+        (
+            [BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK],
+            ([FrmtedString(Code "This  is     code")], [])|>Ok, "Only inline code"
+        );
+        (
+            [BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK; LITERAL "na"],
+            ([FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")], [])|>Ok, "Inline code and literal"
+        )
     ]
 let allTestsWithExpecto() =
     runTestsInAssembly defaultConfig [||]
