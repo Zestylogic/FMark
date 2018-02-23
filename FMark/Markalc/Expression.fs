@@ -19,8 +19,8 @@ let makeFloat i d =
     sprintf "%A.%A" i d |> float
 let makeInt (i:string) =
     i |> int
-let makeCellRef (row:string,col:string) =
-    CellRef (row|>uint32,col|>uint32)
+let makeCellRefOp (row:string,col:string) =
+    RowCol(row|>uint32,col|>uint32) |> CellRef |> Op
 /// Expression parser
 let parseExp toks = 
     let rec (|Expression|_|) (toks:Token list) =
@@ -29,7 +29,8 @@ let parseExp toks =
             | NUMBER(i) :: DOT :: NUMBER(d) :: after -> (makeFloat i d |> Float |> Op,after) |> Some
             | NUMBER(i) :: after ->( makeInt i |> float |> Float |> Op,after) |> Some
             // Parsing in reverse so right and left brackets swapped
-            | RSBRA :: NUMBER(row) :: LSBRA :: RSBRA :: NUMBER(col) :: LSBRA :: after -> ((col,row) |> makeCellRef |> Op,after) |> Some
+            | RSBRA :: NUMBER(row) :: LSBRA :: RSBRA :: NUMBER(col) :: LSBRA :: after 
+                -> ((col,row) |> makeCellRefOp,after) |> Some
             | RBRA :: Expression (x,LBRA::after) -> (x,after) |> Some
             | _ -> None
         // Active pattern to construct precedence-aware active patterns; descends recursively until highest precedence match.
@@ -55,24 +56,27 @@ let parseExp toks =
     | Expression (exp,[]) -> Ok exp
     | _ ->  sprintf "Not valid expression %A" toks |> Error
 // Recursively evaluate expression AST. CellRef will need access to whole table
-let rec evalExp e = 
+let rec evalExpTest e = 
     match e with
-    | BinExp(f,x,y) -> f (evalExp(x)) (evalExp(y))
+    | BinExp(f,x,y) -> f (evalExpTest(x)) (evalExpTest(y))
     | Op (Float(x)) -> x
-    | Op (CellRef(col,row)) -> 1.0
     | _ -> 13.0
-let toToken x = NUMBER(x|>string)
-// Parse 1+1 etc, going to have to pass in Table
-let parseExpTop (toks:Token list) =
+
+let parseExpression toks = 
+    match toks with
+    | EQUAL :: tail -> 
+         whitespaceFilter tail |> parseExp |> function
+             | Error(e) -> Error toks
+             | Ok(x) ->  Ok x
+    | toks -> Error toks
+
+// Test evaluation without table
+let parseExpTest (toks:Token list) =
     whitespaceFilter toks // Remove whitespace
     |> parseExp
     |> function // Perhaps monads not necessary
        | Error(e) -> printfn "Error parsing expression: %A" e
                      Error toks 
-       | Ok(x) -> evalExp x |> Ok
-let parseExpression = function 
-    | EQUAL :: tail -> 
-        parseExpTop tail |> function
-            | Ok(x) -> [toToken x] |> Ok
-            | Error(e) -> Error e
-    | toks -> Error toks
+       | Ok(x) -> evalExpTest x |> Ok
+let toToken x = NUMBER(x|>string)
+

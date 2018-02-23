@@ -1,58 +1,16 @@
 module MarkalcTests
 
 open Types
+open MarkalcShared
 open Markalc
 open Expression
 open Expecto.ExpectoFsCheck
 open Expecto
-open System.Text.RegularExpressions
-
-/// Helper function to copy a list i times
-let rec listCopies i lst =
-    match i with
-    | 1 -> lst
-    | 0 -> []
-    | x when x < 0 -> failwithf "Negative argument: %A" x
-    | _ -> lst @ (listCopies (i-1) lst)
-
-let unfoldTuple3 func (a,b,c) =
-   func a b c
 
 let makeEqTest func fname name inp outp =
     testCase name <| fun () ->
     Expect.equal (func inp) outp (sprintf "%s" fname)
 
-// Quick parser to generate expression test input
-let simpleParse txt = 
-    let (|RegexMatch|_|) r txt =
-        let m = Regex.Match (txt,"^"+r)
-        match m.Success with
-        | true -> (m.Value, txt.Substring(m.Value.Length)) |> Some
-        | false -> None
-    let rec simpleParse' a txt =
-        match txt with
-        | RegexMatch "[\\s]+" (m,after) -> simpleParse' (WHITESPACE(m.Length)::a) after
-        // Tokens for expression evaluation
-        | RegexMatch "[0-9]+" (m,after) -> simpleParse' (NUMBER(m)::a) after
-        | RegexMatch "\\^" (_,after) -> simpleParse' (CARET::a) after
-        | RegexMatch "\\%" (_,after) -> simpleParse' (PERCENT::a) after
-        | RegexMatch "\\*" (_,after) -> simpleParse' (ASTERISK::a) after
-        | RegexMatch "\\/" (_,after) -> simpleParse' (SLASH::a) after
-        | RegexMatch "\\+" (_,after) -> simpleParse' (PLUS::a) after
-        | RegexMatch "\\-" (_,after) -> simpleParse' (MINUS::a) after
-        | RegexMatch "\\(" (_,after) -> simpleParse' (LBRA::a) after
-        | RegexMatch "\\)" (_,after) -> simpleParse' (RBRA::a) after
-        | RegexMatch "\\[" (_,after) -> simpleParse' (LSBRA::a) after
-        | RegexMatch "\\]" (_,after) -> simpleParse' (RSBRA::a) after
-        // Tokens for table recognition
-        | RegexMatch "[a-zA-z]+[0-9]*( [a-zA-z]+[0-9]*)*" (m,after) -> simpleParse' (LITERAL(m)::a) after
-        | RegexMatch "\\|" (_,after) -> simpleParse' (PIPE::a) after
-        | RegexMatch "\\:" (_,after) -> simpleParse' (COLON::a) after
-        | "" -> a
-        | _ -> failwithf "Unexpected character: %A" txt
-    simpleParse' [] txt |> List.rev
-
-let parseY (x,y,z) = x,y|>simpleParse,z
 let expressionData = [
     "Simple addition.",
     "10+10",
@@ -95,7 +53,7 @@ let expressionData = [
     6.0 |> Ok;
     "Testing cellref evaluation (without table)",
     "1+([1][1]+[1][2])",
-    3.0 |> Ok;
+    27.0 |> Ok;
     "Left to right evaluation",
     "2 -4 +6 -1 -1- 0 +8",
     10.0 |> Ok
@@ -103,7 +61,7 @@ let expressionData = [
     "2 ^4 +6 -1 -1- 0 +8",
     28.0 |> Ok
 ]
-let makeExpressionTest = makeEqTest parseExpTop "parseExpTop"
+let makeExpressionTest = makeEqTest parseExpTest "parseExpTop"
 [<Tests>]
 let expTest =
     (List.map (parseY >> unfoldTuple3 makeExpressionTest) expressionData)
@@ -184,13 +142,14 @@ let testTableData = [
                           ":------|:-----:|------:";
                           "Somedfs|tesdfst|stduff"] ,
     // Answer, two lists of aligned cells
-    [[Tokens ([LITERAL "header1"],true,Left);Tokens ([LITERAL "header2"],true,Centre);Tokens ([LITERAL "header3"],true,Right) ]] @
-    [[Tokens ([LITERAL "Somedfs"],false,Left);Tokens ([LITERAL "tesdfst"],false,Centre);Tokens ([LITERAL "stduff"],false,Right)]] |> Ok;
+    [[Contents ([LITERAL "header1"],true,Left);Contents ([LITERAL "header2"],true,Centre);Contents ([LITERAL "header3"],true,Right) ]] @
+    [[Contents ([LITERAL "Somedfs"],false,Left);Contents ([LITERAL "tesdfst"],false,Centre);Contents ([LITERAL "stduff"],false,Right)]] |> Ok;
 ]
 let makeTransformTableTest = makeEqTest transformTable "transformTable"
 [<Tests>]
 let transformTableTest =
     List.map (unfoldTuple3 makeTransformTableTest) testTableData
     |> Expecto.Tests.testList "transformTable tests"
+
 let runTests =
     Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore

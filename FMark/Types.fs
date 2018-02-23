@@ -34,7 +34,7 @@ and TListItem = NestedList of TList | StringItem of TLine
 type Alignment = Centre | Right | Left
 
 type Cell =
-    | Tokens of Token list * Header: bool * Align:Alignment
+    | Contents of Tokens: Token list * Header: bool * Align:Alignment
 
 type Row =
     | Cells of Cell list
@@ -49,8 +49,11 @@ type ParsedObj =
     | PreTable of Content: Token list list * Height: int * Width: int
     | Footnote of ID: int * TLine
 
+type CellReference = 
+    RowCol of Row:uint32*Col:uint32
+
 type Operand =
-    | CellRef of uint32*uint32
+    | CellRef of CellReference
     | Integer of int
     | Float of float
 

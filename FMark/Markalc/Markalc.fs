@@ -4,6 +4,13 @@ open Types
 open MarkalcShared
 open Expression
 open System
+open FsCheck
+
+type Cell with 
+    member c.GetToks = match c with 
+                           | Contents(toks,head,align) -> toks
+    member c.ReplaceTokens t = match c with 
+                               | Contents(_,head,align) -> Contents(t,head,align)
 
 let pipeSplit toks = 
     delimSplit false PIPE toks
@@ -11,7 +18,7 @@ let pipeSplit toks =
 let makeCellU header tokens  = (tokens,header)
 let makeDefaultCellU = makeCellU false
 let makeHeaderCellU = makeCellU true
-let alignCell alignment cellU = Tokens (fst cellU, snd cellU, alignment)
+let alignCell alignment cellU = Contents (fst cellU, snd cellU, alignment)
 // Parse a line into a list of cells
 let parseRowD debug constructCell (row:Token list) =
     let rec parseRow' a row =
@@ -105,16 +112,56 @@ let transformTable (table:Token list list)  =
     |> List.rev
     |> joinErrorList
 
-/// Convert Cell list list into a suitable structure... or create methods for accessing nicely.
 
+type MapContents =
+    | MapTok of Cell
+    | MapExp of Expr * Cell
+let rec evalExp map e =
+    match e with
+    | BinExp(f,x,y) -> f (evalExp map x) (evalExp map y)
+    | Op (Float(x)) -> x
+    | Op (CellRef(ref)) -> match Map.tryFind ref map with
+                           | Some(MapExp(e,_)) -> evalExp map e
+                           | _ -> nan // invalid reference
+    | _ -> 13.0
+// Evaluate all expressions inside a cell list list, leave non-expression cells as they are
+let evaluateCellList cellList = 
+    // Iterate over table, must know "where am I?" for each cell
+    let innerFold row (s:(CellReference*MapContents) list*uint32) (cell:Cell) =
+        match parseExpression (cell.GetToks) with
+        | Ok(ex) ->   (RowCol(row,snd s),MapExp (ex,cell)) :: (fst s), snd s + 1u  // Expression found, put it into the map!
+        | Error(t) -> (RowCol(row,snd s),MapTok (cell)) :: fst s, snd s + 1u // No expression, ignore
+    let outerFold (s:uint32*((CellReference*MapContents)list*uint32)) cells =
+        (fst s + 1u,List.fold (innerFold (fst s)) (fst(snd s),0u) cells)
+    // Get the length of each list.
+    let rowLength = List.length (List.head cellList)
+    List.fold outerFold (0u,([],0u)) cellList 
+    |> function 
+    | (_,(expRefList,_)) -> 
+        let expList = List.rev expRefList
+        let map = Map.ofList expList
+        // Iterate over list, evaluate expression for each MapExp then convert into Token list
+        // convert MapContents from MapExp to MapTok (?)
+        let expListEval = function
+            | MapTok(c) -> c
+            | MapExp(e,c) -> [evalExp map e |> toToken] |> (c.ReplaceTokens)
+        List.map (snd >> expListEval) expList
+        |> (Seq.chunkBySize rowLength) 
+        |> Seq.toList 
+        |> (List.map (Array.toList))
+
+// Parse tokens into cell list list
 /// Top level function
 let topLevel (input:Token list list) = 
-    // Take the table and transform it into an array (could return error monad if invalid table?)
-    let table = transformTable input
-
-    // Iterate over the array and apply functions
-    
-    
-    match table with
+    // Transform Token list list into Cell list list
+    transformTable input
+    |> function
     | Error(_) -> input |> Error
-    | Ok(x) -> x |> Ok
+    | Ok(x) -> evaluateCellList x |> Ok
+
+    
+let testExprData = 
+    List.map simpleParse ["=2+2|header2|header3";
+                          ":------|:-----:|------:";
+                          "=[0][0]+1|tesdfst|stduff";
+                          "=2+3|tesdfst|=[1][0]+[0][0]"]
