@@ -91,13 +91,15 @@ let rec tocParse tocLst depth =
     | _::tl -> tocParse tl 0
     | [] -> []
     
-let tocGen tokenLst maxDepth =
+let tocGen' tokenLst maxDepth =
     match maxDepth with
     | 0 -> tocParse tokenLst 0
     | d when d > 0 ->
         tocParse tokenLst 0
         |> List.filter (fun x -> x.Level <= d)
     | _ -> failwithf "Invalide maxDepth"
+
+let tocGen tLst maxD = {MaxDepth = maxD; HeaderLst = tocGen' tLst maxD}
 
 // --------------------------------------------------------------------------------
 //pick out footnotes and send to footLineParse
@@ -129,4 +131,35 @@ let citeGen tLst =
     List.sortBy (fun (x,_) -> x) ftLst
     |> List.map (fun (x,y) -> Footnote(x,y))
 
-    
+// --------------------------------------------------------------------------------
+//pick out footnotes and send to footLineParse
+//second version for inserting tokens back
+let rec citeParse' tocLst :(int*TLine)list*Token list =
+    let recFit (a,b) c = (fun (x,y) -> (c,a)::x, y) (citeParse' b)
+    match tocLst with
+    | LSBRA::CARET::NUMBER key::RSBRA::tl ->
+        match tl with
+        | COLON::tail -> recFit (citeParseIn' [] tail) (int key)
+        | tail -> (fun (x,y) -> x, FOOTER (int key)::y)(citeParse' tail)
+    | t::tl -> (fun (x,y) -> x, t::y) (citeParse' tl)
+    | [] -> [],[]
+
+//parse footnotes with parseLine
+and citeParseIn' tLne tocLst :TLine*Token list =
+    match tocLst with
+    | ENDLINE::WHITESPACE 4::tl ->
+        citeParseIn' tLne tl
+        |> fun (x,y) -> List.append tLne x, y
+    | ENDLINE::tl -> tLne, tl
+    | _::_ ->
+        parseLine [] tocLst
+        |> fun(x,y) -> citeParseIn' x y
+    | [] -> tLne, []
+
+
+//type change and sorting
+let citeGen' tLst =
+    let ftLst,tLst = citeParse' tLst
+    let k = List.sortBy (fun (x,_) -> x) ftLst
+            |> List.map (fun (x,y) -> Footnote(x,y))
+    k,tLst
