@@ -7,10 +7,7 @@ open Expression
 open Expecto.ExpectoFsCheck
 open Expecto
 
-let makeEqTest func fname name inp outp =
-    testCase name <| fun () ->
-    Expect.equal (func inp) outp (sprintf "%s" fname)
-
+// ####################### DATA ###################
 let expressionData = [
     "Simple addition.",
     "10+10",
@@ -61,45 +58,29 @@ let expressionData = [
     "2 ^4 +6 -1 -1- 0 +8",
     28.0 |> Ok
 ]
-let makeExpressionTest = makeEqTest parseExpTest "parseExpTop"
-[<Tests>]
-let expTest =
-    (List.map (parseY >> unfoldTuple3 makeExpressionTest) expressionData)
-    |> Expecto.Tests.testList "Expression tests"
-
 let parseDefaultRowData = [
-                            "All Pipes",
-                            "|hello |mynameis|",
-                            [makeDefaultCellU[LITERAL("hello"); WHITESPACE(1)]; makeDefaultCellU[LITERAL("mynameis")]];
-                            "Only middle pipe",
-                            "hello |my name is",
-                            [makeDefaultCellU[LITERAL("hello"); WHITESPACE(1)];makeDefaultCellU[LITERAL("my name is")]];
-                            "Empty pipes",
-                            "|||",
-                            [makeDefaultCellU[];makeDefaultCellU[]];
-                            "One pipe",
-                            "hi|",
-                            [makeDefaultCellU[LITERAL("hi")];makeDefaultCellU[]];
-                            "No end pipe",
-                            "|hello my |name",
-                            [makeDefaultCellU [LITERAL("hello my");WHITESPACE(1)] ; makeDefaultCellU[LITERAL("name")]];
-                            "No start pipe",
-                            "hello my |name|",
-                            [makeDefaultCellU [LITERAL("hello my");WHITESPACE(1)] ; makeDefaultCellU[LITERAL("name")]];
-                            "Empty pipes in middle",
-                            "some test||stuff 0398 test",
-                            [makeDefaultCellU [LITERAL("some test")];makeDefaultCellU[] ; makeDefaultCellU[LITERAL("stuff");WHITESPACE(1);NUMBER("0398");WHITESPACE(1);LITERAL("test")]]
-                          ]
-
-let parseDefaultRowData' = List.map parseY parseDefaultRowData
-let makeParseRowTest = makeEqTest parseDefaultRow "parseDefaultRow"
-
-[<Tests>]
-let parseRowTest =
-    List.map (parseY >> unfoldTuple3 makeParseRowTest) (parseDefaultRowData)
-    |> Expecto.Tests.testList "parseDefaultRow tests"
-
-// Test parseAlignmentRow
+    "All Pipes",
+    "|hello |mynameis|",
+    [makeDefaultCellU[LITERAL("hello"); WHITESPACE(1)]; makeDefaultCellU[LITERAL("mynameis")]];
+    "Only middle pipe",
+    "hello |my name is",
+    [makeDefaultCellU[LITERAL("hello"); WHITESPACE(1)];makeDefaultCellU[LITERAL("my name is")]];
+    "Empty pipes",
+    "|||",
+    [makeDefaultCellU[];makeDefaultCellU[]];
+    "One pipe",
+    "hi|",
+    [makeDefaultCellU[LITERAL("hi")];makeDefaultCellU[]];
+    "No end pipe",
+    "|hello my |name",
+    [makeDefaultCellU [LITERAL("hello my");WHITESPACE(1)] ; makeDefaultCellU[LITERAL("name")]];
+    "No start pipe",
+    "hello my |name|",
+    [makeDefaultCellU [LITERAL("hello my");WHITESPACE(1)] ; makeDefaultCellU[LITERAL("name")]];
+    "Empty pipes in middle",
+    "some test||stuff 0398 test",
+    [makeDefaultCellU [LITERAL("some test")];makeDefaultCellU[] ; makeDefaultCellU[LITERAL("stuff");WHITESPACE(1);NUMBER("0398");WHITESPACE(1);LITERAL("test")]]
+]
 let testAlignData = [
     "No alignments.",
     "---|----|---",
@@ -129,13 +110,6 @@ let testAlignData = [
     "|---|:---:|---:|:---:|:---|---:|:---:|---:|:---|",
     [Left;Centre;Right;Centre;Left;Right;Centre;Right;Left] |> Ok
 ]
-let makeParseAlignmentRowTest = makeEqTest parseAlignmentRow "parseAlignmentRow"
-
-[<Tests>]
-let parseAlignmentRowTest =
-    List.map (parseY >> unfoldTuple3 makeParseAlignmentRowTest) testAlignData
-    |> Expecto.Tests.testList "parseAlignmentRow tests"
-
 let testTableData = [
     "Test one: Simple table",
     List.map simpleParse ["header1|header2|header3";
@@ -145,11 +119,29 @@ let testTableData = [
     [[Contents ([LITERAL "header1"],true,Left);Contents ([LITERAL "header2"],true,Centre);Contents ([LITERAL "header3"],true,Right) ]] @
     [[Contents ([LITERAL "Somedfs"],false,Left);Contents ([LITERAL "tesdfst"],false,Centre);Contents ([LITERAL "stduff"],false,Right)]] |> Ok;
 ]
+
+// ####################### FUNCTIONS #####################
+let makeEqTest func fname name inp outp =
+    testCase name <| fun () ->
+    Expect.equal (func inp) outp (sprintf "%s" fname)
+let addTestList test name dataTransform data = 
+    (List.map (dataTransform >> (unfoldTuple3 test)) data)
+    |> Expecto.Tests.testList name
+
+let makeExpressionTest = makeEqTest parseExpTest "parseExpTop"
+let makeParseRowTest = makeEqTest parseDefaultRow "parseDefaultRow"
+let makeParseAlignmentRowTest = makeEqTest parseAlignmentRow "parseAlignmentRow"
 let makeTransformTableTest = makeEqTest transformTable "transformTable"
+
+// ####################### TESTS ########################
 [<Tests>]
-let transformTableTest =
-    List.map (unfoldTuple3 makeTransformTableTest) testTableData
-    |> Expecto.Tests.testList "transformTable tests"
+let tests = 
+    testList "Should pass" [
+        addTestList makeExpressionTest "Expression tests" parseY expressionData;
+        addTestList makeParseRowTest "parseDefaultRow tests" parseY parseDefaultRowData;
+        addTestList makeParseAlignmentRowTest "parseAlignmentRow tests" parseY testAlignData;
+        addTestList makeTransformTableTest "transformTable tests" id testTableData;
+]
 
 let runTests =
     Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
