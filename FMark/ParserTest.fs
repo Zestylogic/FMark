@@ -124,7 +124,8 @@ let parseInlineElementsTest =
         );
         (
             [BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK; LITERAL "na"],
-            ([FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")], [])|>Ok, "Inline code and literal"
+            ([FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")], [])|>Ok,
+            "Inline code and literal"
         )
     ]
 let allTestsWithExpecto() =

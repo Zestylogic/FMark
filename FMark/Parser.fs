@@ -75,13 +75,21 @@ let (|IsNewTLine|_|) toks =
         | false -> None
     | false -> None
 
+/// potential new inline format
+let (|IsNewFrmt|_|) toks =
+    match toks with
+        | UNDERSCORE::_ | DUNDERSCORE::_ | TUNDERSCORE::_   // em and strong
+        | ASTERISK::_ | DASTERISK::_ | TASTERISK::_         // em and strong
+        | BACKTICK:: _                                      // code
+        | LBRA:: _ | RBRA:: _ | EXCLAMATION:: _ | LSBRA:: _ | RSBRA:: _ //link and picture
+            -> toks |> Some
+        | _ -> None
+
 let (|IsWordSepAndNewFrmt|_|) toks =
     match toks with
     | WHITESPACE _::toks' ->
         match toks' with
-        | UNDERSCORE::_ | DUNDERSCORE::_ | TUNDERSCORE::_
-        | ASTERISK::_ | DASTERISK::_ | TASTERISK::_
-            -> toks |> Some
+        | IsNewFrmt _ -> toks |> Some
         | _ -> None
     | _ -> None
 
@@ -102,21 +110,24 @@ let (|MatchNewParagraph|_|) toks =
     | n when n>=2 -> toks.[n..] |> Some
     | _ -> None
 
+let (|MatchMapTok|_|) = function
+    | tok:: toks -> (mapTok tok, toks) |> Some
+    | _ -> None
+
 /// parse literals, return any unrecognized tokens
 let parseLiteral toks =
-    let rec parseLiteral' toks str =
-        let appendString newstr sep retoks =
-            match String.length str with
-            | 0 -> [] | _ -> [str]
-            |> (fun sl -> List.append sl [newstr])
-            |> String.concat sep |> parseLiteral' retoks
+    let rec parseLiteral' (str, toks) =
         match toks with
-        | IsWordSepAndNewFrmt retoks -> str+SPACE, retoks
-        | WHITESPACE _:: LITERAL str':: toks' -> appendString str' SPACE toks'
-        | LITERAL str' :: toks' -> appendString str' NOSTRING toks'
-        | ENDLINE::LITERAL str'::toks' -> appendString str' SPACE toks'
-        | _ -> str, toks
-    parseLiteral' toks NOSTRING
+        | IsWordSepAndNewFrmt retoks -> str+SPACE, retoks   // preserve space before NewFrmt
+        | IsNewTLine _ -> str, toks                         // New TLine
+        | IsNewFrmt _ -> str, toks                          // NewFrmt
+        | MatchNewParagraph _ -> str, toks                  // 2>= endlines
+        | WHITESPACE _:: toks' -> (str+" ", toks') |> parseLiteral' // reduce spaces to 1
+        | ENDLINE::toks' -> (str+" ", toks') |> parseLiteral' // convert 1 endline to space
+        | MatchMapTok (str', tks) -> (str+str', tks) |> parseLiteral' // convert the rest to string
+        | [] -> str, toks
+        | _ -> sprintf "unmatched token should never happen: %A" toks |> failwith
+    parseLiteral' (NOSTRING, toks)
 
 let rec parseCode toks =
     match toks with
@@ -142,7 +153,7 @@ let parseInLineElements toks =
                 match retoks with
                 | MatchEmEnd retoks' -> (FrmtedString(Emphasis(inlines)), retoks')
                 | _ -> failwithf "underscore not matching")
-        | _ -> sprintf "Nothing matched: %A" (stringAllTokens toks) |> Error
+        | _ -> sprintf "Nothing matched: %A" toks |> Error
     and parseInLines toks =
         match toks with
         | [] -> ([], []) |> Ok
