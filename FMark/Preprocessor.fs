@@ -52,7 +52,7 @@ let pNextToken str =
     | RegexMatch "^.+?(?={%|%}|{{|}}|{!|!}|\\(|\\)|;|macro|$)" (m, _, r) -> PTEXT m, r
     | _ -> String.ofChar str.[0] |> PTEXT, str.[1..]
 
-let pTokenize (str: string): PToken list =
+let pTokenize str =
     let rec pTokenize' tList str =
         match str with
         | WhiteSpace -> PENDLINE :: tList
@@ -108,6 +108,10 @@ let (|SChar|_|) = function
     | PLBRA -> Some "("
     | PRBRA -> Some ")"
     | MACRO -> Some "macro"
+    | CLOSEDEF -> Some "%}"
+    | CLOSEEVAL -> Some "}}"
+    | OPENDEF -> Some "{%"
+    | OPENEVAL -> Some "{{"
     | _ -> None
 
 let (|SCharWhite|_|) = function
@@ -115,6 +119,8 @@ let (|SCharWhite|_|) = function
         Some (t+m, PTEXT r :: tl)
     | SChar t :: tl ->
         Some (t, tl)
+    | [SChar t] ->
+        Some (t, [])
     | _ -> None
 
 let pParse tList =
@@ -131,23 +137,17 @@ let pParse tList =
             recText (String.trimStart [|' '|] f) tl
         | _, PENDLINE :: tl ->
             pRec id ParseNewLine tl
-        | _, SCharWhite (c, tl) ->
-            recText c tl
         | Some e, a :: b when e = a ->
             pList, b
+        | _, SCharWhite (c, tl) ->
+            recText c tl
         | _, [] -> pList, []
-        | _ ->
-            printfn "%A\n%A" tList pList
-            failwithf "Could not parse tokens" 
     let p, _ = pParse' None tList []
     List.rev p
 
-let replace (pList: Parser list): Parser list =
+let replace pList=
 
-    let makeDummy (s: string) =
-        {Name=s; Args=[]; Body=[MacroSubstitution (s, [])]}
-
-    let rec replace' pList newPList (param: Map<string, string option>) (scope: Map<string, Macro>) =
+    let rec replace' pList newPList param scope =
 
         let addScope =
             List.fold (fun (st: Map<string, Macro>) v -> st.Add(v.Name, v)) scope
@@ -181,7 +181,9 @@ let replace (pList: Parser list): Parser list =
                 | a ->
                     match scope.TryFind n with
                     | Some m ->
-                        replace' m.Body [] (List.zip m.Args a |> List.fold (fun s (a, b) -> s.Add(a, Some b)) param) scope |> List.rev |> Some
+                        replace' m.Body [] (List.zip m.Args a
+                                            |> List.fold (fun s (a, b) -> s.Add(a, Some b)) param) scope
+                        |> List.rev |> Some
                     | None ->
                         failwithf "Failed"
             match replacement with
@@ -198,7 +200,10 @@ let replace (pList: Parser list): Parser list =
     replace' pList [] Map.empty<string, string option> Map.empty<string, Macro> |> List.rev
 
 let prettyPrint pList =
-    List.fold (fun st -> function | ParseText x -> st+x | ParseNewLine -> st+"\n" | _ -> failwithf "Failed to print") "" pList
+    List.fold (fun st -> function
+               | ParseText x -> st+x
+               | ParseNewLine -> st+"\n"
+               | _ -> failwithf "Failed to print") "" pList
 
 let toStringList pList =
     let f st n =
@@ -211,3 +216,6 @@ let toStringList pList =
             [t]
             
     List.fold f [] pList |> List.rev
+
+let preprocess =
+    pTokenize >> pParse >> replace >> toStringList
