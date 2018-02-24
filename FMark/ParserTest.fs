@@ -117,14 +117,24 @@ let parseInlineElementsTest =
             ([FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")], [])|>Ok,
             "Inline code and literal"
         );
+    ]
+
+[<Tests>]
+let emphasisTest =
+    makeExpectoTestList id id parseInLineElements "parseInLineElements emphasis test" [
         (
             [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"],
             ([FrmtedString(Literal "I "); FrmtedString(Literal "_am")], [])|>Ok,
-            "unmatched emphasis"
+            "unmatched emphasis, UNDERSCORE"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"],
+            ([FrmtedString(Literal "I "); FrmtedString(Literal "*am")], [])|>Ok,
+            "unmatched emphasis, ASTERISK"
         );
         (
             [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ASTERISK],
-            ([FrmtedString(Literal "I "); FrmtedString(Literal "*am")], [])|>Ok,
+            ([FrmtedString(Literal "I "); FrmtedString(Emphasis[FrmtedString(Literal "am")])], [])|>Ok,
             "asterisk as emphasis"
         );
     ]
