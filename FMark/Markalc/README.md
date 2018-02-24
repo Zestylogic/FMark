@@ -67,14 +67,14 @@ Markalc takes in a Token list list, each token list in the input is interpreted 
 
 ### Features
 
-|Feature|Example|Supported?|Tested|
-|---|---|---|---|
-|Superfluous Pipes|`|---|---|`|[x]|Unit Tested|
-|No outside pipes|`---|---`|[x]|Unit Tested|
-|Cell alignment|`---|:---:`|[x]|Unit Tested|
-|Single cell table|See below|[ ]|Untested|
-|Filling in missing row elements in body.||[x]|Unit Tested|
-|Ignoring extra row elements in body.||[x]|Unit Tested|
+|Feature|Supported?|Tested|
+|---|---|---|
+|Superfluous Pipes|[x]|Unit Tested|
+|No outside pipes|[x]|Unit Tested|
+|Cell alignment|[x]|Unit Tested|
+|Single cell table|[ ]|Untested|
+|Filling in missing row elements in body.|[x]|Unit Tested|
+|Ignoring extra row elements in body.|[x]|Unit Tested|
 
 #### Single cell/column table
 ```
