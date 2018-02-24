@@ -27,7 +27,7 @@ Calcs|39|42|
 |Addition|`a+b`|a plus b|Property based, all integer inputs.
 |Brackets|`a+(b-c)`|Specify order of operation.|Unit tested.
 |Cell References|`[row][col]`|Evaluates to contents of cell specified|Unit tested|
-|Range Cell Ref|`[0][0]:[2][0]`|Evaluates to list of cell references.|Unit tested|
+|Range Cell Ref|`[0][0]:[2][0]`|Evaluates to list of cell references.|Unit tested, not fully.|
 
 
 ##### Cell reference behaviour
@@ -54,9 +54,6 @@ Functions support Range Cell References: `[0][0]:[2][0]` will evaluate to `[0][0
 
 `=SUM{[0][0]:[2][0],[0][1]:[2][1],5,[0][2]}`
 
-Future: 
-- Add more functions (easy to do).
-
 ### Unsupported
 
 |Function|Example|Workaround|
@@ -76,6 +73,16 @@ Markalc takes in a Token list list, each token list in the input is interpreted 
 |No outside pipes|`---|---`|[x]|Unit Tested|
 |Cell alignment|`---|:---:`|[x]|Unit Tested|
 |Single cell table|See below|[ ]|Untested|
-|Filling in missing row elements||[x]|Unit Tested|
-|Ignoring extra row elements||[x]|Unit Tested|
+|Filling in missing row elements in body.||[x]|Unit Tested|
+|Ignoring extra row elements in body.||[x]|Unit Tested|
+
+#### Single cell/column table
+```
+example
+---|
+```
+
+example
+---|
+
 
