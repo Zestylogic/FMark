@@ -36,7 +36,7 @@ let rec listCopies i lst =
 let unfoldTuple3 func (a,b,c) =
    func a b c
 
-// Quick parser to generate expression test input
+// Quick parser to generate tokenise string one row at a time
 let simpleParse txt = 
     let (|RegexMatch|_|) r txt =
         let m = Regex.Match (txt,"^"+r)
@@ -72,4 +72,7 @@ let simpleParse txt =
         | _ -> failwithf "Unexpected character: %A" txt
     simpleParse' [] txt |> List.rev
 
+// Experimental parser for tokenising from entire table string
+// let stringParse (txt:string)=
+//     List.map simpleParse (Array.toList (txt.Split("\n")))
 let parseY (x,y,z) = x,y|>simpleParse,z

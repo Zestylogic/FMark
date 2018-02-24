@@ -185,7 +185,7 @@ let evaluateCellList cellList =
         List.map (snd >> expListEval) expList
         |> (Seq.chunkBySize rowLength) 
         |> Seq.toList 
-        |> (List.map (Array.toList))
+        |> List.map (Array.toList)
 
 /// Top level function
 /// Parse tokens into cell list list with all Expressions evaluated
