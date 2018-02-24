@@ -140,6 +140,17 @@ let emphasisTest =
     ]
 
 [<Tests>]
+let ``multiparagraph emphasis test`` =
+    makeExpectoTestList id id parseParagraph "multiparagraph emphasis test" [
+        (
+            [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ENDLINE; ENDLINE; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; UNDERSCORE],
+            (Paragraph[[FrmtedString(Literal "I "); FrmtedString(Literal "*am")];
+                [FrmtedString(Emphasis[FrmtedString(Literal "Lord")])]], [])|>Ok,
+            "unmatched emphasis, and new paragraph emphasis"
+        );
+    ]
+
+[<Tests>]
 let parseParagraphTest =
     makeExpectoTestList id id parseParagraph "parseParagraph test" [
         (
@@ -148,7 +159,7 @@ let parseParagraphTest =
             (Paragraph[[FrmtedString(Literal "I am")];
                 [FrmtedString(Literal "dancing at"); FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")]], [])|>Ok,
             "two simple paragraphs with code"
-        )
+        );
     ]
 
 [<Tests>]
@@ -169,6 +180,21 @@ let testGlobal =
         (
             [HASH; HASH; LITERAL "h2"],
             [Paragraph[[FrmtedString(Literal "##h2")]]] |>Ok, "fake h2 header"
+        )
+    ]
+
+[<Tests>]
+let ``multiparagraph misc test`` =
+    makeExpectoTestList id id parse "multiparagraph misc test" [
+        (
+            [ENDLINE; ENDLINE; LITERAL "feet"],
+            ([Paragraph[[FrmtedString(Literal "feet")]]])|>Ok,
+            "paragraph starting with two ENDLINEs"
+        );
+        (
+            [ENDLINE; LITERAL "feet"],
+            ([Paragraph[[FrmtedString(Literal "feet")]]])|>Ok,
+            "paragraph starting with one ENDLINE"
         )
     ]
 let allTestsWithExpecto() =

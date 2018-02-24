@@ -12,6 +12,11 @@ let mapTEmphasis = function
     | UNDER -> "_"
     | STAR -> "*"
 
+let rec deleteLeadingEDNLINEs toks =
+    match toks with
+    | ENDLINE:: tks -> deleteLeadingEDNLINEs tks
+    | _ -> toks
+
 let mapTok = function
     | CODEBLOCK _ -> "CODEBLOCK" // not supposed to be read be matchTok
     | LITERAL str-> str
@@ -133,6 +138,8 @@ let (|MatchEmEnd|_|) toks =
     | WHITESPACE _:: ASTERISK:: _ -> None           // nor em end
     | tk:: ASTERISK:: toks' -> (tk, STAR, toks') |> Some
     | _ -> None
+
+/// omit EDNLINEs
 let (|MatchNewParagraph|_|) toks =
     match countNewLines toks with
     | n when n>=2 -> toks.[n..] |> Some
@@ -248,7 +255,7 @@ let parseInLineElements toks =
 let parseParagraph toks =
     let rec parseParagraph' toks =
         match toks with
-        | ENDLINE::toks' -> ([], toks') |> Ok
+        | MatchNewParagraph toks' -> ([], toks') |> Ok
         | _ ->
             parseInLineElements toks
             |> Result.map (fun (inLines, retoks)->
@@ -267,10 +274,13 @@ let parseParagraph toks =
     parseParagraphs toks |> Result.map (fun (lines,tks) -> Paragraph lines, tks)
 
 
-let rec parseItem (toks: Token list) : Result<ParsedObj * Token list, string> =
+/// assuming each item start at the beginning of the line
+/// the returned token head does not have 2>= ENDLINE
+let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string> =
+    let toks = deleteLeadingEDNLINEs rawToks
     match toks with
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
-    | ENDLINE _ :: NUMBER _ :: DOT :: WHITESPACE _ :: toks' -> "Lists todo" |> Error
+    | NUMBER _ :: DOT :: WHITESPACE _ :: toks' -> "Lists todo" |> Error
     | MatchHeader (level, rtks) ->
         parseInLineElements rtks
         |> Result.map (fun (line, rtks') -> Header{HeaderName=line; Level=level}, rtks' )
