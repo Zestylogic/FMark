@@ -60,4 +60,4 @@ type Operand =
 type Expr =
     | BinExp of (float->float->float)*Expr*Expr
     | Op of Operand
-    | Exp of Expr
+    | Function of string*CellReference*CellReference

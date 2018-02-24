@@ -147,6 +147,20 @@ let testExprData = [
       Contents ([LITERAL "stduff"],false,Right)];
      [Contents ([NUMBER "5"],false,Left);
       Contents ([LITERAL "tesdfst"],false,Centre);
+      Contents ([NUMBER "NaN"],false,Right)]] |> Ok;
+     "Basic function call.",
+     ["=2+2|header2|header3";
+     ":------|:-----:|------:";
+     "=[0][0]+[2][2]|tesdfst|stduff";
+     "=2+3|=SUM([0][0]:[1][0])|=[1][0]+[0][0]"]|>List.map simpleParse,
+     [[Contents ([NUMBER "4"],true,Left);
+       Contents ([LITERAL "header2"],true,Centre);
+       Contents ([LITERAL "header3"],true,Right)];
+     [Contents ([NUMBER "NaN"],false,Left);
+      Contents ([LITERAL "tesdfst"],false,Centre);
+      Contents ([LITERAL "stduff"],false,Right)];
+     [Contents ([NUMBER "5"],false,Left);
+      Contents ([LITERAL "tesdfst"],false,Centre);
       Contents ([NUMBER "NaN"],false,Right)]] |> Ok
 ]
 // ####################### FUNCTIONS #####################
@@ -174,5 +188,23 @@ let tests =
         addTestList evalTest "transformTable tests" id testExprData;
 ]
 
+let funcList = [( % ),"%";( ** ),"^";( + ),"+";( - ),"-"; ( * ),"*"; ( / ),"/"]
+let expressionPropertyTest op = 
+    testProperty (sprintf "Num %A Num is Num %A Num" op op) <|
+    (fun (x:int,y:int) ->
+        let tostr = function | i when i < 0 -> sprintf "(0-%i)" (-i)
+                             | i -> string i
+        let instr = tostr x + (snd op) + tostr y
+        //sprintf "%i%s%i" x (snd op) y
+        Expect.equal
+            (instr |> simpleParse |> parseExpTest |> (function | Ok(x)->string x | Error(e) -> string e)) // Actual
+            ((fst op) (x|>float) (y|>float) |> string) // Expected
+            (sprintf "x %A y is x %A y" op op)
+    )
+    
+[<Tests>]
+let propertyTests =
+    List.map (expressionPropertyTest) funcList
+    |> Expecto.Tests.testList "Expression property tests."
 let runTests =
     Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore

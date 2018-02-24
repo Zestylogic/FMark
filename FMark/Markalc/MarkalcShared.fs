@@ -60,6 +60,7 @@ let simpleParse txt =
         | RegexMatch "\\[" (_,after) -> simpleParse' (LSBRA::a) after
         | RegexMatch "\\]" (_,after) -> simpleParse' (RSBRA::a) after
         | RegexMatch "\\=" (_,after) -> simpleParse' (EQUAL::a) after
+        | RegexMatch "\\." (_,after) -> simpleParse' (DOT::a) after
         // Contents for table recognition
         | RegexMatch "[a-zA-z]+[0-9]*( [a-zA-z]+[0-9]*)*" (m,after) -> simpleParse' (LITERAL(m)::a) after
         | RegexMatch "\\|" (_,after) -> simpleParse' (PIPE::a) after

@@ -124,7 +124,12 @@ let transformTable (table:Token list list)  =
     |> List.rev
     |> joinErrorList
 
-let tryEval map e = 
+let tryEval map e =
+    // Take in two cell refs and return a list of all refs inbetween or None
+    //let over x y =
+        // 
+        // match x with
+        // | (a,b) -> match 
     let rec evalExp r map e =
         if r > maxRefs then nan else
         match e with
@@ -133,6 +138,7 @@ let tryEval map e =
         | Op (CellRef(ref)) -> match Map.tryFind ref map with
                                | Some(MapExp(e2,_)) -> evalExp (r+1) map e2
                                | _ -> nan // invalid reference
+        // | Function("SUM",x,y) -> 
         | _ -> 13.0
     evalExp 0 map e
 /// Evaluate all expressions inside a cell list list, leave non-expression cells as they are
