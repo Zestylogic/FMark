@@ -46,11 +46,11 @@ let (|Character|_|) = function
     | RegexMatch "^macro\s+" (_, _, r) -> Some (MACRO, r)
     | _ -> None
 
-let pNextToken str: PToken * string =
+let pNextToken str =
     match str with
     | Character r -> r
     | RegexMatch "^.+?(?={%|%}|{{|}}|{!|!}|\\(|\\)|;|macro|$)" (m, _, r) -> PTEXT m, r
-    | _ -> failwithf "Token not found: %s" str
+    | _ -> String.ofChar str.[0] |> PTEXT, str.[1..]
 
 let pTokenize (str: string): PToken list =
     let rec pTokenize' tList str =
@@ -147,7 +147,7 @@ let replace (pList: Parser list): Parser list =
     let makeDummy (s: string) =
         {Name=s; Args=[]; Body=[MacroSubstitution (s, [])]}
 
-    let rec replace' pList newPList (scope: Map<string, Macro>) =
+    let rec replace' pList newPList (param: Map<string, string option>) (scope: Map<string, Macro>) =
 
         let addScope =
             List.fold (fun (st: Map<string, Macro>) v -> st.Add(v.Name, v)) scope
@@ -155,34 +155,47 @@ let replace (pList: Parser list): Parser list =
         match pList with
 
         | MacroDefinition {Name=n; Args=args; Body=p} :: tl ->
-            let newScope =
-                args
-                |> List.map makeDummy
-                |> addScope
+            let newParam: Map<string, string option> =
+                List.replicate (List.length args) None
+                |> List.zip args
+                |> Map.ofList
             let nP =
-                replace' p [] newScope
+                replace' p [] newParam scope
             let macro = {Name=n; Args=args; Body=nP}
-            scope.Add(n, macro) |> replace' tl newPList
+            scope.Add(n, macro) |> replace' tl newPList param
 
         | MacroSubstitution (n, args) :: tl ->
-            let macro =
-                match scope.TryFind n with
-                | Some m -> m
-                | None ->
-                    failwithf "Key not found"
-            let sub =
-                List.zip macro.Args args
-                |> List.map (fun (p, t) -> {Name=p; Args=[]; Body=[ParseText t]})
-                |> addScope
-                |> replace' macro.Body [] |> List.rev
-            replace' tl (sub @ newPList) scope
+            let replacement =
+                match args with
+                | [] ->
+                    match param.TryFind n with
+                    | Some (Some m) ->
+                        [ParseText m] |> Some
+                    | Some _ ->
+                        None
+                    | _ ->
+                        match scope.TryFind n with
+                        | Some m ->
+                            m.Body |> Some
+                        | _ -> failwithf "Macro '%s' did not match anything in scope" n
+                | a ->
+                    match scope.TryFind n with
+                    | Some m ->
+                        replace' m.Body [] (List.zip m.Args a |> List.fold (fun s (a, b) -> s.Add(a, Some b)) param) scope |> List.rev |> Some
+                    | None ->
+                        failwithf "Failed"
+            match replacement with
+            | Some p ->
+                replace' tl (p @ newPList) param scope
+            | None ->
+                replace' tl (MacroSubstitution (n, args) :: newPList) param scope
 
         | ParseText t :: tl ->
-            replace' tl (ParseText t :: newPList) scope
+            replace' tl (ParseText t :: newPList) param scope
         | ParseNewLine :: tl ->
-            replace' tl (ParseNewLine :: newPList) scope
+            replace' tl (ParseNewLine :: newPList) param scope
         | [] -> newPList
-    replace' pList [] Map.empty<string, Macro> |> List.rev
+    replace' pList [] Map.empty<string, string option> Map.empty<string, Macro> |> List.rev
 
 let prettyPrint pList =
     List.fold (fun st -> function | ParseText x -> st+x | ParseNewLine -> st+"\n" | _ -> failwithf "Failed to print") "" pList
