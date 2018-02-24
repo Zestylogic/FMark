@@ -156,10 +156,8 @@ let tryEval map e =
         | Op (CellRef(ref)) -> evalCellRef ref
         | RangeFunction("SUM",x,y) -> rangeFunc (List.sumBy evalCellRef) x y
         | RangeFunction("AVG",x,y) -> rangeFunc (List.averageBy evalCellRef) x y
-        | CommaFunction("SUM",l) -> let answer = List.sumBy (evalExp r map) l
-                                    printfn "evaluating: %A to %A" l answer
-                                    answer
-                                    
+        | CommaFunction("SUM",l) -> List.sumBy (evalExp r map) l
+        | CommaFunction("AVG",l) -> List.averageBy (evalExp r map) l
         | _ -> 11.0
     evalExp 0 map e
 /// Evaluate all expressions inside a cell list list, leave non-expression cells as they are

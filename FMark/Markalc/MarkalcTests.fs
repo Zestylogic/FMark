@@ -152,7 +152,7 @@ let testExprData = [
     ["=5|header2|header3";
     ":------|:-----:|------:";
     "=7|tesdfst|stduff";
-    "=2+3|=SUM([0][0]:[2][0])|0"]|>List.map simpleParse,
+    "=2+3|=SUM{[0][0]:[2][0]}|0"]|>List.map simpleParse,
     [[Contents ([NUMBER "5"],true,Left);
       Contents ([LITERAL "header2"],true,Centre);
       Contents ([LITERAL "header3"],true,Right)];
@@ -166,7 +166,7 @@ let testExprData = [
     ["=5|header2|header3";
     ":------|:-----:|------:";
     "=7|=8|stduff";
-    "=2+3|=SUM([0][0],[2][0],[1][1])|0"]|>List.map simpleParse,
+    "=2+3|=SUM{[0][0],[2][0],[1][1]}|0"]|>List.map simpleParse,
     [[Contents ([NUMBER "5"],true,Left);
       Contents ([LITERAL "header2"],true,Centre);
       Contents ([LITERAL "header3"],true,Right)];

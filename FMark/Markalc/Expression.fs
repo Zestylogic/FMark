@@ -28,19 +28,19 @@ let parseExp toks =
             | NUMBER(i) :: DOT :: NUMBER(d) :: after -> (makeFloat i d, after) |> Some
             | NUMBER(i) :: after -> (makeInt i |> float, after) |> Some
             | _ -> None
-        let (|CellRefPat|_|) = function
+        let rec (|CellRefPat|_|) = function
             | RSBRA :: NUMBER(row) :: LSBRA :: RSBRA :: NUMBER(col) :: LSBRA :: after 
                 -> ((col,row) |> makeCellReference,after) |> Some
             | _ -> None
         let rec (|ExpressionList|_|) = function
-            | Expression(exp,COMMA::ExpressionList(exps,after)) -> ((exp::exps),after) |> Some
+            | Expression(exp,COMMA::ExpressionList(exps,after)) -> (exp::exps,after) |> Some
             | Expression(exp,after) -> ([exp],after) |> Some
             | _ -> None
         // DEFINE FUNCTIONS
         let funcConstruct funcname = function
-        | RBRA :: CellRefPat (x,COLON::CellRefPat(y,LBRA::LITERAL(funcname)::after)) ->
+        | RCBRA :: CellRefPat (x,COLON::CellRefPat(y,LCBRA::LITERAL(funcname)::after)) ->
             (RangeFunction(funcname, y, x),after) |> Some
-        | RBRA :: ExpressionList (lst,LBRA::LITERAL(funcname)::after) ->
+        | RCBRA :: ExpressionList (lst,LCBRA::LITERAL(funcname)::after) ->
             (CommaFunction(funcname,lst),after) |> Some
         | _ -> None
         let (|Sum|_|) = funcConstruct "SUM"
