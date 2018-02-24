@@ -112,7 +112,7 @@ let testAlignData = [
 ]
 let testTableData = [
     "Test one: Simple table",
-    List.map simpleParse ["header1|header2|header3";
+    List.map simpleLex ["header1|header2|header3";
                           ":------|:-----:|------:";
                           "Somedfs|tesdfst|stduff"] ,
     // Answer, two lists of aligned cells
@@ -129,14 +129,14 @@ let testFullData = [
     "Full evaluation test with cell references.",
     ["=2+2|header2|header3"; align;
      "=[0][0]+1|tesdfst|stduff";
-     "=2+3|tesdfst|=[1][0]+[0][0]" ] |> List.map simpleParse,
+     "=2+3|tesdfst|=[1][0]+[0][0]" ],
     [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"];
      ans false [NUMBER "5"] [LITERAL "tesdfst"] [LITERAL "stduff"];
      ans false [NUMBER "5"] [LITERAL "tesdfst"] [NUMBER "9"]]|> Ok;
     "Circular cell reference.",
     ["=2+2|header2|header3"; align;
     "=[0][0]+[2][2]|tesdfst|stduff";
-    "=2+3|tesdfst|=[1][0]+[0][0]"] |> List.map simpleParse,
+    "=2+3|tesdfst|=[1][0]+[0][0]"],
     [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"];
      ans false [NUMBER "NaN"] [LITERAL "tesdfst"] [LITERAL "stduff"];
      ans false [NUMBER "5"] [LITERAL "tesdfst"] [NUMBER "NaN"]] |> Ok;
@@ -144,7 +144,7 @@ let testFullData = [
     ["=5|header2|header3";
     ":------|:-----:|------:";
     "=7|tesdfst|stduff";
-    "=2+3|=SUM{[0][0]:[2][0]}|0"]|>List.map simpleParse,
+    "=2+3|=SUM{[0][0]:[2][0]}|0"],
     [ans true [NUMBER "5"] [LITERAL "header2"] [LITERAL "header3"];
      ans false [NUMBER "7"] [LITERAL "tesdfst"] [LITERAL "stduff"];
      ans false [NUMBER "5"] [NUMBER "17"] [NUMBER "0"]] |> Ok;
@@ -152,10 +152,16 @@ let testFullData = [
     ["=5|header2|header3";
     ":------|:-----:|------:";
     "=AVG{1,6,8}|=8|stduff";
-    "=2+3|=SUM{[0][0],[2][0],[1][1]}|0"]|>List.map simpleParse,
+    "=2+3|=SUM{[0][0],[2][0],[1][1]}|0"],
     [ans true [NUMBER "5"] [LITERAL "header2"] [LITERAL "header3"];
      ans false [NUMBER "5"] [NUMBER "8"] [LITERAL "stduff"];
      ans false [NUMBER "5"] [NUMBER "18"] [NUMBER "0"]] |> Ok
+    "Example usage all",
+    ["Calcs|39|42";
+    ":------|:-----:|------:";
+    "||=6*5+SUM{4,5}|=[1][1]+3"],
+    [ans true [LITERAL "Calcs"] [NUMBER "39"] [NUMBER "42"];
+     ans false [] [NUMBER "39"] [NUMBER "42"]] |> Ok
 ]
 // ####################### FUNCTIONS #####################
 let EQTest func fname name inp outp =
@@ -169,15 +175,15 @@ let expressionTest = EQTest parseExpTest "parseExpTop"
 let parseRowTest = EQTest parseDefaultRow "parseDefaultRow"
 let parseAlignmentRowTest = EQTest parseAlignRow "parseAlignRow"
 let transformTableTest = EQTest transformTable "transformTable"
-let fullTest = EQTest parseEvaluate "evaluation"
+let fullTest = EQTest lexParseEvaluate "evaluation"
 
 // ####################### TESTS ########################
 [<Tests>]
 let tests = 
     testList "Should pass" [
-        addTestList expressionTest "Expression tests" parseY expressionData;
-        addTestList parseRowTest "parseDefaultRow tests" parseY parseDefaultRowData;
-        addTestList parseAlignmentRowTest "parseAlignmentRow tests" parseY testAlignData;
+        addTestList expressionTest "Expression tests" lexY expressionData;
+        addTestList parseRowTest "parseDefaultRow tests" lexY parseDefaultRowData;
+        addTestList parseAlignmentRowTest "parseAlignmentRow tests" lexY testAlignData;
         addTestList transformTableTest "transformTable tests" id testTableData;
         addTestList fullTest "transformTable tests" id testFullData;
 ]
@@ -191,7 +197,7 @@ let expressionPropertyTest op =
         let instr = tostr x + (snd op) + tostr y
         //sprintf "%i%s%i" x (snd op) y
         Expect.equal
-            (instr |> simpleParse |> parseExpTest |> (function | Ok(x)->string x | Error(e) -> string e)) // Actual
+            (instr |> simpleLex |> parseExpTest |> (function | Ok(x)->string x | Error(e) -> string e)) // Actual
             ((fst op) (x|>float) (y|>float) |> string) // Expected
             (sprintf "x %A y is x %A y" op op)
     )

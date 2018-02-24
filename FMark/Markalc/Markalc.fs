@@ -196,3 +196,7 @@ let parseEvaluate (input:Token list list) =
     | Error(_) -> input |> Error // If there are any errors just return the unchanged Token list list
     | Ok(x) -> evaluateCellList x |> Ok // Else return Ok and Cell list list
 
+let lexParseEvaluate input = 
+    List.map simpleLex input
+    |> parseEvaluate
+

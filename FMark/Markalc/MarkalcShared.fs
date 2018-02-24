@@ -37,42 +37,42 @@ let unfoldTuple3 func (a,b,c) =
    func a b c
 
 // Quick parser to generate tokenise string one row at a time
-let simpleParse txt = 
+let simpleLex txt = 
     let (|RegexMatch|_|) r txt =
         let m = Regex.Match (txt,"^"+r)
         match m.Success with
         | true -> (m.Value, txt.Substring(m.Value.Length)) |> Some
         | false -> None
-    let rec simpleParse' a txt =
+    let rec simpleLex' a txt =
         match txt with
         // Whitespace
-        | RegexMatch "[\\s]+" (m,after) -> simpleParse' (WHITESPACE(m.Length)::a) after
+        | RegexMatch "[\\s]+" (m,after) -> simpleLex' (WHITESPACE(m.Length)::a) after
         // Contents for expression evaluation
-        | RegexMatch "[0-9]+" (m,after) -> simpleParse' (NUMBER(m)::a) after
-        | RegexMatch "\\^" (_,after) -> simpleParse' (CARET::a) after
-        | RegexMatch "\\%" (_,after) -> simpleParse' (PERCENT::a) after
-        | RegexMatch "\\*" (_,after) -> simpleParse' (ASTERISK::a) after
-        | RegexMatch "\\/" (_,after) -> simpleParse' (SLASH::a) after
-        | RegexMatch "\\+" (_,after) -> simpleParse' (PLUS::a) after
-        | RegexMatch "\\-" (_,after) -> simpleParse' (MINUS::a) after
-        | RegexMatch "\\(" (_,after) -> simpleParse' (LBRA::a) after
-        | RegexMatch "\\)" (_,after) -> simpleParse' (RBRA::a) after
-        | RegexMatch "\\[" (_,after) -> simpleParse' (LSBRA::a) after
-        | RegexMatch "\\]" (_,after) -> simpleParse' (RSBRA::a) after
-        | RegexMatch "\\=" (_,after) -> simpleParse' (EQUAL::a) after
-        | RegexMatch "\\." (_,after) -> simpleParse' (DOT::a) after
-        | RegexMatch "\\," (_,after) -> simpleParse' (COMMA::a) after
-        | RegexMatch "\\{" (_,after) -> simpleParse' (LCBRA::a) after
-        | RegexMatch "\\}" (_,after) -> simpleParse' (RCBRA::a) after
+        | RegexMatch "[0-9]+" (m,after) -> simpleLex' (NUMBER(m)::a) after
+        | RegexMatch "\\^" (_,after) -> simpleLex' (CARET::a) after
+        | RegexMatch "\\%" (_,after) -> simpleLex' (PERCENT::a) after
+        | RegexMatch "\\*" (_,after) -> simpleLex' (ASTERISK::a) after
+        | RegexMatch "\\/" (_,after) -> simpleLex' (SLASH::a) after
+        | RegexMatch "\\+" (_,after) -> simpleLex' (PLUS::a) after
+        | RegexMatch "\\-" (_,after) -> simpleLex' (MINUS::a) after
+        | RegexMatch "\\(" (_,after) -> simpleLex' (LBRA::a) after
+        | RegexMatch "\\)" (_,after) -> simpleLex' (RBRA::a) after
+        | RegexMatch "\\[" (_,after) -> simpleLex' (LSBRA::a) after
+        | RegexMatch "\\]" (_,after) -> simpleLex' (RSBRA::a) after
+        | RegexMatch "\\=" (_,after) -> simpleLex' (EQUAL::a) after
+        | RegexMatch "\\." (_,after) -> simpleLex' (DOT::a) after
+        | RegexMatch "\\," (_,after) -> simpleLex' (COMMA::a) after
+        | RegexMatch "\\{" (_,after) -> simpleLex' (LCBRA::a) after
+        | RegexMatch "\\}" (_,after) -> simpleLex' (RCBRA::a) after
         // Contents for table recognition
-        | RegexMatch "[a-zA-z]+[0-9]*( [a-zA-z]+[0-9]*)*" (m,after) -> simpleParse' (LITERAL(m)::a) after
-        | RegexMatch "\\|" (_,after) -> simpleParse' (PIPE::a) after
-        | RegexMatch "\\:" (_,after) -> simpleParse' (COLON::a) after
+        | RegexMatch "[a-zA-z]+[0-9]*( [a-zA-z]+[0-9]*)*" (m,after) -> simpleLex' (LITERAL(m)::a) after
+        | RegexMatch "\\|" (_,after) -> simpleLex' (PIPE::a) after
+        | RegexMatch "\\:" (_,after) -> simpleLex' (COLON::a) after
         | "" -> a
         | _ -> failwithf "Unexpected character: %A" txt
-    simpleParse' [] txt |> List.rev
+    simpleLex' [] txt |> List.rev
 
-// Experimental parser for tokenising from entire table string
-// let stringParse (txt:string)=
-//     List.map simpleParse (Array.toList (txt.Split("\n")))
-let parseY (x,y,z) = x,y|>simpleParse,z
+// Experimental Lexr for tokenising from entire table string
+// let stringLex (txt:string)=
+//     List.map simpleLex (Array.toList (txt.Split("\n")))
+let lexY (x,y,z) = x,y|>simpleLex,z
