@@ -119,63 +119,43 @@ let testTableData = [
     [[Contents ([LITERAL "header1"],true,Left);Contents ([LITERAL "header2"],true,Centre);Contents ([LITERAL "header3"],true,Right) ]] @
     [[Contents ([LITERAL "Somedfs"],false,Left);Contents ([LITERAL "tesdfst"],false,Centre);Contents ([LITERAL "stduff"],false,Right)]] |> Ok;
 ]
-let testExprData = [
+
+let align =  ":------|:-----:|------:"
+let ans head a b c = [Contents (a,head,Left);
+                      Contents (b,head,Centre);
+                      Contents (c,head,Right)]
+
+let testFullData = [
     "Full evaluation test with cell references.",
-    ["=2+2|header2|header3";
-    ":------|:-----:|------:";
-    "=[0][0]+1|tesdfst|stduff";
-    "=2+3|tesdfst|=[1][0]+[0][0]"]|>List.map simpleParse,
-    [[Contents ([NUMBER "4"],true,Left);
-      Contents ([LITERAL "header2"],true,Centre);
-      Contents ([LITERAL "header3"],true,Right)];
-    [Contents ([NUMBER "5"],false,Left);
-     Contents ([LITERAL "tesdfst"],false,Centre);
-     Contents ([LITERAL "stduff"],false,Right)];
-    [Contents ([NUMBER "5"],false,Left);
-     Contents ([LITERAL "tesdfst"],false,Centre);
-     Contents ([NUMBER "9"],false,Right)]] |> Ok;
+    ["=2+2|header2|header3"; align;
+     "=[0][0]+1|tesdfst|stduff";
+     "=2+3|tesdfst|=[1][0]+[0][0]" ] |> List.map simpleParse,
+    [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"];
+     ans false [NUMBER "5"] [LITERAL "tesdfst"] [LITERAL "stduff"];
+     ans false [NUMBER "5"] [LITERAL "tesdfst"] [NUMBER "9"]]|> Ok;
     "Circular cell reference.",
-    ["=2+2|header2|header3";
-    ":------|:-----:|------:";
+    ["=2+2|header2|header3"; align;
     "=[0][0]+[2][2]|tesdfst|stduff";
-    "=2+3|tesdfst|=[1][0]+[0][0]"]|>List.map simpleParse,
-    [[Contents ([NUMBER "4"],true,Left);
-      Contents ([LITERAL "header2"],true,Centre);
-      Contents ([LITERAL "header3"],true,Right)];
-    [Contents ([NUMBER "NaN"],false,Left);
-     Contents ([LITERAL "tesdfst"],false,Centre);
-     Contents ([LITERAL "stduff"],false,Right)];
-    [Contents ([NUMBER "5"],false,Left);
-     Contents ([LITERAL "tesdfst"],false,Centre);
-     Contents ([NUMBER "NaN"],false,Right)]] |> Ok;
+    "=2+3|tesdfst|=[1][0]+[0][0]"] |> List.map simpleParse,
+    [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"];
+     ans false [NUMBER "NaN"] [LITERAL "tesdfst"] [LITERAL "stduff"];
+     ans false [NUMBER "5"] [LITERAL "tesdfst"] [NUMBER "NaN"]] |> Ok;
     "SUM range function call.",
     ["=5|header2|header3";
     ":------|:-----:|------:";
     "=7|tesdfst|stduff";
     "=2+3|=SUM{[0][0]:[2][0]}|0"]|>List.map simpleParse,
-    [[Contents ([NUMBER "5"],true,Left);
-      Contents ([LITERAL "header2"],true,Centre);
-      Contents ([LITERAL "header3"],true,Right)];
-    [Contents ([NUMBER "7"],false,Left);
-     Contents ([LITERAL "tesdfst"],false,Centre);
-     Contents ([LITERAL "stduff"],false,Right)];
-    [Contents ([NUMBER "5"],false,Left);
-     Contents ([NUMBER "17"],false,Centre);
-     Contents ([NUMBER "0"],false,Right)]] |> Ok;
-    "SUM list function call.",
+    [ans true [NUMBER "5"] [LITERAL "header2"] [LITERAL "header3"];
+     ans false [NUMBER "7"] [LITERAL "tesdfst"] [LITERAL "stduff"];
+     ans false [NUMBER "5"] [NUMBER "17"] [NUMBER "0"]] |> Ok;
+    "SUM and avg function calls.",
     ["=5|header2|header3";
     ":------|:-----:|------:";
-    "=7|=8|stduff";
+    "=AVG{1,6,8}|=8|stduff";
     "=2+3|=SUM{[0][0],[2][0],[1][1]}|0"]|>List.map simpleParse,
-    [[Contents ([NUMBER "5"],true,Left);
-      Contents ([LITERAL "header2"],true,Centre);
-      Contents ([LITERAL "header3"],true,Right)];
-    [Contents ([NUMBER "7"],false,Left);
-     Contents ([NUMBER "8"],false,Centre);
-     Contents ([LITERAL "stduff"],false,Right)];
-    [Contents ([NUMBER "5"],false,Left);
-     Contents ([NUMBER "18"],false,Centre);
-     Contents ([NUMBER "0"],false,Right)]] |> Ok
+    [ans true [NUMBER "5"] [LITERAL "header2"] [LITERAL "header3"];
+     ans false [NUMBER "5"] [NUMBER "8"] [LITERAL "stduff"];
+     ans false [NUMBER "5"] [NUMBER "18"] [NUMBER "0"]] |> Ok
 ]
 // ####################### FUNCTIONS #####################
 let EQTest func fname name inp outp =
@@ -189,7 +169,7 @@ let expressionTest = EQTest parseExpTest "parseExpTop"
 let parseRowTest = EQTest parseDefaultRow "parseDefaultRow"
 let parseAlignmentRowTest = EQTest parseAlignRow "parseAlignRow"
 let transformTableTest = EQTest transformTable "transformTable"
-let evalTest = EQTest parseEvaluate "evaluation"
+let fullTest = EQTest parseEvaluate "evaluation"
 
 // ####################### TESTS ########################
 [<Tests>]
@@ -199,7 +179,7 @@ let tests =
         addTestList parseRowTest "parseDefaultRow tests" parseY parseDefaultRowData;
         addTestList parseAlignmentRowTest "parseAlignmentRow tests" parseY testAlignData;
         addTestList transformTableTest "transformTable tests" id testTableData;
-        addTestList evalTest "transformTable tests" id testExprData;
+        addTestList fullTest "transformTable tests" id testFullData;
 ]
 
 let funcList = [( % ),"%";( ** ),"^";( + ),"+";( - ),"-"; ( * ),"*"; ( / ),"/"]
