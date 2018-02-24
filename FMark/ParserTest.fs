@@ -24,19 +24,9 @@ let printParsedObj pobj =
         |> List.map (fun inlines -> List.map printInlineElement inlines)
     | _ -> failwithf "not implemented"
 
-[<Tests>]
-/// (input, output, msg)
-let testGlobal =
-    makeExpectoTestList id id parse "Literal and space only" [
-        (
-           [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
-           [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals with spaces between"
-        );
-        (
-           [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
-           [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals with endline"
-        )
-    ]
+//////////////////////////////////
+// tests
+//////////////////////////////////
 
 [<Tests>]
 let countSpaceTest =
@@ -85,7 +75,7 @@ let parseLiteralTest =
         );
         (
             [LITERAL "I"; ENDLINE; LITERAL "Mike"],
-            ("I Mike", []), "ENDLINE between LITERALs"
+            ("I\nMike", []), "ENDLINE between LITERALs"
         );
         (
             [LITERAL "I"; ENDLINE; ENDLINE; LITERAL "am"],
@@ -126,6 +116,49 @@ let parseInlineElementsTest =
             [BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK; LITERAL "na"],
             ([FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")], [])|>Ok,
             "Inline code and literal"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"],
+            ([FrmtedString(Literal "I "); FrmtedString(Literal "_am")], [])|>Ok,
+            "unmatched emphasis"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ASTERISK],
+            ([FrmtedString(Literal "I "); FrmtedString(Literal "*am")], [])|>Ok,
+            "asterisk as emphasis"
+        );
+    ]
+
+[<Tests>]
+let parseParagraphTest =
+    makeExpectoTestList id id parseParagraph "parseParagraph test" [
+        (
+            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; ENDLINE; LITERAL "dancing"; WHITESPACE 1; LITERAL "at";
+            BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK; LITERAL "na"],
+            (Paragraph[[FrmtedString(Literal "I am")];
+                [FrmtedString(Literal "dancing at"); FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")]], [])|>Ok,
+            "two simple paragraphs with code"
+        )
+    ]
+
+[<Tests>]
+let testGlobal =
+    makeExpectoTestList id id parse "top level test" [
+        (
+           [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
+           [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals with spaces between"
+        );
+        (
+           [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike";ENDLINE],
+           [Paragraph[[FrmtedString(Literal "I am Mike\n")]]] |> Ok, "Three literals with endline"
+        );
+        (
+            [HASH; HASH; WHITESPACE 2; LITERAL "h2"],
+            [Header{HeaderName=[FrmtedString(Literal "h2")]; Level=2}] |>Ok, "h2 header"
+        );
+        (
+            [HASH; HASH; LITERAL "h2"],
+            [Paragraph[[FrmtedString(Literal "##h2")]]] |>Ok, "fake h2 header"
         )
     ]
 let allTestsWithExpecto() =

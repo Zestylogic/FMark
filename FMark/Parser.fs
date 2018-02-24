@@ -6,6 +6,8 @@ open Types
 let SPACE = " "
 let NOSTRING = ""
 
+type TEmphasis = UNDER | STAR // underscore and asterisk
+
 let mapTok = function
     | CODEBLOCK _ -> "CODEBLOCK" // not supposed to be read be matchTok
     | LITERAL str-> str
@@ -95,14 +97,23 @@ let (|IsWordSepAndNewFrmt|_|) toks =
 
 let (|MatchEmStart|_|) toks =
     match toks with
-    | WHITESPACE _:: UNDERSCORE:: _ | WHITESPACE _:: ASTERISK ::_ -> toks.[2..] |> Some
-    | ASTERISK ::_ -> toks.[1..] |> Some
+    | WHITESPACE _:: UNDERSCORE:: _ -> (UNDER ,toks.[2..]) |> Some // omit space
+    | ASTERISK ::_ -> (STAR , toks.[1..]) |> Some
     | _ -> None
 
-let (|MatchEmEnd|_|) toks =
+/// match underscore
+/// underscore em needs space after it
+let (|MatchEmEndUDS|_|) toks =
     match toks with
     | UNDERSCORE:: ENDLINE:: _ | UNDERSCORE:: WHITESPACE _:: _ -> toks.[1..] |> Some
     | [UNDERSCORE] -> [] |> Some
+    | _ -> None
+
+/// match asterisk
+/// asterisk em allow no space after it
+let (|MatchEmEndATR|_|) toks =
+    match toks with
+    | ASTERISK::toks' -> toks' |> Some
     | _ -> None
 
 let (|MatchNewParagraph|_|) toks =
@@ -114,6 +125,19 @@ let (|MatchMapTok|_|) = function
     | tok:: toks -> (mapTok tok, toks) |> Some
     | _ -> None
 
+let (|MatchHeader|_|) toks =
+    let rec countHashes n tks =
+        match tks with
+        | HASH:: tks' -> countHashes (n+1) tks'
+        | _ -> n
+    match countHashes 0 toks with
+    | no when no > 0 ->
+        match toks.[no..] with
+        | WHITESPACE _ :: toks' ->
+            (no, toks') |> Some // omit whitespace
+        | _ -> None
+    | _ -> None
+
 /// parse literals, return any unrecognized tokens
 let parseLiteral toks =
     let rec parseLiteral' (str, toks) =
@@ -123,8 +147,8 @@ let parseLiteral toks =
         | IsNewFrmt _ -> str, toks                          // NewFrmt
         | MatchNewParagraph _ -> str, toks                  // 2>= endlines
         | WHITESPACE _:: toks' -> (str+" ", toks') |> parseLiteral' // reduce spaces to 1
-        | ENDLINE::toks' -> (str+" ", toks') |> parseLiteral' // convert 1 endline to space
-        | MatchMapTok (str', tks) -> (str+str', tks) |> parseLiteral' // convert the rest to string
+        //| ENDLINE::toks' -> (str+" ", toks') |> parseLiteral' // convert 1 endline to space
+        | MatchMapTok (str', toks') -> (str+str', toks') |> parseLiteral' // convert the rest to string
         | [] -> str, toks
         | _ -> sprintf "unmatched token should never happen: %A" toks |> failwith
     parseLiteral' (NOSTRING, toks)
@@ -147,12 +171,22 @@ let parseInLineElements toks =
         | BACKTICK:: _ ->
             parseCode toks.[1..]
             |> Result.map(fun (str, rtks) -> FrmtedString(Code str), rtks )
-        | MatchEmStart toks' ->
+        | MatchEmStart (sym, toks') ->
             parseInLines toks'
             |> Result.map (fun (inlines, retoks) ->
-                match retoks with
-                | MatchEmEnd retoks' -> (FrmtedString(Emphasis(inlines)), retoks')
-                | _ -> failwithf "underscore not matching")
+                match sym with
+                | UNDER ->
+                    match retoks with
+                    | MatchEmEndUDS retoks' -> (FrmtedString(Emphasis(inlines)), retoks')
+                    | _ ->          // em does not match -> treat as literal
+                        let pstr, retoks = parseLiteral toks'
+                        (FrmtedString(Literal ("_"+pstr) ), retoks)
+                | STAR ->
+                    match retoks with
+                    | MatchEmEndATR retoks' -> (FrmtedString(Emphasis(inlines)), retoks')
+                    | _ ->          // em does not match -> treat as literal
+                        let pstr, retoks = parseLiteral toks'
+                        (FrmtedString(Literal ("*"+pstr) ), retoks) )
         | _ -> sprintf "Nothing matched: %A" toks |> Error
     and parseInLines toks =
         match toks with
@@ -162,7 +196,7 @@ let parseInLineElements toks =
         |> Result.bind (fun (inLine, retoks) ->
             match retoks with
             | [] -> ([inLine], []) |> Ok
-            | MatchEmEnd _ -> ([inLine], retoks) |> Ok
+            | MatchEmEndUDS _ -> ([inLine], retoks) |> Ok
             | MatchNewParagraph toks' -> ([inLine], toks') |> Ok
             | IsNewTLine toks' -> // new TLine equivalent <br>)
                 parseInLines toks'
@@ -174,16 +208,15 @@ let parseInLineElements toks =
                     inLine::inLines, retoks'))
     parseInLines toks
 
-/// parseParagraph eats ENDLINE
+/// parseParagraph eats 2>= ENDLINEs
 let parseParagraph toks =
     let rec parseParagraph' toks =
         match toks with
-        | LITERAL _::toks' ->
+        | ENDLINE::toks' -> ([], toks') |> Ok
+        | _ ->
             parseInLineElements toks
             |> Result.map (fun (inLines, retoks)->
                 (inLines, retoks) )
-        | ENDLINE::toks' -> ([], toks') |> Ok
-        | _ -> failwithf "parseParagraph ele not implemented"
     //let prep, retoks = parseParagraph' toks
     and parseParagraphs toks =
         parseParagraph' toks
@@ -195,19 +228,18 @@ let parseParagraph toks =
                 parseParagraphs retoks
                 |> Result.map (fun (ps, rts) ->
                     (p::ps, rts)))
-    parseParagraphs toks
+    parseParagraphs toks |> Result.map (fun (lines,tks) -> Paragraph lines, tks)
 
 
 let rec parseItem (toks: Token list) : Result<ParsedObj * Token list, string> =
     match toks with
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
     | ENDLINE _ :: NUMBER _ :: DOT :: WHITESPACE _ :: toks' -> "Lists todo" |> Error
-    | LITERAL str :: toks' ->
-        // match parseLiteral toks with
-        // | lstr, retoks -> (Paragraph([[FrmtedString(Literal lstr)]]), retoks) |> Ok
-        parseParagraph toks
-        |> Result.map (fun (p, tks) -> Paragraph p, tks)
-    | _ -> "not implemented" |> Error
+    | MatchHeader (level, rtks) ->
+        parseInLineElements rtks
+        |> Result.map (fun (line, rtks') -> Header{HeaderName=line; Level=level}, rtks' )
+    | _ -> parseParagraph toks
+        |> Result.map (fun (p, tks) -> p, tks)
 
 and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
     parseItem toks
