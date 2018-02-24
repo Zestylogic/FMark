@@ -15,6 +15,7 @@ type Token =
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
+    | COMMA
 
 type TFrmtedString = | Strong of TFrmtedString | Emphasis of TFrmtedString | Literal of string
 type InlineElement =
@@ -60,4 +61,5 @@ type Operand =
 type Expr =
     | BinExp of (float->float->float)*Expr*Expr
     | Op of Operand
-    | Function of string*CellReference*CellReference
+    | RangeFunction of string*CellReference*CellReference
+    | CommaFunction of string*(Expr list)

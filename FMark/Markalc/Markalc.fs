@@ -125,21 +125,42 @@ let transformTable (table:Token list list)  =
     |> joinErrorList
 
 let tryEval map e =
-    // Take in two cell refs and return a list of all refs inbetween or None
-    //let over x y =
-        // 
-        // match x with
-        // | (a,b) -> match 
+    // Evaluate expression
     let rec evalExp r map e =
-        if r > maxRefs then nan else
+        // Take in two cell refs and return a list of all refs inbetween or None
+        let over (x,y) = 
+            match (x,y) with
+            | (RowCol(x1,y1),RowCol(x2,y2)) ->
+                let x = x1,y1
+                let y = x2,y2
+                let genList a b = if a<b then [a..b] else [b..a]
+                match fst x = fst y, snd x = snd y with
+                | true,true -> Some [RowCol x]
+                | true,false -> (List.map ((fun i -> (fst x,i)) >> RowCol) (genList (snd x) (snd y))) |> Some
+                | false,true -> (List.map ((fun i -> (i,snd x)) >> RowCol) (genList (fst x) (fst y))) |> Some
+                | false,false -> None
+        // Evaluate cell reference
+        let evalCellRef ref = 
+            match Map.tryFind ref map with
+                | Some(MapExp(e2,_)) -> evalExp (r+1) map e2
+                | _ -> nan // invalid reference
+        // Apply f over list of cell references between two cells
+        let rangeFunc f x y = match over (x,y) with
+                              | Some(l) -> f l
+                              | None -> nan
+        //let commaFunc f = match 
+        if r > maxRefs then nan else // Return nan if too many recursive calls, probably circular reference
         match e with
         | BinExp(f,x,y) -> f (evalExp r map x) (evalExp r map y)
         | Op (Float(x)) -> x
-        | Op (CellRef(ref)) -> match Map.tryFind ref map with
-                               | Some(MapExp(e2,_)) -> evalExp (r+1) map e2
-                               | _ -> nan // invalid reference
-        // | Function("SUM",x,y) -> 
-        | _ -> 13.0
+        | Op (CellRef(ref)) -> evalCellRef ref
+        | RangeFunction("SUM",x,y) -> rangeFunc (List.sumBy evalCellRef) x y
+        | RangeFunction("AVG",x,y) -> rangeFunc (List.averageBy evalCellRef) x y
+        | CommaFunction("SUM",l) -> let answer = List.sumBy (evalExp r map) l
+                                    printfn "evaluating: %A to %A" l answer
+                                    answer
+                                    
+        | _ -> 11.0
     evalExp 0 map e
 /// Evaluate all expressions inside a cell list list, leave non-expression cells as they are
 /// No invalid expressions should be matched.

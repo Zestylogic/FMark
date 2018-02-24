@@ -32,11 +32,24 @@ let parseExp toks =
             | RSBRA :: NUMBER(row) :: LSBRA :: RSBRA :: NUMBER(col) :: LSBRA :: after 
                 -> ((col,row) |> makeCellReference,after) |> Some
             | _ -> None
-        let (|FunctionPat|_|) = function
-        | RBRA :: CellRefPat (x,COLON::CellRefPat(y,LBRA::LITERAL("SUM")::after)) ->
-            // failwithf "Detected function: %A" (Function("SUM", x, y))
-            (Function("SUM", y, x),after) |> Some
+        let rec (|ExpressionList|_|) = function
+            | Expression(exp,COMMA::ExpressionList(exps,after)) -> ((exp::exps),after) |> Some
+            | Expression(exp,after) -> ([exp],after) |> Some
+            | _ -> None
+        // DEFINE FUNCTIONS
+        let funcConstruct funcname = function
+        | RBRA :: CellRefPat (x,COLON::CellRefPat(y,LBRA::LITERAL(funcname)::after)) ->
+            (RangeFunction(funcname, y, x),after) |> Some
+        | RBRA :: ExpressionList (lst,LBRA::LITERAL(funcname)::after) ->
+            (CommaFunction(funcname,lst),after) |> Some
         | _ -> None
+        let (|Sum|_|) = funcConstruct "SUM"
+        let (|Avg|_|) = funcConstruct "AVG"
+        let (|FunctionPat|_|) = function
+            | Sum (x,after)  -> (x,after) |> Some
+            | Avg (x,after)  -> (x,after) |> Some
+            | _ -> None
+
         let (|BasePat|_|) = function
             | NumberPat (x,after) -> (x |> Float |> Op,after) |> Some
             | FunctionPat (x,after) -> (x,after) |> Some

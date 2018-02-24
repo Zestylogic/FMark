@@ -122,46 +122,60 @@ let testTableData = [
 let testExprData = [
     "Full evaluation test with cell references.",
     ["=2+2|header2|header3";
-     ":------|:-----:|------:";
-     "=[0][0]+1|tesdfst|stduff";
-     "=2+3|tesdfst|=[1][0]+[0][0]"]|>List.map simpleParse,
-     [[Contents ([NUMBER "4"],true,Left);
-       Contents ([LITERAL "header2"],true,Centre);
-       Contents ([LITERAL "header3"],true,Right)];
-     [Contents ([NUMBER "5"],false,Left);
-      Contents ([LITERAL "tesdfst"],false,Centre);
-      Contents ([LITERAL "stduff"],false,Right)];
-     [Contents ([NUMBER "5"],false,Left);
-      Contents ([LITERAL "tesdfst"],false,Centre);
-      Contents ([NUMBER "9"],false,Right)]] |> Ok;
+    ":------|:-----:|------:";
+    "=[0][0]+1|tesdfst|stduff";
+    "=2+3|tesdfst|=[1][0]+[0][0]"]|>List.map simpleParse,
+    [[Contents ([NUMBER "4"],true,Left);
+      Contents ([LITERAL "header2"],true,Centre);
+      Contents ([LITERAL "header3"],true,Right)];
+    [Contents ([NUMBER "5"],false,Left);
+     Contents ([LITERAL "tesdfst"],false,Centre);
+     Contents ([LITERAL "stduff"],false,Right)];
+    [Contents ([NUMBER "5"],false,Left);
+     Contents ([LITERAL "tesdfst"],false,Centre);
+     Contents ([NUMBER "9"],false,Right)]] |> Ok;
     "Circular cell reference.",
     ["=2+2|header2|header3";
-     ":------|:-----:|------:";
-     "=[0][0]+[2][2]|tesdfst|stduff";
-     "=2+3|tesdfst|=[1][0]+[0][0]"]|>List.map simpleParse,
-     [[Contents ([NUMBER "4"],true,Left);
-       Contents ([LITERAL "header2"],true,Centre);
-       Contents ([LITERAL "header3"],true,Right)];
-     [Contents ([NUMBER "NaN"],false,Left);
-      Contents ([LITERAL "tesdfst"],false,Centre);
-      Contents ([LITERAL "stduff"],false,Right)];
-     [Contents ([NUMBER "5"],false,Left);
-      Contents ([LITERAL "tesdfst"],false,Centre);
-      Contents ([NUMBER "NaN"],false,Right)]] |> Ok;
-     "Basic function call.",
-     ["=2+2|header2|header3";
-     ":------|:-----:|------:";
-     "=[0][0]+[2][2]|tesdfst|stduff";
-     "=2+3|=SUM([0][0]:[1][0])|=[1][0]+[0][0]"]|>List.map simpleParse,
-     [[Contents ([NUMBER "4"],true,Left);
-       Contents ([LITERAL "header2"],true,Centre);
-       Contents ([LITERAL "header3"],true,Right)];
-     [Contents ([NUMBER "NaN"],false,Left);
-      Contents ([LITERAL "tesdfst"],false,Centre);
-      Contents ([LITERAL "stduff"],false,Right)];
-     [Contents ([NUMBER "5"],false,Left);
-      Contents ([LITERAL "tesdfst"],false,Centre);
-      Contents ([NUMBER "NaN"],false,Right)]] |> Ok
+    ":------|:-----:|------:";
+    "=[0][0]+[2][2]|tesdfst|stduff";
+    "=2+3|tesdfst|=[1][0]+[0][0]"]|>List.map simpleParse,
+    [[Contents ([NUMBER "4"],true,Left);
+      Contents ([LITERAL "header2"],true,Centre);
+      Contents ([LITERAL "header3"],true,Right)];
+    [Contents ([NUMBER "NaN"],false,Left);
+     Contents ([LITERAL "tesdfst"],false,Centre);
+     Contents ([LITERAL "stduff"],false,Right)];
+    [Contents ([NUMBER "5"],false,Left);
+     Contents ([LITERAL "tesdfst"],false,Centre);
+     Contents ([NUMBER "NaN"],false,Right)]] |> Ok;
+    "SUM range function call.",
+    ["=5|header2|header3";
+    ":------|:-----:|------:";
+    "=7|tesdfst|stduff";
+    "=2+3|=SUM([0][0]:[2][0])|0"]|>List.map simpleParse,
+    [[Contents ([NUMBER "5"],true,Left);
+      Contents ([LITERAL "header2"],true,Centre);
+      Contents ([LITERAL "header3"],true,Right)];
+    [Contents ([NUMBER "7"],false,Left);
+     Contents ([LITERAL "tesdfst"],false,Centre);
+     Contents ([LITERAL "stduff"],false,Right)];
+    [Contents ([NUMBER "5"],false,Left);
+     Contents ([NUMBER "17"],false,Centre);
+     Contents ([NUMBER "0"],false,Right)]] |> Ok;
+    "SUM list function call.",
+    ["=5|header2|header3";
+    ":------|:-----:|------:";
+    "=7|=8|stduff";
+    "=2+3|=SUM([0][0],[2][0],[1][1])|0"]|>List.map simpleParse,
+    [[Contents ([NUMBER "5"],true,Left);
+      Contents ([LITERAL "header2"],true,Centre);
+      Contents ([LITERAL "header3"],true,Right)];
+    [Contents ([NUMBER "7"],false,Left);
+     Contents ([NUMBER "8"],false,Centre);
+     Contents ([LITERAL "stduff"],false,Right)];
+    [Contents ([NUMBER "5"],false,Left);
+     Contents ([NUMBER "18"],false,Centre);
+     Contents ([NUMBER "0"],false,Right)]] |> Ok
 ]
 // ####################### FUNCTIONS #####################
 let EQTest func fname name inp outp =
