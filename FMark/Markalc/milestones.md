@@ -5,6 +5,5 @@
 - [x] Create expression parser for arithmetic expressions
 - [x] Get CellRef evaluating to implement basic arithmetic on 2d-array of cells
 - [x] Write spec
-- [x] Add an extra function (e.g. SUM(CellRef, CellRef))
-- [ ] How will 
-- [ ] Do the above but process inline markdown of numbers as numbers, keeping calculated result with format. e.g. _0_
+- [x] Add extra functions (e.g. SUM(CellRef, CellRef))
+- [ ] Do the above but process inline markdown of numbers as numbers, keeping calculated result with format. e.g. _0_. Could be done by adding surrounding delimeters to equations (?)
