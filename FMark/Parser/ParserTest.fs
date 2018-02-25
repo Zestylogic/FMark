@@ -138,6 +138,11 @@ let emphasisTest =
             ([FrmtedString(Literal "I "); FrmtedString(Emphasis[FrmtedString(Literal "am")])], [])|>Ok,
             "asterisk as emphasis"
         );
+        (
+            [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; WHITESPACE 1; UNDERSCORE; LITERAL "at"; UNDERSCORE],
+            ([FrmtedString(Literal "I "); FrmtedString(Literal "_am "); FrmtedString(Emphasis[FrmtedString(Literal "at")])], [])|>Ok,
+            "unmatched, matched emphasis"
+        );
     ]
 
 [<Tests>]
