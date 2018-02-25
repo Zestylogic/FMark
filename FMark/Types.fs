@@ -61,5 +61,4 @@ type Operand =
 type Expr =
     | BinExp of (float->float->float)*Expr*Expr
     | Op of Operand
-    | RangeFunction of string*CellReference*CellReference
     | CommaFunction of string*(Expr list)

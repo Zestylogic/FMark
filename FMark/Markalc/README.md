@@ -98,6 +98,26 @@ val parseEvaluateTable (toks:Token list list) : Result<Cell list list, Token lis
 
 Interface is compatible with the other modules since we are using a Result monad to inform caller whether or not the table was valid. The caller can then do different functions on the data accordingly.
 
+### Usage guide
+```fsharp
+val lexer (str:string) : Token list
+
+// Detect potential table (some pipes, 3 dashes, double newline at the end)
+// return all tokens until the newline, a list for each row.
+val detectPotentialTable (toks:Token list) : Token list list
+
+val HTMLGenTable (Cell list list) : string
+val HTMLGenTokenList (Token list list) : string
+
+input
+|> lexer
+|> detectPotentialTable
+|> parseEvaluateTable
+|> function
+| Ok (rows) -> List.map HTMLGenTable rows
+| Error(toks) -> List.map HTMLGenTokenList toks
+```
+
 # Testing Plan
 
 This project was developed in test-driven manner. Each main component was tested using unit tests (and property based tests where simple enough) for as many edge cases as possible. These main components were:

@@ -3,9 +3,6 @@ module Markalc
 open Types
 open MarkalcShared
 open Expression
-open System
-
-let maxRefs = 1000
 
 type Cell with 
     member c.GetToks = match c with 
@@ -125,30 +122,29 @@ let transformTable (table:Token list list)  =
     |> List.rev
     |> joinErrorList
 
-let tryEval map e =
+// Try to evaluate expression, set maxRefs to number of CellRefs before assuming circular reference
+let tryEval' maxRefs map e =
     // Evaluate expression
     let rec evalExp r map e =
         // Evaluate cell reference
         let evalCellRef ref = 
             match Map.tryFind ref map with
-                | Some(MapExp(e2,_)) -> evalExp (r+1) map e2
-                | _ -> nan // invalid reference
+            | Some(MapExp(e2,_)) -> evalExp (r+1) map e2
+            | _ -> nan // invalid reference
         // Apply f over list of cell references between two cells
         let rangeFunc f x y = match cellRange (x,y) with
                               | Some(l) -> f l
                               | None -> nan
-        //let commaFunc f = match 
         if r > maxRefs then nan else // Return nan if too many recursive calls, probably circular reference
         match e with
         | BinExp(f,x,y) -> f (evalExp r map x) (evalExp r map y)
         | Op (Float(x)) -> x
         | Op (CellRef(ref)) -> evalCellRef ref
-        | RangeFunction("SUM",x,y) -> rangeFunc (List.sumBy evalCellRef) x y
-        | RangeFunction("AVG",x,y) -> rangeFunc (List.averageBy evalCellRef) x y
         | CommaFunction("SUM",l) -> List.sumBy (evalExp r map) l
         | CommaFunction("AVG",l) -> List.averageBy (evalExp r map) l
         | _ -> 11.0
     evalExp 0 map e
+let tryEval = tryEval' 1000
 /// Evaluate all expressions inside a cell list list, leave non-expression cells as they are
 /// No invalid expressions should be matched.
 let evaluateCellList cellList = 

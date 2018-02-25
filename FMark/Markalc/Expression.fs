@@ -41,8 +41,6 @@ let parseExp toks =
             | _ -> None
         // DEFINE FUNCTIONS
         let funcConstruct funcname = function
-        // | RCBRA :: CellRefPat (x,COLON::CellRefPat(y,LCBRA::LITERAL(funcname)::after)) ->
-        //     (RangeFunction(funcname, y, x),after) |> Some
         | RCBRA :: ExpressionList (lst,LCBRA::LITERAL(funcname)::after) ->
             (CommaFunction(funcname,lst),after) |> Some
         | _ -> None
@@ -112,7 +110,7 @@ let rec evalExpTest e =
 let parseExpTest (toks:Token list) =
     whitespaceFilter toks // Remove whitespace
     |> parseExp
-    |> function // Perhaps monads not necessary
+    |> function
        | Error(e) -> printfn "Error parsing expression: %A" e
                      Error toks 
        | Ok(x) -> evalExpTest x |> Ok
