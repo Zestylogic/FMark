@@ -58,18 +58,24 @@ let (|VarName|_|) = function
 
 let (|ArgList|_|) =
     let rec (|NameList|_|) = function
+        | PTEXT n :: NameList (nList, r) ->
+            Some (n :: nList, r)
+        | PTEXT n :: r ->
+            Some ([n], r)
+        | _ -> None
+    let rec (|ParamList|_|) = function
         | PTEXT WhiteSpace :: tl | tl ->
             match tl with
-            | VarName n :: PSEMICOLON :: NameList (nameList, rest) ->
-                Some (n :: nameList, rest)
-            | VarName n :: rest ->
-                Some ([n], rest)
-            | PTEXT WhiteSpace :: t | t ->
-                Some ([], t)
+            | NameList (n, PSEMICOLON :: ParamList (lst, r)) ->
+                Some (List.fold (+) "" n :: lst, r)
+            | NameList (n, r) ->
+                Some ([List.fold (+) "" n], r)
+            | _ ->
+                Some ([], tl)
     function
     | PTEXT WhiteSpace :: tl | tl ->
         match tl with
-        | PLBRA :: NameList (nl, PRBRA :: tl) ->
+        | PLBRA :: ParamList (nl, PRBRA :: tl) ->
             Some (nl, tl)
         | _ -> None
 
@@ -157,6 +163,8 @@ let replace pList =
         let replaceInv' pList newPList scope param =
             replace' pList newPList param scope
 
+        let replace'' pList newPList = replace' pList newPList param scope
+
         match pList with
         | MacroDefinition {Name=n; Args=args; Body=p} :: tl ->
             newParam args
@@ -188,14 +196,14 @@ let replace pList =
                         failwithf "Failed"
             match replacement with
             | Some p ->
-                replace' tl (p @ newPList) param scope
+                replace'' tl (p @ newPList)
             | None ->
-                replace' tl (MacroSubstitution (n, args) :: newPList) param scope
+                replace'' tl (MacroSubstitution (n, args) :: newPList)
 
         | ParseText t :: tl ->
-            replace' tl (ParseText t :: newPList) param scope
+            replace'' tl (ParseText t :: newPList)
         | ParseNewLine :: tl ->
-            replace' tl (ParseNewLine :: newPList) param scope
+            replace'' tl (ParseNewLine :: newPList)
         | [] -> newPList
     replace' pList [] Map.empty<string, string option> Map.empty<string, Macro> |> List.rev
 
