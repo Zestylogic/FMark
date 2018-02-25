@@ -9,27 +9,15 @@ open Expecto
 
 // ####################### DATA ###################
 let expressionData = [
-    "Simple addition.",
-    "10+10",
-    20.0 |> Ok;
     "Triple addition.",
     "10+10+10",
     30.0 |> Ok;
     "Simple triple multiplication.",
     "3*7*5",
     105.0 |> Ok;
-    "Simple division.",
-    "16/2",
-    8.0 |> Ok;
     "Triple division, test left associativity.",
     "60/2/3",
     10.0 |> Ok;
-    "Simple modulo.",
-    "3%2",
-    1.0 |> Ok;
-    "Simple subtraction.",
-    "7-2",
-    5.0 |> Ok;
     "Triple subtraction.",
     "7-5-2",
     0.0 |> Ok;
@@ -39,13 +27,13 @@ let expressionData = [
     "Bracketed subtraction then addition.",
     "7-(2-1)+5",
     11.0 |> Ok;
-    "7*(2-3)+5",
+    "Operator precedence",
     "7*(2-3)+5",
     -2.0 |> Ok;
     "7*2-3+5",
     "7*2-3+5",
     16.0 |> Ok;
-    "7*2-(3+5)",
+    "Lots of brackets",
     "7*2-(((((((((3+5)))))))))",
     6.0 |> Ok;
     "Testing cellref evaluation (without table)",
@@ -54,7 +42,7 @@ let expressionData = [
     "Left to right evaluation",
     "2 -4 +6 -1 -1- 0 +8",
     10.0 |> Ok
-    "Pow test",
+    "Pow precendence test",
     "2 ^4 +6 -1 -1- 0 +8",
     28.0 |> Ok
 ]
@@ -126,6 +114,18 @@ let ans head a b c = [Contents (a,head,Left);
                       Contents (c,head,Right)]
 
 let testFullData = [
+    "Single cell table funny syntax",
+    ["=2+2"; "---|"; ],
+    [[Contents ([NUMBER("4")],true,Left);]] |> Ok;
+    "Single cell table",
+    ["=2+2|"; "---|"; ],
+    [[Contents ([NUMBER("4")],true,Left);]] |> Ok;
+    "Two rows no pipes",
+    ["=2+2"; "---|"; "=[0][0]+3";],
+    [[Contents ([NUMBER("4")],true,Left);];[Contents ([NUMBER("7")],false,Left);]] |> Ok;
+    "Single row table",
+    ["=2+2|header2|header3"; align; ],
+    [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"]] |> Ok;
     "Full evaluation test with cell references.",
     ["=2+2|header2|header3"; align;
      "=[0][0]+1|tesdfst|stduff";
