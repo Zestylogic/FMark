@@ -1,7 +1,7 @@
 
 # Markalc
 
-Markalc is a module which adds spreadsheet-like functionality to GFM tables.
+Markalc is a parser for GFM tables which adds spreadsheet functionality.
 
 # Specification
 ## Spreadsheet functionality
@@ -56,12 +56,14 @@ Functions support Range Cell References: `[0][0]:[2][0]` will evaluate to `[0][0
 
 ### Unsupported
 
-|Function|Example|Workaround|
+|Feature|Example|Workaround|
 |---|---|---|
 |Negative numbers  |`=-a+b`|Subtract number from zero in brackets e.g. `=(0-a)+b`|
 |Integer operations|`=5+2`|All calculations done in floating point.|
-|String operations|Excel concat etc.|None|
 |Allow formatting around equation|`*=5+2*`|None|
+|String operations|e.g. Excel CONCAT|None|
+|Assume empty cells are zero|Summing over column with empty cells|Put `=0` in each cell|
+
 
 ## Table parsing functionality
 
@@ -80,14 +82,4 @@ Markalc takes in a Token list list, each token list in the input is interpreted 
 |Filling in missing row elements in body.|Yes|Unit Tested|
 |Ignoring extra row elements in body.|Yes|Unit Tested|
 |Single row table|Yes|Unit Tested|
-
-#### Single cell/column table no header pipe
-```
-example
----|
-```
-
-example
----|
-
 
