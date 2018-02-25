@@ -3,7 +3,7 @@
 
 Markalc is a module which adds spreadsheet-like functionality to GFM tables.
 
-# Functionality
+# Specification
 ## Spreadsheet functionality
 Spreadsheet functions will evaluate in-place, if they are incorrectly formatted then Markalc will leave the cell unchanged as if it were normal text inside. 
 
@@ -61,6 +61,7 @@ Functions support Range Cell References: `[0][0]:[2][0]` will evaluate to `[0][0
 |Negative numbers  |`=-a+b`|Subtract number from zero in brackets e.g. `=(0-a)+b`|
 |Integer operations|`=5+2`|All calculations done in floating point.|
 |String operations|Excel concat etc.|None|
+|Allow formatting around equation|`*=5+2*`|None|
 
 ## Table parsing functionality
 
@@ -70,16 +71,15 @@ Markalc takes in a Token list list, each token list in the input is interpreted 
 
 |Feature|Supported?|Tested|
 |---|---|---|
-|Superfluous Pipes|[x]|Unit Tested|
-|No outside pipes|[x]|Unit Tested|
-|Cell alignment|[x]|Unit Tested|
-|Single cell table|[x]|Unit Tested|
-|Single cell table no header pipe|[x]|Unit Tested|
-|Single column table no pipes except align|[x]|Unit Tested|
-|Filling in missing row elements in body.|[x]|Unit Tested|
-|Ignoring extra row elements in body.|[x]|Unit Tested|
-|Single row table|[x]|Unit Tested|
-
+|Superfluous Pipes|Yes|Unit Tested|
+|No outside pipes|Yes|Unit Tested|
+|Cell alignment|Yes|Unit Tested|
+|Single cell table|Yes|Unit Tested|
+|Single cell table no header pipe|Yes|Unit Tested|
+|Single column table no pipes except align|Yes|Unit Tested|
+|Filling in missing row elements in body.|Yes|Unit Tested|
+|Ignoring extra row elements in body.|Yes|Unit Tested|
+|Single row table|Yes|Unit Tested|
 
 #### Single cell/column table no header pipe
 ```
