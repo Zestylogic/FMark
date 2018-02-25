@@ -1,6 +1,7 @@
 module ParserTest
 
 open Types
+open ParserHelperFuncs
 open Parser
 open Expecto
 
