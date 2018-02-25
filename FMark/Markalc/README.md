@@ -73,11 +73,15 @@ Markalc takes in a Token list list, each token list in the input is interpreted 
 |Superfluous Pipes|[x]|Unit Tested|
 |No outside pipes|[x]|Unit Tested|
 |Cell alignment|[x]|Unit Tested|
-|Single cell table|[ ]|Untested|
+|Single cell table|[x]|Unit Tested|
+|Single cell table no header pipe|[x]|Unit Tested|
+|Single column table no pipes except align|[x]|Unit Tested|
 |Filling in missing row elements in body.|[x]|Unit Tested|
 |Ignoring extra row elements in body.|[x]|Unit Tested|
+|Single row table|[x]|Unit Tested|
 
-#### Single cell/column table
+
+#### Single cell/column table no header pipe
 ```
 example
 ---|
