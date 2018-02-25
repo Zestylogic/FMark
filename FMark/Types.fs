@@ -11,11 +11,10 @@ type Token =
     | LITERAL of string
     | WHITESPACE of size: int
     | NUMBER of string
-    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
+    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT | COMMA
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
-    | COMMA
 
 type TFrmtedString = | Strong of TFrmtedString | Emphasis of TFrmtedString | Literal of string
 type InlineElement =
@@ -49,16 +48,3 @@ type ParsedObj =
     | Table of Row list * Height: int * Width: int
     | PreTable of Content: Token list list * Height: int * Width: int
     | Footnote of ID: int * TLine
-
-type CellReference = 
-    RowCol of Row:uint32*Col:uint32
-
-type Operand =
-    | CellRef of CellReference
-    | Integer of int
-    | Float of float
-
-type Expr =
-    | BinExp of (float->float->float)*Expr*Expr
-    | Op of Operand
-    | CommaFunction of string*(Expr list)

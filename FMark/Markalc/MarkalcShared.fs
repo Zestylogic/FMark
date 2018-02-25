@@ -1,6 +1,19 @@
 module MarkalcShared
 open Types
 open System.Text.RegularExpressions
+
+type CellReference = 
+    RowCol of Row:uint32*Col:uint32
+
+type Operand =
+    | CellRef of CellReference
+    | Integer of int
+    | Float of float
+
+type Expr =
+    | BinExp of (float->float->float)*Expr*Expr
+    | Op of Operand
+    | CommaFunction of string*(Expr list)
 let whitespaceFilter lst = List.filter (function | WHITESPACE(_) -> false | _ -> true) lst
 // Count number of delim in token list
 let countDelim delim tokList =
