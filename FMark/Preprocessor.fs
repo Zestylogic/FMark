@@ -4,7 +4,7 @@ open EEExtensions
 
 type PToken =
     | PTEXT of string
-    | MACRO | OPENDEF | CLOSEDEF | OPENINLINEDEF | CLOSEINLINEDEF
+    | MACRO | OPENDEF | CLOSEDEF
     | OPENEVAL | CLOSEEVAL | PLBRA | PRBRA | PSEMICOLON | PENDLINE
 
 type Parser =
@@ -36,8 +36,6 @@ let (|WhiteSpace|NonWhiteSpace|) = function
 let (|Character|_|) = function
     | StartsWith "{%" r -> Some (OPENDEF, r)
     | StartsWith "%}" r -> Some (CLOSEDEF, r)
-    | StartsWith "{!" r -> Some (OPENINLINEDEF, r)
-    | StartsWith "!}" r -> Some (CLOSEINLINEDEF, r)
     | StartsWith "{{" r -> Some (OPENEVAL, r)
     | StartsWith "}}" r -> Some (CLOSEEVAL, r)
     | StartsWith "(" r -> Some (PLBRA, r)

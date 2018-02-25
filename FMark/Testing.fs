@@ -32,7 +32,17 @@ let pNextTokenTest =
 let pTokenizeTest =
     makeSimpleTestList pTokenize "PTokenize" [
         "Text; {{ H }}", [PTEXT "Text"; PSEMICOLON; PTEXT " "; OPENEVAL; PTEXT " H "; CLOSEEVAL; PENDLINE]
-        "{% macro InExpr %} ", [OPENDEF; PTEXT " "; MACRO; PTEXT " InExpr "; CLOSEDEF; PTEXT " "; PENDLINE]
+        "{% macro InExpr %} ", [OPENDEF; PTEXT " "; MACRO; PTEXT "InExpr "; CLOSEDEF; PENDLINE]
+        "# Title ", [PTEXT "# Title "; PENDLINE]
+        "Escaped Semicolon \;", [PTEXT "Escaped Semicolon "; PTEXT ";"; PENDLINE]
+        "Escaped brackets \( other text \)", [PTEXT "Escaped brackets "; PTEXT "("; PTEXT " other text ";PTEXT ")"; PENDLINE]
+    ]
+
+[<Tests>]
+let pParseTest =
+    let makeParseTestList f = makeTestList pTokenize id f
+    makeParseTestList pParse "PParse" [
+        "{% macro Hello(arg1; arg2) Body %}", [MacroDefinition {Name="Hello"; Args=["arg1"; "arg2"]; Body=[ParseText "Body "]}; ParseNewLine]
     ]
 
 [<Tests>]
@@ -47,6 +57,7 @@ let tokenizeTest =
         "```", [TBACKTICK; ENDLINE]
         "***", [TASTERISK; ENDLINE]
         "___", [TUNDERSCORE; ENDLINE]
+        @"\_", [LITERAL "_"; ENDLINE]
     ]
 
 [<PTests>]
