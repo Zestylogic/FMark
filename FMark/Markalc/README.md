@@ -82,13 +82,3 @@ Markalc takes in a Token list list, each token list in the input is interpreted 
 |Single row table|[x]|Unit Tested|
 
 
-#### Single cell/column table no header pipe
-```
-example
----|
-```
-
-example
----|
-
-
