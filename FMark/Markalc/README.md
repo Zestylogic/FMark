@@ -21,7 +21,7 @@ Calcs|39|42|
 |---|---|---|---|
 |Modulo|`a%b`|a modulo b|Property based, all integer inputs.
 |Power|`a^b`|a to the power of b|Property based, all integer inputs.
-|Multiply|`a\*b`|a times b|Property based, all integer inputs.
+|Multiply|`a*b`|a times b|Property based, all integer inputs.
 |Division|`a/b`|a divided by b|Property based, all integer inputs.
 |Subtraction|`a-b`|a minus b|Property based, all integer inputs.
 |Addition|`a+b`|a plus b|Property based, all integer inputs.
@@ -60,6 +60,7 @@ Functions support Range Cell References: `[0][0]:[2][0]` will evaluate to `[0][0
 |---|---|---|
 |Negative numbers  |`=-a+b`|Subtract number from zero in brackets e.g. `=(0-a)+b`|
 |Integer operations|`=5+2`|All calculations done in floating point.|
+|String operations|Excel concat etc.|None|
 
 ## Table parsing functionality
 
