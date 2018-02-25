@@ -16,6 +16,31 @@ let makeTestList inf outf testf name listOfPairs =
 
 let makeSimpleTestList f = makeTestList id id f
 
+// --------------------------------------------------
+// Unit Tests
+// --------------------------------------------------
+
+// Preprocessor tests
+
+[<Tests>]
+let pTokenizeTest =
+    makeSimpleTestList pTokenize "PTokenize" [
+        "Text; {{ H }}", [PTEXT "Text"; PSEMICOLON; PTEXT " "; OPENEVAL; PTEXT " "; PTEXT "H"; PTEXT " "; CLOSEEVAL; PENDLINE]
+        "{% macro InExpr %} ", [OPENDEF; PTEXT " "; MACRO; PTEXT " "; PTEXT "InExpr"; PTEXT " "; CLOSEDEF; PENDLINE]
+        "# Title ", [PTEXT "#"; PTEXT " "; PTEXT "Title"; PENDLINE]
+        "Escaped Semicolon \;", [PTEXT "Escaped"; PTEXT " "; PTEXT "Semicolon"; PTEXT " "; PTEXT ";"; PENDLINE]
+        "Escaped brackets \( other text \)", [PTEXT "Escaped"; PTEXT " "; PTEXT "brackets"; PTEXT " "; PTEXT "("; PTEXT " "; PTEXT "other"; PTEXT " "; PTEXT "text"; PTEXT " "; PTEXT ")"; PENDLINE]
+    ]
+
+[<Tests>]
+let pParseTest =
+    let makeParseTestList f = makeTestList pTokenize id f
+    makeParseTestList pParse "PParse" [
+        "{% macro Hello(arg1; arg2) Body %}", [MacroDefinition {Name="Hello"; Args=["arg1"; "arg2"]; Body=[ParseText "Body"]}]
+        "{{ x }}", [MacroSubstitution ("x", []); ParseNewLine]
+        "{{ x(arg1) }}", [MacroSubstitution ("x", ["arg1"]); ParseNewLine]
+    ]
+
 [<Tests>]
 let pNextTokenTest =
     makeSimpleTestList pNextToken "PNextToken" [
@@ -25,29 +50,23 @@ let pNextTokenTest =
         ";", (PSEMICOLON, "")
 
         "This is random text, and should stop here; This should not be included",
-        (PTEXT "This is random text, and should stop here", "; This should not be included")
+        (PTEXT "This", " is random text, and should stop here; This should not be included")
     ]
 
 [<Tests>]
-let pTokenizeTest =
-    makeSimpleTestList pTokenize "PTokenize" [
-        "Text; {{ H }}", [PTEXT "Text"; PSEMICOLON; PTEXT " "; OPENEVAL; PTEXT " H "; CLOSEEVAL; PENDLINE]
-        "{% macro InExpr %} ", [OPENDEF; PTEXT " "; MACRO; PTEXT "InExpr "; CLOSEDEF; PENDLINE]
-        "# Title ", [PTEXT "# Title "; PENDLINE]
-        "Escaped Semicolon \;", [PTEXT "Escaped Semicolon "; PTEXT ";"; PENDLINE]
-        "Escaped brackets \( other text \)", [PTEXT "Escaped brackets "; PTEXT "("; PTEXT " other text ";PTEXT ")"; PENDLINE]
+let preprocessTest =
+    makeSimpleTestList preprocess "Preprocess" [
+        "This should stay the same", ["This should stay the same"; ""]
+        "This should identify the ';', but return the same string", ["This should identify the ';', but return the same string"; ""]
+        "{% macro x(y) {{ y }} y %} {{ x(argument) }}", ["argument y"; ""]
+        "{% x(y) {{ y }} y %} {{ x(argument) }}", ["{% x(y) {{ y }} y %} {{ x(argument) }}"; ""]
     ]
 
-[<Tests>]
-let pParseTest =
-    let makeParseTestList f = makeTestList pTokenize id f
-    makeParseTestList pParse "PParse" [
-        "{% macro Hello(arg1; arg2) Body %}", [MacroDefinition {Name="Hello"; Args=["arg1"; "arg2"]; Body=[ParseText "Body "]}; ParseNewLine]
-    ]
+// Lexer tests
 
 [<Tests>]
-let tokenizeTest =
-    makeSimpleTestList tokenize "Tokenize" [
+let lexTest =
+    makeSimpleTestList lex "Lex" [
         "Hello, world", [LITERAL "Hello,"; WHITESPACE 1; LITERAL "world"; ENDLINE]
         "There is _nothing_ to do", [LITERAL "There"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; UNDERSCORE
                                      LITERAL "nothing"; UNDERSCORE; WHITESPACE 1; LITERAL "to"; WHITESPACE 1
@@ -58,10 +77,15 @@ let tokenizeTest =
         "***", [TASTERISK; ENDLINE]
         "___", [TUNDERSCORE; ENDLINE]
         @"\_", [LITERAL "_"; ENDLINE]
+        @"\_\\\***\%\+", [LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE]
     ]
 
+// --------------------------------------------------
+// Property Tests
+// --------------------------------------------------
+
 [<PTests>]
-let tokenizePropertyTest =
+let lexPropertyTest =
     let invCharMap =
         List.map (fun (a, b) -> (b, a)) charList
         |> Map.ofList
@@ -81,7 +105,7 @@ let tokenizePropertyTest =
             | _ -> str
         tokListToString' "" tokList
 
-    testProperty "TokenizePropertyTest" <| fun (tokList: Token list) ->
+    testProperty "LexPropertyTest" <| fun (tokList: Token list) ->
         let filtered = filterTokList tokList
-        let result = filtered |> tokListToString |> tokenize
+        let result = filtered |> tokListToString |> lex
         Expect.equal filtered result

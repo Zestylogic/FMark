@@ -1,11 +1,12 @@
 module Preprocessor
 
 open EEExtensions
+open Shared
 
 type PToken =
     | PTEXT of string
     | MACRO | OPENDEF | CLOSEDEF
-    | OPENEVAL | CLOSEEVAL | PLBRA | PRBRA | PSEMICOLON | PENDLINE
+    | OPENEVAL | CLOSEEVAL | PLBRA | PRBRA | PSEMICOLON | PENDLINE | PBSLASH
 
 type Parser =
     | MacroDefinition of Macro
@@ -14,41 +15,28 @@ type Parser =
     | ParseNewLine
 and Macro = {Name: string; Args: string list; Body: Parser list}
 
-let strRest c (str: string) =
-    str.[String.length c..]
-
-let (|RegexMatch|_|) regex str =
-    match String.regexMatch regex str with
-    | None -> None
-    | Some (m, grp) ->
-        let lchar = String.length m
-        Some (m, grp, str.[lchar..])
-
-let (|StartsWith|_|) c str =
-    match String.startsWith c str with
-    | true -> strRest c str |> Some
-    | _ -> None
+let charList = ["macro", MACRO; "{%", OPENDEF; "%}", CLOSEDEF; "{{", OPENEVAL
+                "}}", CLOSEEVAL; "(", PLBRA; ")", PRBRA; ";", PSEMICOLON;
+                "\\", PBSLASH]
 
 let (|WhiteSpace|NonWhiteSpace|) = function
     | RegexMatch @"^\s*$" _ -> WhiteSpace
     | _ -> NonWhiteSpace
 
-let (|Character|_|) = function
-    | StartsWith "{%" r -> Some (OPENDEF, r)
-    | StartsWith "%}" r -> Some (CLOSEDEF, r)
-    | StartsWith "{{" r -> Some (OPENEVAL, r)
-    | StartsWith "}}" r -> Some (CLOSEEVAL, r)
-    | StartsWith "(" r -> Some (PLBRA, r)
-    | StartsWith ")" r -> Some (PRBRA, r)
-    | StartsWith ";" r -> Some (PSEMICOLON, r)
-    | RegexMatch "^macro\s+" (_, _, r) -> Some (MACRO, r)
-    | _ -> None
+let (|EscapedCharParse|_|) = (|EscapedChar|_|) PTEXT charList
+
+let (|CharacterParse|_|) = (|Character|_|) charList
 
 let pNextToken str =
     match str with
-    | Character r -> r
-    | RegexMatch "^.+?(?={%|%}|{{|}}|{!|!}|\\(|\\)|;|macro|$)" (m, _, r) -> PTEXT m, r
-    | _ -> String.ofChar str.[0] |> PTEXT, str.[1..]
+    | EscapedCharParse n
+    | CharacterParse n -> n
+    | RegexMatch @"^\s+" (m, _, r) ->
+        PTEXT m, r
+    | RegexMatch (literalString charList) (m, _, r) ->
+        PTEXT m, r
+    | _ ->
+        String.ofChar str.[0] |> PTEXT, str.[1..]
 
 let pTokenize str =
     let rec pTokenize' tList str =
@@ -65,29 +53,34 @@ let (|KeyWord|_|) = function
     | _ -> None
 
 let (|VarName|_|) = function
-    | PTEXT n -> String.trim n |> Some
+    | PTEXT n -> Some n
     | _ -> None
 
-let (|ArgList|_|) tList =
-    let rec (|NameList|_|) tList =
-        match tList with
-        | VarName n :: PSEMICOLON :: NameList (nameList, rest) ->
-            Some (n :: nameList, rest)
-        | VarName n :: rest ->
-            Some ([n], rest)
-        | PTEXT WhiteSpace :: tl ->
-            Some ([], tl)
-        | _ ->
-            Some ([], tList)
-    match tList with
-    | PLBRA :: NameList (nl, PRBRA :: tl) ->
-        Some (nl, tl)
-    | _ -> None
+let (|ArgList|_|) =
+    let rec (|NameList|_|) = function
+        | PTEXT WhiteSpace :: tl | tl ->
+            match tl with
+            | VarName n :: PSEMICOLON :: NameList (nameList, rest) ->
+                Some (n :: nameList, rest)
+            | VarName n :: rest ->
+                Some ([n], rest)
+            | PTEXT WhiteSpace :: t | t ->
+                Some ([], t)
+    function
+    | PTEXT WhiteSpace :: tl | tl ->
+        match tl with
+        | PLBRA :: NameList (nl, PRBRA :: tl) ->
+            Some (nl, tl)
+        | _ -> None
 
 let (|Function|_|) = function
-    | VarName n :: ArgList (nl, PTEXT WhiteSpace :: tl) -> Some (n, nl, tl)
-    | VarName n :: ArgList (nl, tl) -> Some (n, nl, tl)
-    | VarName n :: tl -> Some (n, [], tl)
+    | PTEXT WhiteSpace :: VarName n :: tl ->
+        match tl with
+        | ArgList (nl, PTEXT WhiteSpace :: tl)
+        | ArgList (nl, tl) ->
+            Some (n, nl, tl)
+        | _ ->
+            Some (n, [], tl)
     | _ -> None
 
 let (|MacroDef|_|) = function
@@ -96,9 +89,15 @@ let (|MacroDef|_|) = function
     | _ -> None
 
 let (|EvalDef|_|) = function
-    | OPENEVAL :: VarName n :: ArgList (nl, PTEXT WhiteSpace :: CLOSEEVAL :: tl) -> Some (n, nl, tl)
-    | OPENEVAL :: VarName n :: ArgList (nl, CLOSEEVAL :: tl) -> Some (n, nl, tl)
-    | OPENEVAL :: VarName n :: CLOSEEVAL :: tl -> Some (n, [], tl)
+    | OPENEVAL :: PTEXT WhiteSpace :: tl | OPENEVAL :: tl ->
+        match tl with
+        | VarName n :: ArgList (nl, PTEXT WhiteSpace :: CLOSEEVAL :: tl)
+        | VarName n :: ArgList (nl, CLOSEEVAL :: tl) ->
+            Some (n, nl, tl)
+        | VarName n :: PTEXT WhiteSpace :: CLOSEEVAL :: tl
+        | VarName n :: CLOSEEVAL :: tl ->
+            Some (n, [], tl)
+        | _ -> None
     | _ -> None
 
 let (|SChar|_|) = function
@@ -112,15 +111,6 @@ let (|SChar|_|) = function
     | OPENEVAL -> Some "{{"
     | _ -> None
 
-let (|SCharWhite|_|) = function
-    | SChar t :: PTEXT (RegexMatch "^\s+" (m, _, r)) :: tl ->
-        Some (t+m, PTEXT r :: tl)
-    | SChar t :: tl ->
-        Some (t, tl)
-    | [SChar t] ->
-        Some (t, [])
-    | _ -> None
-
 let pParse tList =
     let rec pParse' endToken tList pList =
         let pRec f c tl = f c :: pList |> pParse' endToken tl
@@ -131,13 +121,18 @@ let pParse tList =
             pRec MacroDefinition {Name=a; Args=b; Body=List.rev p} tl'
         | _, EvalDef (n, args, tl) ->
             pRec MacroSubstitution (n, args) tl
-        | _, PTEXT f :: tl ->
-            recText (String.trimStart [|' '|] f) tl
         | _, PENDLINE :: tl ->
             pRec id ParseNewLine tl
-        | Some e, a :: b when e = a ->
-            pList, b
-        | _, SCharWhite (c, tl) ->
+        | Some e, PTEXT WhiteSpace :: a :: tl | Some e, a :: tl when e = a ->
+            match tl with
+            | PTEXT WhiteSpace :: PENDLINE :: b
+            | PTEXT WhiteSpace :: b
+            | PENDLINE :: b
+            | b ->
+                pList, b
+        | _, PTEXT f :: tl ->
+            recText f tl
+        | _, SChar c :: tl ->
             recText c tl
         | _, [] -> pList, []
     let p, _ = pParse' None tList []
