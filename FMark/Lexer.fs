@@ -1,6 +1,5 @@
 module Lexer
 
-open EEExtensions
 open Types
 open Shared
 
@@ -24,7 +23,7 @@ let nextToken = function
         NUMBER m, s
     | RegexMatch (literalString charList) (m, _, s) ->
         LITERAL m, s
-    | s -> String.ofChar s.[0] |> LITERAL, s.[1..]
+    | s -> toString s.[0] |> LITERAL, s.[1..]
 
 let lex source =
     let rec lex' s tokList =

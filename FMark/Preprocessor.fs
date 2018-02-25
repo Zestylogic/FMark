@@ -1,88 +1,116 @@
 module Preprocessor
 
-open EEExtensions
+open System
+
 open Shared
 
-type PToken =
-    | PTEXT of string
-    | MACRO | OPENDEF | CLOSEDEF
-    | OPENEVAL | CLOSEEVAL | PLBRA | PRBRA | PSEMICOLON | PENDLINE | PBSLASH
+/// Token type for the preprocessor macros
+type Token =
+    | LITERAL of string
+    | MACRO | OPENDEF | CLOSEDEF | OPENEVAL | CLOSEEVAL | LBRA | RBRA
+    | SEMICOLON | ENDLINE | BSLASH
 
+/// Type of the parser elements
 type Parser =
     | MacroDefinition of Macro
-    | MacroSubstitution of name: string * arg: string list
+    | MacroSubstitution of Sub
     | ParseText of content: string
     | ParseNewLine
+
+/// Type for a macro
 and Macro = {Name: string; Args: string list; Body: Parser list}
 
-let charList = ["macro", MACRO; "{%", OPENDEF; "%}", CLOSEDEF; "{{", OPENEVAL
-                "}}", CLOSEEVAL; "(", PLBRA; ")", PRBRA; ";", PSEMICOLON;
-                "\\", PBSLASH]
+/// Type for a substitution
+and Sub = {Name: string; Args: string list; Raw: string}
 
+/// Character list for the preprocessor
+let charList = ["{%", OPENDEF; "%}", CLOSEDEF; "{{", OPENEVAL
+                "}}", CLOSEEVAL; "(", LBRA; ")", RBRA; ";", SEMICOLON;
+                "\\", BSLASH]
+
+let keywordList = ["macro", MACRO]
+
+/// Check if a LITERAL is exclusively whitespace 
 let (|WhiteSpace|NonWhiteSpace|) = function
-    | RegexMatch @"^\s*$" _ -> WhiteSpace
+    | LITERAL (RegexMatch @"^\s*$" _) -> WhiteSpace
     | _ -> NonWhiteSpace
 
-let (|EscapedCharParse|_|) = (|EscapedChar|_|) PTEXT charList
+/// Matches all the escapable characters that are defined in charList
+let (|EscapedCharParse|_|) = (|EscapedChar|_|) LITERAL charList
 
+/// Matches all the special characters that are defined in charList
 let (|CharacterParse|_|) = (|Character|_|) charList
 
-let pNextToken str =
-    match str with
-    | EscapedCharParse n
-    | CharacterParse n -> n
-    | RegexMatch @"^\s+" (m, _, r) ->
-        PTEXT m, r
-    | RegexMatch (literalString charList) (m, _, r) ->
-        PTEXT m, r
-    | _ ->
-        String.ofChar str.[0] |> PTEXT, str.[1..]
+let (|KeywordParse|_|) = (|Character|_|) keywordList
 
-let pTokenize str =
+/// Retrieves the next token from a string and returns it, together
+/// with the rest of the string
+let nextToken str =
+    let literalMatch = charList @ keywordList |> literalString
+    match str with
+    | EscapedCharParse n | CharacterParse n | KeywordParse n ->
+        n
+    | RegexMatch @"^\s+" (m, _, r) ->
+        LITERAL m, r
+    | RegexMatch literalMatch (m, _, r) ->
+        LITERAL m, r
+    | _ ->
+        toString str.[0] |> LITERAL, str.[1..]
+
+/// Tokenizes a string and return it as a list of tokens
+let tokenize str =
     let rec pTokenize' tList str =
         match str with
-        | WhiteSpace -> PENDLINE :: tList
+        | "" ->
+            ENDLINE :: tList
         | _ ->
-            let t, r = pNextToken str
+            let t, r = nextToken str
             pTokenize' (t :: tList) r
     pTokenize' [] str |> List.rev
 
-let (|KeyWord|_|) = function
-    | PTEXT WhiteSpace :: MACRO :: tl
-    | MACRO :: tl -> Some tl
-    | _ -> None
+/// Tokenizes a list of strings and returns them as a single list of tokens
+let tokenizeList = List.collect tokenize
 
-let (|VarName|_|) = function
-    | PTEXT n -> Some n
+/// Returns if the start of the list of tokens matches a keyword
+let (|KeyWord|_|) =
+    let listCheckExists t list =
+        list
+        |> List.map (fun (_, c) -> c)
+        |> List.exists ((=) t)
+    function
+    | WhiteSpace :: a :: tl | a :: tl ->
+        match listCheckExists a keywordList with
+        | true -> Some (a, tl)
+        | _ -> None
     | _ -> None
 
 let (|ArgList|_|) =
     let rec (|NameList|_|) = function
-        | PTEXT n :: NameList (nList, r) ->
+        | LITERAL n :: NameList (nList, r) ->
             Some (n :: nList, r)
-        | PTEXT n :: r ->
+        | LITERAL n :: r ->
             Some ([n], r)
         | _ -> None
     let rec (|ParamList|_|) = function
-        | PTEXT WhiteSpace :: tl | tl ->
+        | WhiteSpace :: tl | tl ->
             match tl with
-            | NameList (n, PSEMICOLON :: ParamList (lst, r)) ->
+            | NameList (n, SEMICOLON :: ParamList (lst, r)) ->
                 Some (List.fold (+) "" n :: lst, r)
             | NameList (n, r) ->
                 Some ([List.fold (+) "" n], r)
             | _ ->
                 Some ([], tl)
     function
-    | PTEXT WhiteSpace :: tl | tl ->
+    | WhiteSpace :: tl | tl ->
         match tl with
-        | PLBRA :: ParamList (nl, PRBRA :: tl) ->
+        | LBRA :: ParamList (nl, RBRA :: tl) ->
             Some (nl, tl)
         | _ -> None
 
 let (|Function|_|) = function
-    | PTEXT WhiteSpace :: VarName n :: tl ->
+    | WhiteSpace :: LITERAL n :: tl ->
         match tl with
-        | ArgList (nl, PTEXT WhiteSpace :: tl)
+        | ArgList (nl, WhiteSpace :: tl)
         | ArgList (nl, tl) ->
             Some (n, nl, tl)
         | _ ->
@@ -90,62 +118,75 @@ let (|Function|_|) = function
     | _ -> None
 
 let (|MacroDef|_|) = function
-    | OPENDEF :: KeyWord (Function f) ->
+    | OPENDEF :: KeyWord (MACRO, Function f) ->
         Some f
     | _ -> None
 
 let (|EvalDef|_|) = function
-    | OPENEVAL :: PTEXT WhiteSpace :: tl | OPENEVAL :: tl ->
+    | OPENEVAL :: WhiteSpace :: tl | OPENEVAL :: tl ->
         match tl with
-        | VarName n :: ArgList (nl, PTEXT WhiteSpace :: CLOSEEVAL :: tl)
-        | VarName n :: ArgList (nl, CLOSEEVAL :: tl) ->
+        | LITERAL n :: ArgList (nl, WhiteSpace :: CLOSEEVAL :: tl)
+        | LITERAL n :: ArgList (nl, CLOSEEVAL :: tl) ->
             Some (n, nl, tl)
-        | VarName n :: PTEXT WhiteSpace :: CLOSEEVAL :: tl
-        | VarName n :: CLOSEEVAL :: tl ->
+        | LITERAL n :: WhiteSpace :: CLOSEEVAL :: tl
+        | LITERAL n :: CLOSEEVAL :: tl ->
             Some (n, [], tl)
         | _ -> None
     | _ -> None
 
-let (|SChar|_|) = function
-    | PSEMICOLON -> Some ";"
-    | PLBRA -> Some "("
-    | PRBRA -> Some ")"
-    | MACRO -> Some "macro"
-    | CLOSEDEF -> Some "%}"
-    | CLOSEEVAL -> Some "}}"
-    | OPENDEF -> Some "{%"
-    | OPENEVAL -> Some "{{"
-    | _ -> None
+let (|SChar|_|) tok =
+    List.map invTuple charList
+    |> Map.ofList
+    |> mapTryFind tok
 
-let pParse tList =
-    let rec pParse' endToken tList pList =
-        let pRec f c tl = f c :: pList |> pParse' endToken tl
+let getRaw list =
+    let rec getRaw' list curr =
+        match list with
+        | CLOSEEVAL :: _ ->
+            CLOSEEVAL :: curr
+        | a :: tl ->
+            a :: curr |> getRaw' tl
+        | _ ->
+            curr
+    getRaw' list [] |> List.rev
+
+let tokToString tList =
+    let tokString st = function
+        | LITERAL l -> st+l
+        | t ->
+            match charList @ keywordList |> listTryFind t with
+            | Some s -> st+s
+            | _ -> st
+    List.fold tokString "" tList
+
+let parse tList =
+    let rec parse' endToken tList pList =
+        let pRec f c tl = f c :: pList |> parse' endToken tl
         let recText = pRec ParseText
         match endToken, tList with
         | _, MacroDef (a, b, tl) ->
-            let p, tl' = pParse' (Some CLOSEDEF) tl []
+            let p, tl' = parse' (Some CLOSEDEF) tl []
             pRec MacroDefinition {Name=a; Args=b; Body=List.rev p} tl'
         | _, EvalDef (n, args, tl) ->
-            pRec MacroSubstitution (n, args) tl
-        | _, PENDLINE :: tl ->
+            pRec MacroSubstitution {Name=n; Args=args; Raw=getRaw tList |> tokToString} tl
+        | _, ENDLINE :: tl ->
             pRec id ParseNewLine tl
-        | Some e, PTEXT WhiteSpace :: a :: tl | Some e, a :: tl when e = a ->
+        | Some e, WhiteSpace :: a :: tl | Some e, a :: tl when e = a ->
             match tl with
-            | PTEXT WhiteSpace :: PENDLINE :: b
-            | PTEXT WhiteSpace :: b
-            | PENDLINE :: b
+            | WhiteSpace :: ENDLINE :: b
+            | WhiteSpace :: b
+            | ENDLINE :: b
             | b ->
                 pList, b
-        | _, PTEXT f :: tl ->
+        | _, LITERAL f :: tl ->
             recText f tl
         | _, SChar c :: tl ->
             recText c tl
-        | _, [] -> pList, []
-        | _ -> failwithf "Failed"
-    let p, _ = pParse' None tList []
+        | _ -> pList, []
+    let p, _ = parse' None tList []
     List.rev p
 
-let replace pList =
+let evaluate pList =
 
     let newParam args: Map<string, string option> =
         List.replicate (List.length args) None
@@ -158,22 +199,22 @@ let replace pList =
     let mapAdd (map: Map<'a, 'b>) k v =
         map.Add(k, v)
 
-    let rec replace' pList newPList param (scope: Map<string, Macro>) =
+    let rec evalulate' pList newPList param (scope: Map<string, Macro>) =
 
-        let replaceInv' pList newPList scope param =
-            replace' pList newPList param scope
+        let evalulateInv' pList newPList scope param =
+            evalulate' pList newPList param scope
 
-        let replace'' pList newPList = replace' pList newPList param scope
+        let evalulate'' pList newPList = evalulate' pList newPList param scope
 
         match pList with
         | MacroDefinition {Name=n; Args=args; Body=p} :: tl ->
             newParam args
-            |> replaceInv' p [] scope
+            |> evalulateInv' p [] scope
             |> makeMacro n args
             |> mapAdd scope n
-            |> replace' tl newPList param
-        | MacroSubstitution (n, args) :: tl ->
-            let replacement =
+            |> evalulate' tl newPList param
+        | MacroSubstitution {Name = n; Args = args; Raw = raw} :: tl ->
+            let evalulatement =
                 match args with
                 | [] ->
                     match param.TryFind n with
@@ -185,27 +226,28 @@ let replace pList =
                         match scope.TryFind n with
                         | Some m ->
                             m.Body |> Some
-                        | _ -> failwithf "Macro '%s' did not match anything in scope" n
+                        | _ ->
+                            [ParseText raw] |> Some
                 | a ->
                     match scope.TryFind n with
                     | Some m ->
-                        replace' m.Body [] (List.zip m.Args a
-                                            |> List.fold (fun s (a, b) -> s.Add(a, Some b)) param) scope
+                        evalulate' m.Body [] (List.zip m.Args a
+                                              |> List.fold (fun s (a, b) -> s.Add(a, Some b)) param) scope
                         |> List.rev |> Some
                     | None ->
-                        failwithf "Failed"
-            match replacement with
+                        [ParseText raw] |> Some
+            match evalulatement with
             | Some p ->
-                replace'' tl (p @ newPList)
+                evalulate'' tl (p @ newPList)
             | None ->
-                replace'' tl (MacroSubstitution (n, args) :: newPList)
+                evalulate'' tl (MacroSubstitution {Name = n; Args = args; Raw = raw} :: newPList)
 
         | ParseText t :: tl ->
-            replace'' tl (ParseText t :: newPList)
+            evalulate'' tl (ParseText t :: newPList)
         | ParseNewLine :: tl ->
-            replace'' tl (ParseNewLine :: newPList)
+            evalulate'' tl (ParseNewLine :: newPList)
         | [] -> newPList
-    replace' pList [] Map.empty<string, string option> Map.empty<string, Macro> |> List.rev
+    evalulate' pList [] Map.empty<string, string option> Map.empty<string, Macro> |> List.rev
 
 let prettyPrint pList =
     List.fold (fun st -> function
@@ -226,5 +268,11 @@ let toStringList pList =
             
     List.fold f [] pList |> List.rev
 
+let pET =
+    parse >> evaluate >> toStringList
+
 let preprocess =
-    pTokenize >> pParse >> replace >> toStringList
+    tokenize >> pET
+
+let preprocessList =
+    tokenizeList >> pET

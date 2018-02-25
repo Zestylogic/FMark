@@ -1,40 +1,94 @@
 module Shared
 
-open EEExtensions
+open System
+open System.Text.RegularExpressions
 
+// --------------------------------------------------
+// Helpers
+// --------------------------------------------------
+
+/// Inverse the values in a tuple
+let invTuple (a, b) = b, a
+
+/// Try to find a key in a map, return Some value when it is found, otherwise it
+/// returns None
+let mapTryFind k (map: Map<'a, 'b>) = map.TryFind(k)
+
+/// Convert list of tuples to a map and try to find a key in it and return it's value
+/// if it exists
+let listTryFind k =
+    List.map invTuple >> Map.ofList >> mapTryFind k
+
+/// Match a regular expression Return Some (m,grps) where m is the match string,
+/// grps is the list of match groups (if any) return None on no match
+let strRegexMatch (regex: string) (str: string) =
+    let m = Regex(regex).Match(str)
+    if m.Success
+    then
+        let mLst = [ for x in m.Groups -> x.Value ]
+        Some (List.head mLst, List.tail mLst)
+    else None
+
+/// Checks if a string starts with another string
+let strStartsWith (value: string) (str: string) =
+    str.StartsWith(value)
+
+/// Convert a single character to a string
+let toString (c: char) =
+    String.Concat [c]
+
+/// Replace a every occurence of one string in the string s by another
+let strReplace (o: string) (n: string) (s: string) =
+    s.Replace(o, n)
+
+// --------------------------------------------------
+// Shared
+// --------------------------------------------------
+
+/// Active Pattern to match a string with a regex pattern, returns the matched string
+/// together with the groups in a list and the rest of the string
 let (|RegexMatch|_|) regex str =
-    match String.regexMatch regex str with
+    match strRegexMatch regex str with
     | None -> None
     | Some (m, grp) ->
         let lchar = String.length m
         Some (m, grp, str.[lchar..])
 
+/// Create a regular expression for a literal that matches everything except the
+/// characters defined in charList
 let literalString charList =
+
+    /// Escapes every special regex character in a string given to it
     let addEscape (c, _) =
-        let replace (o: string) (n: string) (s: string) =
-            s.Replace(o, n)
         ["\\"; "."; "^"; "$"; "*"; "+"; "-"; "?"; "("; ")"; "["; "]"; "{"; "}"; "|"; "/"]
-        |> List.fold (fun st n -> replace n ("\\"+n) st) c
+        |> List.fold (fun st n -> strReplace n ("\\"+n) st) c
 
-    let chars =
-        List.map (addEscape >> (fun a -> a+"|")) charList
-        |> List.fold (+) ""
+    charList
+    |> List.map (addEscape >> (fun a -> a+"|"))
+    |> List.fold (+) ""
+    |> (fun c -> "^.+?(?=\\s|"+c+"$)")
 
-    "^.+?(?=\\s|"+chars+"$)"
-
+/// Tests if a string starts with any of the characters in charList,
+/// and returns the match after passing it through the retLastMatch
+/// function, that will be used in a fold operation with None as a starting
+/// value
 let (|CharMatch|_|) retLastMatch a charList (str: string) =
     let testStartWith (c, t) =
         let ch = a + c
-        String.startsWith ch str, ch, t
+        strStartsWith ch str, ch, t
     List.map testStartWith charList
     |> List.fold retLastMatch None
 
+/// Checks if a string starts with a character defined in charList, and returns the DU value
+/// associated with it
 let (|Character|_|) charList (str: string) =
     let retLastMatch i = function
         | true, c, t -> Some (t, str.[String.length c..])
         | _ -> i
     (|CharMatch|_|) retLastMatch "" charList str
 
+/// Checks if a string starts with an escaped char of any character in charList, and returns it
+/// by passing the text of the last matched value to a constructor 'tType'
 let (|EscapedChar|_|) tType charList (str: string) =
     let retLastMatch i = function
         | true, (c: string), _ -> Some (tType c.[1..], str.[String.length c..])
