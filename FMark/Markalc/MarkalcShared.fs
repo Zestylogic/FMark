@@ -36,17 +36,15 @@ let rec listCopies i lst =
 let unfoldTuple3 func (a,b,c) =
    func a b c
 
-// Take in two cell refs and return a list of all refs inbetween or None
-let cellRange (x,y) = 
-    match (x,y) with
-    | (RowCol(x1,y1),RowCol(x2,y2)) ->
-        let x = x1,y1
-        let y = x2,y2
+// Take in two cell refs and return a list of all refs inbetween or None if invalid e.g. diagonal
+let cellRange (p1,p2) = 
+    match (p1,p2) with
+    | (RowCol(p1r,p1c),RowCol(p2r,p2c)) ->
         let genList a b = if a<b then [a..b] else [b..a]
-        match fst x = fst y, snd x = snd y with
-        | true,true -> Some [RowCol x]
-        | true,false -> (List.map ((fun i -> (fst x,i)) >> RowCol) (genList (snd x) (snd y))) |> Some
-        | false,true -> (List.map ((fun i -> (i,snd x)) >> RowCol) (genList (fst x) (fst y))) |> Some
+        match p1r = p2r, p1c = p2c with
+        | true,true -> Some [RowCol (p1r,p1c)]
+        | true,false -> (List.map ((fun i -> (p1r,i)) >> RowCol) (genList p1c p2c)) |> Some
+        | false,true -> (List.map ((fun i -> (i,p1c)) >> RowCol) (genList p1r p2r)) |> Some
         | false,false -> None
 
 // Quick parser to generate tokenise string one row at a time
