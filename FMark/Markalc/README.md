@@ -56,7 +56,7 @@ Functions support Range Cell References: `[0][0]:[2][0]` will evaluate to `[0][0
 
 ### Unsupported
 
-|Function|Example|Workaround|
+|Feature|Example|Workaround|
 |---|---|---|
 |Negative numbers  |`=-a+b`|Subtract number from zero in brackets e.g. `=(0-a)+b`|
 |Integer operations|`=5+2`|All calculations done in floating point.|
