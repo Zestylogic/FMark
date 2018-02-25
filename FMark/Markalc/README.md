@@ -127,4 +127,5 @@ This project was developed in test-driven manner. Each main component was tested
 
 The benefit of this approach is that it's possible to pinpoint the cause of errors to a specific component of the code, or easily add another test to a particular component to debug errors in the full implementation. It also allowed for much faster development; each component need only be written to fulfil its specification and then tested, and henceforth used with impunity. Combining the components into the top level function was trivial. It would have been good to include more property based tests, however the cost of developing these was deemed too high within the timeframe, so mostly unit tests were used.
 
-[Here](TESTS.md) is an itemised description of all unit tested functionality.
+[TESTS.md](TESTS.md) is an itemised description of all unit tested functionality.
+
