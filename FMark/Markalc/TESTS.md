@@ -59,7 +59,7 @@
 |Full evaluation test with cell references|Pass|
 |Circular cell reference|Pass|
 |SUM range function call|Pass|
-|SUM and avg function calls|Pass|
+|SUM and AVG function calls|Pass|
 |Horizontal cell ref range|Pass|
 |Function with cell ref range and other arguments|Pass|
 |Function within a function|Pass|

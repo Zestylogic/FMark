@@ -150,7 +150,7 @@ let fullTestData = [
     [ans true [NUMBER "5"] [LITERAL "header2"] [LITERAL "header3"];
      ans false [NUMBER "7"] [LITERAL "tesdfst"] [LITERAL "stduff"];
      ans false [NUMBER "5"] [NUMBER "17"] [NUMBER "0"]] |> Ok;
-    "SUM and avg function calls",
+    "SUM and AVG function calls",
     ["=5|header2|header3";
     ":------|:-----:|------:";
     "=AVG{1,6,8}|=8|stduff";
