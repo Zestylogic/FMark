@@ -29,11 +29,21 @@ The Parser assumes `WHITESPACE`s will be grouped together,
 e.g. `[WHITESPACE 1; WHITESPACE 2]` is invalid
 and the acceptable form is `[WHITESPACE 3]`.
 
+## Function specs
+| Functions           | Spec (all functions return unparsed Tokens unless otherwise said)            |
+|---------------------|------------------------------------------------------------------------------|
+| parseLiteral        | parse terminates on any unrecognised Token                                   |
+| parseInLineElements | parse inline text, including links and pictures, terminate on 2>= `ENDLINE`s |
+| parseParagraph      | parse a paragraph which counts for contents in  `<p>`                        |
+| parse               | top-level Parser, which the user should use                                  |
+
 ## Behaviour
+### Unparsed Tokens will result in an `Error` message containing those Tokens.
+
 ### Unmatched `UNDERSCORE` and `ASTERISK`, as well as the subsequent inline content, will be turned into `Literal`,until new Inline format.
 
 e.g.
-```Markdown
+```
 _I _love_
 ```
 turned into
@@ -41,5 +51,12 @@ turned into
 [FrmtedString(Literal "_I ");; FrmtedString(Emphasis[FrmtedString(Literal "love")])]
 ```
 
-### 
 
+# Test Plan
+It is difficult to do property tests on a Markdown parser without the help of human interaction.
+
+Every sub-function of the Parser has been unit tested with best effort to make development agile.
+Sub-functions have been tested as they are written. Each time the code changes, the test bench will be run to ensure code correctness.
+What's more, it is easier to find point of failure from the `Expecto` test result, by examining the list of failed tests.
+
+## Test cases
