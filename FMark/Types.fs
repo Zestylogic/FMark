@@ -14,10 +14,12 @@ type Token =
     | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
-    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET
+    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
 
-type TFrmtedString = | Strong of TFrmtedString | Emphasis of TFrmtedString | Literal of string | Code of string
-type InlineElement =
+type TFrmtedString =
+    | Strong of InlineElement list | Emphasis of InlineElement list
+    | Literal of string | Code of string
+and InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
     | Picture of Alt: string * URL: string
