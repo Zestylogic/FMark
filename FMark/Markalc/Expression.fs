@@ -34,12 +34,15 @@ let parseExp toks =
             | _ -> None
         let rec (|ExpressionList|_|) = function
             | Expression(exp,COMMA::ExpressionList(exps,after)) -> (exp::exps,after) |> Some
+            | CellRefPat(x,COLON::CellRefPat(y,after)) -> over (x,y) |> function
+                | Some lst -> (List.map (CellRef >> Op) lst,after) |> Some
+                | _ -> None
             | Expression(exp,after) -> ([exp],after) |> Some
             | _ -> None
         // DEFINE FUNCTIONS
         let funcConstruct funcname = function
-        | RCBRA :: CellRefPat (x,COLON::CellRefPat(y,LCBRA::LITERAL(funcname)::after)) ->
-            (RangeFunction(funcname, y, x),after) |> Some
+        // | RCBRA :: CellRefPat (x,COLON::CellRefPat(y,LCBRA::LITERAL(funcname)::after)) ->
+        //     (RangeFunction(funcname, y, x),after) |> Some
         | RCBRA :: ExpressionList (lst,LCBRA::LITERAL(funcname)::after) ->
             (CommaFunction(funcname,lst),after) |> Some
         | _ -> None

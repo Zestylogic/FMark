@@ -113,32 +113,21 @@ let alignCells' alignList (cells:(Token list * bool) list) =
 
 let alignCells = liftFirstArg alignCells'
 /// Separate list of tokens into cells with alignment and header/not-header
-let transformTable (table:Token list list)  = 
+let transformTable (table:Token list list)  =
+    let xOnwards x lst = if List.length lst > x then lst.[x..] else []
     // Deal with first two rows of format: header1 | header2 | header3
     // Second row tells us how many columns and correct alignment
     let alignments = table.[1] |> parseAlignRow
     let header = List.head table |> parseRow headCellU |> alignCells alignments
     // Fold parse normal row for the rest of the table
     let parseAlignPrepend s x = (parseRow defaultCellU x |> alignCells alignments) :: s
-    List.fold parseAlignPrepend [header] table.[2..]
+    List.fold parseAlignPrepend [header] (xOnwards 2 table)
     |> List.rev
     |> joinErrorList
 
 let tryEval map e =
     // Evaluate expression
     let rec evalExp r map e =
-        // Take in two cell refs and return a list of all refs inbetween or None
-        let over (x,y) = 
-            match (x,y) with
-            | (RowCol(x1,y1),RowCol(x2,y2)) ->
-                let x = x1,y1
-                let y = x2,y2
-                let genList a b = if a<b then [a..b] else [b..a]
-                match fst x = fst y, snd x = snd y with
-                | true,true -> Some [RowCol x]
-                | true,false -> (List.map ((fun i -> (fst x,i)) >> RowCol) (genList (snd x) (snd y))) |> Some
-                | false,true -> (List.map ((fun i -> (i,snd x)) >> RowCol) (genList (fst x) (fst y))) |> Some
-                | false,false -> None
         // Evaluate cell reference
         let evalCellRef ref = 
             match Map.tryFind ref map with
@@ -170,7 +159,6 @@ let evaluateCellList cellList =
         | Error(t) -> (RowCol(row,snd s),MapTok (cell)) :: fst s, snd s + 1u // No expression, ignore
     let outerFold (s:uint32*((CellReference*MapContents)list*uint32)) cells =
         (fst s + 1u,List.fold (innerFold (fst s)) (fst(snd s),0u) cells)
-    // Get the length of each list.
     let rowLength = List.length (List.head cellList)
     List.fold outerFold (0u,([],0u)) cellList 
     |> function 

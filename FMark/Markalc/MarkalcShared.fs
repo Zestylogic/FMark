@@ -36,6 +36,19 @@ let rec listCopies i lst =
 let unfoldTuple3 func (a,b,c) =
    func a b c
 
+// Take in two cell refs and return a list of all refs inbetween or None
+let over (x,y) = 
+    match (x,y) with
+    | (RowCol(x1,y1),RowCol(x2,y2)) ->
+        let x = x1,y1
+        let y = x2,y2
+        let genList a b = if a<b then [a..b] else [b..a]
+        match fst x = fst y, snd x = snd y with
+        | true,true -> Some [RowCol x]
+        | true,false -> (List.map ((fun i -> (fst x,i)) >> RowCol) (genList (snd x) (snd y))) |> Some
+        | false,true -> (List.map ((fun i -> (i,snd x)) >> RowCol) (genList (fst x) (fst y))) |> Some
+        | false,false -> None
+
 // Quick parser to generate tokenise string one row at a time
 let simpleLex txt = 
     let (|RegexMatch|_|) r txt =
