@@ -47,12 +47,10 @@ Supported functions:
 |---|---|---|
 |`SUM`|Adds all arguments.|Unit tested.|
 |`AVG`|Calculates mean of all arguments.|Unit tested.|
+|`MIN`|Returns minimum of all arguments.|Unit tested.|
+|`MAX`|Returns maximum of all arguments.|Unit tested.|
 
-Functions support Range Cell References: `[0][0]:[2][0]` will evaluate to `[0][0],[1][0],[2][0]`.
-
-##### Example function: Sum of first two columns rows 0 to 2 + 5 + contents of cell \[0\]\[2\]
-
-`=SUM{[0][0]:[2][0],[0][1]:[2][1],5,[0][2]}`
+Functions support Range Cell References: `[0][0]:[2][0]` will evaluate to `[0][0],[1][0],[2][0]`. This can be used with other arguments, e.g. `SUM{[0][0]:[2][0],1,3+2,[0][0]}`
 
 ### Unsupported
 

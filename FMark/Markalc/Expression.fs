@@ -46,9 +46,14 @@ let parseExp toks =
         | _ -> None
         let (|Sum|_|) = funcConstruct "SUM"
         let (|Avg|_|) = funcConstruct "AVG"
+        let (|Min|_|) = funcConstruct "MIN"
+        let (|Max|_|) = funcConstruct "MAX"
+        
         let (|FunctionPat|_|) = function
             | Sum (x,after)  -> (x,after) |> Some
             | Avg (x,after)  -> (x,after) |> Some
+            | Min (x,after)  -> (x,after) |> Some
+            | Max (x,after)  -> (x,after) |> Some
             | _ -> None
 
         let (|BasePat|_|) = function

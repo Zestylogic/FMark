@@ -142,6 +142,8 @@ let tryEval' maxRefs map e =
         | Op (CellRef(ref)) -> evalCellRef ref
         | CommaFunction("SUM",l) -> List.sumBy (evalExp r map) l
         | CommaFunction("AVG",l) -> List.averageBy (evalExp r map) l
+        | CommaFunction("MIN",l) -> List.min (List.map (evalExp r map) l)
+        | CommaFunction("MAX",l) -> List.max (List.map(evalExp r map) l)
         | _ -> 11.0
     evalExp 0 map e
 let tryEval = tryEval' 1000

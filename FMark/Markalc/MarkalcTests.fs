@@ -171,13 +171,16 @@ let fullTestData = [
     "||=6*5+SUM{[1][1]:[1][2],4,5}-(39+42)|=[1][1]+3"],
     [ans true [LITERAL "Calcs"] [NUMBER "39"] [NUMBER "42"];
      ans false [] [NUMBER "39"] [NUMBER "42"];
-     ans false [] [NUMBER "39"] [NUMBER "42"]] |> Ok
+     ans false [] [NUMBER "39"] [NUMBER "42"]] |> Ok;
     "Function within a function",
     ["Calcs|=39|=42";
     ":------|:-----:|------:";
     "||=6*5+SUM{SUM{2,7},8,5}|=[1][1]-10"],
     [ans true [LITERAL "Calcs"] [NUMBER "39"] [NUMBER "42"];
-     ans false [] [NUMBER "52"] [NUMBER "42"]] |> Ok
+     ans false [] [NUMBER "52"] [NUMBER "42"]] |> Ok;
+    "MIN/MAX function test",
+    ["=MIN{3,4,2,5,3,2,4,5,7,1,20}|=MAX{3,4,2,5,3,2,4,5,7,1,20}"; "---|---"; ],
+    [[Contents ([NUMBER("1")],true,Left);Contents ([NUMBER("20")],true,Left)]] |> Ok;
 ]
 // ####################### FUNCTIONS #####################
 let EQTest func fname name inp outp =

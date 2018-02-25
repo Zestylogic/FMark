@@ -63,4 +63,5 @@
 |Horizontal cell ref range|Pass|
 |Function with cell ref range and other arguments|Pass|
 |Function within a function|Pass|
+|MIN/MAX function test|Pass|
 
