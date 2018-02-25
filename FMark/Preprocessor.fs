@@ -135,28 +135,35 @@ let pParse tList =
         | _, SChar c :: tl ->
             recText c tl
         | _, [] -> pList, []
+        | _ -> failwithf "Failed"
     let p, _ = pParse' None tList []
     List.rev p
 
-let replace pList=
+let replace pList =
 
-    let rec replace' pList newPList param scope =
+    let newParam args: Map<string, string option> =
+        List.replicate (List.length args) None
+        |> List.zip args
+        |> Map.ofList
 
-        let addScope =
-            List.fold (fun (st: Map<string, Macro>) v -> st.Add(v.Name, v)) scope
+    let makeMacro n args p =
+        {Name = n; Args = args; Body = p}
+
+    let mapAdd (map: Map<'a, 'b>) k v =
+        map.Add(k, v)
+
+    let rec replace' pList newPList param (scope: Map<string, Macro>) =
+
+        let replaceInv' pList newPList scope param =
+            replace' pList newPList param scope
 
         match pList with
-
         | MacroDefinition {Name=n; Args=args; Body=p} :: tl ->
-            let newParam: Map<string, string option> =
-                List.replicate (List.length args) None
-                |> List.zip args
-                |> Map.ofList
-            let nP =
-                replace' p [] newParam scope
-            let macro = {Name=n; Args=args; Body=nP}
-            scope.Add(n, macro) |> replace' tl newPList param
-
+            newParam args
+            |> replaceInv' p [] scope
+            |> makeMacro n args
+            |> mapAdd scope n
+            |> replace' tl newPList param
         | MacroSubstitution (n, args) :: tl ->
             let replacement =
                 match args with
@@ -207,6 +214,7 @@ let toStringList pList =
             a+t :: b
         | _, ParseText t ->
             [t]
+        | _ -> failwithf "Failed"
             
     List.fold f [] pList |> List.rev
 
