@@ -106,7 +106,7 @@ let alignCells' alignList (cells:(Token list * bool) list) =
     let lengths = (List.length alignList, List.length cells)
     match (fst lengths - snd lengths) with
     | x when x > 0 -> cells @ (List.replicate x ([], List.head cells |> snd)) // If alignList longer than cells, fill in with blank cells
-    | x when x < 0 -> cells.[0..fst lengths]// If cells longer than alignList, ignore the extra cells
+    | x when x < 0 -> cells.[0..((fst lengths)-1)]// If cells longer than alignList, ignore the extra cells
     | _ -> cells
     |> (List.zip alignList)
     |> List.map (fun (a,uc) -> alignCell a uc)
