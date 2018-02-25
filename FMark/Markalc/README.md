@@ -1,7 +1,7 @@
 
 # Markalc
 
-Markalc is a module which adds spreadsheet-like functionality to GFM tables.
+Markalc is a parser for GFM tables which adds spreadsheet functionality.
 
 # Functionality
 ## Spreadsheet functionality
