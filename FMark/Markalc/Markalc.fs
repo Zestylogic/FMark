@@ -134,7 +134,7 @@ let tryEval map e =
                 | Some(MapExp(e2,_)) -> evalExp (r+1) map e2
                 | _ -> nan // invalid reference
         // Apply f over list of cell references between two cells
-        let rangeFunc f x y = match over (x,y) with
+        let rangeFunc f x y = match cellRange (x,y) with
                               | Some(l) -> f l
                               | None -> nan
         //let commaFunc f = match 
@@ -176,15 +176,16 @@ let evaluateCellList cellList =
         |> List.map (Array.toList)
 
 /// Top level function
-/// Parse tokens into cell list list with all Expressions evaluated
-let parseEvaluate (input:Token list list) = 
+/// Parse tokens into cell list list with all Expressions evaluated.
+/// Return: Result(OK(Cell list list), Error(toks))
+let parseEvaluateTable (toks:Token list list) = 
     // Transform Token list list into Cell list list
-    transformTable input
+    transformTable toks
     |> function
-    | Error(_) -> input |> Error // If there are any errors just return the unchanged Token list list
+    | Error(_) -> toks |> Error // If there are any errors just return the unchanged Token list list
     | Ok(x) -> evaluateCellList x |> Ok // Else return Ok and Cell list list
 
-let lexParseEvaluate input = 
-    List.map simpleLex input
-    |> parseEvaluate
+let lexParseEvaluate toks = 
+    List.map simpleLex toks
+    |> parseEvaluateTable
 

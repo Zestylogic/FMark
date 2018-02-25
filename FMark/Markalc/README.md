@@ -1,7 +1,7 @@
 
 # Markalc
 
-Markalc is a parser for GFM tables which adds spreadsheet functionality.
+Markalc is a parser for Github Flavoured Markdwon (GFM) tables which adds spreadsheet capabilities.
 
 # Specification
 ## Spreadsheet functionality
@@ -64,7 +64,6 @@ Functions support Range Cell References: `[0][0]:[2][0]` will evaluate to `[0][0
 |String operations|e.g. Excel CONCAT|None|
 |Assume empty cells are zero|Summing over column with empty cells|Put `=0` in each cell|
 
-
 ## Table parsing functionality
 
 Markalc takes in a Token list list, each token list in the input is interpreted as a row of a table. If the evaluation of these Tokens fails, Markalc will return an Error monad containing the original input. Otherwise, if successful, it will return a Row list of the successfully parsed and evaluated table.
@@ -83,3 +82,31 @@ Markalc takes in a Token list list, each token list in the input is interpreted 
 |Ignoring extra row elements in body.|Yes|Unit Tested|
 |Single row table|Yes|Unit Tested|
 
+# Using Markalc
+
+## How does Markalc contribute to FMark?
+
+Markalc is an essential part of the FMark project to implement Markdown and extend its functionality. Firstly, it is essential since it parses tables into `Cell`s which can be easily printed using an HTMLGen function. Secondly, it extends Markdown to add spreadsheet capabilities to GFM tables.
+
+## Interfaces
+
+Top-level function is called `parseEvaluateTable`. The input to the function is a `Token list list` and it returns Ok with the list of rows parsed into `Cell`s if successful, otherwise it passes the input onwards.
+
+``` fsharp
+val parseEvaluateTable (toks:Token list list) : Result<Cell list list, Token list list>
+```
+
+Interface is compatible with the other modules since we are using a Result monad to inform caller whether or not the table was valid. The caller can then do different functions on the data accordingly.
+
+# Testing Plan
+
+This project was developed in test-driven manner. Each main component was tested using unit tests (and property based tests where simple enough) for as many edge cases as possible. These main components were:
+
+- The expression parser and evaluator
+- The row parser
+- The alignment row parser
+- The full `parseEvaluateTable` function.
+
+The benefit of this approach is that it's possible to pinpoint the cause of errors to a specific component of the code, or easily add another test to a particular component to debug errors in the full implementation. It also allowed for much faster development; each component need only be written to fulfil its specification and then tested, and henceforth used with impunity. Combining the components into the top level function was trivial. It would have been good to include more property based tests, however the cost of developing these was deemed too high within the timeframe, so mostly unit tests were used.
+
+[Here](TESTS.md) is an itemised description of all unit tested functionality.

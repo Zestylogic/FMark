@@ -9,4 +9,5 @@ open Markalc
 let main argv =
     printfn "Running tests..."
     runTests
+    testMarkdown
     0 // return an integer exit code

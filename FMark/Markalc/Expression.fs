@@ -34,7 +34,7 @@ let parseExp toks =
             | _ -> None
         let rec (|ExpressionList|_|) = function
             | Expression(exp,COMMA::ExpressionList(exps,after)) -> (exp::exps,after) |> Some
-            | CellRefPat(x,COLON::CellRefPat(y,after)) -> over (x,y) |> function
+            | CellRefPat(x,COLON::CellRefPat(y,after)) -> cellRange (x,y) |> function
                 | Some lst -> (List.map (CellRef >> Op) lst,after) |> Some
                 | _ -> None
             | Expression(exp,after) -> ([exp],after) |> Some

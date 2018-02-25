@@ -37,7 +37,7 @@ let unfoldTuple3 func (a,b,c) =
    func a b c
 
 // Take in two cell refs and return a list of all refs inbetween or None
-let over (x,y) = 
+let cellRange (x,y) = 
     match (x,y) with
     | (RowCol(x1,y1),RowCol(x2,y2)) ->
         let x = x1,y1

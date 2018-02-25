@@ -9,16 +9,16 @@ open Expecto
 
 // ####################### DATA ###################
 let expressionData = [
-    "Triple addition.",
+    "Nested binary expression test with addition.",
     "10+10+10",
     30.0 |> Ok;
     "Simple triple multiplication.",
     "3*7*5",
     105.0 |> Ok;
-    "Triple division, test left associativity.",
+    "Left associativity with triple division.",
     "60/2/3",
     10.0 |> Ok;
-    "Triple subtraction.",
+    "Left associativity with triple subtraction.",
     "7-5-2",
     0.0 |> Ok;
     "Bracketed subtraction.",
@@ -27,10 +27,10 @@ let expressionData = [
     "Bracketed subtraction then addition.",
     "7-(2-1)+5",
     11.0 |> Ok;
-    "Operator precedence",
+    "Operator precedence changed with brackets",
     "7*(2-3)+5",
     -2.0 |> Ok;
-    "7*2-3+5",
+    "Operator precedence",
     "7*2-3+5",
     16.0 |> Ok;
     "Lots of brackets",
@@ -38,8 +38,8 @@ let expressionData = [
     6.0 |> Ok;
     "Testing cellref evaluation (without table)",
     "1+([1][1]+[1][2])",
-    27.0 |> Ok;
-    "Left to right evaluation",
+    27.0 |> Ok; // For test evaluation function without table CellRefs evaluate to 13.0
+    "Test left associativity with extra whitespace",
     "2 -4 +6 -1 -1- 0 +8",
     10.0 |> Ok
     "Pow precendence test",
@@ -69,7 +69,7 @@ let parseDefaultRowData = [
     "some test||stuff 0398 test",
     [defaultCellU [LITERAL("some test")];defaultCellU[] ; defaultCellU[LITERAL("stuff");WHITESPACE(1);NUMBER("0398");WHITESPACE(1);LITERAL("test")]]
 ]
-let testAlignData = [
+let alignmentData = [
     "No alignments.",
     "---|----|---",
     [Left;Left;Left] |> Ok;
@@ -98,7 +98,7 @@ let testAlignData = [
     "|---|:---:|---:|:---:|:---|---:|:---:|---:|:---|",
     [Left;Centre;Right;Centre;Left;Right;Centre;Right;Left] |> Ok
 ]
-let testTableData = [
+let basicTableData = [
     "Test one: Simple table",
     List.map simpleLex ["header1|header2|header3";
                           ":------|:-----:|------:";
@@ -113,7 +113,7 @@ let ans head a b c = [Contents (a,head,Left);
                       Contents (b,head,Centre);
                       Contents (c,head,Right)]
 
-let testFullData = [
+let fullTestData = [
     "Single cell table funny syntax",
     ["=2+2"; "---|"; ],
     [[Contents ([NUMBER("4")],true,Left);]] |> Ok;
@@ -180,12 +180,12 @@ let fullTest = EQTest lexParseEvaluate "evaluation"
 // ####################### TESTS ########################
 [<Tests>]
 let tests = 
-    testList "Should pass" [
+    testList "Should all pass." [
         addTestList expressionTest "Expression tests" lexY expressionData;
         addTestList parseRowTest "parseDefaultRow tests" lexY parseDefaultRowData;
-        addTestList parseAlignmentRowTest "parseAlignmentRow tests" lexY testAlignData;
-        addTestList transformTableTest "transformTable tests" id testTableData;
-        addTestList fullTest "transformTable tests" id testFullData;
+        addTestList parseAlignmentRowTest "parseAlignmentRow tests" lexY alignmentData;
+        addTestList transformTableTest "transformTable tests" id basicTableData;
+        addTestList fullTest "transformTable tests" id fullTestData;
 ]
 
 let funcList = [( % ),"%";( ** ),"^";( + ),"+";( - ),"-"; ( * ),"*"; ( / ),"/"]
@@ -208,3 +208,20 @@ let propertyTests =
     |> Expecto.Tests.testList "Expression property tests."
 let runTests =
     Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
+
+let testMarkdown =
+    let printTestMarkdown name lst =
+        (sprintf "# %s\n\n|UnitTest|Pass/Fail\n|---|---|\n" name) 
+        + (List.fold (fun s x -> s + (sprintf "|%s|Pass|\n" x)) "" lst)
+        + "\n\n"
+    let getFst3 lst = List.map (fun (x,_,_)->x) lst
+
+    (printTestMarkdown "Expression parser and evaluator" (getFst3 expressionData)) +
+    (printTestMarkdown "Default row parser" (getFst3 parseDefaultRowData)) +
+    (printTestMarkdown "Alignment row parser" (getFst3 alignmentData)) +
+    (printTestMarkdown "Basic table parse" (getFst3 basicTableData)) +
+    (printTestMarkdown "Full Markalc test" (getFst3 fullTestData))
+    |> printfn "%s"
+    
+    
+    
