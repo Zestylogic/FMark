@@ -1,5 +1,6 @@
 module Testing
 
+open System
 open Expecto
 
 open Preprocessor
@@ -19,6 +20,19 @@ let makeSimpleTestList f = makeTestList id id f
 // --------------------------------------------------
 
 // Preprocessor tests
+
+[<Tests>]
+let preprocessorNextTokenTest =
+    makeSimpleTestList nextToken "PreprocessorNextToken" [
+        "Openeval", "{{", (OPENEVAL, "")
+        "Closeeval", "}}", (CLOSEEVAL, "")
+        "Opendef", "{%", (OPENDEF, "")
+        "Semicolon", ";", (SEMICOLON, "")
+
+        "Long random text",
+        "This is random text, and should stop here; This should not be included",
+        (LITERAL "This", " is random text, and should stop here; This should not be included")
+    ]
 
 [<Tests>]
 let preprocessorTokenizeTest =
@@ -74,34 +88,68 @@ let preprocessorParseTest =
     ]
 
 [<Tests>]
-let preprocessorNextTokenTest =
-    makeSimpleTestList nextToken "PreprocessorNextToken" [
-        "Openeval", "{{", (OPENEVAL, "")
-        "Closeeval", "}}", (CLOSEEVAL, "")
-        "Opendef", "{%", (OPENDEF, "")
-        "Semicolon", ";", (SEMICOLON, "")
-
-        "Long random text",
-        "This is random text, and should stop here; This should not be included",
-        (LITERAL "This", " is random text, and should stop here; This should not be included")
-    ]
-
-[<Tests>]
 let preprocessTest =
     makeSimpleTestList preprocess "Preprocess" [
-        "Simple text does not change", "This should stay the same", ["This should stay the same"; ""]
+        "Simple text does not change",
+        "This should stay the same",
+        "This should stay the same"
 
         "Simple text does not change with special chars",
         "This should identify the ';', but return the same string",
-        ["This should identify the ';', but return the same string"; ""]
+        "This should identify the ';', but return the same string"
+
+        "Simple macro with no arguments",
+        "{% macro x y %} {{ x }}",
+        "y"
+
+        "Simple macro with empty brackets",
+        "{% macro x() y %} {{ x }}",
+        "y"
 
         "Simple macro evaluation",
         "{% macro x(y) {{ y }} y %} {{ x(argument) }}",
-        ["argument y"; ""]
+        "argument y"
 
         "Print out the input when substitution not in scope",
         "{{ x(argument) }}",
-        ["{{ x(argument) }}"; ""]
+        "{{ x(argument) }}"
+
+        "Escaping macro bracket should make the original input appear",
+        "\\{% macro x (y) {{ y }} y %} {{ x(argument one;) }}",
+        "{% macro x (y) {{ y }} y %} {{ x(argument one;) }}"
+
+        "Shadowed macros and arguments",
+        "{% macro x () macro X %} {% macro y (x) macro Y {{ x }} %} {{ x }}, {{ y(: not x) }}",
+        "macro X, macro Y : not x"
+
+        "Shadowed macros",
+        "{% macro x() x1 %} {% macro y() {% macro x() x2 %} {{ x }} %} {{ x }}, {{ y }}",
+        "x1, x2"
+
+        "Macro with different arguments",
+        "{% macro x(arg1; arg2) {{arg1}}, {{arg2}} %} {{x(a; b)}}; {{ x(c;d) }}; {{ x(e; f)}}",
+        "a, b; c, d; e, f"
+
+        "Macro with long name",
+        "{% macro this_is_a_macro_with_a_long_name(arg1; arg2) {{arg1}}, {{arg2}} %} {{ this_is_a_macro_with_a_long_name(a 1; a 2) }}",
+        "a 1, a 2"
+    ]
+
+[<Tests>]
+let preprocessListTest =
+    makeSimpleTestList preprocessList "PreprocessList" [
+        "Multiline macro evaluation with newline",
+        ["{% macro x"; "Evaluated x"; "%}"; "{{ x }}"],
+        ["Evaluated x"; ""]
+
+        "Multiline macro without newline",
+        ["{% macro x"; "Evaluated x %}"; "{{ x }}"],
+        ["Evaluated x"]
+
+        "Multiline macro with arguments",
+        ["{% macro x(arg1; arg2; arg3; arg4)"; "{{arg1}}, {{arg2}}"; "{{arg3}}, {{arg4}}"; "%}"
+         "{{ x(arg 1; arg 2; arg 3; arg 4)}}"],
+        ["arg 1, arg 2"; "arg 3, arg 4"; ""]
     ]
 
 // Lexer tests
@@ -130,3 +178,13 @@ let lexTest =
 // --------------------------------------------------
 // Property Tests
 // --------------------------------------------------
+
+[<Tests>]
+let preprocessorPropertyTest =
+    testProperty "PreprocessorPropertyTest" <| fun (s: string) ->
+        let str =
+            if isNull s then ""
+            else s.Replace("\\", "")
+        let preprocess1 = str |> preprocess
+        let preprocess2 = str |> preprocess |> preprocess
+        Expect.equal preprocess1 preprocess2 ""
