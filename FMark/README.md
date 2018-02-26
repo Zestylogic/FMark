@@ -33,20 +33,20 @@ _Your markdown file can refer to comments in code, or the code itself, for detai
   * Text Parsers, this is primitive, and to be merged with others' work once group stage starts:
     * `parseText (Token list -> Token list * InlineElement list)`, parse all `Literal`s until something different, then return the unparsed portion of the `Token list`, tupled with the list of `Literal`s.
     * `parseLine (TLine -> Token list -> TLine * Token list)`, handles `Emphasis` and calls parseText to parse header and footer texts.
-    * `parseLine' (Token list -> InlineElement list)`, _call this when the text parser is needed._
+    * `parseLine' (Token list -> InlineElement list)`, _call this when the rest of the token list is not needed._
   * Header Parser.
     * `tocParse (Token list -> int -> int -> THeader list * Token list)`, goes through the token list from the tokeniser, replace the headers with identifiers `HEADER of int`, and generate a list of these headers as `THeader`s for building the table of contents later. depth and index are needed for recusively tracking the level of header and the position of the header in the whole document.
     * `tocGen' (Token list -> int -> THeader list * Token list`, takes in the maximum depth of the table of content, and calls tocParse to generate the desired lists. _Call this function when header parsing is needed._
     * `tocGen (Token list -> int -> Ttoc)`, used when a ParsedObj is required as output.
-  * Footer Parser, two versions provided, distinguished by the `'` after the function names.
-    *
-  
-
+  * Footer Parser, two versions provided, distinguished by the `'` after the function names. The ones with `'` is more powerful.
+    * `citeParse' (Token list -> (int*TLine) list * Token list)`, goes through the token list from tokeniser, replacing in text footers with the identifier `FOOTER of int`, and builds a list of the footer texts by calling `citeParseIn'`.
+    * `citeParseIn' (InlineElement list -> Token list -> TLine * Token list)`, parses footer texts by calling `parseLine`, and feed the rest of the unparsed tokens back to `citeParse'`.
+    * `citeGen' (Token list -> ParsedObj list * Token list)`, builds the result from `citeParse'`.
 
 ### A short description of your Test Plan. Typical length 1/2 page + tables. What you have tested will be clear from the feature specification which includes test status. How you have tested it must be itemised. Again a table is good (could be the same one as used for specification). Add any rationale for your test plan.
 
+`Parsertest.fs`
 * Header tests
- * Unit tests
  
 |Test     |Expected output|Rationale           |
 |---      |------         |--------            |
@@ -57,7 +57,6 @@ _Your markdown file can refer to comments in code, or the code itself, for detai
 |text <br># H1<br> text|H1, 1|text before and after header|
 
 * Footer tests
- * Unit tests
  
 |Test     |Expected output|Rationale           |
 |---      |------         |--------            |
