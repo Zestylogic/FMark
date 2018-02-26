@@ -171,6 +171,14 @@ could mean that pevious functionality might not work anymore.
 Unit tests were used to make small tests that were going to have to pass. After the code was written,
 property based tests made sure that the main functions were working as they were supposed to.
 
+More tests were added once all the functionality was there to thoroughly test the preprocessor and lexer. These tests
+were chosen for relatively large functions that were used directly in the workflow and not for small functions that are
+used by these larger functions, as they would make them fail if they didn't work. This could then be detected by running
+tests on the larger functions that used these tests.
+
+As many edge cases as possible were identified for the preprocessor and tokenizer and tested using unit tests as well,
+which identified a few bugs, such as issues with whitespace in macros.
+
 ## Unit tests
 
 ### Preprocessor
