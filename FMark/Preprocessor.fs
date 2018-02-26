@@ -284,7 +284,7 @@ let parserToString pList =
     List.fold (fun st -> function
                | ParseText x -> st+x
                | ParseNewLine -> st+"\n"
-               | _ -> failwithf "Failed to print") "" pList
+               | _ -> st) "" pList
 
 /// Converts a Parser list to a list of strings without any newlines
 let toStringList pList =
@@ -296,8 +296,7 @@ let toStringList pList =
             a+t :: b
         | _, ParseText t ->
             [t]
-        | _ -> failwithf "Failed"
-            
+        | _ -> st
     List.fold f [] pList |> List.rev
 
 /// perform the parsing, evaluation, while stripping the last endline which is redundant
@@ -309,8 +308,7 @@ let pETS =
             e
         | ParseNewLine :: r ->
             List.rev r
-        | _ ->
-            l
+        | _ -> l
     parse >> evaluate >> stripLastEndline
 
 /// Preprocess a string and output a string with the macro evaluated

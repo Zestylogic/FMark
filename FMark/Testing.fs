@@ -5,6 +5,7 @@ open Expecto
 
 open Preprocessor
 
+/// Higher order function to make tests and remove boilerplate
 let makeTestList inf outf testf name listOfPairs =
     let makeSingleTest index (n, i, o) =
         testCase (sprintf "%s:%s:%d" name n index) <| fun () ->
@@ -13,6 +14,7 @@ let makeTestList inf outf testf name listOfPairs =
     |> List.map (fun (i, pair) -> makeSingleTest i pair)
     |> Expecto.Tests.testList name
 
+/// simple test that does not transform the input or output
 let makeSimpleTestList f = makeTestList id id f
 
 let makeTestFromCharList l e =
@@ -24,6 +26,7 @@ let makeTestFromCharList l e =
 
 // Preprocessor tests
 
+/// Make small test for next token function
 [<Tests>]
 let preprocessorNextTokenTest =
     makeSimpleTestList nextToken "PreprocessorNextToken" [
@@ -37,11 +40,13 @@ let preprocessorNextTokenTest =
         (LITERAL "This", " is random text, and should stop here; This should not be included")
     ]
 
+/// Check if all the special characters get tokenized correctly
 [<Tests>]
 let preprocessorTokenizeTokenTest =
     let tokenTests = makeTestFromCharList charList ENDLINE
     makeSimpleTestList tokenize "PreprocessorTokenize" tokenTests
 
+/// Tokenize tests for the preprocessor
 [<Tests>]
 let preprocessorTokenizeTest =
     makeSimpleTestList tokenize "PreprocessorTokenize" [
@@ -68,6 +73,7 @@ let preprocessorTokenizeTest =
          LITERAL "literal"; LITERAL ")"; ENDLINE]
     ]
 
+/// Parse tests for the preprocessor
 [<Tests>]
 let preprocessorParseTest =
     let makeParseTestList f = makeTestList tokenize id f
@@ -107,6 +113,7 @@ let preprocessorParseTest =
          ParseNewLine]
     ]
 
+/// Complete tests for the preprocessor with evaluation
 [<Tests>]
 let preprocessTest =
     makeSimpleTestList preprocess "Preprocess" [
@@ -155,6 +162,7 @@ let preprocessTest =
         "a 1, a 2"
     ]
 
+/// Complete multiline tests for the preprocessor
 [<Tests>]
 let preprocessListTest =
     makeSimpleTestList preprocessList "PreprocessList" [
@@ -177,11 +185,13 @@ let preprocessListTest =
 open Types
 open Lexer
 
+/// Check if all the tokens are lexed properly
 [<Tests>]
 let lexTokenizeTokenTest =
     let tokenTests = makeTestFromCharList charList ENDLINE
     makeSimpleTestList lex "PreprocessorTokenize" tokenTests
 
+/// Tests for the complete lexer
 [<Tests>]
 let lexTest =
     makeSimpleTestList lex "Lex" [
@@ -212,6 +222,7 @@ let lexTest =
         [LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE]
     ]
 
+/// Tests for the complete lexers with a string list as input
 [<Tests>]
 let lexListTest =
     makeSimpleTestList lexList "LexList" [
@@ -236,6 +247,7 @@ let lexListTest =
 // Property Tests
 // --------------------------------------------------
 
+/// Check if output of preprocessor is the same if passed through the preprocessor again
 [<Tests>]
 let preprocessorPropertyTest =
     testProperty "PreprocessorPropertyTest" <| fun (s: string) ->
