@@ -27,7 +27,7 @@ let countSpaceTest =
         );
         (
             [WHITESPACE 2; DOT; WHITESPACE 4; LITERAL "Mike"],
-            2, "WHITEPSPACE with DOT in between"
+            2, "2 WHITEPSPACE with DOT in between"
         );
         (
             [DOT; DOT; LITERAL "Mike"],
@@ -70,7 +70,28 @@ let parseLiteralTest =
         (
             [LITERAL "I"; ENDLINE; ENDLINE; LITERAL "am"],
             ("I", [ENDLINE; ENDLINE; LITERAL "am"]), "2 endlines"
-        )
+        );
+    ]
+
+[<Tests>]
+let parseLiteralEMTest =
+    makeExpectoTestList id id parseLiteral "parseLiteral emphasis test" [
+        (
+            [LITERAL "I"; ASTERISK; LITERAL "am"],
+            ("I", [LITERAL "I"; ASTERISK; LITERAL "am"]), "literal and asterisk"
+        );
+        (
+            [LITERAL "I"; UNDERSCORE; LITERAL "am"],
+            ("I", [UNDERSCORE; LITERAL "am"]), "literal and underscore, em end"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"],
+            ("I ", [WHITESPACE 1; UNDERSCORE; LITERAL "am"]), "literal and underscore, space before em start"
+        );
+        (
+            [UNDERSCORE; LITERAL "am"],
+            ("", [UNDERSCORE; LITERAL "am"]), "underscore, no space before"
+        );
     ]
 
 [<Tests>]
