@@ -69,6 +69,42 @@ let main =
     ...
 ```
 
+### Example
+
+In markdown using the preprocessor, one can then write the following:
+
+```
+Text before macro
+{% macro Hello(arg1; arg2)
+This is text inside the macro, with semicolons;
+{% macro local(arg1; arg2)
+This is the second macro
+%}
+Now back in the first macro.
+{{ local(arg1; arg2) }}
+%}
+Outside both macros
+Should be printed as not in scope: {{ local(arg1; arg2) }}
+
+{{ Hello(arg1; arg2) }}
+```
+
+which then evaluates to
+
+```
+Text before macro
+Outside both macros
+Should be printed as not in scope: {{ local(arg1; arg2) }}
+
+
+This is text inside the macro, with semicolons;
+Now back in the first macro.
+
+This is the second macro 
+
+
+```
+
 ### Future improvements
 
 There are many features that will be introduced into the preprocessor in the future. Some of the future
@@ -108,7 +144,11 @@ type Token =
 
 ## Features
 
-Supports escaping of all the special characters defined in [Types](/FMark/Types.fs).
+Supports escaping of all the special characters defined in [Types](/FMark/Types.fs). This is done by adding
+a `\` in front of the character that should be escaped.
+
+Tokens that match multiple characters can also be escaped by just putting a `\` before it. For example, 
+`***` can be escaped by writing `\***`.
 
 ## Extensibility
 
@@ -203,7 +243,7 @@ property based tests made sure that the main functions were working as they were
 |With special characters|Pass|
 |Escaping characters|Pass|
 
-#### lexListTest
+#### lexList
 
 |Name|Status|
 |---|---|
