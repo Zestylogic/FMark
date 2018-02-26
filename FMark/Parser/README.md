@@ -12,7 +12,6 @@ Here is a table of supported `ParsedObj`:
 |-----------|
 | CodeBlock |
 | Header    |
-| List      |
 | Paragraph |
 | Quote     |
 | PreTable* |
