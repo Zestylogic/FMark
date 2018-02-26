@@ -201,7 +201,12 @@ let ``multiparagraph misc test`` =
             [ENDLINE; LITERAL "feet"],
             ([Paragraph[[FrmtedString(Literal "feet")]]])|>Ok,
             "paragraph starting with one ENDLINE"
-        )
+        );
+        (
+            [RABRA; LITERAL "feet"],
+            ([Quote[FrmtedString(Literal "feet")]])|>Ok,
+            "Simple quote"
+        );
     ]
 
 [<Tests>]
