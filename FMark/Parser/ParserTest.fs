@@ -186,7 +186,12 @@ let testGlobal =
         (
             [HASH; HASH; LITERAL "h2"],
             [Paragraph[[FrmtedString(Literal "##h2")]]] |>Ok, "fake h2 header"
-        )
+        );
+        (
+            [RABRA; LITERAL "feet"],
+            [Quote[FrmtedString(Literal "feet")]] |>Ok,
+            "Simple quote"
+        );
     ]
 
 [<Tests>]
@@ -201,11 +206,6 @@ let ``multiparagraph misc test`` =
             [ENDLINE; LITERAL "feet"],
             ([Paragraph[[FrmtedString(Literal "feet")]]])|>Ok,
             "paragraph starting with one ENDLINE"
-        );
-        (
-            [RABRA; LITERAL "feet"],
-            ([Quote[FrmtedString(Literal "feet")]])|>Ok,
-            "Simple quote"
         );
     ]
 
