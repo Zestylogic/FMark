@@ -7,6 +7,26 @@
 * My part includes parsers for headers and footers. `Token list -> ParsedObj list`.
   * These two will be run after the tokeniser but before the main parser to pick out the headers and footers in the document.
   * These two should be collected and then will be used to build a table of contents and a citation list.
+  * Unique identifiers will be inserted to the token list after pulling out the headers and footers. These will be useful for relative linking in the final HTML document.
+
+```
+Overall Flowchart:
+
+            ┌───────────┐                      ┌──────────────┐
+Source ───> │ Tokeniser │ ───> Token list ───> │ First Parser │ ───> Token list with identifiers ┐
+            └───────────┘           │          └──────────────┘                                  │
+                                    │                 │                                          │
+                                    │                 └────────────> Header+Footer list ────>────┤
+                                    │                                                            │
+                                    │          ┌──────────────┐                                  │
+                                    └────────> │ Table Parser │────────── PreTable ─────────>────│
+                                               └──────────────┘                                  │
+                                                                                                 │
+                                   ┌─────────┐                            ┌─────────────┐        │
+             Final Document  <──── │ HTMLGen │ <──── ParsedObj list <──── │ Main Parser │ <──────┘
+                                   └─────────┘                            └─────────────┘
+```
+* First Parser cooresponds to my code.
  
 * To ensure compatible interface, `Types.fs` created as a group, which defines `Token` and `ParsedObj`.
   * This lets me know what to expect as inputs (`Token list`), and what to give as outputs (`ParsedObj`).
