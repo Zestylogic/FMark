@@ -169,6 +169,20 @@ let ``multiparagraph emphasis test`` =
                 [FrmtedString(Emphasis[FrmtedString(Literal "Lord")])]], [])|>Ok,
             "unmatched emphasis, and new paragraph emphasis"
         );
+        (
+            [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ASTERISK; ENDLINE; ENDLINE; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; WHITESPACE 1; LITERAL "M"; TILDE;UNDERSCORE; ENDLINE; LITERAL "the feet of my"; MINUS; PLUS; HASH],
+            (Paragraph[[FrmtedString(Literal "I "); FrmtedString(Emphasis[FrmtedString(Literal "am")])];
+                [FrmtedString(Emphasis[FrmtedString(Literal "Lord M~")]); FrmtedString(Literal "\nthe feet of my-+#")]], [])|>Ok,
+            "asterisk and underscore em, 1 newline literal, misc Tokens"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; UNDERSCORE; WHITESPACE 1; LITERAL "an"; ASTERISK],
+            (Paragraph[[FrmtedString (Literal "I ");
+                FrmtedString(Emphasis[FrmtedString (Literal "am ");
+                    FrmtedString (Emphasis [FrmtedString (Literal "Lord")]);
+                    FrmtedString (Literal " an")])]], [])|>Ok,
+            "nested emphasis"
+        );
     ]
 
 [<Tests>]
