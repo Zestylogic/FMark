@@ -70,8 +70,10 @@ _Your markdown file can refer to comments in code, or the code itself, for detai
 |----|---------|
 |Basic footer test|Basic footer text|
 |Basic footer within text|Basic footer in text, testing the identifier replacement functionality|
+|Fake footer|Not a real footer|
 |Footer text continuation over multiple lines|Footer texts can be written in multiple lines in source, as long as the next line is started with a whitespace of more than 4|
 |Footer texts sorting|Footer texts can be written in any order, and they will be sorted before passed forward|
+|Emphasis in footer|Similar to Emphasis in header|
 
 ### Anything notable learnt during testing.
 
