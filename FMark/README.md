@@ -71,29 +71,29 @@ _Your markdown file can refer to comments in code, or the code itself, for detai
   * Input is a `Token list`, output is a tuple of a `THeader list` and a `Token list`.
   * The `THeader list` is the list of headers found, and the `Token list` is the original list with headers replaced by identifiers.
   
-|Test|Rationale|
-|----|---------|
-|Basic Test|Basic functionality|
-|Depth Test|Able to count the number of hashes to get the level for header|
-|Need space between hash and header text|A new line starting with hash can still be normal text if there is no space after the chain of hashes|
-|More fake hashes|The parser should be able to rebuild the correct number of hashes after realising they are not of a header|
-|Hash character support within header text|A hash can appear in the header text and this must be taken as a literal and not the start of another header|
-|Picking out header in document|The parser should be able to pick out headers between texts|
-|Header numbering|A document with more than one header need all headers with different identifiers|
-|Emphasis in header text|`parseLine` in header parsing should be able to handle formats, more formats will be added once merged in group phase|
-|Multiple headers with emphasis|A general test with multiple test points|
+|Test|Rationale|Passed?|
+|----|---------|-------|
+|Basic Test|Basic functionality|Yes|
+|Depth Test|Able to count the number of hashes to get the level for header|Yes|
+|Need space between hash and header text|A new line starting with hash can still be normal text if there is no space after the chain of hashes|Yes|
+|More fake hashes|The parser should be able to rebuild the correct number of hashes after realising they are not of a header|Yes|
+|Hash character support within header text|A hash can appear in the header text and this must be taken as a literal and not the start of another header|Yes|
+|Picking out header in document|The parser should be able to pick out headers between texts|Yes|
+|Header numbering|A document with more than one header need all headers with different identifiers|Yes|
+|Emphasis in header text|`parseLine` in header parsing should be able to handle formats, more formats will be added once merged in group phase|Yes|
+|Multiple headers with emphasis|A general test with multiple test points|Yes|
 
 * Footer tests
   * Stored similar to Header tests in `testDataFt`.
   
-|Test|Rationale|
-|----|---------|
-|Basic footer test|Basic footer text|
-|Basic footer within text|Basic footer in text, testing the identifier replacement functionality|
-|Fake footer|Not a real footer|
-|Footer text continuation over multiple lines|Footer texts can be written in multiple lines in source, as long as the next line is started with a whitespace of more than 4|
-|Footer texts sorting|Footer texts can be written in any order, and they will be sorted before passed forward|
-|Emphasis in footer|Similar to Emphasis in header|
+|Test|Rationale|Passed?|
+|----|---------|-------|
+|Basic footer test|Basic footer text|Yes|
+|Basic footer within text|Basic footer in text, testing the identifier replacement functionality|Yes|
+|Fake footer|Not a real footer|Yes|
+|Footer text continuation over multiple lines|Footer texts can be written in multiple lines in source, as long as the next line is started with a whitespace of more than 4|Yes|
+|Footer texts sorting|Footer texts can be written in any order, and they will be sorted before passed forward|Yes|
+|Emphasis in footer|Similar to Emphasis in header|Yes|
 
 ### Anything notable learnt during testing.
 
