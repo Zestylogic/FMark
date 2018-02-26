@@ -2,7 +2,7 @@
 The Parser takes `Token list` from the Lexer(or Tokenizer) and outputs `ParsedObj list`.
 After being manipulated be other top level functions, `ParsedObj list` will then be used to generate HTML.
 
-However, the Parser produced in individual-phased work is not a complete Markdown parser, due to limited time.
+It follows [CommonMark Spec](http://spec.commonmark.org/0.28/). However, the Parser produced in individual-phased work is not a complete Markdown parser, due to limited time.
 
 In order to split work more evenly, the group has agreed that the majority of text will be parsed in this Parser,
 with the rest to be done by other team members.
@@ -66,6 +66,8 @@ and the acceptable form is `[WHITESPACE 3]`.
 `parse` will either return result monad with either `ParsedObj list` or a string of Error message. Unparsed Tokens will be in the returned in the Error message.
 
 ```fsharp
+open Parser
+
 val parse = Token list -> Result<ParsedObj list * string>
 ```
 
@@ -103,6 +105,9 @@ Every sub-function of the Parser has been unit tested with best effort to make d
 Sub-functions have been tested as they are written. Each time the code changes, the test bench will be run to ensure code correctness.
 What's more, it is easier to find point of failure from the `Expecto` test result, by examining the list of failed tests.
 
+Property tests can be done to ParserHelperFunctions, where putting a random integer to e.g. `WHITESPACE ()`. But this
+does not make too much difference than unit tests since it's the order of Tokens that matters.
+
 ## Test cases
 ### `parser`
 Test top level `parser` functionality
@@ -110,24 +115,26 @@ Test top level `parser` functionality
 | Test Item                            | Rationale                         |
 | ------------------------------------ | --------------------------------- |
 | literals with spaces between         |                                   |
-| literals with `ENDLINE`              |                                   |
+| literals with endline                |                                   |
 | literals and new empty paragraph     |                                   |
 | h2 header                            |                                   |
 | fake h2 header                       | no space between hash and literal |
 | simple quote                         |                                   |
-| paragraph starting with two ENDLINEs | leading ENDLINEs are ignored      |
-| paragraph starting with one ENDLINE  | leading ENDLINEs are ignored      |
+| paragraph starting with two endlines | leading endlines are ignored      |
+| paragraph starting with one endline  | leading endlines are ignored      |
 | sample table                         | simplest table                    |
-| invalid table                        | invalid, therefore `Paragraph`    |
-| just `CODEBLOCK`                     |                                   |
-| `CODEBLOCK` and new paragraph        |                                   |
+| invalid table                        | invalid, therefore Paragraph      |
+| just CODEBLOCK                       |                                   |
+| CODEBLOCK and new paragraph          |                                   |
 
 ### `parseParagraph`
 
-| Test Item                                     | Rationale                         |
-| --------------------------------------------- | --------------------------------- |
-| two simple paragraphs with code               | inline code                       |
-| unmatched emphasis and new paragraph emphasis | unmatched emphasis -> normal text |
+| Test Item                                                  | Rationale                         |
+| ---------------------------------------------------------- | --------------------------------- |
+| two simple paragraphs with code                            | inline code                       |
+| unmatched emphasis and new paragraph emphasis              | unmatched emphasis -> normal text |
+| asterisk and underscore em, 1 newline literal, misc Tokens |                                   |
+| nested emphasis                                            |                                   |
 
 ### `parseInLineElements`
 
@@ -148,9 +155,29 @@ Test top level `parser` functionality
 
 ### `parseLiteral`
 
-| Test Item                   | Rationale                                              |
-| --------------------------- | ------------------------------------------------------ |
-| all valid literal and space |                                                        |
-| 4 Spaces                    | will be squashed to 1 space                            |
-| 1 endline between literals  | do not stop parsing, add `\n` to string                |
-| 2 endlines                  | stop parsing and return endlines and subsequent Tokens |
+| Test Item                                     | Rationale                                                                              |
+| --------------------------------------------- | -------------------------------------------------------------------------------------- |
+| all valid literal and space                   |                                                                                        |
+| 4 Spaces                                      | will be squashed to 1 space                                                            |
+| 1 endline between literals                    | do not stop parsing, add `\n` to string                                                |
+| 2 endlines                                    | stop parsing and return endlines and subsequent Tokens                                 |
+| literal and asterisk                          | return literal, asterisk and subsequent Tokens                                         |
+| literal and underscore, em end                | return literal, underscore and subsequent Tokens                                       |
+| literal and underscore, space before em start | return literal(including space) one Token before underscore <br> and subsequent Tokens |
+| underscore, no space before                   | return NULL literal, all Tokens                                                        |
+
+### `countSpaces`
+
+| Test Item                        | Rationale |
+| -------------------------------- | --------- |
+| 2 whitespace and literal         |           |
+| 2 whitespace with DOT in between |           |
+| no whitespace                    |           |
+
+### `countNewLines`
+
+| Test Item                   | Rationale |
+| --------------------------- | --------- |
+| 2 endline and literal       |           |
+| endline with dot in between |           |
+| no endline                  |           |
