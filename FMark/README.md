@@ -116,6 +116,11 @@ It can easily be extended by adding the type of the token to `Token` above. Then
 has to be linked to the token by adding it as a tuple of type `string * Token` to a list called
 `charList` in the [Lexer](/FMark/Lexer.fs).
 
+## Missing Feature
+
+Currently, it does not return code blocks into `CODEBLOCK`, as that will be moved into the parser and removed from the 
+Token list.
+
 # Test Plan
 
 The lexer and the preprocessor were built using a test-driven manner, by writing tests first and then making them pass with
@@ -125,8 +130,6 @@ could mean that pevious functionality might not work anymore.
 
 Unit tests were used to make small tests that were going to have to pass. After the code was written,
 property based tests made sure that the main functions were working as they were supposed to.
-
-## Notable 
 
 ## Unit tests
 
@@ -146,6 +149,7 @@ property based tests made sure that the main functions were working as they were
 
 |Name|Status|
 |---|---|
+|All Tokens|Pass|
 |Macro|Pass|
 |Subsitution|Pass|
 |Normal markdown|Pass|
@@ -191,7 +195,19 @@ property based tests made sure that the main functions were working as they were
 
 |Name|Status|
 |---|---|
+|All Tokens|Pass|
+|Literal|Pass|
+|Number|Pass|
+|WhiteSpace|Pass|
 |Very simple markdown|Pass|
+|With special characters|Pass|
+|Escaping characters|Pass|
+
+#### lexListTest
+
+|Name|Status|
+|---|---|
+|Very simple multiline markdown|Pass|
 |With special characters|Pass|
 |Escaping characters|Pass|
 

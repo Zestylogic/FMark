@@ -15,6 +15,9 @@ let makeTestList inf outf testf name listOfPairs =
 
 let makeSimpleTestList f = makeTestList id id f
 
+let makeTestFromCharList l e =
+    List.map (fun (a, b) -> (sprintf "Token %s" a), a, [b; e]) l
+
 // --------------------------------------------------
 // Unit Tests
 // --------------------------------------------------
@@ -33,6 +36,11 @@ let preprocessorNextTokenTest =
         "This is random text, and should stop here; This should not be included",
         (LITERAL "This", " is random text, and should stop here; This should not be included")
     ]
+
+[<Tests>]
+let preprocessorTokenizeTokenTest =
+    let tokenTests = makeTestFromCharList charList ENDLINE
+    makeSimpleTestList tokenize "PreprocessorTokenize" tokenTests
 
 [<Tests>]
 let preprocessorTokenizeTest =
@@ -170,8 +178,25 @@ open Types
 open Lexer
 
 [<Tests>]
+let lexTokenizeTokenTest =
+    let tokenTests = makeTestFromCharList charList ENDLINE
+    makeSimpleTestList lex "PreprocessorTokenize" tokenTests
+
+[<Tests>]
 let lexTest =
     makeSimpleTestList lex "Lex" [
+        "Literal",
+        "Hello",
+        [LITERAL "Hello"; ENDLINE]
+
+        "Number",
+        "9",
+        [NUMBER "9"; ENDLINE]
+
+        "WhiteSpace",
+        "d          ",
+        [LITERAL "d"; WHITESPACE 10; ENDLINE]
+
         "Very simple markdown",
         "Hello, world",
         [Types.Token.LITERAL "Hello,"; WHITESPACE 1; Types.Token.LITERAL "world"; Types.Token.ENDLINE]
