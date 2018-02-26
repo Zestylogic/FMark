@@ -174,6 +174,10 @@ let testGlobal =
            [Paragraph[[FrmtedString(Literal "I am Mike\n")]]] |> Ok, "Three literals with endline"
         );
         (
+           [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike";ENDLINE;ENDLINE],
+           [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals and new empty paragraph"
+        );
+        (
             [HASH; HASH; WHITESPACE 2; LITERAL "h2"],
             [Header{HeaderName=[FrmtedString(Literal "h2")]; Level=2}] |>Ok, "h2 header"
         );
