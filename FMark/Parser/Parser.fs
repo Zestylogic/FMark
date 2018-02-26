@@ -19,6 +19,7 @@ let parseLiteral toks =
         | _ -> sprintf "unmatched token should never happen: %A" toks |> failwith
     parseLiteral' (NOSTRING, toks)
 
+/// parse inline code
 let rec parseCode toks =
     match toks with
     | BACKTICK::_ -> ("", toks.[1..]) |> Ok
@@ -28,6 +29,7 @@ let rec parseCode toks =
         mapTok tok + str, tks )
     | _ -> "BACKTICK is not match for inline code" |> Error
 
+/// parse inline text, including links and pictures, terminate on 2>= `ENDLINE`s
 let parseInLineElements toks =
     let rec parseInLineElements' toks =
         match toks with
@@ -71,6 +73,7 @@ let parseInLineElements toks =
                     inLine::inLines, retoks'))
     parseInLines toks
 
+/// parse a paragraph which counts for contents in  `<p>`
 /// parseParagraph eats 2>= ENDLINEs
 let parseParagraph toks =
     let rec parseParagraph' toks =
@@ -93,6 +96,7 @@ let parseParagraph toks =
                     (p::ps, rts)))
     parseParagraphs toks |> Result.map (fun (lines,tks) -> Paragraph lines, tks)
 
+/// parse supported `ParsedObj`s, turn them into a list
 /// assuming each item start at the beginning of the line
 /// the returned token head does not have 2>= ENDLINE
 let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string> =
@@ -121,6 +125,9 @@ and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
                 pobj::pobjs, re' )
         )
 
+/// top-level Parser, which the user should use
+/// `parse` will either return result monad with either `ParsedObj list` or a string of Error message.
+/// Unparsed Tokens will be in the returned in the Error message.
 let parse toks =
     parseItemList toks
     |> Result.bind (fun (pobjs, retoks) ->
