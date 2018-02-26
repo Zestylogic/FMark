@@ -47,22 +47,33 @@ _Your markdown file can refer to comments in code, or the code itself, for detai
 
 `Parsertest.fs`
 * Header tests
- 
-|Test     |Expected output|Rationale           |
-|---      |------         |--------            |
-|# H1     |H1, 1          |Basic header        |
-|### h3   |h3, 3          |Header depth        |
-|#H1      | -             |Not a header without space after hash|
-|# H1 # H2|H1 # H2, 1     |Hash in header      |
-|text <br># H1<br> text|H1, 1|text before and after header|
+  * Each test in `testDataHd` is a tuple of three items, name, input, and output.
+  * Input is a `Token list`, output is a tuple of a `THeader list` and a `Token list`.
+  * The `THeader list` is the list of headers found, and the `Token list` is the original list with headers replaced by identifiers.
+  
+|Test|Rationale|
+|----|---------|
+|Basic Test|Basic functionality|
+|Depth Test|Able to count the number of hashes to get the level for header|
+|Need space between hash and header text|A new line starting with hash can still be normal text if there is no space after the chain of hashes|
+|More fake hashes|The parser should be able to rebuild the correct number of hashes after realising they are not of a header|
+|Hash character support within header text|A hash can appear in the header text and this must be taken as a literal and not the start of another header|
+|Picking out header in document|The parser should be able to pick out headers between texts|
+|Header numbering|A document with more than one header need all headers with different identifiers|
+|Emphasis in header text|`parseLine` in header parsing should be able to handle formats, more formats will be added once merged in group phase|
+|Multiple headers with emphasis|A general test with multiple test points|
 
 * Footer tests
- 
-|Test     |Expected output|Rationale           |
-|---      |------         |--------            |
-|\[^1]    |1              |Basic footer        |
-|\[^1]: text|1, text     |Basic footer text   |
-|\[^2]: line0<br>&nbsp;&nbsp;&nbsp;&nbsp;line1<br>line2|2, line0<br>line1|Multiple line footer text|
-
+  * Stored similar to Header tests in `testDataFt`.
+  
+|Test|Rationale|
+|----|---------|
+|Basic footer test|Basic footer text|
+|Basic footer within text|Basic footer in text, testing the identifier replacement functionality|
+|Footer text continuation over multiple lines|Footer texts can be written in multiple lines in source, as long as the next line is started with a whitespace of more than 4|
+|Footer texts sorting|Footer texts can be written in any order, and they will be sorted before passed forward|
 
 ### Anything notable learnt during testing.
+
+* Finding items to test can be difficult, but each new test greatly improves the confidence I had on my code.
+* Having a systematic testing system is useful to ensure, if changing the code to fulfill one test accidently break something else, it can be quickly spotted.
