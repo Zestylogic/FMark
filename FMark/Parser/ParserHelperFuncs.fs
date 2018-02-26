@@ -52,10 +52,22 @@ let mapTok = function
     | COLON -> ":"
     | CARET -> "^"
     | PERCENT -> "%"
+
+/// convert all Tokens into a single string
+/// see mapTok for Token mapping
 let stringAllTokens toks =
     let matchTok i tok =
         i + mapTok tok
     List.fold matchTok "" toks
+
+/// count subsquent and continuous Tokens
+let countToks (tok: Token) toks =
+    let rec countToks' (n, toks) =
+        match toks with
+        | t:: toks' when t = tok -> countToks' (n+1, toks')
+        | _ -> 0, toks
+    countToks' (0, toks) |> fst
+
 
 /// count continuous spaces
 let rec countSpaces toks =
@@ -63,10 +75,7 @@ let rec countSpaces toks =
     | WHITESPACE n :: toks' -> countSpaces toks' |> (+) n
     | _ -> 0
 
-let rec countNewLines toks =
-    match toks with
-    | ENDLINE :: toks' -> countNewLines toks' |> (+) 1
-    | _ -> 0
+let countNewLines = countToks (ENDLINE)
 
 /// count pipes in a line
 let countInlinePipes toks =
