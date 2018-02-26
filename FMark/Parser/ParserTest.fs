@@ -57,7 +57,7 @@ let parseLiteralTest =
     makeExpectoTestList id id parseLiteral "parseLiteral test" [
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
-            ("I am Mike", []), "All valid literal and space"
+            ("I am Mike", []), "all valid literal and space"
         );
         (
             [LITERAL "I"; WHITESPACE 4; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
@@ -65,11 +65,11 @@ let parseLiteralTest =
         );
         (
             [LITERAL "I"; ENDLINE; LITERAL "Mike"],
-            ("I\nMike", []), "ENDLINE between LITERALs"
+            ("I\nMike", []), "1 ENDLINE between LITERALs"
         );
         (
             [LITERAL "I"; ENDLINE; ENDLINE; LITERAL "am"],
-            ("I", [ENDLINE; ENDLINE; LITERAL "am"]), "two endlines"
+            ("I", [ENDLINE; ENDLINE; LITERAL "am"]), "2 endlines"
         )
     ]
 
@@ -78,40 +78,40 @@ let parseInlineElementsTest =
     makeExpectoTestList id id parseInLineElements "parseInLineElements test" [
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; ENDLINE],
-            ([FrmtedString(Literal "I am")], [])|>Ok, "literal and two ENDLINEs"
+            ([FrmtedString(Literal "I am")], [])|>Ok, "literal and 2 ENDLINEs"
         );
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 2; ENDLINE],
-            ([FrmtedString(Literal "I am")], [])|>Ok, "2 whitespaces and 1 newline"
-        );
-        (
-            [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; UNDERSCORE],
-            ([FrmtedString(Literal "I "); FrmtedString(Emphasis([FrmtedString (Literal "am")]))], [])|>Ok,
-            "literal and emphasis literal"
-        );
-        (
-            [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; UNDERSCORE; WHITESPACE 2; ENDLINE],
-            ([FrmtedString(Literal "I "); FrmtedString(Emphasis([FrmtedString(Literal "am")]))], [])|>Ok,
-            "literal and emphasis, newTLine"
+            ([FrmtedString(Literal "I am")], [])|>Ok, "literal with 2 whitespaces and 1 newline"
         );
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; ENDLINE; LITERAL "New line"],
-            ([FrmtedString(Literal "I am")], [LITERAL "New line"])|>Ok, "Two paragraphs"
+            ([FrmtedString(Literal "I am")], [LITERAL "New line"])|>Ok, "two paragraphs"
         );
         (
             [BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK],
-            ([FrmtedString(Code "This  is     code")], [])|>Ok, "Only inline code"
+            ([FrmtedString(Code "This  is     code")], [])|>Ok, "only inline code"
         );
         (
             [BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK; LITERAL "na"],
             ([FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")], [])|>Ok,
-            "Inline code and literal"
+            "inline code and literal"
         );
     ]
 
 [<Tests>]
 let emphasisTest =
     makeExpectoTestList id id parseInLineElements "parseInLineElements emphasis test" [
+        (
+            [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; UNDERSCORE],
+            ([FrmtedString(Literal "I "); FrmtedString(Emphasis([FrmtedString (Literal "am")]))], [])|>Ok,
+            "literal and underscore emphasis literal"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; UNDERSCORE; WHITESPACE 2; ENDLINE],
+            ([FrmtedString(Literal "I "); FrmtedString(Emphasis([FrmtedString(Literal "am")]))], [])|>Ok,
+            "literal and underscore emphasis, newTLine"
+        );
         (
             [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"],
             ([FrmtedString(Literal "I "); FrmtedString(Literal "_am")], [])|>Ok,
@@ -130,12 +130,12 @@ let emphasisTest =
         (
             [LITERAL "I"; WHITESPACE 1; UNDERSCORE; LITERAL "am"; WHITESPACE 1; UNDERSCORE; LITERAL "at"; UNDERSCORE],
             ([FrmtedString(Literal "I "); FrmtedString(Literal "_am "); FrmtedString(Emphasis[FrmtedString(Literal "at")])], [])|>Ok,
-            "unmatched, matched emphasis"
+            "unmatched, matched emphasis in new line"
         );
         (
             [ASTERISK; LITERAL "am"; ASTERISK],
             ([FrmtedString(Emphasis[FrmtedString(Literal "am")])], [])|>Ok,
-            "unmatched emphasis, UNDERSCORE"
+            "emphasis, asterisk wo spaces"
         );
     ]
 
