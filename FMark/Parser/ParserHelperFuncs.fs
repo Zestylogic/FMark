@@ -10,11 +10,13 @@ let mapTEmphasis = function
     | UNDER -> "_"
     | STAR -> "*"
 
+/// delete leading ENDLINEs and retur the rest
 let rec deleteLeadingEDNLINEs toks =
     match toks with
     | ENDLINE:: tks -> deleteLeadingEDNLINEs tks
     | _ -> toks
 
+/// map a Token to string
 let mapTok = function
     | CODEBLOCK _ -> "CODEBLOCK" // not supposed to be read by matchTok
     | LITERAL str-> str
@@ -113,7 +115,8 @@ let (|IsNewTLine|_|) toks =
         | false -> None
     | false -> None
 
-/// potential new inline format
+/// match potential new inline format
+/// return input Token list
 let (|IsNewFrmt|_|) toks =
     match toks with
         | UNDERSCORE::_ | DUNDERSCORE::_ | TUNDERSCORE::_   // em and strong
@@ -123,6 +126,8 @@ let (|IsNewFrmt|_|) toks =
             -> toks |> Some
         | _ -> None
 
+/// match potential em sequence
+/// return input Token list
 let (|IsWordSepAndNewFrmt|_|) toks =
     match toks with
     | WHITESPACE _::toks' ->
@@ -131,7 +136,10 @@ let (|IsWordSepAndNewFrmt|_|) toks =
         | _ -> None
     | _ -> None
 
-/// returns a string, representing a space before UNDERSCORE
+/// match underscore and asterisk emphasis start squence
+/// return 1. string, representing a space before UNDERSCORE
+/// 2. TEmphasis, emphasis type
+/// 3. Token list after underscore or asterisk
 let (|MatchEmStart|_|) toks =
     match toks with
     | WHITESPACE _:: UNDERSCORE:: WHITESPACE _:: _ -> None      // not em
@@ -140,7 +148,11 @@ let (|MatchEmStart|_|) toks =
     | ASTERISK :: rtks -> ("", STAR, rtks) |> Some
     | _ -> None
 
-/// match underscore and asterisk emphasis end squence
+
+/// match underscore and asterisk emphasis end sequence
+/// return 1. Token, a Token before emphasis
+/// 2. TEmphasis, emphasis type
+/// 3. Token list after underscore or asterisk
 let (|MatchEmEnd|_|) toks =
     match toks with
     | WHITESPACE _:: UNDERSCORE:: _ -> None         // not em end
@@ -152,18 +164,21 @@ let (|MatchEmEnd|_|) toks =
     | tk:: ASTERISK:: toks' -> (tk, STAR, toks') |> Some
     | _ -> None
 
-/// omit EDNLINEs
+/// match new paragraph sequence
+/// return Token list after EDNLINEs
 let (|MatchNewParagraph|_|) toks =
     match countNewLines toks with
     | n when n>=2 -> toks.[n..] |> Some
     | _ -> None
 
+/// turn head Token into string
+/// return head Token string and tail Token list
 let (|MatchMapTok|_|) = function
     | tok:: toks -> (mapTok tok, toks) |> Some
     | _ -> None
 
-/// match hashes, returns no of hashes and the first
-/// non-WHITESPACE token
+/// match hashes
+/// returns no of hashes and the first non-WHITESPACE token
 let (|MatchHeader|_|) toks =
     let rec countHashes n tks =
         match tks with
@@ -177,25 +192,34 @@ let (|MatchHeader|_|) toks =
         | _ -> None
     | _ -> None
 
+/// match list begin sequence w/o spaces
+/// return list type and Token list after start sequence
 let (|MatchList|_|) toks =
     match toks with
     | NUMBER _:: DOT:: WHITESPACE _:: toks' -> (OL, toks') |> Some
     | ASTERISK:: WHITESPACE _:: toks' -> (UL, toks') |> Some
     | _ -> None
 
+/// match list begin sequence with optional spaces
+/// return list type and Token list after start sequence
 let (|MatchListOpSpace|_|) toks =
     match toks with
     | WHITESPACE _:: MatchList content -> content |> Some
     | MatchList content -> content |> Some
     | _ -> None
 
+/// match 2>= "|" in Token list
+/// return the next line
+/// next line is seperated by 1 ENDLINE
 let (|MatchTableHead|_|) toks =
     let line, rtks = cutLine toks
     match countInlinePipes line with
     | n when n>=2 -> rtks |> Some
     | _ -> None
 
-/// take one PIPE, return the rest
+/// take one PIPE
+/// return the rest |> Some
+/// otherwise, None
 let pipeMatch oToks =
     oToks
     |> Option.bind (fun toks ->
@@ -205,7 +229,9 @@ let pipeMatch oToks =
 
 
 
-/// take all subsequent MINUSes
+/// take all leading subsequent MINUSes
+/// return the rest Tokens |> Some
+/// otherwise, None
 let minusMatch oToks =
     let takeAwayMinuses toks =
         let rec takeAwayMinuses' n toks =
@@ -222,12 +248,19 @@ let minusMatch oToks =
             None
         )
 
+/// match the table formater line
+/// the table formater is usually the second line of a table
+/// return the rest Tokens |> Some
+/// otherwise, None
 let (|MatchTableFormater|_|) toks =
     let line, rtks = cutLine toks
     line |> Some |> pipeMatch |> minusMatch |> pipeMatch
-    |> Option.map (fun _ -> Some rtks)
+    |> Option.map (fun _ -> rtks)
 
-/// row list, remaining Tokens
+/// cut Tokens into Token list list for Table parsing
+/// terminates when [] or two continuous ENDLINEs
+/// return Token list list,
+/// remaining Token list
 let cutTableRows toks =
     let rec cutTableRow' rows toks =
         match toks with
@@ -238,6 +271,10 @@ let cutTableRows toks =
             cutTableRow' (row::rows) rtks
     cutTableRow' [] toks
 
+/// match table start sequence
+/// return table rows, terminates when [] or two continuous ENDLINEs
+/// start sequence:
+/// 2>= "|" in first line, "|", 1>= "-", "|" in second line
 let (|MatchTable|_|) toks =
     match toks with
     | MatchTableHead rtks ->
