@@ -101,6 +101,9 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
     | MatchListOpSpace _ -> "Lists todo" |> Error
     | MatchTable (rows, rtks) -> (PreTable(rows, 0, 0), rtks) |> Ok
+    | RABRA:: toks' ->
+        parseInLineElements toks'
+        |> Result.map (fun (line, rtks) -> Quote(line), rtks)
     | MatchHeader (level, rtks) ->
         parseInLineElements rtks
         |> Result.map (fun (line, rtks') -> Header{HeaderName=line; Level=level}, rtks' )
