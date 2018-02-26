@@ -203,6 +203,21 @@ let ``multiparagraph misc test`` =
             "paragraph starting with one ENDLINE"
         )
     ]
+
+[<Tests>]
+let ``preprocess table test`` =
+    makeExpectoTestList id id parse "preprocess table test" [
+        (
+            [PIPE; WHITESPACE 1; PIPE; ENDLINE; PIPE; MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
+            ([PreTable([[PIPE; WHITESPACE 1; PIPE; ENDLINE]; [PIPE; MINUS; PIPE; ENDLINE]; [PIPE; LITERAL "cell"; PIPE]], 0, 0)])|>Ok,
+            "Sample table"
+        );
+        (
+            [WHITESPACE 1; PIPE; ENDLINE; PIPE; MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
+            ([Paragraph [[FrmtedString (Literal " |\n|-|\n|cell|")]]])|>Ok,
+            "Invalid table"
+        )
+    ]
 let allTestsWithExpecto() =
     runTestsInAssembly defaultConfig [||]
 let runParserTest =

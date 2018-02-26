@@ -68,6 +68,23 @@ let rec countNewLines toks =
     | ENDLINE :: toks' -> countNewLines toks' |> (+) 1
     | _ -> 0
 
+/// count pipes in a line
+let countInlinePipes toks =
+    let pipeCounter tok =
+        match tok with
+        | PIPE -> 1
+        | _ -> 0
+    List.sumBy pipeCounter toks
+
+/// first element is the line
+/// second element is remaining tokens
+let cutLine toks =
+    let rec cutLine' line rtks =
+        match rtks with
+        | ENDLINE:: rtks -> ENDLINE::line |> List.rev, rtks
+        | tok:: rtks -> cutLine' (tok::line) rtks
+        | [] -> line |> List.rev, []
+    cutLine' [] toks
 
 /// newline but not new paragraoh
 /// is 2>= spaces and 1 newline, and potential spaces
@@ -159,5 +176,74 @@ let (|MatchHeader|_|) toks =
         match toks.[no..] with
         | WHITESPACE _ :: toks' ->
             (no, toks') |> Some // omit whitespace
+        | _ -> None
+    | _ -> None
+
+let (|MatchList|_|) toks =
+    match toks with
+    | NUMBER _:: DOT:: WHITESPACE _:: toks' -> (OL, toks') |> Some
+    | ASTERISK:: WHITESPACE _:: toks' -> (UL, toks') |> Some
+    | _ -> None
+
+let (|MatchListOpSpace|_|) toks =
+    match toks with
+    | WHITESPACE _:: MatchList content -> content |> Some
+    | MatchList content -> content |> Some
+    | _ -> None
+
+let (|MatchTableHead|_|) toks =
+    let line, rtks = cutLine toks
+    match countInlinePipes line with
+    | n when n>=2 -> rtks |> Some
+    | _ -> None
+
+/// take one PIPE, return the rest
+let pipeMatch oToks =
+    oToks
+    |> Option.bind (fun toks ->
+        match toks with
+        | PIPE:: rtks -> Some rtks
+        | _ -> None )
+
+
+
+/// take all subsequent MINUSes
+let minusMatch oToks =
+    let takeAwayMinuses toks =
+        let rec takeAwayMinuses' n toks =
+            match toks with
+            | MINUS:: rtks -> takeAwayMinuses' (n+1) rtks
+            | _ -> n, toks
+        takeAwayMinuses' 0 toks
+    oToks
+    |> Option.bind (fun toks ->
+        let n, rtks = toks |> takeAwayMinuses 
+        if n>0 then
+            Some rtks
+        else
+            None
+        )
+
+let (|MatchTableFormater|_|) toks =
+    let line, rtks = cutLine toks
+    line |> Some |> pipeMatch |> minusMatch |> pipeMatch
+    |> Option.map (fun _ -> Some rtks)
+
+/// row list, remaining Tokens
+let cutTableRows toks =
+    let rec cutTableRow' rows toks =
+        match toks with
+        | ENDLINE:: rtks -> rows |> List.rev, rtks // one endline followed by another
+        | [] -> rows |> List.rev, []
+        | _ ->
+            let row, rtks = cutLine toks
+            cutTableRow' (row::rows) rtks
+    cutTableRow' [] toks
+
+let (|MatchTable|_|) toks =
+    match toks with
+    | MatchTableHead rtks ->
+        match rtks with
+        | MatchTableFormater _ -> cutTableRows toks |> Some
         | _ -> None
     | _ -> None

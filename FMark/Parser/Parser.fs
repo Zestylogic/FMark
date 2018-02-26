@@ -8,14 +8,12 @@ open ParserHelperFuncs
 let parseLiteral toks =
     let rec parseLiteral' (str, toks) =
         match toks with
-        //| IsWordSepAndNewFrmt retoks -> str+SPACE, retoks   // preserve space before NewFrmt
         | MatchEmStart (pre, _, _) -> str+pre, toks
         | MatchEmEnd (pretk, _, _) -> str+(mapTok pretk), toks
         | IsNewTLine _ -> str, toks                         // New TLine
         | IsNewFrmt _ -> str, toks                          // NewFrmt
         | MatchNewParagraph _ -> str, toks                  // 2>= endlines
         | WHITESPACE _:: toks' -> (str+" ", toks') |> parseLiteral' // reduce spaces to 1
-        //| ENDLINE::toks' -> (str+" ", toks') |> parseLiteral' // convert 1 endline to space
         | MatchMapTok (str', toks') -> (str+str', toks') |> parseLiteral' // convert the rest to string
         | [] -> str, toks                                   // nothing to parse
         | _ -> sprintf "unmatched token should never happen: %A" toks |> failwith
@@ -33,9 +31,6 @@ let rec parseCode toks =
 let parseInLineElements toks =
     let rec parseInLineElements' toks =
         match toks with
-        // | LITERAL _ :: _ ->
-        //     let pstr, retoks = parseLiteral toks
-        //     (FrmtedString (Literal pstr), retoks) |> Ok
         | BACKTICK:: _ ->
             parseCode toks.[1..]
             |> Result.map(fun (str, rtks) -> FrmtedString(Code str), rtks )
@@ -52,22 +47,7 @@ let parseInLineElements toks =
                 | _ ->
                     let pstr, rtks = parseLiteral toks'
                     (FrmtedString(Literal ( (mapTEmphasis sym)+pstr) ), rtks)
-
-                // match sym with
-                // | UNDER ->
-                //     match retoks with
-                //     | MatchEmEndUDS retoks' -> (FrmtedString(Emphasis(inlines)), retoks')
-                //     | _ ->          // em does not match -> treat as literal
-                //         let pstr, retoks = parseLiteral toks'
-                //         (FrmtedString(Literal ("_"+pstr) ), retoks)
-                // | STAR ->
-                //     match retoks with
-                //     | MatchEmEndATR retoks' -> (FrmtedString(Emphasis(inlines)), retoks')
-                //     | _ ->          // em does not match -> treat as literal
-                //         let pstr, retoks = parseLiteral toks'
-                //         (FrmtedString(Literal ("*"+pstr) ), retoks) 
-                )
-        // | _ -> sprintf "Nothing matched: %A" toks |> Error
+            )
         | _ ->
             let pstr, retoks = parseLiteral toks
             (FrmtedString (Literal pstr), retoks) |> Ok
@@ -113,14 +93,14 @@ let parseParagraph toks =
                     (p::ps, rts)))
     parseParagraphs toks |> Result.map (fun (lines,tks) -> Paragraph lines, tks)
 
-
 /// assuming each item start at the beginning of the line
 /// the returned token head does not have 2>= ENDLINE
 let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string> =
     let toks = deleteLeadingEDNLINEs rawToks
     match toks with
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
-    | NUMBER _ :: DOT :: WHITESPACE _ :: toks' -> "Lists todo" |> Error
+    | MatchListOpSpace _ -> "Lists todo" |> Error
+    | MatchTable (rows, rtks) -> (PreTable(rows, 0, 0), rtks) |> Ok
     | MatchHeader (level, rtks) ->
         parseInLineElements rtks
         |> Result.map (fun (line, rtks') -> Header{HeaderName=line; Level=level}, rtks' )
@@ -143,4 +123,4 @@ let parse toks =
     |> Result.bind (fun (pobjs, retoks) ->
         match retoks with
         | None -> pobjs |> Ok
-        | Some retoks -> "Some unparsed tokens" |> Error)
+        | Some retoks -> sprintf "Some unparsed tokens: %A" retoks |> Error)
