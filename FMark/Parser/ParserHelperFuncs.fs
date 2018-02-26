@@ -140,21 +140,6 @@ let (|MatchEmStart|_|) toks =
     | ASTERISK :: rtks -> ("", STAR, rtks) |> Some
     | _ -> None
 
-/// match underscore
-/// underscore em needs space after it
-let (|MatchEmEndUDS|_|) toks =
-    match toks with
-    | UNDERSCORE:: ENDLINE:: _ | UNDERSCORE:: WHITESPACE _:: _ -> toks.[1..] |> Some
-    | [UNDERSCORE] -> [] |> Some
-    | _ -> None
-
-/// match asterisk
-/// asterisk em allow no space after it
-let (|MatchEmEndATR|_|) toks =
-    match toks with
-    | ASTERISK::toks' -> toks' |> Some
-    | _ -> None
-
 /// match underscore and asterisk emphasis end squence
 let (|MatchEmEnd|_|) toks =
     match toks with
