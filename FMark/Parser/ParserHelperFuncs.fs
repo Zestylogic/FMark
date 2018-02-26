@@ -70,10 +70,12 @@ let countToks (tok: Token) toks =
 
 
 /// count continuous spaces
-let rec countSpaces toks =
-    match toks with
-    | WHITESPACE n :: toks' -> countSpaces toks' |> (+) n
-    | _ -> 0
+let countSpaces toks =
+    let rec countToks' (n, toks') =
+        match toks' with
+        | WHITESPACE no:: rtks -> countToks' (n+no, rtks)
+        | _ -> n, toks'
+    countToks' (0, toks) |> fst
 
 let countNewLines = countToks (ENDLINE)
 
