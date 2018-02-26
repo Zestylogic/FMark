@@ -62,10 +62,10 @@ let stringAllTokens toks =
 
 /// count subsquent and continuous Tokens
 let countToks (tok: Token) toks =
-    let rec countToks' (n, toks) =
-        match toks with
-        | t:: toks' when t = tok -> countToks' (n+1, toks')
-        | _ -> 0, toks
+    let rec countToks' (n, toks') =
+        match toks' with
+        | t:: rtks when t = tok -> countToks' (n+1, rtks)
+        | _ -> n, toks'
     countToks' (0, toks) |> fst
 
 
