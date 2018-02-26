@@ -77,6 +77,7 @@ let countSpaces toks =
         | _ -> n, toks'
     countToks' (0, toks) |> fst
 
+/// count continuoues ENDLINEs
 let countNewLines = countToks (ENDLINE)
 
 /// count pipes in a line
