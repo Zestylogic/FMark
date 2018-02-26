@@ -7,41 +7,77 @@ open Expecto
 // --------------------------------------------------------------------------------
 let testDataHd = [
     "Basic Test",
-    [HASH; WHITESPACE 1; LITERAL "H1"],
-    [{HeaderName = [FrmtedString (Literal "H1")]; Level = 1;}];
+    [ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"],
+    (
+        [{HeaderName = [FrmtedString (Literal "H1")]; Level = 1;}],
+        [HEADER 0]
+    );
 
     "Depth Test",
-    [HASH; HASH; HASH; WHITESPACE 1; LITERAL "h3"],
-    [{HeaderName = [FrmtedString (Literal "h3")]; Level = 3;}];
+    [ENDLINE; HASH; HASH; HASH; WHITESPACE 1; LITERAL "h3"],
+    (
+        [{HeaderName = [FrmtedString (Literal "h3")]; Level = 3;}],
+        [HEADER 0]
+    );
 
     "Need space between hash and header text",
-    [HASH; LITERAL "H1"],
-    [];
+    [ENDLINE; HASH; LITERAL "H1"],
+    (
+        [],
+        [ENDLINE; HASH; LITERAL "H1"]
+    );
+
+    "More fake hashes",
+    [ENDLINE; HASH; HASH; HASH; LITERAL "NotHeader"; ENDLINE],
+    (
+        [],
+        [ENDLINE; HASH; HASH; HASH; LITERAL "NotHeader"; ENDLINE]
+    )
 
     "Hash character support within header text",
-    [HASH; WHITESPACE 1; LITERAL "H1"; HASH; WHITESPACE 1; LITERAL "H2"],
-    [{HeaderName = [FrmtedString (Literal "H1"); FrmtedString (Literal "#");
-        FrmtedString (Literal " "); FrmtedString (Literal "H2")]; Level = 1;}];
+    [ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"; HASH; WHITESPACE 1; LITERAL "H2"],
+    (
+        [{HeaderName = [FrmtedString (Literal "H1"); FrmtedString (Literal "#");
+            FrmtedString (Literal " "); FrmtedString (Literal "H2")]; Level = 1;}],
+        [HEADER 0]
+    );
 
     "Picking out header in document",
     [LITERAL "text1"; ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"; ENDLINE;
         LITERAL "text2"; ENDLINE],
-    [{HeaderName = [FrmtedString (Literal "H1")];
-        Level = 1;}];
+    (
+        [{HeaderName = [FrmtedString (Literal "H1")]; Level = 1;}],
+        [LITERAL "text1"; HEADER 0; ENDLINE; LITERAL "text2"; ENDLINE]
+    );
+
+    "Header numbering",
+    [ENDLINE; HASH; HASH; WHITESPACE 1; LITERAL "h1"; ENDLINE;
+        HASH; WHITESPACE 1; LITERAL "h2"],
+    (
+        [{HeaderName = [FrmtedString (Literal "h1")]; Level = 2;};
+            {HeaderName = [FrmtedString (Literal "h2")]; Level = 1;}],
+        [HEADER 0; HEADER 1]
+    )
 
     "Emphasis in header text",
-    [HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"; ASTERISK],
-    [{HeaderName = [FrmtedString (Literal "NotBold");
-        FrmtedString (Emphasis [FrmtedString (Literal "bold")])]; Level = 1;}];
+    [ENDLINE; HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"; ASTERISK],
+    (
+        [{HeaderName = [FrmtedString (Literal "NotBold");
+            FrmtedString (Emphasis [FrmtedString (Literal "bold")])]; Level = 1;}],
+        [HEADER 0]
+    );
         
     "Multiple headers with emphasis",
-    [HASH; HASH; WHITESPACE 1;LITERAL "hi"; LITERAL "h2";
-        ENDLINE; LITERAL "This is a Paragraph"; HASH; HASH; HASH; WHITESPACE 3;
+    [ENDLINE; HASH; HASH; WHITESPACE 1;LITERAL "hi"; LITERAL "h2";
+        ENDLINE; LITERAL "This is a Paragraph"; ENDLINE; HASH; HASH; HASH; WHITESPACE 3;
         ASTERISK; LITERAL "Another Title"; ASTERISK; ENDLINE],
-    [{HeaderName =[FrmtedString (Literal "hi");
-        FrmtedString (Literal "h2")]; Level = 2;};
-        {HeaderName = [FrmtedString (Emphasis [FrmtedString (Literal "Another Title")])];
-        Level = 3;}]
+    (
+        [{HeaderName =[FrmtedString (Literal "hi");
+            FrmtedString (Literal "h2")]; Level = 2;};
+            {HeaderName = [FrmtedString (Emphasis [FrmtedString (Literal "Another Title")])];
+            Level = 3;}],
+        [HEADER 0; ENDLINE; LITERAL "This is a Paragraph"; HEADER 1; ENDLINE]
+    )        
     ]
 
 let makeHdTest (name,inn,out) =

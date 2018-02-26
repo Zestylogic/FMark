@@ -75,31 +75,45 @@ let rec parseLine pLst tLst: TLine*Token list =
 let parseLine' tLst = (fun (x,_) -> List.rev x) (parseLine [] tLst)
 
 // --------------------------------------------------------------------------------
-let rec tocParse tocLst depth =
+let rec tocParse tocLst depth index : THeader list * Token list =
     // Detect hashes with whitespace after it
     // printf "tocParse %A\n%A\n" depth tocLst
+    // let refFit (a,b) = {HeaderName = parseLine' h; Level = depth} :: tocParse t 0
+    let rec fakehash dep =
+        match dep with
+        | 0 -> [ENDLINE]
+        | _ -> HASH :: fakehash (dep-1)
+
     match tocLst with
-    | HASH::tl -> tocParse tl (depth+1)
+    | ENDLINE::HASH::tl -> tocParse tl 1 index
+    | HASH::tl when depth > 0 -> tocParse tl (depth+1) index
     | WHITESPACE _ ::tl when depth > 0 ->
         let ind = tl |> List.tryFindIndex (fun x -> x = ENDLINE)
         match ind with
         | Some i ->
             let (h,t) = List.splitAt i tl
-            {HeaderName = parseLine' h; Level = depth} :: tocParse t 0
+            tocParse t 0 (index+1)
+            |> fun (x,y) -> {HeaderName = parseLine' h; Level = depth}::x, HEADER index::y
         | None ->
-            [{HeaderName = parseLine' tl; Level = depth}]
-    | _::tl -> tocParse tl 0
-    | [] -> []
-    
+            [{HeaderName = parseLine' tl; Level = depth}], [HEADER index]
+    | a::tl when depth > 0 ->
+        tocParse tl 0 index
+        |> fun (x,y) -> x, List.append (fakehash depth |> List.rev) (a::y)
+    | a::tl -> 
+        tocParse tl 0 index
+        |> fun (x,y) -> x, a::y
+    | [] -> [], []
+
 let tocGen' tokenLst maxDepth =
     match maxDepth with
-    | 0 -> tocParse tokenLst 0
+    | 0 -> tocParse tokenLst 0 0
     | d when d > 0 ->
-        tocParse tokenLst 0
-        |> List.filter (fun x -> x.Level <= d)
-    | _ -> failwithf "Invalide maxDepth"
+        tocParse tokenLst 0 0
+        |> fun (x,y) -> List.filter (fun x -> x.Level <= d) x, y
+    | _ -> failwithf "Invalide maxDepth" // railway this? not necessary yet
 
-let tocGen tLst maxD = {MaxDepth = maxD; HeaderLst = tocGen' tLst maxD}
+let tocGen tLst maxD =
+    {MaxDepth = maxD; HeaderLst = tocGen' tLst maxD |> fun (x,_)->x}
 
 // --------------------------------------------------------------------------------
 //pick out footnotes and send to footLineParse
@@ -109,7 +123,7 @@ let rec citeParse tocLst =
     | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
         | COLON::tail -> recFit (citeParseIn [] tail) (int key)
-        | tail -> citeParse tail // TODO: do something when it is inline?
+        | tail -> citeParse tail
     | _::tl -> citeParse tl
     | [] -> []
 
@@ -133,16 +147,23 @@ let citeGen tLst =
 
 // --------------------------------------------------------------------------------
 //pick out footnotes and send to footLineParse
-//second version for inserting tokens back
+//second version for inserting tokens back for linking
+//works, but messy compared to the first version
 let rec citeParse' tocLst :(int*TLine)list*Token list =
-    let recFit (a,b) c = (fun (x,y) -> (c,a)::x, y) (citeParse' b)
+    let recFit (a,b) c =
+        citeParse' b
+        |> fun (x,y) -> (c,a)::x, y
     match tocLst with
     | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
         | COLON::tail -> recFit (citeParseIn' [] tail) (int key)
-        | tail -> (fun (x,y) -> x, FOOTER (int key)::y)(citeParse' tail)
-    | t::tl -> (fun (x,y) -> x, t::y) (citeParse' tl)
-    | [] -> [],[]
+        | tail ->
+            citeParse' tail
+            |> fun (x,y) -> x, FOOTER (int key)::y
+    | t::tl ->
+        citeParse' tl
+        |> fun (x,y) -> x, t::y
+    | [] -> [], []
 
 //parse footnotes with parseLine
 and citeParseIn' tLne tocLst :TLine*Token list =
