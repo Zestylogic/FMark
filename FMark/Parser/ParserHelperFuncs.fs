@@ -71,7 +71,7 @@ let countToks (tok: Token) toks =
     countToks' (0, toks) |> fst
 
 
-/// count continuous spaces
+/// count leading continuous spaces
 let countSpaces toks =
     let rec countToks' (n, toks') =
         match toks' with
@@ -79,10 +79,10 @@ let countSpaces toks =
         | _ -> n, toks'
     countToks' (0, toks) |> fst
 
-/// count continuoues ENDLINEs
+/// count leading continuoues ENDLINEs
 let countNewLines = countToks (ENDLINE)
 
-/// count pipes in a line
+/// count all pipes in a line
 let countInlinePipes toks =
     let pipeCounter tok =
         match tok with
