@@ -155,6 +155,7 @@ let (|MatchEmEndATR|_|) toks =
     | ASTERISK::toks' -> toks' |> Some
     | _ -> None
 
+/// match underscore and asterisk emphasis end squence
 let (|MatchEmEnd|_|) toks =
     match toks with
     | WHITESPACE _:: UNDERSCORE:: _ -> None         // not em end
