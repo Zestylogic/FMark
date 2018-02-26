@@ -25,6 +25,33 @@ written by the other team member to produce `Table`.
 
 
 # Interface Compatibility
+
+Input: `Token list` :
+```fsharp
+type Token =
+    | CODEBLOCK of string * Language
+    | LITERAL of string
+    | WHITESPACE of size: int
+    | NUMBER of string
+    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
+    | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
+    | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
+    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
+```
+
+Output: `ParsedObj list` :
+```fsharp
+type ParsedObj =
+    | CodeBlock of string * Language
+    | Header of THeader
+    | List of TList
+    | Paragraph of TLine list
+    | Quote of TLine
+    | Table of Row list * Height: int * Width: int
+    | PreTable of Content: Token list list * Height: int * Width: int
+    | Footnote of ID: int * TLine
+```
+
 * The Parser assumes `WHITESPACE`s will be grouped together,
 e.g. `[WHITESPACE 1; WHITESPACE 2]` is invalid
 and the acceptable form is `[WHITESPACE 3]`.
@@ -34,6 +61,13 @@ and the acceptable form is `[WHITESPACE 3]`.
 * Any character that does not have a mapping in `Token` is a `LITERAL`
 
 * `Footnote` will be produced by the other function and be inserted to the end of `ParsedObj list` during group work. This will be done before generating HTML.
+
+## Usage
+`parse` will either return result monad with either `ParsedObj list` or a string of Error message. Unparsed Tokens will be in the returned in the Error message.
+
+```fsharp
+val parse = Token list -> Result<ParsedObj list * string>
+```
 
 ## Function specs
 
@@ -50,6 +84,7 @@ and the acceptable form is `[WHITESPACE 3]`.
 
 * Unmatched `UNDERSCORE` and `ASTERISK`, as well as the subsequent inline content, will be turned into `Literal`, until new Inline format.
 
+input string representing Tokens
 e.g.
 ```
 _I _love_
