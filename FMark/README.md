@@ -80,3 +80,67 @@ type Token =
 The lexer and the preprocessor were built using a test-driven manner, by writing tests first and then making them pass with
 the code. This means that the goal of the code is well defined and can more easily be written. It is then
 much easier to test the whole code by just running all the unit tests, instead of manually testing it everytime.
+
+Unit tests were used to make small tests that were going to have to pass. After the code was written,
+property based tests made sure that the main functions were working as they were supposed to.
+
+## Unit tests
+
+### Preprocessor
+
+#### Next Token
+
+|Name|Status|
+|---|---|
+|Openeval|Pass|
+|Closeeval|Pass|
+|Opendef|Pass|
+|Semicolon|Pass|
+|Long random text|Pass|
+
+#### Tokenize
+
+|Name|Status|
+|---|---|
+|Macro|Pass|
+|Subsitution|Pass|
+|Normal markdown|Pass|
+|Escaped character in sentence|Pass|
+
+#### Parse
+
+|Name|Status|
+|---|---|
+|Macro with multiple arguments and inline body|Pass|
+|Substitution|Pass|
+|Substitution with argument|Pass|
+|Substitution with multiple arguments|Pass|
+|Substitution with argument and spaces|Pass|
+
+#### Preprocess
+
+|Name|Status|
+|---|---|
+|Simple text does not change|Pass|
+|Simple text does not change with special chars|Pass|
+|Simple macro with no arguments|Pass|
+|Simple macro with empty brackets|Pass|
+|Simple macro evaluation|Pass|
+|Print out the input when substitution not in scope|Pass|
+|Escaping macro bracket should make the original input appear|Pass|
+|Shadowed macros and arguments|Pass|
+|Shadowed macros|Pass|
+|Macro with different arguments|Pass|
+|Macro with long name|Pass|
+
+#### Preprocess List
+
+|Name|Status|
+|---|---|
+|Multiline macro evaluation with newline|Pass|
+|Multiline macro without newline|Pass|
+|Multiline macro with arguments|Pass|
+
+### Lexer
+
+## Property based tests
