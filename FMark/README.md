@@ -26,7 +26,7 @@ Source ───> │ Tokeniser │ ───> Token list ───> │ First P
              Final Document  <──── │ HTMLGen │ <──── ParsedObj list <──── │ Main Parser │ <──────┘
                                    └─────────┘                            └─────────────┘
 ```
-* First Parser cooresponds to my code.
+* First Parser cooresponds to my code. The other parts are simplified for easy understanding of where this parser fits in the whole program.
  
 * To ensure compatible interface, `Types.fs` created as a group, which defines `Token` and `ParsedObj`.
   * This lets me know what to expect as inputs (`Token list`), and what to give as outputs (`ParsedObj`).
