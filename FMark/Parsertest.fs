@@ -104,6 +104,13 @@ let testDataFt = [
         [LITERAL "textbefore"; FOOTER 3; LITERAL "textAfter"; ENDLINE]
     );
 
+    "Fake footer",
+    [LITERAL "text1"; LSBRA; NUMBER "1"; RSBRA; LITERAL "text2"; ENDLINE],
+    (
+        [],
+        [LITERAL "text1"; LSBRA; NUMBER "1"; RSBRA; LITERAL "text2"; ENDLINE]
+    )
+
     "Footer text continuation over multiple lines",
     [LSBRA; CARET; NUMBER "2"; RSBRA; COLON; LITERAL "text1";
         ENDLINE; WHITESPACE 4; LITERAL "text2"; ENDLINE; 
@@ -122,6 +129,17 @@ let testDataFt = [
             Footnote (3,[FrmtedString (Literal "text3")])],
         []
     )
+
+    "Emphasis in footer",
+    [LSBRA; CARET; NUMBER "1"; RSBRA; COLON; WHITESPACE 1; UNDERSCORE;
+        LITERAL "text1"; UNDERSCORE; WHITESPACE 1; LITERAL "text2"; ENDLINE],
+    (
+        [Footnote (1,[FrmtedString (Emphasis [FrmtedString (Literal "text1")]);
+            FrmtedString (Literal "text2")])],
+        []
+    )
+
+
     ]
 
 let makeFtTest (name,inn,out) =
