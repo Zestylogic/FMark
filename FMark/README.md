@@ -1,6 +1,6 @@
 # Project Contribution
 
-The preprocessor and lexer are part of FMark, which a markdown parser in F#. This su project contains the 
+The preprocessor and lexer are part of FMark, which a markdown parser in F#. This sub project contains the 
 lexer and the preprocessor for the markdown parser. The preprocessor is a completely separate parser
 which preprocesses the markdown before passing it to the lexer and finally the parser.
 
@@ -40,7 +40,34 @@ These are the features that are currently supported by the preprocessor.
 
 ### Usage
 
+To use the preprocessor and the lexer, a string or a list of strings can be used, depending on if there are multiple
+lines or not. For a single string, the following can be used.
 
+For string, the `preprocess` and `lex` functions.
+
+``` f#
+[<EntryPoint>]
+let main =
+    let inputString = (* Read the string *)
+
+    intputString
+    |> preprocess
+    |> lex
+    ...
+```
+
+For a list of strings, one can use the `preprocessList` and `lexList` functions.
+
+``` f#
+[<EntryPoint>]
+let main =
+    let inputStringList = (* Read the string list *)
+    
+    inputStringList
+    |> preprocessList
+    |> lexList
+    ...
+```
 
 ### Future improvements
 
@@ -79,6 +106,16 @@ type Token =
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
 ```
 
+## Features
+
+Supports escaping of all the special characters defined in [Types](/FMark/Types.fs).
+
+## Extensibility
+
+It can easily be extended by adding the type of the token to `Token` above. Then the string
+has to be linked to the token by adding it as a tuple of type `string * Token` to a list called
+`charList` in the [Lexer](/FMark/Lexer.fs).
+
 # Test Plan
 
 The lexer and the preprocessor were built using a test-driven manner, by writing tests first and then making them pass with
@@ -88,6 +125,8 @@ could mean that pevious functionality might not work anymore.
 
 Unit tests were used to make small tests that were going to have to pass. After the code was written,
 property based tests made sure that the main functions were working as they were supposed to.
+
+## Notable 
 
 ## Unit tests
 

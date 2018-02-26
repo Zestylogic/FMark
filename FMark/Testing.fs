@@ -64,6 +64,18 @@ let preprocessorTokenizeTest =
 let preprocessorParseTest =
     let makeParseTestList f = makeTestList tokenize id f
     makeParseTestList parse "PreprocessorParse" [
+        "Macro with no args",
+        "{% macro Hello Body %}",
+        [MacroDefinition {Name="Hello"; Args=[]; Body=[ParseText "Body"]}]
+
+        "Macro with no args but brackets",
+        "{% macro Hello() Body %}",
+        [MacroDefinition {Name="Hello"; Args=[]; Body=[ParseText "Body"]}]
+
+        "Macro with one argument and inline body",
+        "{% macro Hello(arg1) Body %}",
+        [MacroDefinition {Name="Hello"; Args=["arg1"]; Body=[ParseText "Body"]}]
+
         "Macro with multiple arguments and inline body",
         "{% macro Hello(arg1; arg2) Body %}",
         [MacroDefinition {Name="Hello"; Args=["arg1"; "arg2"]; Body=[ParseText "Body"]}]
@@ -175,6 +187,26 @@ let lexTest =
         [LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE]
     ]
 
+[<Tests>]
+let lexListTest =
+    makeSimpleTestList lexList "LexList" [
+        "Very simple multiline markdown",
+        ["Hello, world"; "Line 2"],
+        [LITERAL "Hello,"; WHITESPACE 1; LITERAL "world"; ENDLINE; LITERAL "Line"; WHITESPACE 1
+         NUMBER "2"; ENDLINE]
+
+        "With special characters",
+        ["__Bold__"; "_Emphasis_"],
+        [DUNDERSCORE; LITERAL "Bold"; DUNDERSCORE; ENDLINE; UNDERSCORE; LITERAL "Emphasis"; UNDERSCORE
+         ENDLINE]
+
+        "Escaping characters",
+        [@"\_\\\***\%\+"; @"\_\\\***\%\+"; @"\_\\\*\%\+"],
+        [LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
+         LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
+         LITERAL "_"; LITERAL @"\"; LITERAL "*"; LITERAL "%"; LITERAL "+"; ENDLINE]
+    ]
+
 // --------------------------------------------------
 // Property Tests
 // --------------------------------------------------
@@ -183,7 +215,9 @@ let lexTest =
 let preprocessorPropertyTest =
     testProperty "PreprocessorPropertyTest" <| fun (s: string) ->
         let str =
+            // The functions will not work with a null string
             if isNull s then ""
+            // There is also a weird interaction with '\' because it escapes itself
             else s.Replace("\\", "")
         let preprocess1 = str |> preprocess
         let preprocess2 = str |> preprocess |> preprocess
