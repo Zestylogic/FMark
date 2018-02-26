@@ -1,3 +1,9 @@
+# Project Contribution
+
+The preprocessor and lexer are part of FMark, which a markdown parser in F#. This su project contains the 
+lexer and the preprocessor for the markdown parser. The preprocessor is a completely separate parser
+which preprocesses the markdown before passing it to the lexer and finally the parser.
+
 # Preprocessor
 
 This project contains the Preprocessor for FMark. The preprocessor adds templating
@@ -5,7 +11,9 @@ capabilities to FMark, which was inspired by [Liquid](https://shopify.github.io/
 
 ## Specification
 
-### Supported Elements
+### Supported Constructs
+
+These are the supported constructs in the preprocessor.
 
 |Supported|Syntax|Description|Tested|
 |---|---|---|---|
@@ -15,6 +23,8 @@ capabilities to FMark, which was inspired by [Liquid](https://shopify.github.io/
 | Function Evaluation | `{{ macro_name(arg 1; arg 2) }}`     | Evaluates the macro `macro_name` with the arguments `arg 1` and `arg 2` and replaces the evaluation with the evaluated body of the macro. | Unit Test |
 
 ### Supported Features
+
+These are the features that are currently supported by the preprocessor.
 
 | Feature                     | Example                                                                                                                                         | Description                                                                                             | Tested    |
 |-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|-----------|
@@ -27,3 +37,46 @@ capabilities to FMark, which was inspired by [Liquid](https://shopify.github.io/
 |Escaping macros|`\{% macro x y %}`|This will escape the whole macro and not evaluate it|Unit Test|
 |Escaping Subsitutions|`\{{ x }}`| will not evaluate the substitution but instead output it literally|Unit Test|
 |Outputting unmatched subsituttion|`{{ x }}` -> `{{ x }}` if not in scope|If the subsitution is not matched, it will output it as it got it|Unit Test|
+
+### Future improvements
+
+There are many features that will be introduced into the preprocessor in the future. Some of the future
+constructs can be seen below.
+
+|Construct|Description|
+|---|---|
+|for loop|A for loop that will repeat whatever is put into the body|
+|ifdef|Check if a macro is defined|
+|Expressions|Introduce arithmetic expressions|
+|if|Check if a condition is true, which will need the introduction of Expressions|
+
+There are also some features that could be added.
+
+|Feature|Description|
+|---|---|
+|`{%- -%}`|New delimiter that will completely remove the whitespace of the macro at that point|
+
+# Lexer
+
+## Interface to the Parser
+
+The interface to the parser was done using the following `Token` type, which the parser takes in 
+and can parse.
+
+``` f#
+type Token =
+    | CODEBLOCK of string * Language
+    | LITERAL of string
+    | WHITESPACE of size: int
+    | NUMBER of string
+    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
+    | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
+    | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
+    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
+```
+
+# Testing
+
+The lexer and the preprocessor were built using a test-driven manner, by writing tests first and then making them pass with
+the code. This means that the goal of the code is well defined and can more easily be written. It is then
+much easier to test the whole code by just running all the unit tests, instead of manually testing it everytime.
