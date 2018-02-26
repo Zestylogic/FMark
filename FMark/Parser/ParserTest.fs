@@ -190,6 +190,17 @@ let testGlobal =
             [Quote[FrmtedString(Literal "feet")]] |>Ok,
             "Simple quote"
         );
+        (
+            [CODEBLOCK("I am dancing at the feet of my lord", FSharp)],
+            [CodeBlock("I am dancing at the feet of my lord", FSharp)] |>Ok,
+            "Just CODEBLOCK"
+        );
+        (
+            [CODEBLOCK("I am dancing at the feet of my lord", FSharp); ENDLINE; ENDLINE; LITERAL "Yes"],
+            [CodeBlock("I am dancing at the feet of my lord", FSharp);
+                Paragraph[[FrmtedString(Literal "Yes")]]] |>Ok,
+            "CODEBLOCK and new paragraph"
+        );
     ]
 
 [<Tests>]
