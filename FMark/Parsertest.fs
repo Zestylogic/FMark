@@ -90,9 +90,9 @@ let hdTests =
 // --------------------------------------------------------------------------------
 let testDataFt = [
     "Basic footer text",
-    [LSBRA; CARET; NUMBER "1"; RSBRA; COLON; LITERAL "text"; ENDLINE],
+    [LSBRA; CARET; NUMBER "1"; RSBRA; COLON; LITERAL "text1"; LITERAL "text2"; ENDLINE],
     (
-        [Footnote (1, [FrmtedString (Literal "text")])],
+        [Footnote (1, [FrmtedString (Literal "text1"); FrmtedString (Literal "text2")])],
         []
     );
 

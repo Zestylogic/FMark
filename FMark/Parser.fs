@@ -57,22 +57,25 @@ let parseText tLst =
         | _ -> tLst', pLst'
     textIn tLst []
 
-let rec parseLine pLst tLst: TLine*Token list =
-    // printf "parseLine\n%A\n" tLst
-    match tLst with
-    | ENDLINE::_ -> pLst, tLst
-    | EmphasisS tl ->
-        let tok,text = parseText tl
-        match tok with
-        | EmphasisE ttl -> parseLine (FrmtedString (Emphasis text)::pLst) ttl
-        | ENDLINE :: ttl -> parseLine (List.append text pLst) ttl
-        | [] -> text, []
-        | _ -> failwithf "Unaccepted Emphasis Token, support to be added"
-    | NormalWords t :: tl -> parseLine (FrmtedString (Literal t)::pLst) tl
-    | _::tl -> parseLine pLst tl
-    | [] -> pLst, tLst
+let parseLine toLst =
+    let rec parseLineRec pLst tLst: TLine*Token list =
+        // printf "parseLine\n%A\n" tLst
+        match tLst with
+        | ENDLINE::_ -> pLst, tLst
+        | EmphasisS tl ->
+            let tok,text = parseText tl
+            match tok with
+            | EmphasisE ttl -> parseLineRec (FrmtedString (Emphasis text)::pLst) ttl
+            | ENDLINE :: ttl -> parseLineRec (List.append text pLst) ttl
+            | [] -> text, []
+            | _ -> failwithf "Unaccepted Emphasis Token, support to be added"
+        | NormalWords t :: tl -> parseLineRec (FrmtedString (Literal t)::pLst) tl
+        | _::tl -> parseLineRec pLst tl
+        | [] -> pLst, tLst
+    parseLineRec [] toLst
+    |> fun (x,y) -> List.rev x, y
 
-let parseLine' tLst = (fun (x,_) -> List.rev x) (parseLine [] tLst)
+let parseLine' tLst = (fun (x,_) -> x) (parseLine tLst)
 
 // --------------------------------------------------------------------------------
 let rec tocParse tocLst depth index : THeader list * Token list =
@@ -135,7 +138,7 @@ and citeParseIn tLne tocLst :TLine*Token list =
         |> fun (x,y) -> List.append tLne x, y
     | ENDLINE::tl -> tLne, tl
     | _::_ ->
-        parseLine [] tocLst
+        parseLine tocLst
         |> fun(x,y) -> citeParseIn x y
     | [] -> tLne, []
 
@@ -173,7 +176,7 @@ and citeParseIn' tLne tocLst :TLine*Token list =
         |> fun (x,y) -> List.append tLne x, y
     | ENDLINE::tl -> tLne, tl
     | _::_ ->
-        parseLine [] tocLst
+        parseLine tocLst
         |> fun(x,y) -> citeParseIn' x y
     | [] -> tLne, []
 
