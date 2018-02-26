@@ -19,24 +19,28 @@ These are the supported constructs in the preprocessor.
 |---|---|---|---|
 |Simple Macro|`{% macro name value %}`| Sets the Macro `name` equal to the string `value`|Unit Test|
 |Function Macro|`{% macro name(arg1; arg2) value %}`|Sets the Macro `name` equal to the string `value` with two parameters.|Unit Test|
-|Simple Evaluation|`{{ macro_name }}`                   | Evaluates the macro `macro_name` and replaces the evaluation with the evaluated body of the macro.                                        | Unit Test |
-| Function Evaluation | `{{ macro_name(arg 1; arg 2) }}`     | Evaluates the macro `macro_name` with the arguments `arg 1` and `arg 2` and replaces the evaluation with the evaluated body of the macro. | Unit Test |
+|Simple Evaluation|`{{ macro_name }}`|Evaluates the macro `macro_name` and replaces the evaluation with the evaluated body of the macro.|Unit Test|
+|Function Evaluation|`{{ macro_name(arg 1; arg 2) }}`|Evaluates the macro `macro_name` with the arguments `arg 1` and `arg 2` and replaces the evaluation with the evaluated body of the macro.|Unit Test|
 
 ### Supported Features
 
 These are the features that are currently supported by the preprocessor.
 
-| Feature                     | Example                                                                                                                                         | Description                                                                                             | Tested    |
-|-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|-----------|
-| Simple whitespace control   | `{% macro x y %}` evaluates to `y` and not ` ` `y` ` `.                                                                                               | Removes whitespace and newlines in macros where one wouldn't expect them to be added to the macro body. | Unit Test |
-| Shadowing of macros through | `{% macro x x %} {% macro y(x) {{ x }} %}` with `{{ y(z) }}` will evaluate to `z` but `{{ x }}` outside of the macro will always evaluate to `x`. | Macros can be shadowed by arguments of other macros.                                                    | Unit Test |
-| Nested macros               | `{% macro x {% macro y %} %}`                                                                                                                   | Macro y is only defined inside macro x and cannot be seen outside of the scope of x.                    | Unit Test |
-| Shadowing of macros through | `{% macro x x %} {% macro y {% macro x z %} {{x}} %} y: {{ y }}, x: {{ x }}` will evaluate to `y: z, x: x`                                      | Macros can be shadowed by other macros which will be used instead for evaluation.                       | Unit Test |
+|Feature|Example|Description|Tested|
+|---|---|---|---|
+| Simple whitespace control|`{% macro x y %}` evaluates to `y` and not ` ` `y` ` `.|Removes whitespace and newlines in macros where one wouldn't expect them to be added to the macro body.|Unit Test|
+|Shadowing of macros through|`{% macro x x %} {% macro y(x) {{ x }} %}` with `{{ y(z) }}` will evaluate to `z` but `{{ x }}` outside of the macro will always evaluate to `x`.|Macros can be shadowed by arguments of other macros.|Unit Test|
+|Nested macros|`{% macro x {% macro y %} %}`|Macro y is only defined inside macro x and cannot be seen outside of the scope of x.|Unit Test|
+|Shadowing of macros through|`{% macro x x %} {% macro y {% macro x z %} {{x}} %} y: {{ y }}, x: {{ x }}` will evaluate to `y: z, x: x`|Macros can be shadowed by other macros which will be used instead for evaluation.|Unit Test|
 |Evaluation of large strings|`{{ x(This is the first argument; This is the second argument) }}`|One can pass large strings as arguments to the macros.|Unit Test|
 |Escaping of characters inside argument|`{{ x(arg 1 with a \); arg 2 with a \;) }}`|One can esape all the special characters inside macros and substitutions|Unit Test|
 |Escaping macros|`\{% macro x y %}`|This will escape the whole macro and not evaluate it|Unit Test|
 |Escaping Subsitutions|`\{{ x }}`| will not evaluate the substitution but instead output it literally|Unit Test|
 |Outputting unmatched subsituttion|`{{ x }}` -> `{{ x }}` if not in scope|If the subsitution is not matched, it will output it as it got it|Unit Test|
+
+### Usage
+
+
 
 ### Future improvements
 
@@ -75,11 +79,12 @@ type Token =
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
 ```
 
-# Testing
+# Test Plan
 
 The lexer and the preprocessor were built using a test-driven manner, by writing tests first and then making them pass with
-the code. This means that the goal of the code is well defined and can more easily be written. It is then
-much easier to test the whole code by just running all the unit tests, instead of manually testing it everytime.
+the code. This means that the goal of the code is well defined beforehand and can more easily be written. It is then
+much easier to test the whole code by just running all the unit tests, instead of manually testing it everytime, as that 
+could mean that pevious functionality might not work anymore.
 
 Unit tests were used to make small tests that were going to have to pass. After the code was written,
 property based tests made sure that the main functions were working as they were supposed to.
@@ -143,4 +148,18 @@ property based tests made sure that the main functions were working as they were
 
 ### Lexer
 
+#### Lex
+
+|Name|Status|
+|---|---|
+|Very simple markdown|Pass|
+|With special characters|Pass|
+|Escaping characters|Pass|
+
 ## Property based tests
+
+### Preprocessor
+
+This property based test runs a random string that is generated by `FsCheck` and runs it through
+the preprocessor. It then checks if the output string is the same as the string if it passed through the
+preprocessor a second time.
