@@ -14,17 +14,6 @@ let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPai
     |> List.map (fun (i, triple) -> makeOneTest i triple )
     |> Expecto.Tests.testList name
 
-let printParsedObj pobj =
-    let printInlineElement inlineEle=
-        match inlineEle with
-        | FrmtedString str -> printf "It is %A" str
-        | _ -> failwithf "not implemented"
-    match pobj with
-    | Paragraph lines ->
-        lines
-        |> List.map (fun inlines -> List.map printInlineElement inlines)
-    | _ -> failwithf "not implemented"
-
 //////////////////////////////////
 // tests
 //////////////////////////////////
