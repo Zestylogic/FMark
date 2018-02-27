@@ -15,6 +15,8 @@ type Token =
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
+    | HEADER of int
+    | FOOTER of int
 
 type TFrmtedString =
     | Strong of InlineElement list | Emphasis of InlineElement list
@@ -44,6 +46,7 @@ type Row =
 type ParsedObj =
     | CodeBlock of string * Language
     | Header of THeader
+    | ContentTable of Ttoc
     | List of TList
     | Paragraph of TLine list
     | Quote of TLine
