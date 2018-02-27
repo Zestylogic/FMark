@@ -11,10 +11,12 @@ type Token =
     | LITERAL of string
     | WHITESPACE of size: int
     | NUMBER of string
-    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT | COMMA
+    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
+    | HEADER of int
+    | FOOTER of int
 
 type TFrmtedString =
     | Strong of InlineElement list | Emphasis of InlineElement list
@@ -36,7 +38,7 @@ and TListItem = NestedList of TList | StringItem of TLine
 type Alignment = Centre | Right | Left
 
 type Cell =
-    | Contents of Tokens: Token list * Header: bool * Align:Alignment
+    | Tokens of Token list * Header: bool * Align:Alignment
 
 type Row =
     | Cells of Cell list
