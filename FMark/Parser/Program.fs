@@ -1,4 +1,4 @@
-﻿open ParserTest
+open ParserTest
 
 [<EntryPoint>]
 let main argv =
