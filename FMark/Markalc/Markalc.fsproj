@@ -10,7 +10,7 @@
     <Compile Include="MarkalcShared.fs" />
     <Compile Include="Expression.fs" />
     <Compile Include="Markalc.fs" />
-    <Compile Include="MarkalcTests.fs" />
+    <Compile Include="MarkalcTest.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

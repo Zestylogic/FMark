@@ -1,4 +1,4 @@
-module Testing
+module LexerTest
 
 open System
 open Expecto

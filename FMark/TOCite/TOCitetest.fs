@@ -1,4 +1,4 @@
-module TOCitetest
+module TOCiteTest
 open Types
 open TOCite
 open Expecto

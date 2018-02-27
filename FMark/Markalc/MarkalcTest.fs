@@ -1,4 +1,4 @@
-module MarkalcTests
+module MarkalcTest
 
 open Types
 open MarkalcShared
@@ -6,7 +6,6 @@ open Markalc
 open Expression
 open Expecto.ExpectoFsCheck
 open Expecto
-open System
 open System.IO
 
 // ####################### DATA ###################
@@ -225,7 +224,9 @@ let expressionPropertyTest op =
 let propertyTests =
     List.map (expressionPropertyTest) funcList
     |> Expecto.Tests.testList "Expression property tests."
-let runTests =
+
+// Not tests
+let runMarkalcTests =
     Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
 
 let testMarkdown =

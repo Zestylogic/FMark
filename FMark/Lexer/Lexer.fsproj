@@ -10,7 +10,7 @@
     <Compile Include="Shared.fs" />
     <Compile Include="Preprocessor.fs" />
     <Compile Include="Lexer.fs" />
-    <Compile Include="Testing.fs" />
+    <Compile Include="LexerTest.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
