@@ -1,44 +1,50 @@
 module Types
 
+type Language =
+    | Python
+    | FSharp
+    | CPP
+    | C
+
 type Token =
-    | WORD of string | MISCCHAR of string | NUMBER of string | SPACE | TAB
-    | DOT | POUND | PIPE | COLON | EQUAL | MINUS | PLUS | ASTERISK | DASTERISK
-    | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
-    | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | LABRA | RABRA | LCBRA
-    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION
+    | CODEBLOCK of string * Language
+    | LITERAL of string
+    | WHITESPACE of size: int
+    | NUMBER of string
+    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT | COMMA
+    | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
+    | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
+    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
 
-type WordLst = string list
+type TFrmtedString = | Strong of TFrmtedString | Emphasis of TFrmtedString | Literal of string
+type InlineElement =
+    | FrmtedString of TFrmtedString
+    | Link of HyperText: TFrmtedString * URL: string
+    | Picture of Alt: string * URL: string
+type TLine = InlineElement list
 
-type Format = {Bold: bool;
-               Italic: bool;
-               Strike: bool;
-               InlineCode: bool}
-
-type URL = string
-
-type HyperText = WordLst
-
-type Element =
-    | FrmtedWordLst of WordLst * Format
-    | Link of HyperText * URL
-    | Picture of WordLst * URL
-
-type Language = ENGLISH
-
-type ListType = UL | OL
-
-type Line = Element list
-
-type THeader = {HeaderName: WordLst ; Level: int}
+type THeader = {HeaderName: TLine; Level: int}
 
 type Ttoc = {MaxDepth: int; HeaderLst: THeader list}
 
-type ParedObj =
-    | Code of string * Language
+type TListType = | UL | OL
+type TList = {ListType: TListType; ListItem: TListItem list; Depth: int}
+and TListItem = NestedList of TList | StringItem of TLine
+
+type Alignment = Centre | Right | Left
+
+type Cell =
+    | Contents of Tokens: Token list * Header: bool * Align:Alignment
+
+type Row =
+    | Cells of Cell list
+
+type ParsedObj =
+    | CodeBlock of string * Language
     | Header of THeader
-    | List of ListType * Line * Depth: int
-    | Paragraph of Line list
-    | Quote of Line
-    | Table of cell: Line list
-    | METADATA
-    | Footnote of ID: int * Line
+    | List of TList
+    | Paragraph of TLine list
+    | Quote of TLine
+    | Table of Row list * Height: int * Width: int
+    | PreTable of Content: Token list list * Height: int * Width: int
+    | Footnote of ID: int * TLine
