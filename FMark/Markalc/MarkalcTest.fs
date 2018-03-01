@@ -196,7 +196,7 @@ let transformTableTest = EQTest transformTable "transformTable"
 let fullTest = EQTest lexParseEvaluate "evaluation"
 
 // Not tests
-let testMarkdown =
+let testMarkdown print =
     let printToFile fpath s =
         use sw = new StreamWriter(path=fpath)
         let myPrint format = fprintf sw format
@@ -207,14 +207,15 @@ let testMarkdown =
         + (List.fold (fun s x -> s + (sprintf "|%s|Pass|\n" x)) "" lst)
         + "\n"
     let getFst3 lst = List.map (fun (x,_,_)->x) lst
-    "# Tests\n" +
-    (printTestMarkdown "Expression parser and evaluator" (getFst3 expressionData)) +
-    (printTestMarkdown "Default row parser" (getFst3 parseDefaultRowData)) +
-    (printTestMarkdown "Alignment row parser" (getFst3 alignmentData)) +
-    (printTestMarkdown "Basic table parse" (getFst3 basicTableData)) +
-    (printTestMarkdown "Full Markalc test" (getFst3 fullTestData))
-    |> printToFile "TESTS.md" //sprintf "%s" |>
-
+    
+    let testTable = "# Tests\n" +
+                    (printTestMarkdown "Expression parser and evaluator" (getFst3 expressionData)) +
+                    (printTestMarkdown "Default row parser" (getFst3 parseDefaultRowData)) +
+                    (printTestMarkdown "Alignment row parser" (getFst3 alignmentData)) +
+                    (printTestMarkdown "Basic table parse" (getFst3 basicTableData)) +
+                    (printTestMarkdown "Full Markalc test" (getFst3 fullTestData))
+    // printToFile "TESTS.md" //sprintf "%s" |>
+    if print then printToFile "TESTS.md" testTable else ()
 let funcList = [( % ),"%";( ** ),"^";( + ),"+";( - ),"-"; ( * ),"*"; ( / ),"/"]
 let expressionPropertyTest op = 
     testProperty (sprintf "Num %A Num is Num %A Num" op op) <|
