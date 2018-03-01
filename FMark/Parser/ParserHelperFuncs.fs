@@ -54,6 +54,7 @@ let mapTok = function
     | COLON -> ":"
     | CARET -> "^"
     | PERCENT -> "%"
+    | COMMA -> ","
 
 /// convert all Tokens into a single string
 /// see mapTok for Token mapping

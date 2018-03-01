@@ -9,7 +9,7 @@ let charList = ["#", HASH; "|", PIPE; "=", EQUAL; "-", MINUS; "+", PLUS; "*", AS
                 "___", TUNDERSCORE; "~", TILDE; "~~", DTILDE; "~~~", TTILDE; "[", LSBRA
                 "]", RSBRA; "(", LBRA; ")", RBRA; @"\", BSLASH; "/", SLASH; "<", LABRA
                 ">", RABRA; "{", LCBRA; "}", RCBRA; "`", BACKTICK; "```", TBACKTICK
-                "!", EXCLAMATION; ":", COLON; "^", CARET; "%", PERCENT]
+                "!", EXCLAMATION; ":", COLON; "^", CARET; "%", PERCENT;",", COMMA]
 
 /// An escaped char tokenizer, which identifies the escaped characters and returns them
 /// as a literal instead, without the leading '\'
