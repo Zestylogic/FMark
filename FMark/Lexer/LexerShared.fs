@@ -1,4 +1,4 @@
-module Shared
+module LexerShared
 
 open System
 open System.Text.RegularExpressions

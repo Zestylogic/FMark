@@ -1,7 +1,7 @@
 module Lexer
 
 open Types
-open Shared
+open LexerShared
 
 /// The list of characters used in the parser
 let charList = ["#", HASH; "|", PIPE; "=", EQUAL; "-", MINUS; "+", PLUS; "*", ASTERISK

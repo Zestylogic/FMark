@@ -4,7 +4,7 @@ open MarkalcTest
 open Expecto
 
 [<EntryPoint>]
-let main argv =
+let markalcMain argv =
     printfn "Running tests..."
     runMarkalcTests
     printfn "Updated TESTS.md document with \'Should pass\' tests."

@@ -7,11 +7,11 @@
 
   <ItemGroup>
     <Compile Include="../Types.fs" />
-    <Compile Include="Shared.fs" />
+    <Compile Include="LexerShared.fs" />
     <Compile Include="Preprocessor.fs" />
     <Compile Include="Lexer.fs" />
     <Compile Include="LexerTest.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="LexerProgram.fs" />
   </ItemGroup>
 
   <ItemGroup>

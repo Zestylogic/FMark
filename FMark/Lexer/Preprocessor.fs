@@ -2,7 +2,7 @@ module Preprocessor
 
 open System
 
-open Shared
+open LexerShared
 
 /// Token type for the preprocessor macros
 type Token =

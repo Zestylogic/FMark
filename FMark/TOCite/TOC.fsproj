@@ -9,7 +9,7 @@
     <Compile Include="../Types.fs" />
     <Compile Include="TOCite.fs" />
     <Compile Include="TOCiteTest.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="TOCiteProgram.fs" />
   </ItemGroup>
 
   <ItemGroup>

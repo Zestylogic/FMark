@@ -10,7 +10,7 @@
     <Compile Include="ParserHelperFuncs.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="ParserTest.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="ParserProgram.fs" />
   </ItemGroup>
 
   <ItemGroup>
