@@ -55,6 +55,8 @@ let mapTok = function
     | CARET -> "^"
     | PERCENT -> "%"
     | COMMA -> ","
+    | FOOTER n -> sprintf "FOOTER %d" n
+    | HEADER n -> sprintf "HEADER %d" n
 
 /// convert all Tokens into a single string
 /// see mapTok for Token mapping
