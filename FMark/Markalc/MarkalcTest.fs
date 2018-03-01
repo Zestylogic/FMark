@@ -203,12 +203,12 @@ let testMarkdown print =
         do myPrint "%s" s
         sw.Close()
     let printTestMarkdown name lst =
-        (sprintf "## %s\n\n|UnitTest|Pass/Fail\n|---|---|\n" name) 
-        + (List.fold (fun s x -> s + (sprintf "|%s|Pass|\n" x)) "" lst)
-        + "\n"
+        (sprintf "## %s\r\n\r\n|UnitTest|Pass/Fail\r\n|---|---|\r\n" name) 
+        + (List.fold (fun s x -> s + (sprintf "|%s|Pass|\r\n" x)) "" lst)
+        + "\r\n"
     let getFst3 lst = List.map (fun (x,_,_)->x) lst
     
-    let testTable = "# Tests\n" +
+    let testTable = "# Tests\r\n" +
                     (printTestMarkdown "Expression parser and evaluator" (getFst3 expressionData)) +
                     (printTestMarkdown "Default row parser" (getFst3 parseDefaultRowData)) +
                     (printTestMarkdown "Alignment row parser" (getFst3 alignmentData)) +
