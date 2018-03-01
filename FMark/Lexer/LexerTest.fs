@@ -209,7 +209,7 @@ let lexTest =
 
         "Very simple markdown",
         "Hello, world",
-        [Types.Token.LITERAL "Hello,"; WHITESPACE 1; Types.Token.LITERAL "world"; Types.Token.ENDLINE]
+        [Types.Token.LITERAL "Hello"; COMMA; WHITESPACE 1; Types.Token.LITERAL "world"; Types.Token.ENDLINE]
 
         "With special characters",
         "There is _nothing_ to do",
@@ -228,7 +228,7 @@ let lexListTest =
     makeSimpleTestList lexList "LexList" [
         "Very simple multiline markdown",
         ["Hello, world"; "Line 2"],
-        [LITERAL "Hello,"; WHITESPACE 1; LITERAL "world"; ENDLINE; LITERAL "Line"; WHITESPACE 1
+        [LITERAL "Hello"; COMMA; WHITESPACE 1; LITERAL "world"; ENDLINE; LITERAL "Line"; WHITESPACE 1
          NUMBER "2"; ENDLINE]
 
         "With special characters",
