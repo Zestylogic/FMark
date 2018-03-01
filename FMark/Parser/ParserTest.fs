@@ -267,8 +267,8 @@ let ``preprocess table test`` =
             "Invalid table"
         )
     ]
-let allTestsWithExpecto() =
-    runTestsInAssembly defaultConfig [||]
-let runParserTest =
-    allTestsWithExpecto() |> ignore
-    0
+//let allTestsWithExpecto() =
+//    runTestsInAssembly defaultConfig [||]
+//let runParserTest =
+//    allTestsWithExpecto() |> ignore
+//    0

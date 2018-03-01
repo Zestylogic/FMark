@@ -2,6 +2,6 @@ open ParserTest
 
 [<EntryPoint>]
 let parserMain argv =
-    runParserTest |> ignore
+    Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
     printfn "Hello World from F#!"
     0

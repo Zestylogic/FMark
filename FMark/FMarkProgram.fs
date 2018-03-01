@@ -1,5 +1,5 @@
 open System
-open Expecto
+open MarkalcTest
 
 [<EntryPoint>]
 let main argv =

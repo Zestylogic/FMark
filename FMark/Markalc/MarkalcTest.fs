@@ -195,40 +195,7 @@ let parseAlignmentRowTest = EQTest parseAlignRow "parseAlignRow"
 let transformTableTest = EQTest transformTable "transformTable"
 let fullTest = EQTest lexParseEvaluate "evaluation"
 
-// ####################### TESTS ########################
-[<Tests>]
-let tests = 
-    testList "Should pass" [
-        addTestList expressionTest "Expression tests" lexY expressionData;
-        addTestList parseRowTest "parseDefaultRow tests" lexY parseDefaultRowData;
-        addTestList parseAlignmentRowTest "parseAlignmentRow tests" lexY alignmentData;
-        addTestList transformTableTest "transformTable tests" id basicTableData;
-        addTestList fullTest "transformTable tests" id fullTestData;
-]
-
-let funcList = [( % ),"%";( ** ),"^";( + ),"+";( - ),"-"; ( * ),"*"; ( / ),"/"]
-let expressionPropertyTest op = 
-    testProperty (sprintf "Num %A Num is Num %A Num" op op) <|
-    (fun (x:int,y:int) ->
-        let tostr = function | i when i < 0 -> sprintf "(0-%i)" (-i)
-                             | i -> string i
-        let instr = tostr x + (snd op) + tostr y
-        //sprintf "%i%s%i" x (snd op) y
-        Expect.equal
-            (instr |> simpleLex |> parseExpTest |> (function | Ok(x)->string x | Error(e) -> string e)) // Actual
-            ((fst op) (x|>float) (y|>float) |> string) // Expected
-            (sprintf "x %A y is x %A y" op op)
-    )
-    
-[<Tests>]
-let propertyTests =
-    List.map (expressionPropertyTest) funcList
-    |> Expecto.Tests.testList "Expression property tests."
-
 // Not tests
-let runMarkalcTests =
-    Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
-
 let testMarkdown =
     let printToFile fpath s =
         use sw = new StreamWriter(path=fpath)
@@ -247,7 +214,41 @@ let testMarkdown =
     (printTestMarkdown "Basic table parse" (getFst3 basicTableData)) +
     (printTestMarkdown "Full Markalc test" (getFst3 fullTestData))
     |> printToFile "TESTS.md" //sprintf "%s" |>
+
+let funcList = [( % ),"%";( ** ),"^";( + ),"+";( - ),"-"; ( * ),"*"; ( / ),"/"]
+let expressionPropertyTest op = 
+    testProperty (sprintf "Num %A Num is Num %A Num" op op) <|
+    (fun (x:int,y:int) ->
+        let tostr = function | i when i < 0 -> sprintf "(0-%i)" (-i)
+                             | i -> string i
+        let instr = tostr x + (snd op) + tostr y
+        //sprintf "%i%s%i" x (snd op) y
+        Expect.equal
+            (instr |> simpleLex |> parseExpTest |> (function | Ok(x)->string x | Error(e) -> string e)) // Actual
+            ((fst op) (x|>float) (y|>float) |> string) // Expected
+            (sprintf "x %A y is x %A y" op op)
+    )
+
+// ####################### TESTS ########################
+[<Tests>]
+let tests = 
+    testList "Should pass" [
+        addTestList expressionTest "Expression tests" lexY expressionData;
+        addTestList parseRowTest "parseDefaultRow tests" lexY parseDefaultRowData;
+        addTestList parseAlignmentRowTest "parseAlignmentRow tests" lexY alignmentData;
+        addTestList transformTableTest "transformTable tests" id basicTableData;
+        addTestList fullTest "transformTable tests" id fullTestData;
+]
+
+
     
+[<Tests>]
+let propertyTests =
+    List.map (expressionPropertyTest) funcList
+    |> Expecto.Tests.testList "Expression property tests."
+
+
     
+//let runMarkalcTests = Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore 
     
     
