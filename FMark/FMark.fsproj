@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
+<<<<<<< HEAD
     <Compile Include="Parser.fs" />
     <Compile Include="Parsertest.fs" />
     <Compile Include="Program.fs" />
@@ -17,4 +18,31 @@
     <PackageReference Include="expecto.fscheck" Version="5.1.2" />
   </ItemGroup>
 
+=======
+    
+    <Compile Include="Lexer/LexerShared.fs" />
+    <Compile Include="Lexer/Preprocessor.fs" />
+    <Compile Include="Lexer/Lexer.fs" />
+    <Compile Include="Lexer/LexerTest.fs" />
+
+    <Compile Include="TOCite/TOCite.fs" />
+    <Compile Include="TOCite/TOCitetest.fs" />
+
+    <Compile Include="Markalc/MarkalcShared.fs" />
+    <Compile Include="Markalc/Expression.fs" />
+    <Compile Include="Markalc/Markalc.fs" />
+    <Compile Include="Markalc/MarkalcTest.fs" />
+
+    <Compile Include="Parser/ParserHelperFuncs.fs" />
+    <Compile Include="Parser/Parser.fs" />
+    <Compile Include="Parser/ParserTest.fs" />
+
+    <Compile Include="FMarkProgram.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Expecto" Version="5.1.2" />
+    <PackageReference Include="Expecto.FsCheck" Version="5.1.2" />
+  </ItemGroup>
+>>>>>>> master
 </Project>

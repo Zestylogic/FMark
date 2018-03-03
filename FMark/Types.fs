@@ -11,7 +11,7 @@ type Token =
     | LITERAL of string
     | WHITESPACE of size: int
     | NUMBER of string
-    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
+    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT | COMMA
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
@@ -38,7 +38,7 @@ and TListItem = NestedList of TList | StringItem of TLine
 type Alignment = Centre | Right | Left
 
 type Cell =
-    | Tokens of Token list * Header: bool * Align:Alignment
+    | Contents of Token list * Header: bool * Align:Alignment
 
 type Row =
     | Cells of Cell list
@@ -46,6 +46,7 @@ type Row =
 type ParsedObj =
     | CodeBlock of string * Language
     | Header of THeader
+    | ContentTable of Ttoc
     | List of TList
     | Paragraph of TLine list
     | Quote of TLine
