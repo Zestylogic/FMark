@@ -7,18 +7,6 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
-<<<<<<< HEAD
-    <Compile Include="Parser.fs" />
-    <Compile Include="Parsertest.fs" />
-    <Compile Include="Program.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="expecto" Version="5.1.2" />
-    <PackageReference Include="expecto.fscheck" Version="5.1.2" />
-  </ItemGroup>
-
-=======
     
     <Compile Include="Lexer/LexerShared.fs" />
     <Compile Include="Lexer/Preprocessor.fs" />
@@ -44,5 +32,4 @@
     <PackageReference Include="Expecto" Version="5.1.2" />
     <PackageReference Include="Expecto.FsCheck" Version="5.1.2" />
   </ItemGroup>
->>>>>>> master
 </Project>
