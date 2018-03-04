@@ -3,4 +3,5 @@ mono: none
 dotnet: 2.1.4
 script:
  - cd $TRAVIS_BUILD_DIR/FMark
- - dotnet run
+ - dotnet build -v
+ - dotnet run --no-build
