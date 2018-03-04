@@ -256,9 +256,13 @@ let ``multiparagraph misc test`` =
 [<Tests>]
 let ``preprocess table test`` =
     makeExpectoTestList id id parse "preprocess table test" [
-        (
-            [PIPE; WHITESPACE 1; PIPE; ENDLINE; PIPE; MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
-            ([PreTable([[PIPE; WHITESPACE 1; PIPE; ENDLINE]; [PIPE; MINUS; PIPE; ENDLINE]; [PIPE; LITERAL "cell"; PIPE]], 0, 0)])|>Ok,
+        (   (*|head|
+              |---|
+              |cell|*)
+            [PIPE;  LITERAL "head"; PIPE; ENDLINE; PIPE; MINUS;MINUS;MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
+            ([Table
+                [Cells ([Contents ([LITERAL "head"],true,Left)],true);
+                 Cells ([Contents ([LITERAL "cell"],false,Left)],false)]])|>Ok,
             "Sample table"
         );
         (

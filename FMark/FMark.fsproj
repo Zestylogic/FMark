@@ -24,11 +24,18 @@
     <Compile Include="Parser/ParserHelperFuncs.fs" />
     <Compile Include="Parser/Parser.fs" />
     <Compile Include="Parser/ParserTest.fs" />
+    
+    <Compile Include="HTMLGen.fs" />
+    <Compile Include="FMark.fs" />
+    <Compile Include="FMarkTests.fs" />
 
+    <Compile Include="FMarkCLI.fs" />
     <Compile Include="FMarkProgram.fs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="4.3.2" />
+    <PackageReference Include="Argu" Version="5.0.1" />
     <PackageReference Include="Expecto" Version="5.1.2" />
     <PackageReference Include="Expecto.FsCheck" Version="5.1.2" />
   </ItemGroup>

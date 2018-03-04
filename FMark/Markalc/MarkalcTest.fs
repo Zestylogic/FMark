@@ -105,25 +105,25 @@ let basicTableData = [
                           ":------|:-----:|------:";
                           "Somedfs|tesdfst|stduff"] ,
     // Answer, two lists of aligned cells
-    [[Contents ([LITERAL "header1"],true,Left);Contents ([LITERAL "header2"],true,Centre);Contents ([LITERAL "header3"],true,Right) ]] @
-    [[Contents ([LITERAL "Somedfs"],false,Left);Contents ([LITERAL "tesdfst"],false,Centre);Contents ([LITERAL "stduff"],false,Right)]] |> Ok;
+    [Cells([Contents ([LITERAL "header1"],true,Left);Contents ([LITERAL "header2"],true,Centre);Contents ([LITERAL "header3"],true,Right)],true)] @
+    [Cells([Contents ([LITERAL "Somedfs"],false,Left);Contents ([LITERAL "tesdfst"],false,Centre);Contents ([LITERAL "stduff"],false,Right)],false)] |> Ok;
 ]
 
 let align =  ":------|:-----:|------:"
-let ans head a b c = [Contents (a,head,Left);
-                      Contents (b,head,Centre);
-                      Contents (c,head,Right)]
+let ans head a b c = Cells ([Contents (a,head,Left)  ;
+                            Contents (b,head,Centre);
+                            Contents (c,head,Right) ], head)
 
 let fullTestData = [
     "Single cell table no header pipe",
     ["=2+2"; "---|"; ],
-    [[Contents ([NUMBER("4")],true,Left);]] |> Ok;
+    [Cells([Contents ([NUMBER("4")],true,Left);],true)] |> Ok;
     "Single cell table",
     ["=2+2|"; "---|"; ],
-    [[Contents ([NUMBER("4")],true,Left);]] |> Ok;
+    [Cells([Contents ([NUMBER("4")],true,Left);],true)] |> Ok;
     "Two rows no pipes",
     ["=2+2"; "---|"; "=[0][0]+3";],
-    [[Contents ([NUMBER("4")],true,Left);];[Contents ([NUMBER("7")],false,Left);]] |> Ok;
+    [Cells ([Contents ([NUMBER("4")],true,Left);],true);Cells ([Contents ([NUMBER("7")],false,Left);],false)] |> Ok;
     "Single row table",
     ["=2+2|header2|header3"; align; ],
     [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"]] |> Ok;
@@ -179,7 +179,7 @@ let fullTestData = [
      ans false [] [NUMBER "52"] [NUMBER "42"]] |> Ok;
     "MIN/MAX function test",
     ["=MIN{3,4,2,5,3,2,4,5,7,1,20}|=MAX{3,4,2,5,3,2,4,5,7,1,20}"; "---|---"; ],
-    [[Contents ([NUMBER("1")],true,Left);Contents ([NUMBER("20")],true,Left)]] |> Ok;
+    [Cells ([Contents ([NUMBER("1")],true,Left);Contents ([NUMBER("20")],true,Left)],true)] |> Ok;
 ]
 // ####################### FUNCTIONS #####################
 let EQTest func fname name inp outp =
@@ -188,7 +188,6 @@ let EQTest func fname name inp outp =
 let addTestList test name dataTransform data = 
     (List.map (dataTransform >> (unfoldTuple3 test)) data)
     |> Expecto.Tests.testList name
-
 let expressionTest = EQTest parseExpTest "parseExpTop"
 let parseRowTest = EQTest parseDefaultRow "parseDefaultRow"
 let parseAlignmentRowTest = EQTest parseAlignRow "parseAlignRow"
@@ -238,7 +237,7 @@ let tests =
         addTestList parseRowTest "parseDefaultRow tests" lexY parseDefaultRowData;
         addTestList parseAlignmentRowTest "parseAlignmentRow tests" lexY alignmentData;
         addTestList transformTableTest "transformTable tests" id basicTableData;
-        addTestList fullTest "transformTable tests" id fullTestData;
+        addTestList fullTest "fullTable tests" id fullTestData;
 ]
 
 
