@@ -1,7 +1,11 @@
 module FMark
 
-let processData x =
-    x 
-    |> Preprocessor.preprocess
-    |> Lexer.lex
-    |> Parser.parse
+open HTMLGen
+
+let preLexParse = 
+    Preprocessor.preprocessList
+    >> Lexer.lexList
+    >> Parser.parse
+let processDataDummy =
+    preLexParse
+    >> HTMLGenDummy

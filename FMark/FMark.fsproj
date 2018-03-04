@@ -24,8 +24,10 @@
     <Compile Include="Parser/ParserHelperFuncs.fs" />
     <Compile Include="Parser/Parser.fs" />
     <Compile Include="Parser/ParserTest.fs" />
-
+    
+    <Compile Include="HTMLGen.fs" />
     <Compile Include="FMark.fs" />
+    <Compile Include="FMarkTests.fs" />
 
     <Compile Include="FMarkCLI.fs" />
     <Compile Include="FMarkProgram.fs" />
