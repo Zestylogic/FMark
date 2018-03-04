@@ -1,6 +1,6 @@
 module FMark
 
-let process x =
+let processData x =
     x 
     |> Preprocessor.preprocess
     |> Lexer.lex
