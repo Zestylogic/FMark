@@ -3,6 +3,8 @@ open Argu
 
 
 type CLIArguments =
+    | [<MainCommand;Last;AltCommandLine("-i")>] Input of path:string
+    | [<AltCommandLine("-s")>] Stdin of text:string
     | [<AltCommandLine("-o")>] Output of path:string
     | [<AltCommandLine("-l")>] Loglevel of level:int
     | [<AltCommandLine("-f")>] Format of string
@@ -12,6 +14,8 @@ with
     interface IArgParserTemplate with
         member s.Usage =
             match s with
+            | Input _ -> "specify input file path."
+            | Stdin _ -> "using tool with stdin"
             | Output _ -> "specify output file path."
             | Loglevel _ -> "set the log level  ('3:DEBUG', '2:INFO', '1:WARNING', '0:ERROR')."
             | Format _ -> "specify format, by default: html."
