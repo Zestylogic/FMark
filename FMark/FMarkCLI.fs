@@ -3,7 +3,6 @@ open Argu
 
 
 type CLIArguments =
-    | [<Mandatory;ExactlyOnce;AltCommandLine("-i")>] Input of path:string
     | [<AltCommandLine("-o")>] Output of path:string
     | [<AltCommandLine("-l")>] Loglevel of level:int
     | [<AltCommandLine("-f")>] Format of string
@@ -13,7 +12,6 @@ with
     interface IArgParserTemplate with
         member s.Usage =
             match s with
-            | Input _ -> "specify input file path."
             | Output _ -> "specify output file path."
             | Loglevel _ -> "set the log level  ('3:DEBUG', '2:INFO', '1:WARNING', '0:ERROR')."
             | Format _ -> "specify format, by default: html."
