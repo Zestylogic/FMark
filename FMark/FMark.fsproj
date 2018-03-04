@@ -25,6 +25,8 @@
     <Compile Include="Parser/Parser.fs" />
     <Compile Include="Parser/ParserTest.fs" />
 
+    <Compile Include="FMark.fs" />
+
     <Compile Include="FMarkProgram.fs" />
   </ItemGroup>
 
