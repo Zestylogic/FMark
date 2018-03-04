@@ -157,7 +157,7 @@ let tryEval = tryEval' 1000
 /// No invalid expressions should be matched.
 let evaluateCellList (rowList:Row list) = 
     let rowUnpack = List.collect (function | Cells(l,_) -> [l])
-    let makeRow (cellList:Cell list) = Cells(cellList,(List.head cellList).GetHead)
+    let makeRow (cellList:Cell list) = Cells(cellList, (List.head cellList).GetHead)
     // Iterate over table, must know "where am I?" for each cell
     let innerFold row (s:(CellReference*MapContents) list*uint32) (cell:Cell) =
         match parseExpression (cell.GetToks) with
@@ -187,7 +187,8 @@ let evaluateCellList (rowList:Row list) =
 /// Return: Result(OK(Cell list list), Error(toks))
 let parseEvaluateTable (toks:Token list list) = 
     // Transform Token list list into Cell list list
-    transformTable toks
+    let endlFilt = function | ENDLINE -> false | _ -> true
+    transformTable (List.map (List.filter endlFilt) toks)
     |> function
     | Error(_) -> toks |> Error // If there are any errors just return the unchanged Token list list
     | Ok(x) -> evaluateCellList x |> Ok // Else return Ok and Cell list list

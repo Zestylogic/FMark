@@ -188,7 +188,6 @@ let EQTest func fname name inp outp =
 let addTestList test name dataTransform data = 
     (List.map (dataTransform >> (unfoldTuple3 test)) data)
     |> Expecto.Tests.testList name
-
 let expressionTest = EQTest parseExpTest "parseExpTop"
 let parseRowTest = EQTest parseDefaultRow "parseDefaultRow"
 let parseAlignmentRowTest = EQTest parseAlignRow "parseAlignRow"
