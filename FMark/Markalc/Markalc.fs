@@ -9,6 +9,8 @@ type Cell with
                            | Contents(toks,_,_) -> toks
     member c.ReplaceTokens t = match c with 
                                | Contents(_,head,align) -> Contents(t,head,align)
+    member c.GetHead = match c with 
+                       | Contents(_,head,_) -> head
 
 type MapContents =
     | MapTok of Cell
@@ -115,9 +117,13 @@ let transformTable (table:Token list list)  =
     // Deal with first two rows of format: header1 | header2 | header3
     // Second row tells us how many columns and correct alignment
     let alignments = table.[1] |> parseAlignRow
-    let header = List.head table |> parseRow headCellU |> alignCells alignments
+    let makeRow head = function | Ok(x) -> Ok(x,head) | Error(e) -> Error e
+
+    let header = (List.head table |> parseRow headCellU |> alignCells alignments) 
+                 |> makeRow true  |> (Result.map Cells)
+
     // Fold parse normal row for the rest of the table
-    let parseAlignPrepend s x = (parseRow defaultCellU x |> alignCells alignments) :: s
+    let parseAlignPrepend s x = (parseRow defaultCellU x |> alignCells alignments |> makeRow false  |> (Result.map Cells)) :: s
     List.fold parseAlignPrepend [header] (xOnwards 2 table)
     |> List.rev
     |> joinErrorList
@@ -149,7 +155,9 @@ let tryEval' maxRefs map e =
 let tryEval = tryEval' 1000
 /// Evaluate all expressions inside a cell list list, leave non-expression cells as they are
 /// No invalid expressions should be matched.
-let evaluateCellList cellList = 
+let evaluateCellList (rowList:Row list) = 
+    let rowUnpack = List.collect (function | Cells(l,_) -> [l])
+    let makeRow (cellList:Cell list) = Cells(cellList,(List.head cellList).GetHead)
     // Iterate over table, must know "where am I?" for each cell
     let innerFold row (s:(CellReference*MapContents) list*uint32) (cell:Cell) =
         match parseExpression (cell.GetToks) with
@@ -157,6 +165,7 @@ let evaluateCellList cellList =
         | Error(t) -> (RowCol(row,snd s),MapTok (cell)) :: fst s, snd s + 1u // No expression, ignore
     let outerFold (s:uint32*((CellReference*MapContents)list*uint32)) cells =
         (fst s + 1u,List.fold (innerFold (fst s)) (fst(snd s),0u) cells)
+    let cellList = rowUnpack rowList
     let rowLength = List.length (List.head cellList)
     List.fold outerFold (0u,([],0u)) cellList 
     |> function 
@@ -171,7 +180,7 @@ let evaluateCellList cellList =
         List.map (snd >> expListEval) expList
         |> (Seq.chunkBySize rowLength) 
         |> Seq.toList 
-        |> List.map (Array.toList)
+        |> List.map (Array.toList>>makeRow)
 
 /// Top level function
 /// Parse tokens into cell list list with all Expressions evaluated.
