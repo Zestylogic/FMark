@@ -1,6 +1,10 @@
 # FMark
 FSharp markdown.
 
+## Test Status
+
+[![Build Status](https://travis-ci.org/ymherklotz/FMark.svg?branch=master)](https://travis-ci.org/ymherklotz/FMark)
+
 ## Features
 
 - Generating html

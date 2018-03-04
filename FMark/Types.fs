@@ -46,6 +46,7 @@ type Row =
 type ParsedObj =
     | CodeBlock of string * Language
     | Header of THeader
+    | ContentTable of Ttoc
     | List of TList
     | Paragraph of TLine list
     | Quote of TLine
