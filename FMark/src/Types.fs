@@ -41,7 +41,7 @@ type Cell =
     | Contents of Token list * Header: bool * Align:Alignment
 
 type Row =
-    | Cells of Cell list
+    | Cells of Cell list * Header:bool
 
 type ParsedObj =
     | CodeBlock of string * Language
@@ -50,6 +50,7 @@ type ParsedObj =
     | List of TList
     | Paragraph of TLine list
     | Quote of TLine
-    | Table of Row list * Height: int * Width: int
-    | PreTable of Content: Token list list * Height: int * Width: int
+    | Table of Row list
+    | PreTable of Content: Token list list
     | Footnote of ID: int * TLine
+    | CellContent of InlineElement
