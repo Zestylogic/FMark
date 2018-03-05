@@ -14,7 +14,7 @@ let main argv =
 
     // ############## EXAMPLE, NEEDS TIDYING UP ################
     match ifFileReadFrom results with
-    | None(_) -> failwithf "No input."
+    | None(_) -> ()
     | Some(instr,fname) -> 
         let strip chars s = (String.map (fun c -> if Seq.exists((=)c) chars then ' ' else c) s).Trim()
         let outFile = results.GetResult(Output,defaultValue=strip ".md" fname+".html")
