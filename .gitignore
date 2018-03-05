@@ -5,3 +5,4 @@ packages
 *.cache
 *.pdb
 *.dll
+paket.exe
