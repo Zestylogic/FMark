@@ -2,12 +2,13 @@ language: csharp
 mono: none
 dotnet: 2.1.4
 script:
-- cd $TRAVIS_BUILD_DIR/FMark/src/FMarkCLI
-- dotnet build -v n
-- dotnet run --no-build -- -t
-- cd $TRAVIS_BUILD_DIR/FMark/src/FMarkFable
-- dotnet restore
-- dotnet fable yarn-build
+  - mozroots --import
+  - cd $TRAVIS_BUILD_DIR/FMark/src/FMarkCLI
+  - dotnet build -v n
+  - dotnet run --no-build -- -t
+  - cd $TRAVIS_BUILD_DIR/FMark/src/FMarkFable
+  - dotnet restore
+  - dotnet fable yarn-build
 install:
-- sudo apt-get -qq update
-- sudo apt-get install -y mono-4.0-gac mono-complete
+  - sudo apt-get -qq update
+  - sudo apt-get install -y mono-complete
