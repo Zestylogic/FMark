@@ -4,11 +4,12 @@ dotnet: 2.1.4
 script:
   - export PREFIX=`pwd`
   - export PATH=$PREFIX/bin:$PATH
-  - git clone https://github.com/mono/mono.git
+  - git clone -b mono-5.13.0.308 https://github.com/mono/mono.git
   - cd mono
   - ./autogen.sh --prefix=$PREFIX
   - make
   - make install
+  - mono --version
   - cd $TRAVIS_BUILD_DIR/FMark/src/FMarkCLI
   - dotnet build -v n
   - dotnet run --no-build -- -t
