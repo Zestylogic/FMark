@@ -2,7 +2,7 @@ language: csharp
 mono: none
 dotnet: 2.1.4
 script:
-  - mozroots --import
+  - mozroots --import --sync
   - cd $TRAVIS_BUILD_DIR/FMark/src/FMarkCLI
   - dotnet build -v n
   - dotnet run --no-build -- -t
