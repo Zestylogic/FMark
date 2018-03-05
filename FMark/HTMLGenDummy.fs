@@ -2,6 +2,18 @@ module HTMLGenDummy
 
 open Types
 
+
+let rec inlineHTMLGen elem =
+    match elem with
+    //| Strong(x) -> // recursive...
+    | Literal(s) -> s
+    | Strong(x) -> sprintf "<strong>%s</strong>" (elemListHTMLGen x)
+    | e -> failwithf "Unexpected element: %A" e
+
+and elemListHTMLGen elemLst = 
+    let folder s x = s + (inlineHTMLGen x)
+    List.fold folder elemLst
+
 let rec tableHTMLGenDummy tab =
     let getAlignment = function
     | Centre -> "align=\"center\""
@@ -11,16 +23,12 @@ let rec tableHTMLGenDummy tab =
         | true -> "h"
         | false -> "d"
     let printCell s = function
-                      | Contents(toks,h,ali) -> 
-                        let cellContents = HTMLGenObjDummy (Parser.parseInLineElements toks 
-                                                            |> (function | Ok(x) -> x | _ -> failwithf "Error parsing inside table cell.")
-                                                            |> fst
-                                                            |> List.head
-                                                            |> CellContent)
+                      | CellLine(line,h,ali) -> 
+                        let cellContents = HTMLGenObjDummy line
                         s + sprintf "<t%s%s>%s</t%s>" (getH h) (getAlignment ali) cellContents (getH h)
     let printRow s = 
         function
-        | Cells(clst,h) ->
+        | PCells(clst,h) ->
             let rowTxt = sprintf "<tr>%s</tr>" (List.fold printCell "" clst)
             s + if h then sprintf "<thead>%s</thead>" rowTxt else rowTxt
     let s = "<table>" + printRow "" (List.head tab) + "<tbody>"
@@ -31,8 +39,8 @@ and HTMLGenObjDummy ob =
     let f ob = 
         match ob with
         | Table(t) -> tableHTMLGenDummy t
-        | CellContent(FrmtedString(Literal(s))) -> s
-        | _ -> "<!--not a table-->"
+        | CellContents(line) -> elemListHTMLGen line 
+        | _ -> "Unexpected parsedObj"
     //(Result.bind f) ob
     f ob
 

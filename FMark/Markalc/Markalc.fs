@@ -11,6 +11,8 @@ type Cell with
                                | Contents(_,head,align) -> Contents(t,head,align)
     member c.GetHead = match c with 
                        | Contents(_,head,_) -> head
+    member c.GetParams = match c with 
+                       | Contents(toks,head,align) -> toks,head,align
 
 type MapContents =
     | MapTok of Cell

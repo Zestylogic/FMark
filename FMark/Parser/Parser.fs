@@ -109,7 +109,16 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
     let tableTransform =
         Markalc.parseEvaluateTable
         >> function
-        | Ok(rows) -> Table(rows)
+        | Ok(rows) -> 
+            let toPCellList cell = 
+                let toks,head,align = (cell.GetParams) 
+                let PCellLine = toks |> parseItemList |> (function | Ok(x,_) -> x | Error(e) -> [Literal(e)])
+                CellLine(PCellLine,head,align)
+            let toPRow row = 
+                let clst, rHead = row |> function | Cells(clst',rHead'') -> clst',rHead'
+                PCells(List.map toPCellList clst, rHead)// Create PRows
+            // For each row, unpack into Cell list
+            List.map toPRow rows |> Table
         | Error(toks)-> PreTable(toks)
 
     let toks = deleteLeadingEDNLINEs rawToks
