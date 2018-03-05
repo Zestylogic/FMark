@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../Types.fs" />
+    <Compile Include="../Lexer/LexerShared.fs" />
+    <Compile Include="../Lexer/Preprocessor.fs" />
+    <Compile Include="../Lexer/Lexer.fs" />
+    <Compile Include="../TOCite/TOCite.fs" />
+    <Compile Include="../Markalc/MarkalcShared.fs" />
+    <Compile Include="../Markalc/Expression.fs" />
+    <Compile Include="../Markalc/Markalc.fs" />
+    <Compile Include="../Parser/ParserHelperFuncs.fs" />
+    <Compile Include="../Parser/Parser.fs" />
+    <Compile Include="../HTMLGen/HTMLGenDummy.fs" />
+    <Compile Include="../FMark.fs" />
+    <Compile Include="FMarkFable.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="4.3.2" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

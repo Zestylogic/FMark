@@ -50,7 +50,7 @@ For string, the `preprocess` and `lex` functions.
 let main =
     let inputString = (* Read the string *)
 
-    intputString
+    inputString
     |> preprocess
     |> lex
     ...
