@@ -96,27 +96,15 @@ let parseParagraph toks =
                     (p::ps, rts)))
     parseParagraphs toks |> Result.map (fun (lines,tks) -> Paragraph lines, tks)
 
-
-
-
-
-
 /// parse supported `ParsedObj`s, turn them into a list
 /// assuming each item start at the beginning of the line
 /// the returned token head does not have 2>= ENDLINE
 let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string> =
-    // transform table rows into Table or Pretable depending if valid table.
-    let tableTransform =
-        Markalc.parseEvaluateTable
-        >> function
-        | Ok(rows) -> Table(rows)
-        | Error(toks)-> PreTable(toks)
-
-    let toks = deleteLeadingEDNLINEs rawToks
+    let toks = deleteLeadingENDLINEs rawToks
     match toks with
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
     | MatchListOpSpace _ -> "Lists todo" |> Error
-    | MatchTable (rows, rtks) -> (rows|>tableTransform, rtks) |> Ok
+    | MatchTable (rows, rtks) -> (rows, rtks) |> Ok
     | RABRA:: toks' ->
         parseInLineElements toks'
         |> Result.map (fun (line, rtks) -> Quote(line), rtks)

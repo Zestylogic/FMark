@@ -11,9 +11,9 @@ let mapTEmphasis = function
     | STAR -> "*"
 
 /// delete leading ENDLINEs and retur the rest
-let rec deleteLeadingEDNLINEs toks =
+let rec deleteLeadingENDLINEs toks =
     match toks with
-    | ENDLINE:: tks -> deleteLeadingEDNLINEs tks
+    | ENDLINE:: tks -> deleteLeadingENDLINEs tks
     | _ -> toks
 
 /// map a Token to string
@@ -277,11 +277,17 @@ let cutTableRows toks =
 /// match table start sequence
 /// return table rows, terminates when [] or two continuous ENDLINEs
 /// start sequence:
-/// 2>= "|" in first line, "|", 1>= "-", "|" in second line
+/// something in first line, at least one '|' and three '-' in second line
 let (|MatchTable|_|) toks =
+    // transform table rows into Table or Pretable depending if valid table.
+    let tableTransform (rows,rtks) =
+        rows |> Markalc.parseEvaluateTable
+        |> function
+        | Ok(rows) -> (Table(rows),rtks) |> Some
+        | Error(_)-> None
     match toks with
     | MatchTableHead rtks ->
         match rtks with
-        | MatchTableFormater _ -> cutTableRows toks |> Some
+        | MatchTableFormater _ -> cutTableRows toks |> tableTransform
         | _ -> None
     | _ -> None
