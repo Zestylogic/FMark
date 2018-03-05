@@ -59,4 +59,4 @@ type ParsedObj =
     | Table of PRow list
     | PreTable of Content: Token list list
     | Footnote of ID: int * TLine
-    | CellContent of InlineElement
+    | CellContents of TLine
