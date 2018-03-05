@@ -1,6 +1,7 @@
 module Parser
 open Types
 open ParserHelperFuncs
+open Markalc
 
 // helper functions
 
@@ -107,15 +108,15 @@ let parseParagraph toks =
 let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string> =
     // transform table rows into Table or Pretable depending if valid table.
     let tableTransform =
-        Markalc.parseEvaluateTable
+        parseEvaluateTable
         >> function
         | Ok(rows) -> 
-            let toPCellList cell = 
+            let toPCellList (cell:Cell) = 
                 let toks,head,align = (cell.GetParams) 
-                let PCellLine = toks |> parseItemList |> (function | Ok(x,_) -> x | Error(e) -> [Literal(e)])
-                CellLine(PCellLine,head,align)
+                let pCellLine = toks |> parseInLineElements |> (function | Ok(x,_) -> x | Error(e) -> [FrmtedString(Literal(e))])
+                CellLine(pCellLine,head,align)
             let toPRow row = 
-                let clst, rHead = row |> function | Cells(clst',rHead'') -> clst',rHead'
+                let clst, rHead = row |> function | Cells(clst',rHead') -> clst',rHead'
                 PCells(List.map toPCellList clst, rHead)// Create PRows
             // For each row, unpack into Cell list
             List.map toPRow rows |> Table

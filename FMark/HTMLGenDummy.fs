@@ -6,13 +6,13 @@ open Types
 let rec inlineHTMLGen elem =
     match elem with
     //| Strong(x) -> // recursive...
-    | Literal(s) -> s
-    | Strong(x) -> sprintf "<strong>%s</strong>" (elemListHTMLGen x)
+    | FrmtedString(Literal(s)) -> s
+    | FrmtedString(Strong(x)) -> sprintf "<strong>%s</strong>" (elemListHTMLGen x)
     | e -> failwithf "Unexpected element: %A" e
 
 and elemListHTMLGen elemLst = 
     let folder s x = s + (inlineHTMLGen x)
-    List.fold folder elemLst
+    List.fold folder "" elemLst
 
 let rec tableHTMLGenDummy tab =
     let getAlignment = function
@@ -24,7 +24,7 @@ let rec tableHTMLGenDummy tab =
         | false -> "d"
     let printCell s = function
                       | CellLine(line,h,ali) -> 
-                        let cellContents = HTMLGenObjDummy line
+                        let cellContents = elemListHTMLGen line
                         s + sprintf "<t%s%s>%s</t%s>" (getH h) (getAlignment ali) cellContents (getH h)
     let printRow s = 
         function
@@ -35,11 +35,10 @@ let rec tableHTMLGenDummy tab =
     List.fold printRow s tab.[1..]
     + "</tbody></table>"
 
-and HTMLGenObjDummy ob =
+and HTMLGenObjDummy (ob:ParsedObj) =
     let f ob = 
         match ob with
         | Table(t) -> tableHTMLGenDummy t
-        | CellContents(line) -> elemListHTMLGen line 
         | _ -> "Unexpected parsedObj"
     //(Result.bind f) ob
     f ob
