@@ -97,19 +97,15 @@ let parseParagraph toks =
                     (p::ps, rts)))
     parseParagraphs toks |> Result.map (fun (lines,tks) -> Paragraph lines, tks)
 
-
-
-
-
-
-/// parse supported `ParsedObj`s, turn them into a list
-/// assuming each item start at the beginning of the line
-/// the returned token head does not have 2>= ENDLINE
-let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string> =
+/// match table start sequence
+/// return table rows, terminates when [] or two continuous ENDLINEs
+/// start sequence:
+/// something in first line, at least one '|' and three '-' in second line
+let (|MatchTable|_|) toks =
     // transform table rows into Table or Pretable depending if valid table.
-    let tableTransform =
-        parseEvaluateTable
-        >> function
+    let tableTransform (rows,rtks) =
+        rows |> Markalc.parseEvaluateTable
+        |> function
         | Ok(rows) -> 
             let toPCellList (cell:Cell) = 
                 let toks,head,align = (cell.GetParams) 
@@ -119,14 +115,24 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
                 let clst, rHead = row |> function | Cells(clst',rHead') -> clst',rHead'
                 PCells(List.map toPCellList clst, rHead)// Create PRows
             // For each row, unpack into Cell list
-            List.map toPRow rows |> Table
-        | Error(toks)-> PreTable(toks)
+            (List.map toPRow rows |> Table,rtks) |> Some
+        | Error(_)-> None
+    match toks with
+    | MatchTableHead rtks ->
+        match rtks with
+        | MatchTableFormater _ -> cutTableRows toks |> tableTransform
+        | _ -> None
+    | _ -> None
 
-    let toks = deleteLeadingEDNLINEs rawToks
+/// parse supported `ParsedObj`s, turn them into a list
+/// assuming each item start at the beginning of the line
+/// the returned token head does not have 2>= ENDLINE
+let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string> =
+    let toks = deleteLeadingENDLINEs rawToks
     match toks with
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
     | MatchListOpSpace _ -> "Lists todo" |> Error
-    | MatchTable (rows, rtks) -> (rows|>tableTransform, rtks) |> Ok
+    | MatchTable (rows, rtks) -> (rows, rtks) |> Ok
     | RABRA:: toks' ->
         parseInLineElements toks'
         |> Result.map (fun (line, rtks) -> Quote(line), rtks)

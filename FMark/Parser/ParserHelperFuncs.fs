@@ -11,9 +11,9 @@ let mapTEmphasis = function
     | STAR -> "*"
 
 /// delete leading ENDLINEs and retur the rest
-let rec deleteLeadingEDNLINEs toks =
+let rec deleteLeadingENDLINEs toks =
     match toks with
-    | ENDLINE:: tks -> deleteLeadingEDNLINEs tks
+    | ENDLINE:: tks -> deleteLeadingENDLINEs tks
     | _ -> toks
 
 /// map a Token to string
@@ -273,15 +273,3 @@ let cutTableRows toks =
             let row, rtks = cutLine toks
             cutTableRow' (row::rows) rtks
     cutTableRow' [] toks
-
-/// match table start sequence
-/// return table rows, terminates when [] or two continuous ENDLINEs
-/// start sequence:
-/// 2>= "|" in first line, "|", 1>= "-", "|" in second line
-let (|MatchTable|_|) toks =
-    match toks with
-    | MatchTableHead rtks ->
-        match rtks with
-        | MatchTableFormater _ -> cutTableRows toks |> Some
-        | _ -> None
-    | _ -> None

@@ -269,7 +269,13 @@ let ``preprocess table test`` =
             [WHITESPACE 1; PIPE; ENDLINE; PIPE; MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
             ([Paragraph [[FrmtedString (Literal " |\n|-|\n|cell|")]]])|>Ok,
             "Invalid table"
+        );
+        (
+            [WHITESPACE 1; PIPE; ENDLINE; PIPE; MINUS; MINUS;COLON; MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
+            ([Paragraph [[FrmtedString (Literal " |\n|--:-|\n|cell|")]]])|>Ok,
+            "Invalid table 2"
         )
+       
     ]
 //let allTestsWithExpecto() =
 //    runTestsInAssembly defaultConfig [||]
