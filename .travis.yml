@@ -10,4 +10,4 @@ script:
 - dotnet fable yarn-build
 install:
 - sudo apt-get -qq update
-- sudo apt-get install -y mono-4.0-gac
+- sudo apt-get install -y mono-4.0-gac mono-complete
