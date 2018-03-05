@@ -6,6 +6,7 @@ packages
 *.pdb
 *.dll
 *.lock
+paket.exe
 
 js/bundle.js.map
 
