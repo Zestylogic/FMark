@@ -4,7 +4,7 @@ dotnet: 2.1.4
 script:
   - export PREFIX=`pwd`
   - export PATH=$PREFIX/bin:$PATH
-  - git clone -b mono-5.13.0.308 https://github.com/mono/mono.git
+  - git clone https://github.com/mono/mono.git
   - cd mono
   - ./autogen.sh --prefix=$PREFIX
   - make
