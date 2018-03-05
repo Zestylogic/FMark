@@ -26,3 +26,13 @@ let ifFlagRunTests (r:ParseResults<CLIArguments>) =
     |> function
     | true -> Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
     | false -> ()
+
+let ifFileReadFrom (r:ParseResults<CLIArguments>) =
+    let readLines filePath = System.IO.File.ReadLines(filePath)
+    // If Input is present
+    r.TryGetResult(Input) 
+    |> function 
+    | Some(fname) -> Some(readLines fname |> Seq.toList,fname)
+    | None(_) -> None
+    
+    // r.TryGetResult(Input) |> function | Some(s) -> true | None(_) -> "false"

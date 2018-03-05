@@ -6,7 +6,6 @@ open Markalc
 open Expression
 open Expecto.ExpectoFsCheck
 open Expecto
-open System.IO
 
 // ####################### DATA ###################
 let expressionData = [
@@ -196,11 +195,6 @@ let fullTest = EQTest lexParseEvaluate "evaluation"
 
 // Not tests
 let testMarkdown print =
-    let printToFile fpath s =
-        use sw = new StreamWriter(path=fpath)
-        let myPrint format = fprintf sw format
-        do myPrint "%s" s
-        sw.Close()
     let printTestMarkdown name lst =
         (sprintf "## %s\r\n\r\n|UnitTest|Pass/Fail\r\n|---|---|\r\n" name) 
         + (List.fold (fun s x -> s + (sprintf "|%s|Pass|\r\n" x)) "" lst)
