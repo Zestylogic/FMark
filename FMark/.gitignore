@@ -1,4 +1,4 @@
-public/bundle.js*
+js/bundle.js.map
 
 # Node
 node_modules/
