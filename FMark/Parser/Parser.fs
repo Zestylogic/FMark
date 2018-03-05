@@ -99,16 +99,19 @@ let parseParagraph toks =
 
 
 
-// tranform table rows into Table or Pretable depending if valid table.
-let tableTransform =
-    Markalc.parseEvaluateTable
-    >> function
-    | Ok(rows) -> Table(rows)
-    | Error(toks)-> PreTable(toks)
+
+
 /// parse supported `ParsedObj`s, turn them into a list
 /// assuming each item start at the beginning of the line
 /// the returned token head does not have 2>= ENDLINE
 let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string> =
+    // transform table rows into Table or Pretable depending if valid table.
+    let tableTransform =
+        Markalc.parseEvaluateTable
+        >> function
+        | Ok(rows) -> Table(rows)
+        | Error(toks)-> PreTable(toks)
+
     let toks = deleteLeadingEDNLINEs rawToks
     match toks with
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok

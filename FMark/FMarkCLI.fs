@@ -3,7 +3,7 @@ open Argu
 
 
 type CLIArguments =
-    | [<MainCommand;Last;AltCommandLine("-i")>] Input of path:string
+    | [<MainCommand;AltCommandLine("-i")>] Input of path:string
     | [<AltCommandLine("-s")>] Stdin of text:string
     | [<AltCommandLine("-o")>] Output of path:string
     | [<AltCommandLine("-l")>] Loglevel of level:int
@@ -26,3 +26,13 @@ let ifFlagRunTests (r:ParseResults<CLIArguments>) =
     |> function
     | true -> Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
     | false -> ()
+
+let ifFileReadFrom (r:ParseResults<CLIArguments>) =
+    let readLines filePath = System.IO.File.ReadLines(filePath)
+    // If Input is present
+    r.TryGetResult(Input) 
+    |> function 
+    | Some(fname) -> Some(readLines fname |> Seq.toList,fname)
+    | None(_) -> None
+    
+    // r.TryGetResult(Input) |> function | Some(s) -> true | None(_) -> "false"

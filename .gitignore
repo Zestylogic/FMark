@@ -7,3 +7,4 @@ paket.lock
 *.cache
 *.pdb
 *.dll
+*.html
