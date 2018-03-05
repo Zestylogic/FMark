@@ -3,7 +3,7 @@ open Argu
 
 
 type CLIArguments =
-    | [<MainCommand;Last;AltCommandLine("-i")>] Input of path:string
+    | [<MainCommand;AltCommandLine("-i")>] Input of path:string
     | [<AltCommandLine("-s")>] Stdin of text:string
     | [<AltCommandLine("-o")>] Output of path:string
     | [<AltCommandLine("-l")>] Loglevel of level:int

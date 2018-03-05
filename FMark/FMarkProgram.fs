@@ -17,7 +17,7 @@ let main argv =
     | None(_) -> failwithf "No input."
     | Some(instr,fname) -> 
         let strip chars s = (String.map (fun c -> if Seq.exists((=)c) chars then ' ' else c) s).Trim()
-        let outFile = results.GetResult(Output,defaultValue=strip ".md" fname+"html")
+        let outFile = results.GetResult(Output,defaultValue=strip ".md" fname+".html")
         FMark.processDataDummy instr
         |> MarkalcShared.printToFile outFile
 
