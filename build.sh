@@ -25,7 +25,7 @@ fi
 
 echo "Running F# tests"
 cd $BASE_DIR/FMark/src/FMarkCLI
-dotnet build -v n
+dotnet build
 dotnet run --no-build -- -t
 
 if [[ -z $TRAVIS_BUILD_DIR ]]; then
