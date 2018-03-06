@@ -31,14 +31,14 @@ let strParagraph lines =
         pLinesStr + strInlineElements line + NLS
     List.fold folder "" lines
     |> deletetrailingNewLines
-    |> attachHTMLTag ("p", [], gIndent, true)
+    |> attachHTMLTag ("p", [], GIndent, true)
 
 let strBody pObjs =
     let folder pStr pObj =
         pStr +
         match pObj with
         | Paragraph p -> strParagraph p
-        | Quote q -> strInlineElements q |> attachHTMLTag ("q", [], gIndent, true)
-        | CodeBlock (c, l) -> attachHTMLTag ("code", toAttrs [("language", mapLang l)], gIndent, true) c
+        | Quote q -> strInlineElements q |> attachHTMLTag ("q", [], GIndent, true)
+        | CodeBlock (c, l) -> attachHTMLTag ("code", toAttrs [("language", mapLang l)], GIndent, true) c
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs

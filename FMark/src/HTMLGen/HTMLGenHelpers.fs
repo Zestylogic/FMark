@@ -9,7 +9,7 @@ type TagStyle = INLINE | NonInline of indentStr: string
 let NLS = "\n"
 
 /// general indentation style
-let gIndent = NonInline "\t"
+let GIndent = NonInline "\t"
 
 /// atach HTML tag to a given string, both start and end tag
 /// inline style does not insert newline after start tag and before end tag
