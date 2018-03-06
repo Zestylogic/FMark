@@ -4,6 +4,9 @@ open Types
 
 type TagStyle = INLINE | NonInline of indentStr: string
 
+[<Literal>]
+/// neline string, "\n"
+let NLS = "\n"
 
 /// atach HTML tag to a given string, both start and end tag
 /// inline style does not insert newline after start tag and before end tag
@@ -16,7 +19,7 @@ let attachHTMLTag (tagName, attributes, style, needCloseTag) (content: string) =
     let transformedContent =
         match style with
         | INLINE -> content
-        | NonInline ind -> "\n" + content.Replace("\n", "\n"+ind) + "\n"
+        | NonInline ind -> NLS + content.Replace(NLS, NLS+ind) + NLS
     "<" + tagName + attr + ">"
     + transformedContent
     + if needCloseTag then "</" + tagName + ">" else ""
@@ -32,3 +35,7 @@ let toAttrs attrs =
     let mapper attr =
         match attr with | (attrName, value) -> toAttr attrName value
     List.map mapper attrs
+
+
+let deletetrailingNewLines (str: string) =
+    str.TrimEnd(NLS.ToCharArray())

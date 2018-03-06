@@ -28,6 +28,6 @@ and strInlineElements eles =
 
 let strParagraph lines =
     let folder pLinesStr line =
-        pLinesStr + strInlineElements line + "\n"
+        pLinesStr + strInlineElements line + NLS
     List.fold folder "" lines
     |> attachHTMLTag ("p", [], NonInline "\t", true)
