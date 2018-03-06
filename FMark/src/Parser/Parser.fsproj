@@ -7,6 +7,9 @@
 
   <ItemGroup>
     <Compile Include="../Types.fs" />
+    <Compile Include="../Markalc/MarkalcShared.fs" />
+    <Compile Include="../Markalc/Expression.fs" />
+    <Compile Include="../Markalc/Markalc.fs" />
     <Compile Include="ParserHelperFuncs.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="ParserTest.fs" />
