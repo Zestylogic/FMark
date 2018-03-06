@@ -2,6 +2,7 @@ module HTMLGenTester
 
 open Types
 open HTMLGen
+open HTMLGenHelpers
 open Expecto
 
 let id x = x
@@ -12,6 +13,11 @@ let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPai
     |> List.indexed
     |> List.map (fun (i, triple) -> makeOneTest i triple )
     |> Expecto.Tests.testList name
+
+/// "\b" is used as one indent character because backspace would never appear in input string
+/// convert "\b" to `INDENT`, which is defined in HTMLGenHelpers
+let convertToIndent (str: string) =
+    str.Replace("\b", INDENT)
 
 //////////////////////////////////
 // tests
@@ -40,30 +46,30 @@ let strInlineElementsTests =
 
 [<Tests>]
 let paragraphTests =
-    makeExpectoTestList id id strParagraph "paragraph tests" [
+    makeExpectoTestList id convertToIndent strParagraph "paragraph tests" [
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]],
-            "<p>\n\t<strong>Go go go!</strong>\n</p>", "strong tag"
+            "<p>\n\b<strong>Go go go!</strong>\n</p>", "strong tag"
         );
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]],
-            "<p>\n\t<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
+            "<p>\n\b<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
         );
         (
             [[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]],
-            "<p>\n\tGo go go!<a href=\"brokenURL\">broken link</a>\n\tCome!\n</p>", "indent test"
+            "<p>\n\bGo go go!<a href=\"brokenURL\">broken link</a>\n\bCome!\n</p>", "indent test"
         );
     ]
 
 [<Tests>]
 let bodyTests =
-    makeExpectoTestList id id strBody "body tests" [
+    makeExpectoTestList id convertToIndent strBody "body tests" [
         (
             [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]]],
-            "<p>\n\t<strong>Go go go!</strong>\n</p>", "strong tag"
+            "<p>\n\b<strong>Go go go!</strong>\n</p>", "strong tag"
         );
         (
             [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]]],
-            "<p>\n\t<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
+            "<p>\n\b<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
         );
     ]
