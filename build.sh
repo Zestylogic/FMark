@@ -28,7 +28,9 @@ cd $BASE_DIR/FMark/src/FMarkCLI
 dotnet build -v n
 dotnet run --no-build -- -t
 
-# echo "Running javascript build"
-# cd $BASE_DIR/FMark/src/FMarkFable
-# dotnet restore
-# dotnet fable yarn-build
+if [[ -z $TRAVIS_BUILD_DIR ]]; then
+    echo "Running javascript build"
+    cd $BASE_DIR/FMark/src/FMarkFable
+    dotnet restore
+    dotnet fable yarn-build
+fi
