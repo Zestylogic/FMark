@@ -26,3 +26,8 @@ and strInlineElements eles =
             attachHTMLTag ("img", attrs, INLINE, false) ""
     List.fold convertHtml "" eles
 
+let strParagraph lines =
+    let folder pLinesStr line =
+        pLinesStr + strInlineElements line + "\n"
+    List.fold folder "" lines
+    |> attachHTMLTag ("p", [], NonInline "\t", true)

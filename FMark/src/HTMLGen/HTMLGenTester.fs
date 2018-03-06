@@ -38,4 +38,17 @@ let strInlineElementsTests =
         );
     ]
 
+[<Tests>]
+let paragraphTests =
+    makeExpectoTestList id id strParagraph "paragraph tests" [
+        (
+            [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]],
+            "<p>\n<strong>Go go go!</strong>\n</p>", "strong tag"
+        );
+        (
+            [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]],
+            "<p>\n<strong>Go go go!</strong>\n</p>", "strong tag"
+        );
+    ]
+
 
