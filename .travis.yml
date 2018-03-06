@@ -5,4 +5,4 @@ script:
   - ${TRAVIS_BUILD_DIR}/build.sh
 install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y deps git autoconf libtool automake build-essential mono-devel gettext cmake
+  - sudo apt-get install -y git autoconf libtool automake build-essential mono-devel gettext cmake
