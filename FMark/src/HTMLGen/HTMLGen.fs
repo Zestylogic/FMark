@@ -9,7 +9,7 @@ open HTMLGenHelpers
 let rec strFStr fStr =
     match fStr with
     | Literal str -> str
-    | Code str -> attachHTMLTag ("code", [], NonInline "\t", true) str
+    | Code str -> attachHTMLTag ("code", [], INLINE, true) str
     | Strong a -> strInlineElements a |> attachHTMLTag ("strong", [], INLINE, true)
     | Emphasis e -> strInlineElements e |> attachHTMLTag ("em", [], INLINE, true)
 
