@@ -1,12 +1,8 @@
 module Logger
 
-let slowConsoleWrite msg = 
-    msg |> String.iter (fun ch->
-        System.Threading.Thread.Sleep(1)
-        System.Console.Write ch
-        )
+open System
 
-type SerializedLogger() = 
+type Logger() =
 
     // create the mailbox processor
     let agent = MailboxProcessor.Start(fun inbox -> 
@@ -18,7 +14,7 @@ type SerializedLogger() =
             let! msg = inbox.Receive()
 
             // write it to the log
-            slowConsoleWrite msg
+            printfn "%s" msg
 
             // loop to top
             return! messageLoop ()
@@ -28,5 +24,15 @@ type SerializedLogger() =
         messageLoop ()
         )
 
+    let postStr pType msg = function
+        | Some l ->
+            sprintf "%s [%s] (%d) %s" pType (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) l msg |> agent.Post
+        | _ ->
+            sprintf "%s [%s] %s" pType (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) msg |> agent.Post
+
     // public interface
-    member this.Log msg = agent.Post msg
+    member __.Debug = postStr "DEBUG"
+    member __.Info = postStr "INFO"
+    member __.Warn = postStr "WARNING"
+    member __.Error = postStr "ERROR"
+    member __.Fatal = postStr "FATAL"
