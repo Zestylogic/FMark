@@ -2,7 +2,23 @@ module Logger
 
 open System
 
-type Logger() =
+type LogLevel =
+    | DEBUG=0
+    | INFO=1
+    | WARNING=2
+    | ERROR=3
+    | FATAL=4
+
+let logLevelStr =
+    [
+        LogLevel.DEBUG, "DEBUG"
+        LogLevel.INFO, "INFO"
+        LogLevel.WARNING, "WARNING"
+        LogLevel.ERROR, "ERROR"
+        LogLevel.FATAL, "FATAL"
+    ] |> Map.ofList
+
+type Logger(logLevel) =
 
     // create the mailbox processor
     let agent = MailboxProcessor.Start(fun inbox -> 
@@ -30,9 +46,14 @@ type Logger() =
         | _ ->
             sprintf "%s [%s] %s" pType (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) msg |> agent.Post
 
-    // public interface
-    member __.Debug = postStr "DEBUG"
-    member __.Info = postStr "INFO"
-    member __.Warn = postStr "WARNING"
-    member __.Error = postStr "ERROR"
-    member __.Fatal = postStr "FATAL"
+    let log t msg l =
+        if t >= logLevel then
+            postStr logLevelStr.[t] msg l
+        else ()
+
+    // Public API
+    member __.Debug = log LogLevel.DEBUG
+    member __.Info = log LogLevel.INFO
+    member __.Warn = log LogLevel.WARNING
+    member __.Error = log LogLevel.ERROR
+    member __.Fatal = log LogLevel.FATAL

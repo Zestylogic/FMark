@@ -8,10 +8,5 @@ let slowConsoleWrite msg =
         System.Console.Write ch
         )
 
-let logger = Logger()
-logger.Fatal "Hello world" (Some 2)
-
-
-
-
-
+let logger = Logger(LogLevel.DEBUG)
+Some 2 |> logger.Debug "Hello world"
