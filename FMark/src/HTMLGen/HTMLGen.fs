@@ -22,7 +22,7 @@ and strInlineElements eles =
         | FrmtedString fStr -> strFStr fStr
         | Link (ht, url) -> strFStr ht |> attachHTMLTag ("a", toAttrs [("href", url)], INLINE, true)
         | Picture (alt, url) ->
-            let attrs =  toAttrs [("src", url); ("alt=", alt)]
+            let attrs =  toAttrs [("src", url); ("alt", alt)]
             attachHTMLTag ("img", attrs, INLINE, false) ""
     List.fold convertHtml "" eles
 
