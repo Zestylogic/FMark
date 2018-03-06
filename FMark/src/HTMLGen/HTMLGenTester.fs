@@ -16,8 +16,8 @@ let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPai
 
 /// "\b" is used as one indent character because backspace would never appear in input string
 /// convert "\b" to `INDENT`, which is defined in HTMLGenHelpers
-let convertToIndent (str: string) =
-    str.Replace("\b", INDENT)
+let fixNewLineAndIndent (str: string) =
+    str.Replace("\b", INDENT).Replace("\n", NLS)
 
 //////////////////////////////////
 // tests
@@ -46,7 +46,7 @@ let strInlineElementsTests =
 
 [<Tests>]
 let paragraphTests =
-    makeExpectoTestList id convertToIndent strParagraph "paragraph tests" [
+    makeExpectoTestList id fixNewLineAndIndent strParagraph "paragraph tests" [
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]],
             "<p>\n\b<strong>Go go go!</strong>\n</p>", "strong tag"
@@ -63,7 +63,7 @@ let paragraphTests =
 
 [<Tests>]
 let bodyTests =
-    makeExpectoTestList id convertToIndent strBody "body tests" [
+    makeExpectoTestList id fixNewLineAndIndent strBody "body tests" [
         (
             [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]]],
             "<p>\n\b<strong>Go go go!</strong>\n</p>", "strong tag"
@@ -71,5 +71,13 @@ let bodyTests =
         (
             [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]]],
             "<p>\n\b<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
+        );
+        (
+            [CodeBlock("fsharp is cool", FSharp)],
+            "<code language=\"fsharp\">\n\bfsharp is cool\n</code>", "codeblock, noninline"
+        );
+        (
+            [Quote([FrmtedString(Literal "fsharp is cool")])],
+            "<q>\n\bfsharp is cool\n</q>", "quote"
         );
     ]

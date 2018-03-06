@@ -6,7 +6,7 @@ type TagStyle = INLINE | NonInline of indentStr: string
 
 [<Literal>]
 /// neline string, "\n"
-let NLS = "\n"
+let NLS = "\n\r"
 [<Literal>]
 let INDENT = "\t"
 
