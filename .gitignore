@@ -7,10 +7,7 @@ packages
 *.dll
 *.lock
 paket.exe
-
-
-
-bundle.js.map
+js
 
 # Node
 node_modules/
