@@ -16,7 +16,7 @@ let attachHTMLTag (tagName, attributes, style, needCloseTag) (content: string) =
     let transformedContent =
         match style with
         | INLINE -> content
-        | NonInline ind -> content.Replace("\n", "\n"+ind)
+        | NonInline ind -> "\n" + content.Replace("\n", "\n"+ind) + "\n"
     "<" + tagName + attr + ">"
     + transformedContent
     + if needCloseTag then "</" + tagName + ">" else ""
@@ -26,6 +26,8 @@ let attachHTMLTag (tagName, attributes, style, needCloseTag) (content: string) =
 let toAttr attributeName value =
     attributeName + "=\"" + value + "\""
 
+/// convert (attributeName, value) list to string list
+/// ready for inserting into HTML tag
 let toAttrs attrs =
     let mapper attr =
         match attr with | (attrName, value) -> toAttr attrName value
