@@ -14,9 +14,9 @@ else
     echo "Compiling mono from source"
     git clone -b mono-5.13.0.308 https://github.com/mono/mono.git
     cd mono
-    ./autogen.sh --prefix=$PREFIX
-    make
-    make install
+    ./autogen.sh --prefix=$PREFIX >/dev/null
+    make >/dev/null
+    make install >/dev/null
     mono --version
 fi
 
