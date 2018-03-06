@@ -17,7 +17,7 @@
     <PaketExePath Condition=" '$(PaketExePath)' == '' AND Exists('$(PaketRootPath)paket.exe')">$(PaketRootPath)paket.exe</PaketExePath>
     <PaketExePath Condition=" '$(PaketExePath)' == '' ">$(PaketToolsPath)paket.exe</PaketExePath>
     <PaketCommand Condition=" '$(OS)' == 'Windows_NT'">"$(PaketExePath)"</PaketCommand>
-    <PaketCommand Condition=" '$(OS)' != 'Windows_NT' ">$(MonoPath) --runtime=v4.0.30319 "$(PaketExePath)"</PaketCommand>
+    <PaketCommand Condition=" '$(OS)' != 'Windows_NT' ">$(MonoPath) "$(PaketExePath)"</PaketCommand>
 
     <!-- .net core fdd -->
     <_PaketExeExtension>$([System.IO.Path]::GetExtension("$(PaketExePath)"))</_PaketExeExtension>
@@ -29,7 +29,7 @@
     <PaketBootStrapperExePath Condition=" '$(PaketBootStrapperExePath)' == '' AND Exists('$(PaketRootPath)paket.bootstrapper.exe')">$(PaketRootPath)paket.bootstrapper.exe</PaketBootStrapperExePath>
     <PaketBootStrapperExePath Condition=" '$(PaketBootStrapperExePath)' == '' ">$(PaketToolsPath)paket.bootstrapper.exe</PaketBootStrapperExePath>
     <PaketBootStrapperCommand Condition=" '$(OS)' == 'Windows_NT'">"$(PaketBootStrapperExePath)"</PaketBootStrapperCommand>
-    <PaketBootStrapperCommand Condition=" '$(OS)' != 'Windows_NT' ">$(MonoPath) --runtime=v4.0.30319 "$(PaketBootStrapperExePath)"</PaketBootStrapperCommand>
+    <PaketBootStrapperCommand Condition=" '$(OS)' != 'Windows_NT' ">$(MonoPath) "$(PaketBootStrapperExePath)"</PaketBootStrapperCommand>
 
     <!-- Disable automagic references for F# dotnet sdk -->
     <!-- This will not do anything for other project types -->
