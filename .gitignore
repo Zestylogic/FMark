@@ -8,7 +8,7 @@ packages
 *.lock
 paket.exe
 
-js/bundle.js.map
+bundle.js.map
 
 # Node
 node_modules/
