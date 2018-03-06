@@ -43,11 +43,11 @@ let paragraphTests =
     makeExpectoTestList id id strParagraph "paragraph tests" [
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]],
-            "<p>\n<strong>Go go go!</strong>\n</p>", "strong tag"
+            "<p>\n\t<strong>Go go go!</strong>\n</p>", "strong tag"
         );
         (
-            [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]],
-            "<p>\n\t<strong>Go go go!</strong>\n</p>", "strong tag"
+            [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]],
+            "<p>\n\t<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong tag"
         );
     ]
 
