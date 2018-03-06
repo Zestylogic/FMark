@@ -47,8 +47,19 @@ let paragraphTests =
         );
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]],
-            "<p>\n\t<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong tag"
+            "<p>\n\t<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
         );
     ]
 
-
+[<Tests>]
+let bodyTests =
+    makeExpectoTestList id id strBody "body tests" [
+        (
+            [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]]],
+            "<p>\n\t<strong>Go go go!</strong>\n</p>", "strong tag"
+        );
+        (
+            [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]]],
+            "<p>\n\t<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
+        );
+    ]
