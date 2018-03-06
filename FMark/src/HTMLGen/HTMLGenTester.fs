@@ -32,6 +32,10 @@ let strInlineElementsTests =
             [Link(Emphasis([FrmtedString(Literal "Go go go!")]), "www.google.co.uk")],
             "<a href=\"www.google.co.uk\"><em>Go go go!</em></a>", "a tag"
         );
+        (
+            [Picture("404 not found", "www.google.co.uk/img.jpg")],
+            "<img src=\"www.google.co.uk/img.jpg\" alt=\"404 not found\">", "picture tag"
+        );
     ]
 
 
