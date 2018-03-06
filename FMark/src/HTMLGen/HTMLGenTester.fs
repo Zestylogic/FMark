@@ -49,6 +49,10 @@ let paragraphTests =
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]],
             "<p>\n\t<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
         );
+        (
+            [[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]],
+            "<p>\n\tGo go go!<a href=\"brokenURL\">broken link</a>\n\tCome!\n</p>", "indent test"
+        );
     ]
 
 [<Tests>]
