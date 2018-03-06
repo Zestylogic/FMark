@@ -30,4 +30,5 @@ let strParagraph lines =
     let folder pLinesStr line =
         pLinesStr + strInlineElements line + NLS
     List.fold folder "" lines
+    |> deletetrailingNewLines
     |> attachHTMLTag ("p", [], NonInline "\t", true)
