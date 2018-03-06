@@ -19,7 +19,7 @@ let attachHTMLTag (tagName, attributes, style, needCloseTag) (content: string) =
     let transformedContent =
         match style with
         | INLINE -> content
-        | NonInline ind -> NLS + content.Replace(NLS, NLS+ind) + NLS
+        | NonInline ind -> NLS + ind + content.Replace(NLS, NLS+ind) + NLS
     "<" + tagName + attr + ">"
     + transformedContent
     + if needCloseTag then "</" + tagName + ">" else ""

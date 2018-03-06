@@ -47,7 +47,7 @@ let paragraphTests =
         );
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]],
-            "<p>\n<strong>Go go go!</strong>\n</p>", "strong tag"
+            "<p>\n\t<strong>Go go go!</strong>\n</p>", "strong tag"
         );
     ]
 
