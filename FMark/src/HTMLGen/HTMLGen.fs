@@ -32,3 +32,13 @@ let strParagraph lines =
     List.fold folder "" lines
     |> deletetrailingNewLines
     |> attachHTMLTag ("p", [], NonInline "\t", true)
+
+let strBody pObjs =
+    let folder pStr pObj =
+        pStr +
+        match pObj with
+        | Paragraph p -> strParagraph p
+        | Quote q -> strInlineElements q |> attachHTMLTag ("q", [], NonInline "\t", true)
+        | CodeBlock (c, l) -> attachHTMLTag ("code", toAttrs [("language", mapLang l)], NonInline "\t", true) c
+        | _ -> sprintf "%A is not implemented" pObj
+    List.fold folder "" pObjs

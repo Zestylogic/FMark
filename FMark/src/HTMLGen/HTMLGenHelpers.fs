@@ -8,6 +8,9 @@ type TagStyle = INLINE | NonInline of indentStr: string
 /// neline string, "\n"
 let NLS = "\n"
 
+/// general indentation style
+let gIndent = NonInline "\t"
+
 /// atach HTML tag to a given string, both start and end tag
 /// inline style does not insert newline after start tag and before end tag
 /// non-inline style will have indent set to desired string
@@ -39,3 +42,10 @@ let toAttrs attrs =
 
 let deletetrailingNewLines (str: string) =
     str.TrimEnd(NLS.ToCharArray())
+
+let mapLang lang =
+    match lang with
+    | Python -> "python"
+    | FSharp -> "fsharp"
+    | CPP -> "cpp"
+    | C -> "c"
