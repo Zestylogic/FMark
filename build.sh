@@ -14,7 +14,7 @@ function print_help {
     echo "                fsharp, js, all"
     exit 1
 }
-
+ <<<<<
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
