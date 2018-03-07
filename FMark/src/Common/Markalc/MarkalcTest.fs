@@ -37,7 +37,7 @@ let expressionData = [
     "7*2-(((((((((3+5)))))))))",
     6.0 |> Ok;
     "Testing cellref evaluation (without table)",
-    "1+([1][1]+[1][2])",
+    "1+([1,1]+[1,2])",
     27.0 |> Ok; // For test evaluation function without table CellRefs evaluate to 13.0
     "Test left associativity with extra whitespace",
     "2 -4 +6 -1 -1- 0 +8",
@@ -121,22 +121,22 @@ let fullTestData = [
     ["=2+2|"; "---|"; ],
     [Cells([Contents ([NUMBER("4")],true,Left);],true)] |> Ok;
     "Two rows no pipes",
-    ["=2+2"; "---|"; "=[0][0]+3";],
+    ["=2+2"; "---|"; "=[0,0]+3";],
     [Cells ([Contents ([NUMBER("4")],true,Left);],true);Cells ([Contents ([NUMBER("7")],false,Left);],false)] |> Ok;
     "Single row table",
     ["=2+2|header2|header3"; align; ],
     [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"]] |> Ok;
     "Full evaluation test with cell references",
     ["=2+2|header2|header3"; align;
-     "=[0][0]+1|tesdfst|stduff";
-     "=2+3|tesdfst|=[1][0]+[0][0]" ],
+     "=[0,0]+1|tesdfst|stduff";
+     "=2+3|tesdfst|=[1,0]+[0,0]" ],
     [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"];
      ans false [NUMBER "5"] [LITERAL "tesdfst"] [LITERAL "stduff"];
      ans false [NUMBER "5"] [LITERAL "tesdfst"] [NUMBER "9"]]|> Ok;
     "Circular cell reference",
     ["=2+2|header2|header3"; align;
-    "=[0][0]+[2][2]|tesdfst|stduff";
-    "=2+3|tesdfst|=[1][0]+[0][0]"],
+    "=[0,0]+[2,2]|tesdfst|stduff";
+    "=2+3|tesdfst|=[1,0]+[0,0]"],
     [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"];
      ans false [NUMBER "NaN"] [LITERAL "tesdfst"] [LITERAL "stduff"];
      ans false [NUMBER "5"] [LITERAL "tesdfst"] [NUMBER "NaN"]] |> Ok;
@@ -144,7 +144,7 @@ let fullTestData = [
     ["=5|header2|header3";
     ":------|:-----:|------:";
     "=7|tesdfst|stduff";
-    "=2+3|=SUM{[0][0]:[2][0]}|0"],
+    "=2+3|=SUM{[0,0]:[2,0]}|0"],
     [ans true [NUMBER "5"] [LITERAL "header2"] [LITERAL "header3"];
      ans false [NUMBER "7"] [LITERAL "tesdfst"] [LITERAL "stduff"];
      ans false [NUMBER "5"] [NUMBER "17"] [NUMBER "0"]] |> Ok;
@@ -152,33 +152,34 @@ let fullTestData = [
     ["=5|header2|header3";
     ":------|:-----:|------:";
     "=AVG{1,6,8}|=8|stduff";
-    "=2+3|=SUM{[0][0],[2][0],[1][1]}|0"],
+    "=2+3|=SUM{[0,0],[2,0],[1,1]}|0"],
     [ans true [NUMBER "5"] [LITERAL "header2"] [LITERAL "header3"];
      ans false [NUMBER "5"] [NUMBER "8"] [LITERAL "stduff"];
      ans false [NUMBER "5"] [NUMBER "18"] [NUMBER "0"]] |> Ok;
     "Horizontal cell ref range",
     ["Calcs|=39|=42";
     ":------|:-----:|------:";
-    "||=SUM{[0][1]:[0][2]}|=[1][1]+3"],
+    "||=SUM{[0,1]:[0,2]}|=[1,1]+3"],
     [ans true [LITERAL "Calcs"] [NUMBER "39"] [NUMBER "42"];
      ans false [] [NUMBER "81"] [NUMBER "84"]] |> Ok
     "Function with cell ref range and other arguments",
     ["Calcs|39|42";
     ":------|:-----:|------:";
     "||=39|=42";
-    "||=6*5+SUM{[1][1]:[1][2],4,5}-(39+42)|=[1][1]+3"],
+    "||=6*5+SUM{[1,1]:[1,2],4,5}-(39+42)|=[1,1]+3"],
     [ans true [LITERAL "Calcs"] [NUMBER "39"] [NUMBER "42"];
      ans false [] [NUMBER "39"] [NUMBER "42"];
      ans false [] [NUMBER "39"] [NUMBER "42"]] |> Ok;
     "Function within a function",
     ["Calcs|=39|=42";
     ":------|:-----:|------:";
-    "||=6*5+SUM{SUM{2,7},8,5}|=[1][1]-10"],
+    "||=6*5+SUM{SUM{2,7},8,5}|=[1,1]-10"],
     [ans true [LITERAL "Calcs"] [NUMBER "39"] [NUMBER "42"];
      ans false [] [NUMBER "52"] [NUMBER "42"]] |> Ok;
     "MIN/MAX function test",
     ["=MIN{3,4,2,5,3,2,4,5,7,1,20}|=MAX{3,4,2,5,3,2,4,5,7,1,20}"; "---|---"; ],
     [Cells ([Contents ([NUMBER("1")],true,Left);Contents ([NUMBER("20")],true,Left)],true)] |> Ok;
+    
 ]
 // ####################### FUNCTIONS #####################
 let EQTest func fname name inp outp =

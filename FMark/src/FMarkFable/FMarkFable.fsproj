@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="../Common/Types.fs" />
     <Compile Include="../Common/Shared.fs" />
+    <Compile Include="../Common/Logger/Logger.fs" />
     <Compile Include="../Common/Lexer/LexerShared.fs" />
     <Compile Include="../Common/Lexer/Preprocessor.fs" />
     <Compile Include="../Common/Lexer/Lexer.fs" />

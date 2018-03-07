@@ -3,6 +3,7 @@ module Markalc
 open Types
 open MarkalcShared
 open Expression
+open Logger
 
 type MapContents =
     | MapTok of Cell
@@ -47,11 +48,11 @@ let parsePipesD debug constructCell (row:Token list) =
     let rec parsePipes' a row =
         match pipeSplit row with
         | Ok([],[])       -> (constructCell []):: a
-        | Ok([],after)    -> if debug then printfn "empty, %A" after
+        | Ok([],after)    -> sprintf "empty, %A" after |> logger.Debug None
                              parsePipes' ((constructCell [])::a) after // If before is empty and after is not, empty cell
-        | Ok(before,[])   -> if debug then printfn "%A, empty" before
+        | Ok(before,[])   -> sprintf "%A, empty" before |> logger.Debug None
                              (constructCell before) :: a // If after is empty, add before and stop
-        | Ok(before,after) -> if debug then printfn "%A, %A" before after 
+        | Ok(before,after) -> sprintf "%A, %A" before after |> logger.Debug None
                               parsePipes' ((constructCell before) :: a) after
         | Error(_) -> if List.isEmpty row then a else (constructCell row)::a  // If there is content, add it
     parsePipes' [] row
