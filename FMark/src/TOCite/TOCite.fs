@@ -135,7 +135,7 @@ let rec citeParse tocLst =
     match tocLst with
     | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
-        | COLON::tail -> recFit (citeParseIn [] tail) (int key)
+        | COMMA::tail -> recFit (citeParseIn [] tail) (int key)
         | tail -> citeParse tail
     | _::tl -> citeParse tl
     | [] -> []
@@ -170,7 +170,7 @@ let rec citeParse' tocLst :(int*TLine)list*Token list =
     match tocLst with
     | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
-        | COLON::tail -> recFit (citeParseIn' [] tail) (int key)
+        | COMMA::tail -> recFit (citeParseIn' [] tail) (int key)
         | tail ->
             citeParse' tail
             |> fun (x,y) -> x, FOOTER (int key)::y

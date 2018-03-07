@@ -90,7 +90,7 @@ let hdTests =
 // --------------------------------------------------------------------------------
 let testDataFt = [
     "Basic footer text",
-    [LSBRA; CARET; NUMBER "1"; RSBRA; COLON; LITERAL "text1"; LITERAL "text2"; ENDLINE],
+    [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "text1"; LITERAL "text2"; ENDLINE],
     (
         [Footnote (1, [FrmtedString (Literal "text1"); FrmtedString (Literal "text2")])],
         []
@@ -112,7 +112,7 @@ let testDataFt = [
     )
 
     "Footer text continuation over multiple lines",
-    [LSBRA; CARET; NUMBER "2"; RSBRA; COLON; LITERAL "text1";
+    [LSBRA; CARET; NUMBER "2"; RSBRA; COMMA; LITERAL "text1";
         ENDLINE; WHITESPACE 4; LITERAL "text2"; ENDLINE; 
         LITERAL "text3";ENDLINE],
     (
@@ -122,8 +122,8 @@ let testDataFt = [
     );
 
     "Footer texts sorting",
-    [LSBRA; CARET; NUMBER "3"; RSBRA; COLON; LITERAL "text3"; ENDLINE;
-        LSBRA; CARET; NUMBER "1"; RSBRA; COLON; LITERAL "text1"; ENDLINE],
+    [LSBRA; CARET; NUMBER "3"; RSBRA; COMMA; LITERAL "text3"; ENDLINE;
+        LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "text1"; ENDLINE],
     (
         [Footnote (1,[FrmtedString (Literal "text1")]);
             Footnote (3,[FrmtedString (Literal "text3")])],
@@ -131,7 +131,7 @@ let testDataFt = [
     )
 
     "Emphasis in footer",
-    [LSBRA; CARET; NUMBER "1"; RSBRA; COLON; WHITESPACE 1; UNDERSCORE;
+    [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; WHITESPACE 1; UNDERSCORE;
         LITERAL "text1"; UNDERSCORE; WHITESPACE 1; LITERAL "text2"; ENDLINE],
     (
         [Footnote (1,[FrmtedString (Emphasis [FrmtedString (Literal "text1")]);
