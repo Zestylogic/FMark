@@ -81,3 +81,12 @@ let bodyTests =
             "<q>\n\bfsharp is cool\n</q>", "quote"
         );
     ]
+
+[<Tests>]
+let bodyTableTests =
+    makeExpectoTestList id fixNewLineAndIndent strTable "body table tests" [
+        (
+            [PCells([CellLine([FrmtedString(Literal "head")], true, Left)], true)],
+            "<tbody>\n\b<thead>\n\b\b<tr>\n\b\b\b<th align=\"left\">head</th>\n\b\b</tr>\n\b</thead>\n</tbody>", "strong tag"
+        );
+    ]
