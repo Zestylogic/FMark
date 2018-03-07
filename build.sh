@@ -36,11 +36,8 @@ if [[ -z $TRAVIS_BUILD_DIR ]]; then
     cd $BASE_DIR/FMark/src/FMarkFable
     dotnet restore
     dotnet fable yarn-dev
-<<<<<<< HEAD
     read -n1 -r -p "Press any key to continue..." key
     if [[ "$?" != "0" ]]; then
         exit 1
     fi
-=======
->>>>>>> f9d4f3b8dee743cfc106565b9da05b2d031fdb02
 fi
