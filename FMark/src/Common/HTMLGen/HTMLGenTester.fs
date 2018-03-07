@@ -83,6 +83,10 @@ let bodyTableTests =
     makeExpectoTestList id id strTable "body table tests" [
         (
             [PCells([CellLine([FrmtedString(Literal "head")], true, Left)], true)],
-            "<tbody><thead><tr><th align=\"left\">head</th></tr></thead></tbody>", "strong tag"
+            "<tbody><thead><tr><th align=\"left\">head</th></tr></thead></tbody>", "one thead only"
+        );
+        (
+            [PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)],
+            "<tbody><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead></tbody>", "two theads with different align"
         );
     ]
