@@ -94,6 +94,23 @@ let strHeader header =
         |> strInlineElements
         |> attachSimpleTag tagName
 
+/// process inline footnotes
+let strInlineFootnote fnId =
+    let idStr = string fnId
+    idStr
+    |> attachHTMLTag ("a", ["href", "#footnote"+idStr], true)
+    |> attachSimpleTag "sup"
+
+
+/// gather footnotes for end of page display
+let gatherFootnotes pObjs =
+    let footnotesFilter pObj =
+        match pObj with
+        | Footnote _ -> true
+        | _ -> false
+    List.filter footnotesFilter pObjs
+
+
 /// process HTML body part
 let strBody pObjs =
     let folder pStr pObj =
@@ -105,5 +122,6 @@ let strBody pObjs =
         | Table rows -> strTable rows
         | List l -> strList l
         | Header h -> strHeader h
+        | Footnote (fnId, _) -> strInlineFootnote fnId
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs

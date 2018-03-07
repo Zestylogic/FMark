@@ -129,6 +129,15 @@ let headerTests =
     ]
 
 [<Tests>]
+let inlineFootnoteTests =
+    makeExpectoTestList id id strInlineFootnote "inline footnote tests" [
+        (
+            3,
+            "<sup><a href=\"#footnote3\">3</a></sup>", "footer3"
+        );
+    ]
+
+[<Tests>]
 let fullBodyTests =
     makeExpectoTestList id catStr strBody "full body tests" [
         (
