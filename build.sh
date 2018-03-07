@@ -63,7 +63,7 @@ fi
 
 if [[ $BUILD = "all" ]] || [[ $BUILD = "js" ]]; then
     echo "Running javascript build"
-    cd $BASE_DIR
+    cd $BASE_DIR/FMark
     yarn install
     cd $BASE_DIR/FMark/src/FMarkFable
     dotnet restore
