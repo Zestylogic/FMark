@@ -5,6 +5,7 @@ type Language =
     | FSharp
     | CPP
     | C
+    | Empty
 
 type Token =
     | CODEBLOCK of string * Language
@@ -14,7 +15,7 @@ type Token =
     | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT | COMMA
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
-    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
+    | RCBRA | BACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
     | HEADER of int
     | FOOTER of int
 

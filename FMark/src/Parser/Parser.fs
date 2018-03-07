@@ -1,5 +1,6 @@
 module Parser
 open Types
+open Shared
 open ParserHelperFuncs
 open Markalc
 

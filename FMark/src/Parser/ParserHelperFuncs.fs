@@ -1,5 +1,6 @@
 module ParserHelperFuncs
 open Types
+open Shared
 
 let SPACE = " "
 let NOSTRING = ""
@@ -16,48 +17,6 @@ let rec deleteLeadingENDLINEs toks =
     | ENDLINE:: tks -> deleteLeadingENDLINEs tks
     | _ -> toks
 
-/// map a Token to string
-let mapTok = function
-    | CODEBLOCK _ -> "CODEBLOCK" // not supposed to be read by matchTok
-    | LITERAL str-> str
-    | WHITESPACE n -> String.replicate n " "
-    | NUMBER str -> str
-    | HASH -> "#"
-    | PIPE->  "|"
-    | EQUAL-> "="
-    | MINUS-> "-"
-    | PLUS->  "+"
-    | ASTERISK-> "*"
-    | DOT-> "."
-    | DASTERISK-> "**"
-    | TASTERISK-> "***"
-    | UNDERSCORE-> "_"
-    | DUNDERSCORE-> "__"
-    | TUNDERSCORE-> "___"
-    | TILDE-> "~"
-    | DTILDE-> "~~"
-    | TTILDE-> "~~~"
-    | LSBRA-> "["
-    | RSBRA-> "]"
-    | LBRA-> "("
-    | RBRA-> ")"
-    | BSLASH-> "\\"
-    | SLASH-> "/"
-    | LABRA-> "<"
-    | RABRA-> ">"
-    | LCBRA -> "{"
-    | RCBRA -> "}"
-    | BACKTICK -> "`"
-    | TBACKTICK -> "``"
-    | EXCLAMATION -> "!"
-    | ENDLINE -> "\n"
-    | COLON -> ":"
-    | CARET -> "^"
-    | PERCENT -> "%"
-    | COMMA -> ","
-    | FOOTER n -> sprintf "FOOTER %d" n
-    | HEADER n -> sprintf "HEADER %d" n
-
 /// convert all Tokens into a single string
 /// see mapTok for Token mapping
 let stringAllTokens toks =
@@ -72,7 +31,6 @@ let countToks (tok: Token) toks =
         | t:: rtks when t = tok -> countToks' (n+1, rtks)
         | _ -> n, toks'
     countToks' (0, toks) |> fst
-
 
 /// count leading continuous spaces
 let countSpaces toks =
