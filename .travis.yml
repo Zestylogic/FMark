@@ -2,6 +2,4 @@ language: csharp
 mono: none
 dotnet: 2.1.4
 script:
- - cd $TRAVIS_BUILD_DIR/FMark
- - dotnet build -v n
- - dotnet run --no-build
+  - ${TRAVIS_BUILD_DIR}/build.sh

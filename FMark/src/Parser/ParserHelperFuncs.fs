@@ -11,9 +11,9 @@ let mapTEmphasis = function
     | STAR -> "*"
 
 /// delete leading ENDLINEs and retur the rest
-let rec deleteLeadingEDNLINEs toks =
+let rec deleteLeadingENDLINEs toks =
     match toks with
-    | ENDLINE:: tks -> deleteLeadingEDNLINEs tks
+    | ENDLINE:: tks -> deleteLeadingENDLINEs tks
     | _ -> toks
 
 /// map a Token to string
@@ -86,12 +86,14 @@ let countSpaces toks =
 let countNewLines = countToks (ENDLINE)
 
 /// count all pipes in a line
-let countInlinePipes toks =
-    let pipeCounter tok =
+let countDelim delim toks =
+    let counter tok =
         match tok with
-        | PIPE -> 1
+        | t when t =delim ->1
         | _ -> 0
-    List.sumBy pipeCounter toks
+    List.sumBy counter toks
+let countPipes = countDelim PIPE
+let countMinus = countDelim MINUS
 
 /// first element is the line
 /// second element is remaining tokens
@@ -211,14 +213,13 @@ let (|MatchListOpSpace|_|) toks =
     | MatchList content -> content |> Some
     | _ -> None
 
-/// match 2>= "|" in Token list
 /// return the next line
 /// next line is seperated by 1 ENDLINE
 let (|MatchTableHead|_|) toks =
     let line, rtks = cutLine toks
-    match countInlinePipes line with
-    | n when n>=2 -> rtks |> Some
-    | _ -> None
+    match line with
+    | [] -> None
+    | _ -> rtks |> Some
 
 /// take one PIPE
 /// return the rest |> Some
@@ -229,8 +230,6 @@ let pipeMatch oToks =
         match toks with
         | PIPE:: rtks -> Some rtks
         | _ -> None )
-
-
 
 /// take all leading subsequent MINUSes
 /// return the rest Tokens |> Some
@@ -257,8 +256,9 @@ let minusMatch oToks =
 /// otherwise, None
 let (|MatchTableFormater|_|) toks =
     let line, rtks = cutLine toks
-    line |> Some |> pipeMatch |> minusMatch |> pipeMatch
-    |> Option.map (fun _ -> rtks)
+    match (countPipes line, countMinus line) with
+    | (p,m) when p>0 && m>2 -> Some(rtks)
+    | _ -> None
 
 /// cut Tokens into Token list list for Table parsing
 /// terminates when [] or two continuous ENDLINEs
@@ -273,15 +273,3 @@ let cutTableRows toks =
             let row, rtks = cutLine toks
             cutTableRow' (row::rows) rtks
     cutTableRow' [] toks
-
-/// match table start sequence
-/// return table rows, terminates when [] or two continuous ENDLINEs
-/// start sequence:
-/// 2>= "|" in first line, "|", 1>= "-", "|" in second line
-let (|MatchTable|_|) toks =
-    match toks with
-    | MatchTableHead rtks ->
-        match rtks with
-        | MatchTableFormater _ -> cutTableRows toks |> Some
-        | _ -> None
-    | _ -> None
