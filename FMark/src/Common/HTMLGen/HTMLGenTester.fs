@@ -116,3 +116,12 @@ let listTests =
             "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>", "ol inside ul"
         );
     ]
+
+[<Tests>]
+let headerTests =
+    makeExpectoTestList id id strHeader "header tests" [
+        (
+            {HeaderName=[FrmtedString(Literal "header")]; Level=1},
+            "<h1>header</h1>", "h1"
+        );
+    ]

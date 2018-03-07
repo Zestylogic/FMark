@@ -2,6 +2,7 @@ module HTMLGen
 
 open Types
 open HTMLGenHelpers
+open Mono.CompilerServices.SymbolWriter
 
 
 /// convert TFrmtedString to string, with HTML tags where necessary
@@ -84,6 +85,15 @@ let rec strList list =
         List.fold strListItem "" liS
         |> attachSimpleTag listTag
 
+/// process header
+let strHeader header =
+    match header with
+    | {HeaderName=line;Level=lv} ->
+        let tagName = "h" + string(lv)
+        line
+        |> strInlineElements
+        |> attachSimpleTag tagName
+
 /// process HTML body part
 let strBody pObjs =
     let folder pStr pObj =
@@ -94,5 +104,6 @@ let strBody pObjs =
         | CodeBlock (c, l) -> attachHTMLTag ("code", [("language", mapLang l)], true) c
         | Table rows -> strTable rows
         | List l -> strList l
+        | Header h -> strHeader h
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
