@@ -183,6 +183,7 @@ let preprocessListTest =
 // Lexer tests
 
 open Types
+open Shared
 open Lexer
 
 /// Check if all the tokens are lexed properly

@@ -1,4 +1,5 @@
 module TOCite
+open Shared
 open Types
 
 let rec (|NormalWords|_|) tok =
@@ -7,38 +8,8 @@ let rec (|NormalWords|_|) tok =
     | LITERAL lit -> Some lit
     | WHITESPACE _ -> Some " "
     | NUMBER num -> Some num
-    | HASH -> Some "#"
-    | PIPE -> Some "|"
-    | EQUAL -> Some "="
-    | MINUS -> Some "-"
-    | PLUS -> Some "+"
-    // | ASTERISK -> Some "*"
-    | DOT -> Some "."
-    | DASTERISK -> Some "**"
-    | TASTERISK -> Some "***"
-    // | UNDERSCORE
-    | DUNDERSCORE -> Some "__"
-    | TUNDERSCORE -> Some "___"
-    | TILDE -> Some "~"
-    | DTILDE -> Some "~~"
-    | TTILDE -> Some "~~~"
-    // | LSBRA -> Some "["
-    // | RSBRA -> Some "]"
-    | LBRA -> Some "("
-    | RBRA -> Some ")"
-    | BSLASH -> Some "\\"
-    | SLASH -> Some "/"
-    | LABRA -> Some "<"
-    | RABRA -> Some ">"
-    | LCBRA -> Some "{"
-    | RCBRA -> Some "}"
-    | BACKTICK -> Some "`"
-    | TBACKTICK -> Some "```"
-    | EXCLAMATION -> Some "!"
+    | CharTok t -> Some t
     // | ENDLINE
-    | COLON -> Some ":"
-    | CARET -> Some "^"
-    | PERCENT -> Some "%"
     | _ -> None
 
 // start of emphasis
