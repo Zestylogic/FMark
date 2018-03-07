@@ -1,6 +1,7 @@
 module MarkalcShared
 open Types
 open System.Text.RegularExpressions
+open Logger
 
 type CellReference = 
     RowCol of Row:uint32*Col:uint32
@@ -92,6 +93,7 @@ let simpleLex txt =
         | RegexMatch "[a-zA-z]+[0-9]*( [a-zA-z]+[0-9]*)*" (m,after) -> simpleLex' (LITERAL(m)::a) after
         | RegexMatch "\\|" (_,after) -> simpleLex' (PIPE::a) after
         | RegexMatch "\\:" (_,after) -> simpleLex' (COLON::a) after
+        | RegexMatch "\\;" (_,after) -> simpleLex' (SEMICOLON::a) after
         | "" -> a
         | _ -> failwithf "Unexpected character: %A" txt
     simpleLex' [] txt |> List.rev
@@ -100,3 +102,5 @@ let simpleLex txt =
 // let stringLex (txt:string)=
 //     List.map simpleLex (Array.toList (txt.Split("\n")))
 let lexY (x,y,z) = x,y|>simpleLex,z
+
+let logger = Logger(LogLevel.INFO)

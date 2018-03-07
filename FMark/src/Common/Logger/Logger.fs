@@ -46,7 +46,7 @@ type Logger(logLevel) =
         | _ ->
             sprintf "%s [%s] %s" pType (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) msg |> agent.Post
 
-    let log t msg l =
+    let log t l msg =
         if t >= logLevel then
             postStr logLevelStr.[t] msg l
         else ()
