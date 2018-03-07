@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,14 +7,15 @@
 
   <ItemGroup>
     <Compile Include="../Types.fs" />
-    <Compile Include="MarkalcShared.fs" />
-    <Compile Include="Expression.fs" />
-    <Compile Include="Markalc.fs" />
-    <Compile Include="MarkalcTest.fs" />
-    <Compile Include="MarkalcProgram.fs" />
+    <Compile Include="HTMLGenHelpers.fs" />
+    <Compile Include="HTMLGen.fs" />
+    <Compile Include="HTMLGenTester.fs" />
+    <Compile Include="HTMLGenProgram.fs" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Expecto" Version="5.1.2" />
     <PackageReference Include="Expecto.FsCheck" Version="5.1.2" />
   </ItemGroup>
+
 </Project>

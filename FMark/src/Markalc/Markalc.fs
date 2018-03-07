@@ -4,14 +4,6 @@ open Types
 open MarkalcShared
 open Expression
 
-type Cell with 
-    member c.GetToks = match c with 
-                           | Contents(toks,_,_) -> toks
-    member c.ReplaceTokens t = match c with 
-                               | Contents(_,head,align) -> Contents(t,head,align)
-    member c.GetHead = match c with 
-                       | Contents(_,head,_) -> head
-
 type MapContents =
     | MapTok of Cell
     | MapExp of Expr * Cell
@@ -196,4 +188,3 @@ let parseEvaluateTable (toks:Token list list) =
 let lexParseEvaluate toks = 
     List.map simpleLex toks
     |> parseEvaluateTable
-
