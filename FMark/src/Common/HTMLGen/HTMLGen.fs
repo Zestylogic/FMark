@@ -30,7 +30,7 @@ let strParagraph lines =
     let folder pLinesStr line =
         pLinesStr + strInlineElements line
     List.fold folder "" lines
-    |> attachHTMLTag ("p", [], true)
+    |> attachSimpleTag "p"
 
 
 /// process Markdown Table
@@ -60,7 +60,7 @@ let strTable (rows: PRow list) =
     let foldRows rows =
         let rowsFolder pStr row =
             foldCells row
-            |> attachHTMLTag ("tr", [], true)
+            |> attachSimpleTag "tr"
             |> fun s -> pStr + s
         List.fold rowsFolder "" rows
     foldRows headerRows |> attachSimpleTag "thead"
@@ -77,7 +77,7 @@ let strBody pObjs =
         pStr +
         match pObj with
         | Paragraph p -> strParagraph p
-        | Quote q -> strInlineElements q |> attachHTMLTag ("q", [], true)
+        | Quote q -> strInlineElements q |> attachSimpleTag "q"
         | CodeBlock (c, l) -> attachHTMLTag ("code", [("language", mapLang l)], true) c
         | Table rows -> strTable rows
         | _ -> sprintf "%A is not implemented" pObj
