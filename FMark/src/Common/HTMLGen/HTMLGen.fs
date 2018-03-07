@@ -19,19 +19,18 @@ and strInlineElements eles =
         pStr +
         match ele with
         | FrmtedString fStr -> strFStr fStr
-        | Link (ht, url) -> strFStr ht |> attachHTMLTag ("a", toAttrs [("href", url)], INLINE, true)
+        | Link (ht, url) -> strFStr ht |> attachHTMLTag ("a", [("href", url)], true)
         | Picture (alt, url) ->
-            let attrs =  toAttrs [("src", url); ("alt", alt)]
-            attachHTMLTag ("img", attrs, INLINE, false) ""
+            let attrs = [("src", url); ("alt", alt)]
+            attachHTMLTag ("img", attrs, false) ""
     List.fold convertHtml "" eles
 
 /// process Markdown paragraph
 let strParagraph lines =
     let folder pLinesStr line =
-        pLinesStr + strInlineElements line + NLS
+        pLinesStr + strInlineElements line
     List.fold folder "" lines
-    |> deletetrailingNewLines
-    |> attachHTMLTag ("p", [], GIndent, true)
+    |> attachHTMLTag ("p", [], true)
 
 
 /// process Markdown Table
@@ -56,17 +55,17 @@ let strTable (rows: PRow list) =
                     | Centre -> ("align", "center")
                     | Right -> ("align", "right")
                     | Left -> ("align", "left")
-                pStr + attachHTMLTag (tagName, toAttrs [alignAttr], INLINE, true) cellContent + NLS
+                pStr + attachHTMLTag (tagName, [alignAttr], true) cellContent
         List.fold cellsFolder "" row
     let foldRows rows =
         let rowsFolder pStr row =
             foldCells row
-            |> attachHTMLTag ("tr", [], GIndent, true)
-            |> fun s -> pStr + s + NLS
+            |> attachHTMLTag ("tr", [], true)
+            |> fun s -> pStr + s
         List.fold rowsFolder "" rows
-    foldRows headerRows |> attachNonInlineTag "thead"
+    foldRows headerRows |> attachSimpleTag "thead"
     |> fun s ->
-    s + foldRows bodyRows |> attachNonInlineTag "tbody"
+    s + foldRows bodyRows |> attachSimpleTag "tbody"
 
 
 
@@ -78,9 +77,9 @@ let strBody pObjs =
         pStr +
         match pObj with
         | Paragraph p -> strParagraph p
-        | Quote q -> strInlineElements q |> attachHTMLTag ("q", [], GIndent, true)
-        | CodeBlock (c, l) -> attachHTMLTag ("code", toAttrs [("language", mapLang l)], GIndent, true) c
+        | Quote q -> strInlineElements q |> attachHTMLTag ("q", [], true)
+        | CodeBlock (c, l) -> attachHTMLTag ("code", [("language", mapLang l)], true) c
         // | Table(t) -> strTable t
-        | Table rows -> strTable rows |> attachHTMLTag ("table", [], GIndent, true)
+        | Table rows -> strTable rows |> attachHTMLTag ("table", [], true)
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs

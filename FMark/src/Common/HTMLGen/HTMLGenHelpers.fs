@@ -4,14 +4,6 @@ open Types
 
 type TagStyle = INLINE | NonInline of indentStr: string
 
-[<Literal>]
-/// neline string, "\n"
-let NLS = "\n\r"
-[<Literal>]
-let INDENT = "\t"
-
-/// general indentation style
-let GIndent = NonInline INDENT
 
 /// concat attributeName and value
 /// with quotes
@@ -25,10 +17,6 @@ let toAttrs attrs =
         match attr with | (attrName, value) -> toAttr attrName value
     List.map mapper attrs
 
-
-let deletetrailingNewLines (str: string) =
-    str.TrimEnd(NLS.ToCharArray())
-
 let mapLang lang =
     match lang with
     | Python -> "python"
@@ -40,25 +28,20 @@ let mapLang lang =
 /// atach HTML tag to a given string, both start and end tag
 /// inline style does not insert newline after start tag and before end tag
 /// non-inline style will have indent set to desired string
-let attachHTMLTag (tagName, attributes, style, needCloseTag) (content: string) =
-    let attr =
+let attachHTMLTag (tagName, attributes: list<string * string>, needCloseTag) (content: string) =
+    let attrStr =
         match List.isEmpty attributes with
         | true -> ""
-        | false -> match attributes with
-                   | [""] -> ""
-                   | _ -> " " + String.concat " " attributes // space before attributes and tagName
-    let transformedContent =
-        match style with
-        | INLINE -> content
-        | NonInline ind ->
-            let c = content |> deletetrailingNewLines
-            NLS + ind + c.Replace(NLS, NLS+ind) + NLS
-    "<" + tagName + attr + ">"
-    + transformedContent
+        | false ->
+            let attrFolder pStr attrNameValue =
+                let (attrName, value) = attrNameValue
+                pStr + " " +       // space before attribute
+                if value = "" then attrName
+                else attrName + "=\"" + value + "\""
+            List.fold attrFolder "" attributes
+    "<" + tagName + attrStr + ">"
+    + content
     + if needCloseTag then "</" + tagName + ">" else ""
 
-/// attach (tagName,noAttr,INLINE,closeTag)
-let attachSimpleTag tagName = attachHTMLTag (tagName,[],INLINE,true)
-
-/// attach (tagName,noAttr,GIndent,closeTag)
-let attachNonInlineTag tagName = attachHTMLTag (tagName, [], GIndent, true)
+/// attach (tagName,noAttr,closeTag)
+let attachSimpleTag tagName = attachHTMLTag (tagName,[],true)
