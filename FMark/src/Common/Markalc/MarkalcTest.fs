@@ -120,7 +120,7 @@ let fullTestData = [
     "Single cell table",
     ["=2+2|"; "---|"; ],
     [Cells([Contents ([NUMBER("4")],true,Left);],true)] |> Ok;
-    "Two rows no pipes",
+    "Two rows no pipes cell reference",
     ["=2+2"; "---|"; "=[0,0]+3";],
     [Cells ([Contents ([NUMBER("4")],true,Left);],true);Cells ([Contents ([NUMBER("7")],false,Left);],false)] |> Ok;
     "Single row table",
@@ -179,7 +179,14 @@ let fullTestData = [
     "MIN/MAX function test",
     ["=MIN{3,4,2,5,3,2,4,5,7,1,20}|=MAX{3,4,2,5,3,2,4,5,7,1,20}"; "---|---"; ],
     [Cells ([Contents ([NUMBER("1")],true,Left);Contents ([NUMBER("20")],true,Left)],true)] |> Ok;
-    
+    "Cell reference with key word functionality",
+    ["=5|header2|header3";
+    ":------|:-----:|------:";
+    "=7|tesdfst|stduff";
+    "=2+3|=[1,0]+12|=[col=0,row=2]+[row=1,col=0]"],
+    [ans true [NUMBER "5"] [LITERAL "header2"] [LITERAL "header3"];
+     ans false [NUMBER "7"] [LITERAL "tesdfst"] [LITERAL "stduff"];
+     ans false [NUMBER "5"] [NUMBER "19"] [NUMBER "12"]] |> Ok;
 ]
 // ####################### FUNCTIONS #####################
 let EQTest func fname name inp outp =
