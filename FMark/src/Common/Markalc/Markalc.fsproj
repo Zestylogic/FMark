@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="../Types.fs" />
     <Compile Include="../IOFuncs.fs" />
+    <Compile Include="../Logger/Logger.fs" />
     <Compile Include="MarkalcShared.fs" />
     <Compile Include="Expression.fs" />
     <Compile Include="Markalc.fs" />

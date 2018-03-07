@@ -29,7 +29,7 @@ let parseExp toks =
             | NUMBER(i) :: after -> (makeInt i |> float, after) |> Some
             | _ -> None
         let rec (|CellRefPat|_|) = function
-            | RSBRA :: NUMBER(row) :: LSBRA :: RSBRA :: NUMBER(col) :: LSBRA :: after 
+            | RSBRA :: NUMBER(row) :: COMMA :: NUMBER(col) :: LSBRA :: after 
                 -> ((col,row) |> makeCellReference,after) |> Some
             | _ -> None
         let rec (|ExpressionList|_|) = function
