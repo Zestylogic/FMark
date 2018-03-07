@@ -3,6 +3,7 @@ module HTMLGen
 open Types
 open HTMLGenHelpers
 open Mono.CompilerServices.SymbolWriter
+open System.Drawing
 
 
 /// convert TFrmtedString to string, with HTML tags where necessary
@@ -102,6 +103,38 @@ let strInlineFootnote fnId =
     |> attachSimpleTag "sup"
 
 
+let (|MatchHeaderAndSubHeader|_|) hds =
+    match hds with
+    | fstHd::sndHd::_ ->
+        let {Level=fstLv} = fstHd
+        let {Level=sndLv} =sndHd
+        if sndLv > fstLv then (List.head hds, List.tail hds) |> Some else None
+    | _ -> None
+
+/// process table of contents
+let strToC toc =
+    let displaySingleHeader headerName =
+        headerName |> strInlineElements // can insert unique id for linking
+    let rec tocMany currentLv maxLv headers pStr =
+        match headers with
+        | {HeaderName=headerName; Level=headerLv}::rHds ->
+            match headerLv with
+            | hlv when hlv = currentLv ->
+                match headers with
+                | MatchHeaderAndSubHeader (fstHd, rHds) ->
+                    let (cStr, rHds) =
+                        match fstHd |> strInlineElements |> tocMany currentLv+1 maxLv rHds with
+                        | Ok (cStr, rHds) -> (cStr, rHds)
+                        | Error
+                    pStr + (
+                        
+                        |> attachSimpleTag "li")
+                    
+                | _ -> pStr + (headerName |> strInlineElements) |> tocMany currentLv maxLv rHds |> Ok
+            | hlv when hlv 
+
+
+
 /// gather footnotes for end of page display
 let gatherFootnotes pObjs =
     let footnotesFilter pObj =
@@ -123,5 +156,7 @@ let strBody pObjs =
         | List l -> strList l
         | Header h -> strHeader h
         | Footnote (fnId, _) -> strInlineFootnote fnId
+        | ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
+
