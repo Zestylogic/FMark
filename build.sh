@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 PREFIX=$DIR
@@ -25,27 +27,13 @@ fi
 
 echo "Running F# tests"
 cd $BASE_DIR/FMark/src/FMarkCLI
+
 dotnet build
-
-if [[ "$?" != "0" ]]; then
-    exit 1
-fi
-
-dotnet run --no-build -- -t
-
-if [[ "$?" != "0" ]]; then
-    exit 1
-fi
+dotnet run --no-build -- --test
 
 if [[ -z $TRAVIS_BUILD_DIR ]]; then
     echo "Running javascript build"
     cd $BASE_DIR/FMark/src/FMarkFable
     dotnet restore
-    if [[ "$?" != "0" ]]; then
-        exit 1
-    fi
     dotnet fable yarn-dev
-    if [[ "$?" != "0" ]]; then
-        exit 1
-    fi
 fi
