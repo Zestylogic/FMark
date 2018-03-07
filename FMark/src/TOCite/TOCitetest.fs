@@ -1,5 +1,6 @@
 module TOCiteTest
 open Types
+open RefParse
 open TOCite
 open Expecto
 
@@ -92,7 +93,7 @@ let testDataFt = [
     "Basic footer text",
     [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "text1"; LITERAL "text2"; ENDLINE],
     (
-        [Footnote (1, [FrmtedString (Literal "text1"); FrmtedString (Literal "text2")])],
+        [Footnote (FtID 1, [FrmtedString (Literal "text1"); FrmtedString (Literal "text2")])],
         []
     );
 
@@ -101,7 +102,7 @@ let testDataFt = [
         LITERAL "textAfter"; ENDLINE],
     (
         [],
-        [LITERAL "textbefore"; FOOTER 3; LITERAL "textAfter"; ENDLINE]
+        [LITERAL "textbefore"; FOOTER (FtID 3); LITERAL "textAfter"; ENDLINE]
     );
 
     "Fake footer",
@@ -116,7 +117,7 @@ let testDataFt = [
         ENDLINE; WHITESPACE 4; LITERAL "text2"; ENDLINE; 
         LITERAL "text3";ENDLINE],
     (
-        [Footnote (2, [FrmtedString (Literal "text1");
+        [Footnote (FtID 2, [FrmtedString (Literal "text1");
             FrmtedString (Literal "text2")]);],
         [LITERAL "text3"; ENDLINE]
     );
@@ -125,8 +126,8 @@ let testDataFt = [
     [LSBRA; CARET; NUMBER "3"; RSBRA; COMMA; LITERAL "text3"; ENDLINE;
         LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "text1"; ENDLINE],
     (
-        [Footnote (1,[FrmtedString (Literal "text1")]);
-            Footnote (3,[FrmtedString (Literal "text3")])],
+        [Footnote (FtID 1,[FrmtedString (Literal "text1")]);
+            Footnote (FtID 3,[FrmtedString (Literal "text3")])],
         []
     )
 
@@ -134,7 +135,7 @@ let testDataFt = [
     [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; WHITESPACE 1; UNDERSCORE;
         LITERAL "text1"; UNDERSCORE; WHITESPACE 1; LITERAL "text2"; ENDLINE],
     (
-        [Footnote (1,[FrmtedString (Emphasis [FrmtedString (Literal "text1")]);
+        [Footnote (FtID 1,[FrmtedString (Emphasis [FrmtedString (Literal "text1")]);
             FrmtedString (Literal "text2")])],
         []
     )
@@ -149,3 +150,23 @@ let makeFtTest (name,inn,out) =
 let ftTests =
     List.map makeFtTest testDataFt
     |> Expecto.Tests.testList "Specific footer unit tests"
+
+// --------------------------------------------------------------------------------
+
+let testDataRef =
+    [
+    "Basic reference",
+    [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+        LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
+        LITERAL "Not a real book"; COMMA],
+    Harvard,
+    [FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ")]
+    ]
+
+let makeRefTest (name,inn,frmt,out) =
+    testCase name <| fun () -> Expect.equal (refParser frmt inn) out "Unit test"
+
+[<Tests>]
+let refTests =
+    List.map makeRefTest testDataRef
+    |> Expecto.Tests.testList "Specific reference unit tests"

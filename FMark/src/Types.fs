@@ -6,6 +6,8 @@ type Language =
     | CPP
     | C
 
+type ID = FtID of int | RefID of string
+
 type Token =
     | CODEBLOCK of string * Language
     | LITERAL of string
@@ -16,7 +18,7 @@ type Token =
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
     | HEADER of int
-    | FOOTER of int
+    | FOOTER of ID
 
 type TFrmtedString =
     | Strong of InlineElement list | Emphasis of InlineElement list
@@ -51,9 +53,8 @@ type PRow =
 
 type RefFrmt = IEEE | Harvard | Chicago
 
-type Ref = {Author: string; Title: string; Year: int; URL: string;}
-
-type CiteRef = {Data: Ref; Frmt: RefFrmt}
+// date support for access later
+type Ref = {Author: Token list; Title: Token list; Year: int; URL: string; Access: Token list}
 
 type ParsedObj =
     | CodeBlock of string * Language
@@ -64,7 +65,7 @@ type ParsedObj =
     | Quote of TLine
     | Table of PRow list
     | PreTable of Content: Token list list
-    | Footnote of ID: int * TLine
+    | Footnote of ID * TLine
 
 type Cell with 
     member c.GetToks = match c with 
