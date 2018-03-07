@@ -33,7 +33,6 @@ let rec (|NormalWords|_|) tok =
     | LCBRA -> Some "{"
     | RCBRA -> Some "}"
     | BACKTICK -> Some "`"
-    | TBACKTICK -> Some "```"
     | EXCLAMATION -> Some "!"
     // | ENDLINE
     | COLON -> Some ":"

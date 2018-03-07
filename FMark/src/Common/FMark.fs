@@ -5,4 +5,4 @@ let preLexParse =
     >> Lexer.lexList
     >> Parser.parse
 let processDataDummy =
-    preLexParse >> HTMLGenDummy.HTMLGen
+    preLexParse >> Result.map(HTMLGen.strBody)

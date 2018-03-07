@@ -5,8 +5,7 @@ open Fable.Core.JsInterop
 open Fable.Import.Browser
 open FMark
 
-[<EntryPoint>]
-let main argv =
-    printfn "Welcome to FMark!"
-    let processData = processDataDummy
-    0
+let processMarkdownString (str:string) = 
+    str.Split [|'\n'|] 
+    |> Array.toList
+    |> processDataDummy

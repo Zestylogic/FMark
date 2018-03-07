@@ -7,14 +7,17 @@
 
   <ItemGroup>
     <Compile Include="../Types.fs" />
-    <Compile Include="MarkalcShared.fs" />
-    <Compile Include="Expression.fs" />
-    <Compile Include="Markalc.fs" />
-    <Compile Include="MarkalcTest.fs" />
-    <Compile Include="MarkalcProgram.fs" />
+    <Compile Include="../Shared.fs" />
+    <Compile Include="LexerShared.fs" />
+    <Compile Include="Preprocessor.fs" />
+    <Compile Include="Lexer.fs" />
+    <Compile Include="LexerTest.fs" />
+    <Compile Include="LexerProgram.fs" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Expecto" Version="5.1.2" />
     <PackageReference Include="Expecto.FsCheck" Version="5.1.2" />
   </ItemGroup>
+
 </Project>

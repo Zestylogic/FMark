@@ -7,17 +7,8 @@ open System.Text.RegularExpressions
 // Helpers
 // --------------------------------------------------
 
-/// Inverse the values in a tuple
-let invTuple (a, b) = b, a
-
-/// Try to find a key in a map, return Some value when it is found, otherwise it
-/// returns None
-let mapTryFind k (map: Map<'a, 'b>) = map.TryFind(k)
-
-/// Convert list of tuples to a map and try to find a key in it and return it's value
-/// if it exists
-let listTryFind k =
-    List.map invTuple >> Map.ofList >> mapTryFind k
+/// Take the first element of a tuple of size 3
+let takeFirst (a, _, _) = a
 
 /// Match a regular expression Return Some (m,grps) where m is the match string,
 /// grps is the list of match groups (if any) return None on no match

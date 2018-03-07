@@ -7,15 +7,14 @@
 
   <ItemGroup>
     <Compile Include="../Types.fs" />
-    <Compile Include="../Markalc/MarkalcShared.fs" />
-    <Compile Include="../Markalc/Expression.fs" />
-    <Compile Include="../Markalc/Markalc.fs" />
-    <Compile Include="ParserHelperFuncs.fs" />
-    <Compile Include="Parser.fs" />
-    <Compile Include="ParserTest.fs" />
-    <Compile Include="ParserProgram.fs" />
+    <Compile Include="../IOFuncs.fs" />
+    <Compile Include="../Logger/Logger.fs" />
+    <Compile Include="MarkalcShared.fs" />
+    <Compile Include="Expression.fs" />
+    <Compile Include="Markalc.fs" />
+    <Compile Include="MarkalcTest.fs" />
+    <Compile Include="MarkalcProgram.fs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Expecto" Version="5.1.2" />
     <PackageReference Include="Expecto.FsCheck" Version="5.1.2" />

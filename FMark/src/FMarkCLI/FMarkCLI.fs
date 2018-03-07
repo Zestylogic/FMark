@@ -54,6 +54,8 @@ let main argv =
         let strip chars s = (String.map (fun c -> if Seq.exists((=)c) chars then ' ' else c) s).Trim()
         let outFile = results.GetResult(Output,defaultValue=strip ".md" fname+".html")
         FMark.processDataDummy instr
-        |> IOFuncs.printToFile outFile
+        |> function
+            | Ok(s)
+            | Error(s) -> IOFuncs.printToFile outFile s
 
     0

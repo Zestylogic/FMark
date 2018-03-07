@@ -183,6 +183,7 @@ let preprocessListTest =
 // Lexer tests
 
 open Types
+open Shared
 open Lexer
 
 /// Check if all the tokens are lexed properly
@@ -220,6 +221,10 @@ let lexTest =
         "Escaping characters",
         @"\_\\\***\%\+",
         [LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE]
+
+        "Whitespace",
+        "          d    ",
+        [WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
     ]
 
 /// Tests for the complete lexers with a string list as input
@@ -241,6 +246,10 @@ let lexListTest =
         [LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
          LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
          LITERAL "_"; LITERAL @"\"; LITERAL "*"; LITERAL "%"; LITERAL "+"; ENDLINE]
+
+        "Whitespace",
+        ["          d    "],
+        [WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
     ]
 
 // --------------------------------------------------
