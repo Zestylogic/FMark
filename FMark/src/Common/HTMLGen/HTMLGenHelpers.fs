@@ -53,3 +53,4 @@ let mapLang lang =
     | FSharp -> "fsharp"
     | CPP -> "cpp"
     | C -> "c"
+    | Empty -> ""

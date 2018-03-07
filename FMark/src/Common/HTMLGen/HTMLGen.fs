@@ -25,6 +25,7 @@ and strInlineElements eles =
             attachHTMLTag ("img", attrs, INLINE, false) ""
     List.fold convertHtml "" eles
 
+/// process Markdown paragraph
 let strParagraph lines =
     let folder pLinesStr line =
         pLinesStr + strInlineElements line + NLS
@@ -32,26 +33,66 @@ let strParagraph lines =
     |> deletetrailingNewLines
     |> attachHTMLTag ("p", [], GIndent, true)
 
-let strTable (tab:PRow list) =
-    let getAlignment = function
-    | Centre -> "align=\"center\""
-    | Right -> "align=\"right\""
-    | Left -> ""
-    let getH = function
-        | true -> "th"
-        | false -> "td"
-    let printCell s = function
-        | CellLine(line,h,ali) -> 
-          s + 
-          (strInlineElements line 
-          |> attachHTMLTag ((getH h), [getAlignment ali], INLINE, true))
-    let printRow s = function
-        | PCells(clst,h) ->
-            let rowTxt = (List.fold printCell "" clst) |> simpleTag "tr"
-            s + if h then rowTxt |> simpleTag "thead" else rowTxt
-    printRow "" (List.head tab)
-    + (List.fold printRow "" tab.[1..] |> simpleTag "tbody")
-    |> simpleTag "table"
+
+// let strTable (tab:PRow list) =
+//     let getAlignment = function
+//     | Centre -> "align=\"center\""
+//     | Right -> "align=\"right\""
+//     | Left -> ""
+//     let getH = function
+//         | true -> "th"
+//         | false -> "td"
+//     let printCell s = function
+//         | CellLine(line,h,ali) -> 
+//           s + 
+//           (strInlineElements line 
+//           |> attachHTMLTag ((getH h), [getAlignment ali], INLINE, true))
+//     let printRow s = function
+//         | PCells(clst,h) ->
+//             let rowTxt = (List.fold printCell "" clst) |> simpleTag "tr"
+//             s + if h then rowTxt |> simpleTag "thead" else rowTxt
+//     printRow "" (List.head tab)
+//     + (List.fold printRow "" tab.[1..] |> simpleTag "tbody")
+//     |> simpleTag "table"
+
+/// process Markdown Table
+let strTable (rows: PRow list) =
+    // filter out table header
+    let containHeader (row: PRow) =
+        //let PCells(_, isHeader) = row
+        match row with
+        | PCells(_, isHeader) ->
+            isHeader
+    let takeoutCells = List.map (fun pRow -> match pRow with | PCells(cells,_) -> cells)
+    let headerRows = List.filter (containHeader) rows |> takeoutCells
+    let bodyRows = List.filter (containHeader >> not) rows |> takeoutCells
+    let foldCells row =
+        let cellsFolder pStr cell =
+            match cell with
+            | CellLine(line, isHeader, align) ->
+                let tagName = if isHeader then "th" else "td"
+                let cellContent = strInlineElements line
+                let alignAttr =
+                    match align with
+                    | Centre -> ("align", "center")
+                    | Right -> ("align", "right")
+                    | Left -> ("align", "left")
+                pStr + attachHTMLTag (tagName, toAttrs [alignAttr], INLINE, true) cellContent + NLS
+        List.fold cellsFolder "" row
+    let foldRows rows =
+        let rowsFolder pStr row =
+            foldCells row
+            |> attachHTMLTag ("tr", [], GIndent, true)
+            |> fun s -> pStr + s + NLS
+        List.fold rowsFolder "" rows
+    foldRows headerRows |> attachHTMLTag ("thead", [], GIndent, true)
+    |> fun s ->
+    s + foldRows bodyRows |> attachHTMLTag ("tbody", [], GIndent, true)
+
+
+
+
+/// process HTML body part
 
 let strBody pObjs =
     let folder pStr pObj =
@@ -60,6 +101,7 @@ let strBody pObjs =
         | Paragraph p -> strParagraph p
         | Quote q -> strInlineElements q |> attachHTMLTag ("q", [], GIndent, true)
         | CodeBlock (c, l) -> attachHTMLTag ("code", toAttrs [("language", mapLang l)], GIndent, true) c
-        | Table(t) -> strTable t
+        // | Table(t) -> strTable t
+        | Table rows -> strTable rows |> attachHTMLTag ("table", [], GIndent, true)
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
