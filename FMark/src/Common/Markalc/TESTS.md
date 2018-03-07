@@ -54,7 +54,7 @@
 |---|---|
 |Single cell table no header pipe|Pass|
 |Single cell table|Pass|
-|Two rows no pipes|Pass|
+|Two rows no pipes cell reference|Pass|
 |Single row table|Pass|
 |Full evaluation test with cell references|Pass|
 |Circular cell reference|Pass|
@@ -64,4 +64,5 @@
 |Function with cell ref range and other arguments|Pass|
 |Function within a function|Pass|
 |MIN/MAX function test|Pass|
+|Cell reference with key word functionality|Pass|
 

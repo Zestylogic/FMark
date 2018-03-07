@@ -25,10 +25,10 @@ Source ───> │ Lex and Preprocessor│ ───> Token list ───> �
                                    └─────────┘                            └─────────────┘
 ```
 
-1. [Lexer and Preprocessor](FMark/Lexer/README.md)
-2. [TOCite: Table of Contents and Citations](FMark/TOCite/README.md)
-3. [Markalc: Spreadsheet functionality](FMark/Markalc/README.md)
-4. [Main Parser](FMark/Parser/README.md)
+1. [Lexer and Preprocessor](FMark/src/Common/Lexer/README.md)
+2. [TOCite: Table of Contents and Citations](FMark/src/Common/TOCite/README.md)
+3. [Markalc: Spreadsheet functionality](FMark/src/Common/Markalc/README.md)
+4. [Main Parser](FMark/src/Common/Parser/README.md)
 
 ## Specification
 
