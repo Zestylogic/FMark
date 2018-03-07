@@ -14,10 +14,8 @@ let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPai
     |> List.map (fun (i, triple) -> makeOneTest i triple )
     |> Expecto.Tests.testList name
 
-/// "\b" is used as one indent character because backspace would never appear in input string
-/// convert "\b" to `INDENT`, which is defined in HTMLGenHelpers
-let fixNewLineAndIndent (str: string) =
-    str.Replace("\b", INDENT).Replace("\n", NLS)
+let catStr strList =
+    String.concat "" strList
 
 //////////////////////////////////
 // tests
@@ -46,38 +44,118 @@ let strInlineElementsTests =
 
 [<Tests>]
 let paragraphTests =
-    makeExpectoTestList id fixNewLineAndIndent strParagraph "paragraph tests" [
+    makeExpectoTestList id id strParagraph "paragraph tests" [
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]],
-            "<p>\n\b<strong>Go go go!</strong>\n</p>", "strong tag"
+            "<p><strong>Go go go!</strong></p>", "strong tag"
         );
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]],
-            "<p>\n\b<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
+            "<p><strong>Go go go!</strong><a href=\"brokenURL\">broken link</a></p>", "strong and link tag"
         );
         (
             [[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]],
-            "<p>\n\bGo go go!<a href=\"brokenURL\">broken link</a>\n\bCome!\n</p>", "indent test"
+            "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>", "indent test"
         );
     ]
 
 [<Tests>]
 let bodyTests =
-    makeExpectoTestList id fixNewLineAndIndent strBody "body tests" [
+    makeExpectoTestList id id strBody "body tests" [
         (
             [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]]],
-            "<p>\n\b<strong>Go go go!</strong>\n</p>", "strong tag"
+            "<p><strong>Go go go!</strong></p>", "strong tag"
         );
         (
             [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]]],
-            "<p>\n\b<strong>Go go go!</strong><a href=\"brokenURL\">broken link</a>\n</p>", "strong and link tag"
+            "<p><strong>Go go go!</strong><a href=\"brokenURL\">broken link</a></p>", "strong and link tag"
         );
         (
             [CodeBlock("fsharp is cool", FSharp)],
-            "<code language=\"fsharp\">\n\bfsharp is cool\n</code>", "codeblock, noninline"
+            "<code language=\"fsharp\">fsharp is cool</code>", "codeblock, noninline"
         );
         (
             [Quote([FrmtedString(Literal "fsharp is cool")])],
-            "<q>\n\bfsharp is cool\n</q>", "quote"
+            "<q>fsharp is cool</q>", "quote"
+        );
+    ]
+
+[<Tests>]
+let bodyTableTests =
+    makeExpectoTestList id id strTable "body table tests" [
+        (
+            [PCells([CellLine([FrmtedString(Literal "head")], true, Left)], true)],
+            "<table><tbody><thead><tr><th align=\"left\">head</th></tr></thead></tbody></table>", "one thead only"
+        );
+        (
+            [PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)],
+            "<table><tbody><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead></tbody></table>", "two theads with different align"
+        );
+    ]
+
+[<Tests>]
+let listTests =
+    makeExpectoTestList id id strList "list tests" [
+        (
+            {ListType=OL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
+            "<ol><li>first</li></ol>", "ol, 1 li"
+        );
+        (
+            {ListType=UL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
+            "<ul><li>first</li></ul>", "ul, 1 li"
+        );
+        (
+            {ListType=UL;ListItem=
+            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=1},
+            "<ul><li>first</li><li>second</li></ul>", "ul, 2 li"
+        );
+        (
+            {ListType=UL;ListItem=
+            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
+                NestedList{ListType=OL;ListItem=
+                [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=2} ];
+            Depth=1},
+            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>", "ol inside ul"
+        );
+    ]
+
+[<Tests>]
+let headerTests =
+    makeExpectoTestList id id strHeader "header tests" [
+        (
+            {HeaderName=[FrmtedString(Literal "header")]; Level=1},
+            "<h1>header</h1>", "h1"
+        );
+    ]
+
+[<Tests>]
+let inlineFootnoteTests =
+    makeExpectoTestList id id strInlineFootnote "inline footnote tests" [
+        (
+            3,
+            "<sup><a href=\"#footnote3\">3</a></sup>", "footer3"
+        );
+    ]
+
+[<Tests>]
+let fullBodyTests =
+    makeExpectoTestList id catStr strBody "full body tests" [
+        (
+            [
+                Header{HeaderName=[FrmtedString(Literal "header")]; Level=1};
+                List{ListType=UL;ListItem=
+                    [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
+                        NestedList{ListType=OL;ListItem=
+                        [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];
+                        Depth=2} ];
+                    Depth=1};
+                Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
+                Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
+            ],
+            ["<h1>header</h1>";
+            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>";
+            "<table><tbody><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead></tbody></table>";
+            "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>"]
+            , "the bodyshop"
         );
     ]
