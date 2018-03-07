@@ -70,8 +70,21 @@ let strTable (rows: PRow list) =
     |> attachSimpleTag "table"
 
 
-/// process HTML body part
+/// recursively process a list
+let rec strList list =
+    let strListItem pStr li =
+        pStr + (
+            match li with
+            | StringItem(line) -> strInlineElements line
+            | NestedList(list) -> strList list
+            |> attachSimpleTag "li")
+    match list with
+    | {ListType=lt; ListItem=liS} ->
+        let listTag = if lt=UL then "ul" else "ol"
+        List.fold strListItem "" liS
+        |> attachSimpleTag listTag
 
+/// process HTML body part
 let strBody pObjs =
     let folder pStr pObj =
         pStr +
@@ -80,5 +93,6 @@ let strBody pObjs =
         | Quote q -> strInlineElements q |> attachSimpleTag "q"
         | CodeBlock (c, l) -> attachHTMLTag ("code", [("language", mapLang l)], true) c
         | Table rows -> strTable rows
+        | List l -> strList l
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs

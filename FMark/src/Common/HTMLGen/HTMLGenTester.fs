@@ -90,3 +90,29 @@ let bodyTableTests =
             "<table><tbody><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead></tbody></table>", "two theads with different align"
         );
     ]
+
+[<Tests>]
+let listTests =
+    makeExpectoTestList id id strList "list tests" [
+        (
+            {ListType=OL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
+            "<ol><li>first</li></ol>", "ol, 1 li"
+        );
+        (
+            {ListType=UL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
+            "<ul><li>first</li></ul>", "ul, 1 li"
+        );
+        (
+            {ListType=UL;ListItem=
+            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=1},
+            "<ul><li>first</li><li>second</li></ul>", "ul, 2 li"
+        );
+        (
+            {ListType=UL;ListItem=
+            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
+                NestedList{ListType=OL;ListItem=
+                [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=2} ];
+            Depth=1},
+            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>", "ol inside ul"
+        );
+    ]
