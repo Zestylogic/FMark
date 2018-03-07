@@ -65,9 +65,9 @@ let strTable (rows: PRow list) =
         List.fold rowsFolder "" rows
     foldRows headerRows |> attachSimpleTag "thead"
     |> fun s ->
-    s + foldRows bodyRows |> attachSimpleTag "tbody"
-
-
+        s + foldRows bodyRows
+    |> attachSimpleTag "tbody"
+    |> attachSimpleTag "table"
 
 
 /// process HTML body part
@@ -79,7 +79,6 @@ let strBody pObjs =
         | Paragraph p -> strParagraph p
         | Quote q -> strInlineElements q |> attachHTMLTag ("q", [], true)
         | CodeBlock (c, l) -> attachHTMLTag ("code", [("language", mapLang l)], true) c
-        // | Table(t) -> strTable t
-        | Table rows -> strTable rows |> attachHTMLTag ("table", [], true)
+        | Table rows -> strTable rows
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
