@@ -49,6 +49,12 @@ type PCell =
 type PRow =
     | PCells of PCell list * Header:bool
 
+type RefFrmt = IEEE | Harvard | Chicago
+
+type Ref = {Author: string; Title: string; Year: int; URL: string;}
+
+type CiteRef = {Data: Ref; Frmt: RefFrmt}
+
 type ParsedObj =
     | CodeBlock of string * Language
     | Header of THeader
