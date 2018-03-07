@@ -199,3 +199,8 @@ let citeGen' tLst =
     let k = List.sortBy (fun (x,_) -> x) ftLst
             |> List.map (fun (x,y) -> Footnote(x,y))
     k,tLst
+
+let preParser tLst =
+    tocGen' tLst 0
+    |> fun (x,y) -> x, citeGen' y
+    |> fun (x,(y,z)) -> x, y, z
