@@ -26,7 +26,9 @@
     <Compile Include="../Parser/Parser.fs" />
     <Compile Include="../Parser/ParserTest.fs" />
 
-    <Compile Include="../HTMLGen/HTMLGenDummy.fs" />
+    <Compile Include="../HTMLGen/HTMLGenHelpers.fs" />
+    <Compile Include="../HTMLGen/HTMLGen.fs" />
+    <Compile Include="../HTMLGen/HTMLGenTester.fs" />
     <Compile Include="../FMark.fs" />
     <Compile Include="FMarkTests.fs" />
 
