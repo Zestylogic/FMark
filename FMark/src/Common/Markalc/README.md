@@ -11,7 +11,7 @@ To delineate an expression, start the cell with the `=` operator, e.g.
 
 Calcs|39|42|
 |---|---|---|
-||`=6*5+SUM{4,5}`|`=[1][1]+3`|
+||`=6*5+SUM{4,5}`|`=[1,1]+3`|
 
 ### Supported
 
@@ -27,7 +27,7 @@ Calcs|39|42|
 |Addition|`a+b`|a plus b|Property based, all integer inputs.
 |Brackets|`a+(b-c)`|Specify order of operation.|Unit tested.
 |Cell References|`[row][col]`|Evaluates to contents of cell specified|Unit tested|
-|Range Cell Ref|`[0][0]:[2][0]`|Evaluates to list of cell references.|Unit tested, not fully.|
+|Range Cell Ref|`[0,0]:[2,0]`|Evaluates to list of cell references.|Unit tested, not fully.|
 
 
 ##### Cell reference behaviour
@@ -50,7 +50,7 @@ Supported functions:
 |`MIN`|Returns minimum of all arguments.|Unit tested.|
 |`MAX`|Returns maximum of all arguments.|Unit tested.|
 
-Functions support Range Cell References: `[0][0]:[2][0]` will evaluate to `[0][0],[1][0],[2][0]`. This can be used with other arguments, e.g. `SUM{[0][0]:[2][0],1,3+2,[0][0]}`
+Functions support Range Cell References: `[0,0]:[2,0]` will evaluate to `[0,0],[1,0],[2,0]`. This can be used with other arguments, e.g. `SUM{[0,0]:[2,0],1,3+2,[0,0]}`
 
 ### Unsupported
 
