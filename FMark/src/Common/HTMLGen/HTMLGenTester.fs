@@ -14,6 +14,8 @@ let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPai
     |> List.map (fun (i, triple) -> makeOneTest i triple )
     |> Expecto.Tests.testList name
 
+let catStr strList =
+    String.concat "" strList
 
 //////////////////////////////////
 // tests
@@ -123,5 +125,28 @@ let headerTests =
         (
             {HeaderName=[FrmtedString(Literal "header")]; Level=1},
             "<h1>header</h1>", "h1"
+        );
+    ]
+
+[<Tests>]
+let fullBodyTests =
+    makeExpectoTestList id catStr strBody "full body tests" [
+        (
+            [
+                Header{HeaderName=[FrmtedString(Literal "header")]; Level=1};
+                List{ListType=UL;ListItem=
+                    [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
+                        NestedList{ListType=OL;ListItem=
+                        [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];
+                        Depth=2} ];
+                    Depth=1};
+                Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
+                Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
+            ],
+            ["<h1>header</h1>";
+            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>";
+            "<table><tbody><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead></tbody></table>";
+            "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>"]
+            , "the bodyshop"
         );
     ]
