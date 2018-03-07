@@ -1,7 +1,6 @@
 module MarkalcShared
 open Types
 open System.Text.RegularExpressions
-open System.IO
 
 type CellReference = 
     RowCol of Row:uint32*Col:uint32
@@ -101,9 +100,3 @@ let simpleLex txt =
 // let stringLex (txt:string)=
 //     List.map simpleLex (Array.toList (txt.Split("\n")))
 let lexY (x,y,z) = x,y|>simpleLex,z
-
-let printToFile fpath s =
-    use sw = new StreamWriter(path=fpath)
-    let myPrint format = fprintf sw format
-    do myPrint "%s" s
-    sw.Close()

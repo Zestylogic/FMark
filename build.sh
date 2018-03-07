@@ -45,6 +45,7 @@ if [[ -z $TRAVIS_BUILD_DIR ]]; then
         exit 1
     fi
     dotnet fable yarn-dev
+    read -n1 -r -p "Press any key to continue..." key
     if [[ "$?" != "0" ]]; then
         exit 1
     fi
