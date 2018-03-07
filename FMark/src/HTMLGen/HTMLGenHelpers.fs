@@ -20,7 +20,9 @@ let attachHTMLTag (tagName, attributes, style, needCloseTag) (content: string) =
     let attr =
         match List.isEmpty attributes with
         | true -> ""
-        | false -> " " + String.concat " " attributes // space before attributes and tagName
+        | false -> match attributes with
+                   | [""] -> ""
+                   | _ -> " " + String.concat " " attributes // space before attributes and tagName
     let transformedContent =
         match style with
         | INLINE -> content

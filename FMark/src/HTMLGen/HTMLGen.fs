@@ -3,15 +3,14 @@ module HTMLGen
 open Types
 open HTMLGenHelpers
 
-
-
+let simpleTag tagName = attachHTMLTag (tagName,[],INLINE,true)
 /// convert TFrmtedString to string, with HTML tags where necessary
 let rec strFStr fStr =
     match fStr with
     | Literal str -> str
-    | Code str -> attachHTMLTag ("code", [], INLINE, true) str
-    | Strong a -> strInlineElements a |> attachHTMLTag ("strong", [], INLINE, true)
-    | Emphasis e -> strInlineElements e |> attachHTMLTag ("em", [], INLINE, true)
+    | Code str -> str |> simpleTag "code"
+    | Strong a -> strInlineElements a |> simpleTag "strong"
+    | Emphasis e -> strInlineElements e |> simpleTag "em"
 
 /// convert InlineElement list to string, with HTML tags where necessary
 /// not tail recursive because the code looks cleaner this way
@@ -33,6 +32,27 @@ let strParagraph lines =
     |> deletetrailingNewLines
     |> attachHTMLTag ("p", [], GIndent, true)
 
+let strTable (tab:PRow list) =
+    let getAlignment = function
+    | Centre -> "align=\"center\""
+    | Right -> "align=\"right\""
+    | Left -> ""
+    let getH = function
+        | true -> "th"
+        | false -> "td"
+    let printCell s = function
+        | CellLine(line,h,ali) -> 
+          s + 
+          (strInlineElements line 
+          |> attachHTMLTag ((getH h), [getAlignment ali], INLINE, true))
+    let printRow s = function
+        | PCells(clst,h) ->
+            let rowTxt = (List.fold printCell "" clst) |> simpleTag "tr"
+            s + if h then rowTxt |> simpleTag "thead" else rowTxt
+    printRow "" (List.head tab)
+    + (List.fold printRow "" tab.[1..] |> simpleTag "tbody")
+    |> simpleTag "table"
+
 let strBody pObjs =
     let folder pStr pObj =
         pStr +
@@ -40,5 +60,6 @@ let strBody pObjs =
         | Paragraph p -> strParagraph p
         | Quote q -> strInlineElements q |> attachHTMLTag ("q", [], GIndent, true)
         | CodeBlock (c, l) -> attachHTMLTag ("code", toAttrs [("language", mapLang l)], GIndent, true) c
+        | Table(t) -> strTable t
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
