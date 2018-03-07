@@ -33,7 +33,7 @@ esac
 done
 
 if [[ -z $BUILD ]]; then
-    BUILD=fsharp
+    BUILD=all
 fi
 
 if [[ $BUILD != "fsharp" ]] && [[ $BUILD != "js" ]] && [[ $BUILD != "all" ]]; then
