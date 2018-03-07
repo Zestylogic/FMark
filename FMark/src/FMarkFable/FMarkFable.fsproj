@@ -17,7 +17,8 @@
     <Compile Include="../Markalc/Markalc.fs" />
     <Compile Include="../Parser/ParserHelperFuncs.fs" />
     <Compile Include="../Parser/Parser.fs" />
-    <Compile Include="../HTMLGen/HTMLGenDummy.fs" />
+    <Compile Include="../HTMLGen/HTMLGenHelpers.fs" />
+    <Compile Include="../HTMLGen/HTMLGen.fs" />
     <Compile Include="../FMark.fs" />
     <Compile Include="FMarkFable.fs" />
   </ItemGroup>
