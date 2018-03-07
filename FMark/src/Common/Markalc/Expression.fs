@@ -20,7 +20,9 @@ let makeInt (i:string) =
     i |> int
 let makeCellReference (row:string,col:string) =
     RowCol(row|>uint32,col|>uint32)
-
+// [row=3,col=2]
+// ]2=col,3=row[
+// [row=3,col=2] [3,42]
 /// EXPRESSION PARSER
 let parseExp toks = 
     let rec (|Expression|_|) (toks:Token list) =
@@ -29,8 +31,14 @@ let parseExp toks =
             | NUMBER(i) :: after -> (makeInt i |> float, after) |> Some
             | _ -> None
         let rec (|CellRefPat|_|) = function
-            | RSBRA :: NUMBER(row) :: COMMA :: NUMBER(col) :: LSBRA :: after 
-                -> ((col,row) |> makeCellReference,after) |> Some
+            | RSBRA :: NUMBER(col) :: COMMA :: NUMBER(row) :: LSBRA :: after 
+                -> ((row,col) |> makeCellReference,after) |> Some
+            | RSBRA :: NUMBER(row) :: EQUAL :: LITERAL("row") :: COMMA :: NUMBER(col) :: EQUAL :: LITERAL("col") :: LSBRA :: after 
+                -> sprintf "Row:%A, Col:%A" row col |> logger.Debug None
+                   ((row,col) |> makeCellReference,after) |> Some
+            | RSBRA :: NUMBER(col) :: EQUAL :: LITERAL("col") :: COMMA :: NUMBER(row) :: EQUAL :: LITERAL("row") :: LSBRA :: after 
+                ->  sprintf "Row:%A, Col:%A" row col |> logger.Debug None
+                    ((row,col) |> makeCellReference,after) |> Some
             | _ -> None
         let rec (|ExpressionList|_|) = function
             | Expression(exp,COMMA::ExpressionList(exps,after)) -> (exp::exps,after) |> Some
