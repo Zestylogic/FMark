@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../Types.fs" />
+    <Compile Include="../Logger/Logger.fs">
+    <Compile Include="../Shared.fs">
+    <Compile Include="HTMLGenHelpers.fs" />
+    <Compile Include="HTMLGen.fs" />
+    <Compile Include="HTMLGenTester.fs" />
+    <Compile Include="HTMLGenProgram.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Expecto" Version="5.1.2" />
+    <PackageReference Include="Expecto.FsCheck" Version="5.1.2" />
+  </ItemGroup>
+
+</Project>

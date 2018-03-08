@@ -6,27 +6,33 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="../Types.fs" />
-    <Compile Include="../IOFuncs.fs" />
-    <Compile Include="../Lexer/LexerShared.fs" />
-    <Compile Include="../Lexer/Preprocessor.fs" />
-    <Compile Include="../Lexer/Lexer.fs" />
-    <Compile Include="../Lexer/LexerTest.fs" />
+    <Compile Include="../Common/Types.fs" />
+    <Compile Include="../Common/Shared.fs" />
+    <Compile Include="../Common/IOFuncs.fs" />
+    <Compile Include="../Common/Logger/Logger.fs" />
+    <Compile Include="../Common/Lexer/LexerShared.fs" />
+    <Compile Include="../Common/Lexer/Preprocessor.fs" />
+    <Compile Include="../Common/Lexer/Lexer.fs" />
+    <Compile Include="../Common/Lexer/LexerTest.fs" />
 
-    <Compile Include="../TOCite/TOCite.fs" />
-    <Compile Include="../TOCite/TOCitetest.fs" />
+    <Compile Include="../Common/TOCite/TOCite.fs" />
+    <Compile Include="../Common/TOCite/TOCitetest.fs" />
 
-    <Compile Include="../Markalc/MarkalcShared.fs" />
-    <Compile Include="../Markalc/Expression.fs" />
-    <Compile Include="../Markalc/Markalc.fs" />
-    <Compile Include="../Markalc/MarkalcTest.fs" />
+    <Compile Include="../Common/Markalc/MarkalcShared.fs" />
+    <Compile Include="../Common/Markalc/Expression.fs" />
+    <Compile Include="../Common/Markalc/Markalc.fs" />
+    <Compile Include="../Common/Markalc/MarkalcTest.fs" />
 
-    <Compile Include="../Parser/ParserHelperFuncs.fs" />
-    <Compile Include="../Parser/Parser.fs" />
-    <Compile Include="../Parser/ParserTest.fs" />
+    <Compile Include="../Common/Parser/ParserHelperFuncs.fs" />
+    <Compile Include="../Common/Parser/Parser.fs" />
+    <Compile Include="../Common/Parser/ParserTest.fs" />
 
-    <Compile Include="../HTMLGen/HTMLGenDummy.fs" />
-    <Compile Include="../FMark.fs" />
+    <Compile Include="../Common/HTMLGen/HTMLGenHelpers.fs" />
+    <Compile Include="../Common/HTMLGen/HTMLGen.fs" />
+    <Compile Include="../Common/HTMLGen/HTMLGenTester.fs" />
+    <Compile Include="../Common/MarkdownGen/MarkdownGen.fs" />
+    <Compile Include="../Common/MarkdownGen/MarkdownGenTester.fs" />
+    <Compile Include="../Common/FMark.fs" />
     <Compile Include="FMarkTests.fs" />
 
     <Compile Include="FMarkCLI.fs" />
