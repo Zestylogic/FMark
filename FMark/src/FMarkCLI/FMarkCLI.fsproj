@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="../Common/Types.fs" />
     <Compile Include="../Common/Shared.fs" />
     <Compile Include="../Common/IOFuncs.fs" />
@@ -33,6 +34,31 @@
     <Compile Include="../Common/MarkdownGen/MarkdownGen.fs" />
     <Compile Include="../Common/MarkdownGen/MarkdownGenTester.fs" />
     <Compile Include="../Common/FMark.fs" />
+=======
+    <Compile Include="../Types.fs" />
+    <Compile Include="../IOFuncs.fs" />
+    <Compile Include="../Lexer/LexerShared.fs" />
+    <Compile Include="../Lexer/Preprocessor.fs" />
+    <Compile Include="../Lexer/Lexer.fs" />
+    <Compile Include="../Lexer/LexerTest.fs" />
+
+    <Compile Include="../TOCite/TOCiteHelper.fs" />
+    <Compile Include="../TOCite/RefParse.fs" />
+    <Compile Include="../TOCite/TOCite.fs" />
+    <Compile Include="../TOCite/TOCiteTest.fs" />
+
+    <Compile Include="../Markalc/MarkalcShared.fs" />
+    <Compile Include="../Markalc/Expression.fs" />
+    <Compile Include="../Markalc/Markalc.fs" />
+    <Compile Include="../Markalc/MarkalcTest.fs" />
+
+    <Compile Include="../Parser/ParserHelperFuncs.fs" />
+    <Compile Include="../Parser/Parser.fs" />
+    <Compile Include="../Parser/ParserTest.fs" />
+
+    <Compile Include="../HTMLGen/HTMLGenDummy.fs" />
+    <Compile Include="../FMark.fs" />
+>>>>>>> dev-zifan
     <Compile Include="FMarkTests.fs" />
 
     <Compile Include="FMarkCLI.fs" />

@@ -17,6 +17,51 @@ let rec deleteLeadingENDLINEs toks =
     | ENDLINE:: tks -> deleteLeadingENDLINEs tks
     | _ -> toks
 
+<<<<<<< HEAD:FMark/src/Common/Parser/ParserHelperFuncs.fs
+=======
+/// map a Token to string
+let mapTok = function
+    | CODEBLOCK _ -> "CODEBLOCK" // not supposed to be read by matchTok
+    | LITERAL str-> str
+    | WHITESPACE n -> String.replicate n " "
+    | NUMBER str -> str
+    | HASH -> "#"
+    | PIPE->  "|"
+    | EQUAL-> "="
+    | MINUS-> "-"
+    | PLUS->  "+"
+    | ASTERISK-> "*"
+    | DOT-> "."
+    | DASTERISK-> "**"
+    | TASTERISK-> "***"
+    | UNDERSCORE-> "_"
+    | DUNDERSCORE-> "__"
+    | TUNDERSCORE-> "___"
+    | TILDE-> "~"
+    | DTILDE-> "~~"
+    | TTILDE-> "~~~"
+    | LSBRA-> "["
+    | RSBRA-> "]"
+    | LBRA-> "("
+    | RBRA-> ")"
+    | BSLASH-> "\\"
+    | SLASH-> "/"
+    | LABRA-> "<"
+    | RABRA-> ">"
+    | LCBRA -> "{"
+    | RCBRA -> "}"
+    | BACKTICK -> "`"
+    | TBACKTICK -> "``"
+    | EXCLAMATION -> "!"
+    | ENDLINE -> "\n"
+    | COLON -> ":"
+    | CARET -> "^"
+    | PERCENT -> "%"
+    | COMMA -> ","
+    | FOOTER n -> sprintf "FOOTER %A" n
+    | HEADER n -> sprintf "HEADER %d" n
+
+>>>>>>> dev-zifan:FMark/src/Parser/ParserHelperFuncs.fs
 /// convert all Tokens into a single string
 /// see mapTok for Token mapping
 let stringAllTokens toks =
