@@ -53,7 +53,7 @@ let accGen tokLst =
     | None -> []
     | Some a ->
         [FrmtedString (Literal "]")]
-        |> List.append (FrmtedString (Literal "[Accessed on: ")::accGen' a)
+        |> List.append (FrmtedString (Literal "[Accessed ")::accGen' a)
 
 let rec ref2TLine format ref:TLine =
     match format with

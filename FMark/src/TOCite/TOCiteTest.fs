@@ -214,7 +214,7 @@ let testDataRef =
     "Access date only",
     [LITERAL "access";EQUAL; WHITESPACE 1; LITERAL "8th March 2018"],
     Harvard,
-    [FrmtedString (Literal "[Accessed on: ");
+    [FrmtedString (Literal "[Accessed ");
         FrmtedString (Literal "8th March 2018"); FrmtedString (Literal "]")];
 
     "Book reference",
@@ -238,7 +238,7 @@ let testDataRef =
         FrmtedString (Emphasis [FrmtedString (Literal "Not a real website")]);
         FrmtedString (Literal "(2017) "); FrmtedString (Literal "Available from: ");
         Link (Literal "www.example.com/website","www.example.com/website");
-        FrmtedString (Literal " "); FrmtedString (Literal "[Accessed on: ");
+        FrmtedString (Literal " "); FrmtedString (Literal "[Accessed ");
         FrmtedString (Literal "4th March 2018"); FrmtedString (Literal "]")]
 
     ]
