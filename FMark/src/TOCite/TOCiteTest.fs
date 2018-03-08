@@ -4,7 +4,6 @@ open RefParse
 open TOCite
 open Expecto
 
-
 // --------------------------------------------------------------------------------
 let testDataHd = [
     "Basic Test",
@@ -97,12 +96,32 @@ let testDataFt = [
         []
     );
 
+    "Basic reference text",
+    [LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
+        LITERAL "Zifan"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL;
+        WHITESPACE 1; LITERAL "Not a real book"; COMMA; LITERAL "year"; EQUAL;
+        WHITESPACE 1; LITERAL "2018"; ENDLINE],
+    (
+        [Footnote (RefID "Eric", [FrmtedString (Literal "Wang, ");
+            FrmtedString (Literal "Z. ");
+            FrmtedString (Emphasis [FrmtedString(Literal "Not a real book")])])],
+        []
+    );
+
     "Basic footer within text",
     [LITERAL "textbefore"; LSBRA; CARET; NUMBER "3"; RSBRA;
         LITERAL "textAfter"; ENDLINE],
     (
         [],
         [LITERAL "textbefore"; FOOTER (FtID 3); LITERAL "textAfter"; ENDLINE]
+    );
+
+    "Basic reference within text",
+    [LITERAL "textbefore"; LSBRA; CARET; LITERAL "Eric"; RSBRA;
+        LITERAL "textAfter"; ENDLINE],
+    (
+        [],
+        [LITERAL "textbefore"; FOOTER (RefID "Eric"); LITERAL "textAfter"; ENDLINE]
     );
 
     "Fake footer",
@@ -157,43 +176,43 @@ let testDataRef =
     [
     "Author only",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
-        LITERAL "Wang"; ENDLINE],
+        LITERAL "Wang"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ")];
 
     "Author with multiple given names",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
-        LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; ENDLINE],
+        LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "E. ");
         FrmtedString (Literal "Z. ")];
 
     "Title only",
-    [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; ENDLINE],
+    [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"],
     Harvard,
     [FrmtedString (Emphasis [FrmtedString (Literal "Book1")])];
 
     "Title with multiple words",
     [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
-        LITERAL "Subtitle"; ENDLINE],
+        LITERAL "Subtitle"],
     Harvard,
     [FrmtedString (Emphasis [FrmtedString (Literal "Book1");
         FrmtedString (Literal "Subtitle")])];
 
     "Year only",
-    [LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"; ENDLINE],
+    [LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"],
     Harvard,
     [FrmtedString (Literal "(2018) ")];
 
     "URL only",
-    [LITERAL "url";EQUAL; WHITESPACE 1; LITERAL "www.example.com"; ENDLINE],
+    [LITERAL "url";EQUAL; WHITESPACE 1; LITERAL "www.example.com"],
     Harvard,
     [FrmtedString (Literal "Available from: ");
         Link (Literal "www.example.com","www.example.com");
         FrmtedString (Literal " ")];
 
     "Access date only",
-    [LITERAL "access";EQUAL; WHITESPACE 1; LITERAL "8th March 2018"; ENDLINE],
+    [LITERAL "access";EQUAL; WHITESPACE 1; LITERAL "8th March 2018"],
     Harvard,
     [FrmtedString (Literal "[Accessed on: ");
         FrmtedString (Literal "8th March 2018"); FrmtedString (Literal "]")];
@@ -202,7 +221,7 @@ let testDataRef =
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
         LITERAL "Not a real book"; COMMA; LITERAL "year"; EQUAL; WHITESPACE 1;
-        LITERAL "2018"; ENDLINE],
+        LITERAL "2018"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ");
         FrmtedString (Emphasis [FrmtedString (Literal "Not a real book")])];
@@ -213,7 +232,7 @@ let testDataRef =
         LITERAL "Not a real website"; COMMA; LITERAL "year"; EQUAL;
         WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
         WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
-        LITERAL "access"; EQUAL; WHITESPACE 1; LITERAL "4th March 2018"; ENDLINE],
+        LITERAL "access"; EQUAL; WHITESPACE 1; LITERAL "4th March 2018"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "E. ");
         FrmtedString (Emphasis [FrmtedString (Literal "Not a real website")]);
@@ -230,3 +249,38 @@ let makeRefTest (name,inn,frmt,out) =
 let refTests =
     List.map makeRefTest testDataRef
     |> Expecto.Tests.testList "Specific reference unit tests"
+
+// --------------------------------------------------------------------------------
+
+let testDataFull =
+    [
+    "Inline footer and references",
+    [LITERAL "textbefore"; LSBRA; CARET; NUMBER "3"; RSBRA;
+        LITERAL "textBetween"; LSBRA; CARET; LITERAL "Eric"; RSBRA;
+        LITERAL "textAfter"; ENDLINE],
+    (
+        [],
+        [],
+        [LITERAL "textbefore"; FOOTER (FtID 3); LITERAL "textBetween";
+            FOOTER (RefID "Eric"); LITERAL "textAfter"; ENDLINE]
+    )
+
+    ]
+
+let testConvHd =
+    let rf (a,b) = (a,[],b)
+    testDataHd |> List.map (fun (a,b,c) -> a, b, rf c)
+
+let testConvFt = 
+    let rf (a,b) = ([],a,b)
+    testDataFt |> List.map (fun (a,b,c) -> a, b, rf c)
+
+let makeFullTest (name,inn,out) =
+    testCase name <| fun () -> Expect.equal (preParser inn) out "Unit test"
+
+[<Tests>]
+let fullTests =
+    [testDataFull; testConvHd; testConvFt]
+    |> List.reduce List.append
+    |> List.map makeFullTest
+    |> Expecto.Tests.testList "Preparser full unit tests"

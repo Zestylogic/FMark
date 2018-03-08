@@ -49,9 +49,30 @@ let tocGen tLst maxD =
     {MaxDepth = maxD; HeaderLst = tocGen' tLst maxD |> fun (x,_)->x}
 
 // --------------------------------------------------------------------------------
-//pick out footnotes and send to footLineParse
-//second version for inserting tokens back for linking
-//works, but messy compared to the first version
+// parse footnotes with parseLine
+let rec citeParseIn' tLne tocLst :TLine*Token list =
+    match tocLst with
+    // continue if next line is indented
+    | ENDLINE::WHITESPACE a::tl when a >= 4 ->
+        citeParseIn' tLne tl
+        |> fun (x,y) -> List.append tLne x, y
+    | ENDLINE::tl -> tLne, tl
+    | _::_ ->
+        parseLine tocLst
+        |> fun(x,y) -> citeParseIn' x y
+    | [] -> tLne, []
+
+// parse references with refParser
+let rec refParse tocLst :TLine*Token list =
+    let ind = tocLst |> List.tryFindIndex (fun x -> x = ENDLINE)
+    match ind with
+    | Some i ->
+        let (h,t) = List.splitAt i tocLst
+        refParser Harvard h, t.Tail
+    | None ->
+        refParser Harvard tocLst, []
+
+// main citation parser
 let rec citeParse' tocLst :(ID*TLine)list*Token list =
     let recFit (a,b) c =
         citeParse' b
@@ -74,29 +95,8 @@ let rec citeParse' tocLst :(ID*TLine)list*Token list =
         |> fun (x,y) -> x, t::y
     | [] -> [], []
 
-//parse footnotes with parseLine
-and citeParseIn' tLne tocLst :TLine*Token list =
-    match tocLst with
-    // continue if next line is indented
-    | ENDLINE::WHITESPACE a::tl when a >= 4->
-        citeParseIn' tLne tl
-        |> fun (x,y) -> List.append tLne x, y
-    | ENDLINE::tl -> tLne, tl
-    | _::_ ->
-        parseLine tocLst
-        |> fun(x,y) -> citeParseIn' x y
-    | [] -> tLne, []
-
-and refParse tocLst :TLine*Token list =
-    let ind = tocLst |> List.tryFindIndex (fun x -> x = ENDLINE)
-    match ind with
-    | Some i ->
-        let (h,t) = List.splitAt i tocLst
-        refParser Harvard h, t
-    | None ->
-        refParser Harvard tocLst, []
-
 //type change and sorting
+// might change now that there are string IDs
 let citeGen' tLst =
     let ftLst,tLst = citeParse' tLst
     let k = List.sortBy (fun (x,_) -> x) ftLst
