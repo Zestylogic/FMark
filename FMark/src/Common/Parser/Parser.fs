@@ -3,6 +3,9 @@ open Types
 open Shared
 open ParserHelperFuncs
 open Markalc
+open Logger
+
+let logger = Logger(LogLevel.ERROR)
 
 // helper functions
 
@@ -29,7 +32,8 @@ let rec parseCode toks =
         parseCode toks'
         |> Result.map (fun (str, tks) ->
         mapTok tok + str, tks )
-    | _ -> "BACKTICK is not match for inline code" |> Error
+    | e ->  logger.Error None (sprintf "%A" e)
+            ("\\`", xOnwards 1 toks) |> Ok
 
 /// parse inline text, including links and pictures, terminate on 2>= `ENDLINE`s
 let parseInLineElements toks =

@@ -47,4 +47,4 @@ let mapLang lang =
     | C -> "c"
     | Empty -> ""
 
-    
+let xOnwards x lst = if List.length lst > x then lst.[x..] else []

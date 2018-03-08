@@ -4,6 +4,9 @@ open FMark
 open MarkalcTest
 open Expecto
 open Types
+open Logger
+
+let logger = Logger(LogLevel.DEBUG)
 
 let htmlTestData = [
     "Simple table",
@@ -43,19 +46,23 @@ let tests =
 // PROPERTY BASED TESTS
 
 /// Check if markdown output of FMark is the same if passed through FMark again
-(*
+
 [<Tests>]
 let FMarkPropertyTest =
     testProperty "FMarkPropertyTest" <| fun (s: string) ->
         let takeEither = function
             | Ok(s)
             | Error(s) -> s
-        let splitStr (s:string) = s.Split '\n' |> Array.toList 
+        let splitStr (s:string) = s.Split '\n' |> Array.toList |> (List.filter (fun s -> s<>""))
         // The functions will not work with a null string
         // There is also a weird interaction with '\' because it escapes itself
-        let str = if (isNull s) then "" else s.Replace("\\", "")
+        let removeChars lst s =
+            let folder (s:string) x = s.Replace(x,"")
+            List.fold folder s lst
+            //|> logPass None logger.Debug
+        let str = if (isNull s) then "" else removeChars ["\\";"!";"[";"]";"(";")";"╝";"╔";"║";">";":";"<";"╚";"╗";"`";"║";"║"] s
+                  |> logPass None logger.Debug
                   |> splitStr
         let preprocess1 = str |> (takeEither<<processString Markdown)
         let preprocess2 = str |> (takeEither<<processString Markdown) |> (takeEither<<processString Markdown<<splitStr)
         Expect.equal preprocess1 preprocess2 ""
-*)
