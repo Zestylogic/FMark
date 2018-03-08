@@ -1,6 +1,7 @@
 module HTMLGen
 
 open Types
+open Shared
 open HTMLGenHelpers
 
 
