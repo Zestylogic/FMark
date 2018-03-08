@@ -34,10 +34,12 @@ let attachHTMLTag (tagName, attributes: list<string * string>, needCloseTag) (co
         | true -> ""
         | false ->
             let attrFolder pStr attrNameValue =
-                let (attrName, value) = attrNameValue
-                pStr + " " +       // space before attribute
-                if value = "" then attrName
-                else attrName + "=\"" + value + "\""
+                match attrNameValue with
+                | ("","") -> ""
+                | (attrName, value) ->
+                    pStr + " " +       // space before attribute
+                    if value = "" then attrName
+                    else attrName + "=\"" + value + "\""
             List.fold attrFolder "" attributes
     "<" + tagName + attrStr + ">"
     + content
