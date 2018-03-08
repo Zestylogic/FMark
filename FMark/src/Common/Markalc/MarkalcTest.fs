@@ -72,13 +72,13 @@ let parseDefaultRowData = [
 let alignmentData = [
     "No alignments",
     "---|----|---",
-    [Left;Left;Left] |> Ok;
+    [NoAlign;NoAlign;NoAlign] |> Ok;
     "Middle right aligned",
     "---|---:|---",
-    [Left;Right;Left] |> Ok;
+    [NoAlign;Right;NoAlign] |> Ok;
     "No alignments, superfluous pipes both sides",
     "|---|---|---|",
-    [Left;Left;Left] |> Ok;
+    [NoAlign;NoAlign;NoAlign] |> Ok;
     "All centre aligned, both outside pipes",
     "|:---:|:---:|:---:|",
     [Centre;Centre;Centre] |> Ok;
@@ -90,13 +90,13 @@ let alignmentData = [
     [Centre;Centre;Centre] |> Ok;
     "Simple all align types",
     "---|:---:|---:",
-    [Left;Centre;Right] |> Ok;
+    [NoAlign;Centre;Right] |> Ok;
     "Complex non-symmetric using all aligns w/o outside pipes",
     "---|:---:|---:|:---:|:---|---:|:---:|---:|:---",
-    [Left;Centre;Right;Centre;Left;Right;Centre;Right;Left] |> Ok;
+    [NoAlign;Centre;Right;Centre;Left;Right;Centre;Right;Left] |> Ok;
     "Complex non-symmetric using all aligns with outside pipes",
     "|---|:---:|---:|:---:|:---|---:|:---:|---:|:---|",
-    [Left;Centre;Right;Centre;Left;Right;Centre;Right;Left] |> Ok
+    [NoAlign;Centre;Right;Centre;Left;Right;Centre;Right;Left] |> Ok
 ]
 let basicTableData = [
     "Table parse into cells with no functions",
@@ -116,13 +116,13 @@ let ans head a b c = Cells ([Contents (a,head,Left)  ;
 let fullTestData = [
     "Single cell table no header pipe",
     ["=2+2"; "---|"; ],
-    [Cells([Contents ([NUMBER("4")],true,Left);],true)] |> Ok;
+    [Cells([Contents ([NUMBER("4")],true,NoAlign);],true)] |> Ok;
     "Single cell table",
     ["=2+2|"; "---|"; ],
-    [Cells([Contents ([NUMBER("4")],true,Left);],true)] |> Ok;
+    [Cells([Contents ([NUMBER("4")],true,NoAlign);],true)] |> Ok;
     "Two rows no pipes cell reference",
     ["=2+2"; "---|"; "=[0,0]+3";],
-    [Cells ([Contents ([NUMBER("4")],true,Left);],true);Cells ([Contents ([NUMBER("7")],false,Left);],false)] |> Ok;
+    [Cells ([Contents ([NUMBER("4")],true,NoAlign);],true);Cells ([Contents ([NUMBER("7")],false,NoAlign);],false)] |> Ok;
     "Single row table",
     ["=2+2|header2|header3"; align; ],
     [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"]] |> Ok;
@@ -178,7 +178,7 @@ let fullTestData = [
      ans false [] [NUMBER "52"] [NUMBER "42"]] |> Ok;
     "MIN/MAX function test",
     ["=MIN{3,4,2,5,3,2,4,5,7,1,20}|=MAX{3,4,2,5,3,2,4,5,7,1,20}"; "---|---"; ],
-    [Cells ([Contents ([NUMBER("1")],true,Left);Contents ([NUMBER("20")],true,Left)],true)] |> Ok;
+    [Cells ([Contents ([NUMBER("1")],true,NoAlign);Contents ([NUMBER("20")],true,NoAlign)],true)] |> Ok;
     "Cell reference with key word functionality",
     ["=5|header2|header3";
     ":------|:-----:|------:";
