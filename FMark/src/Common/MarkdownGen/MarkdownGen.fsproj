@@ -7,12 +7,11 @@
 
   <ItemGroup>
     <Compile Include="../Types.fs" />
-    <Compile Include="../Logger/Logger.fs">
-    <Compile Include="../Shared.fs">
-    <Compile Include="HTMLGenHelpers.fs" />
-    <Compile Include="HTMLGen.fs" />
-    <Compile Include="HTMLGenTester.fs" />
-    <Compile Include="HTMLGenProgram.fs" />
+    <Compile Include="../Shared.fs" />
+    <Compile Include="../Logger/Logger.fs" />
+    <Compile Include="MarkdownGen.fs" />
+    <Compile Include="MarkdownGenTester.fs" />
+    <Compile Include="MarkdownGenProgram.fs" />
   </ItemGroup>
 
   <ItemGroup>

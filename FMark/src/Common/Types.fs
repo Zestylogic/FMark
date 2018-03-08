@@ -70,3 +70,5 @@ type Cell with
                        | Contents(_,head,_) -> head
     member c.GetParams = match c with 
                          | Contents(toks,head,align) -> toks,head,align
+
+type OutFormat = HTML | Markdown

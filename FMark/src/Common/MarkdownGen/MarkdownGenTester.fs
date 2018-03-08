@@ -1,13 +1,12 @@
-module HTMLGenTester
+module MarkdownGenTester
 
 open Types
-open HTMLGen
-open HTMLGenHelpers
+open MarkdownGen
 open Expecto
 
 let id x = x
 let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPairs =
-    let makeOneTest i (inn, out, msg) = testCase (sprintf "test numer: %d" i) <| fun () ->
+    let makeOneTest i (inn, out, msg) = testCase (sprintf "test markdown: %d" i) <| fun () ->
         Expect.equal (inn |> inputTransform |> testFunc) (outputTransform out) msg
     listOfIOPairs
     |> List.indexed
@@ -22,128 +21,143 @@ let catStr strList =
 //////////////////////////////////
 
 [<Tests>]
-let strInlineElementsTests =
-    makeExpectoTestList id id strInlineElements "strInlineElementsTests" [
+let mdInlineElementsTests =
+    makeExpectoTestList id id mdInlineElements "mdInlineElementsTests" [
         (
             [FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))],
-            "<strong>Go go go!</strong>", "strong tag"
+            "**Go go go!**", "strong tag"
         );
         (
             [FrmtedString(Emphasis([FrmtedString(Literal "Go go go!")]))],
-            "<em>Go go go!</em>", "em tag"
+            "*Go go go!*", "em tag"
         );
         (
             [Link(Emphasis([FrmtedString(Literal "Go go go!")]), "www.google.co.uk")],
-            "<a href=\"www.google.co.uk\"><em>Go go go!</em></a>", "a tag"
+            "[*Go go go!*](www.google.co.uk)", "a tag"
         );
         (
             [Picture("404 not found", "www.google.co.uk/img.jpg")],
-            "<img src=\"www.google.co.uk/img.jpg\" alt=\"404 not found\">", "picture tag"
+            "![404 not found](www.google.co.uk/img.jpg)", "picture tag"
         );
     ]
 
 [<Tests>]
 let paragraphTests =
-    makeExpectoTestList id id strParagraph "paragraph tests" [
+    makeExpectoTestList id id mdParagraph "paragraph tests" [
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]],
-            "<p><strong>Go go go!</strong></p>", "strong tag"
+            "**Go go go!**\n\n", "strong tag"
         );
         (
             [[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]],
-            "<p><strong>Go go go!</strong><a href=\"brokenURL\">broken link</a></p>", "strong and link tag"
+            "**Go go go!**[broken link](brokenURL)\n\n", "strong and link tag"
         );
         (
             [[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]],
-            "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>", "indent test"
+            "Go go go![broken link](brokenURL)Come!\n\n", "indent test"
         );
     ]
 
 [<Tests>]
 let bodyTests =
-    makeExpectoTestList id id strBody "body tests" [
+    makeExpectoTestList id id mdBody "body tests" [
         (
             [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")]))]]],
-            "<p><strong>Go go go!</strong></p>", "strong tag"
+            "**Go go go!**\n\n", "strong tag"
         );
         (
             [Paragraph[[FrmtedString(Strong([FrmtedString(Literal "Go go go!")])); Link(Literal "broken link", "brokenURL")]]],
-            "<p><strong>Go go go!</strong><a href=\"brokenURL\">broken link</a></p>", "strong and link tag"
+            "**Go go go!**[broken link](brokenURL)\n\n", "strong and link tag"
         );
         (
             [CodeBlock("fsharp is cool", FSharp)],
-            "<code language=\"fsharp\">fsharp is cool</code>", "codeblock, noninline"
+            "```fsharp\nfsharp is cool\n```", "codeblock, noninline"
         );
+        (*
         (
             [Quote([FrmtedString(Literal "fsharp is cool")])],
-            "<q>fsharp is cool</q>", "quote"
+            "\`fsharp is cool\`", "quote"
         );
+        *)
     ]
 
 [<Tests>]
 let bodyTableTests =
-    makeExpectoTestList id id strTable "body table tests" [
+    makeExpectoTestList id id mdTable "body table tests" [
         (
             [PCells([CellLine([FrmtedString(Literal "head")], true, NoAlign)], true)],
-            "<table><thead><tr><th>head</th></tr></thead><tbody></tbody></table>", "one thead only"
+            "|head|\n|---|\n\n", "one thead only"
         );
         (
             [PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)],
-            "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>", "two theads with different align"
+            "|head|head|\n|:---|---:|\n\n", "two theads with different align"
         );
     ]
 
+
 [<Tests>]
 let listTests =
-    makeExpectoTestList id id strList "list tests" [
+    makeExpectoTestList id id mdList "list tests" [
         (
             {ListType=OL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
-            "<ol><li>first</li></ol>", "ol, 1 li"
+            "1. first\n", "ol, 1 li"
         );
         (
             {ListType=UL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
-            "<ul><li>first</li></ul>", "ul, 1 li"
+            "- first\n", "ul, 1 li"
         );
         (
             {ListType=UL;ListItem=
             [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=1},
-            "<ul><li>first</li><li>second</li></ul>", "ul, 2 li"
+            "- first\n- second\n", "ul, 2 li"
+        );
+        (
+            {ListType=OL;ListItem=
+            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=1},
+            "1. first\n2. second\n", "ol, 2 li"
+        );
+        (
+            {ListType=OL;ListItem=
+            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];NestedList{ListType=UL;ListItem=
+                [StringItem[FrmtedString(Literal "third")]; StringItem[FrmtedString(Literal "fourth")] ];Depth=2}  ];Depth=1},
+            "1. first\n2. second\n\t- third\n\t- fourth\n", "ol, 2 li, nested 1 ul"
         );
         (
             {ListType=UL;ListItem=
             [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
                 NestedList{ListType=OL;ListItem=
-                [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=2} ];
+                [StringItem[FrmtedString(Literal "third")]; StringItem[FrmtedString(Literal "fourth")] ];Depth=2} ];
             Depth=1},
-            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>", "ol inside ul"
+            "- first\n- second\n\t1. third\n\t2. fourth\n", "ol inside ul"
         );
     ]
 
 [<Tests>]
 let headerTests =
-    makeExpectoTestList id id strHeader "header tests" [
+    makeExpectoTestList id id mdHeader "header tests" [
         (
             {HeaderName=[FrmtedString(Literal "header")]; Level=1},
-            "<h1>header</h1>", "h1"
+            "# header\n", "h1"
         );
         (
             {HeaderName=[FrmtedString(Literal "header")]; Level=2},
-            "<h2>header</h2>", "h2"
+            "## header\n", "h2"
         );
     ]
 
+(*
 [<Tests>]
 let inlineFootnoteTests =
-    makeExpectoTestList id id strInlineFootnote "inline footnote tests" [
+    makeExpectoTestList id id mdInlineFootnote "inline footnote tests" [
         (
             3,
             "<sup><a href=\"#footnote3\">3</a></sup>", "footer3"
         );
     ]
-
+*)
 [<Tests>]
 let fullBodyTests =
-    makeExpectoTestList id catStr strBody "full body tests" [
+    makeExpectoTestList id catStr mdBody "full body tests" [
         (
             [
                 Header{HeaderName=[FrmtedString(Literal "header")]; Level=1};
@@ -156,10 +170,10 @@ let fullBodyTests =
                 Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ],
-            ["<h1>header</h1>";
-            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>";
-            "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
-            "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>"]
+            ["# header\n";
+            "- first\n- second\n\t1. first\n\t2. second\n\n";
+            "|head|head|\n|:---|---:|\n\n";
+            "Go go go![broken link](brokenURL)Come!\n\n"]
             , "the bodyshop"
         );
     ]

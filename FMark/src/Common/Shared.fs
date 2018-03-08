@@ -37,3 +37,14 @@ let mapTok = function
     | LITERAL s -> s
     | WHITESPACE n -> String.replicate n " "
     | _ -> "\n"
+
+
+let mapLang lang =
+    match lang with
+    | Python -> "python"
+    | FSharp -> "fsharp"
+    | CPP -> "cpp"
+    | C -> "c"
+    | Empty -> ""
+
+    

@@ -57,3 +57,11 @@ type Logger(logLevel) =
     member __.Warn = log LogLevel.WARNING
     member __.Error = log LogLevel.ERROR
     member __.Fatal = log LogLevel.FATAL
+
+let logPass line log s =
+    s |> log line
+    s
+
+let logPassN log s =
+    s |> log None
+    s
