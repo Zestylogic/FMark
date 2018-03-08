@@ -43,6 +43,7 @@ let tests =
 // PROPERTY BASED TESTS
 
 /// Check if markdown output of FMark is the same if passed through FMark again
+(*
 [<Tests>]
 let FMarkPropertyTest =
     testProperty "FMarkPropertyTest" <| fun (s: string) ->
@@ -57,3 +58,4 @@ let FMarkPropertyTest =
         let preprocess1 = str |> (takeEither<<processString Markdown)
         let preprocess2 = str |> (takeEither<<processString Markdown) |> (takeEither<<processString Markdown<<splitStr)
         Expect.equal preprocess1 preprocess2 ""
+*)
