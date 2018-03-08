@@ -20,6 +20,7 @@
     <Compile Include="../Common/Parser/Parser.fs" />
     <Compile Include="../Common/HTMLGen/HTMLGenHelpers.fs" />
     <Compile Include="../Common/HTMLGen/HTMLGen.fs" />
+    <Compile Include="../Common/MarkdownGen/MarkdownGen.fs" />
     <Compile Include="../Common/FMark.fs" />
     <Compile Include="FMarkFable.fs" />
   </ItemGroup>

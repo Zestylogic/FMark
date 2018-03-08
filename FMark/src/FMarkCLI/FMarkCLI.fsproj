@@ -30,6 +30,8 @@
     <Compile Include="../Common/HTMLGen/HTMLGenHelpers.fs" />
     <Compile Include="../Common/HTMLGen/HTMLGen.fs" />
     <Compile Include="../Common/HTMLGen/HTMLGenTester.fs" />
+    <Compile Include="../Common/MarkdownGen/MarkdownGen.fs" />
+    <Compile Include="../Common/MarkdownGen/MarkdownGenTester.fs" />
     <Compile Include="../Common/FMark.fs" />
     <Compile Include="FMarkTests.fs" />
 

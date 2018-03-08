@@ -171,7 +171,7 @@ let fullBodyTests =
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ],
             ["# header\n";
-            "- first\n- second\n\t1. first\n\t2. second";
+            "- first\n- second\n\t1. first\n\t2. second\n\n";
             "|head|head|\n|:---|---:|\n\n";
             "Go go go![broken link](brokenURL)Come!\n\n"]
             , "the bodyshop"

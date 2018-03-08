@@ -117,7 +117,7 @@ let mdBody pObjs =
         //| Quote q -> mdInlineElements q
         | CodeBlock (c, l) -> surround "```" (mapLang l + "\n" + c + "\n")
         | Table rows -> mdTable rows
-        | List l -> mdList l |> sprintf "%s\n\n"
+        | List l -> mdList l |> sprintf "%s\n"
         | Header h -> mdHeader h
         //| Footnote (fnId, _) -> mdInlineFootnote fnId
         | _ -> sprintf "%A is not implemented" pObj
