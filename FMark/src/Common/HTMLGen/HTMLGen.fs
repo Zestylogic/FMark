@@ -55,6 +55,7 @@ let strTable (rows: PRow list) =
                     | Centre -> ("align", "center")
                     | Right -> ("align", "right")
                     | Left -> ("align", "left")
+                    | NoAlign -> ("","")
                 pStr + attachHTMLTag (tagName, [alignAttr], true) cellContent
         List.fold cellsFolder "" row
     let foldRows rows =
@@ -65,8 +66,7 @@ let strTable (rows: PRow list) =
         List.fold rowsFolder "" rows
     foldRows headerRows |> attachSimpleTag "thead"
     |> fun s ->
-        s + foldRows bodyRows
-    |> attachSimpleTag "tbody"
+        s + (foldRows bodyRows |> attachSimpleTag "tbody")
     |> attachSimpleTag "table"
 
 

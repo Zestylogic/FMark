@@ -84,12 +84,12 @@ let bodyTests =
 let bodyTableTests =
     makeExpectoTestList id id strTable "body table tests" [
         (
-            [PCells([CellLine([FrmtedString(Literal "head")], true, Left)], true)],
-            "<table><tbody><thead><tr><th align=\"left\">head</th></tr></thead></tbody></table>", "one thead only"
+            [PCells([CellLine([FrmtedString(Literal "head")], true, NoAlign)], true)],
+            "<table><thead><tr><th>head</th></tr></thead><tbody></tbody></table>", "one thead only"
         );
         (
             [PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)],
-            "<table><tbody><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead></tbody></table>", "two theads with different align"
+            "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>", "two theads with different align"
         );
     ]
 
@@ -154,7 +154,7 @@ let fullBodyTests =
             ],
             ["<h1>header</h1>";
             "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>";
-            "<table><tbody><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead></tbody></table>";
+            "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
             "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>"]
             , "the bodyshop"
         );

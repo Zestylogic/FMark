@@ -82,7 +82,7 @@ let parseAlignRow (row:Token list) =
                 | (COLON :: _, 2) when List.head toks = COLON -> Centre |> Ok
                 | (COLON :: _, 1) -> Right |> Ok
                 | (_,1) when List.head toks = COLON -> Left |> Ok
-                | (_,0) -> Left |> Ok// default is leftAlign
+                | (_,0) -> NoAlign |> Ok
                 | (_,x) -> sprintf "\':\'s in wrong position %A, %A" toks x |> Error
     let parseAlign' = parsePipes getAlignment
     // Ignore the first pipe if there is nothing before it

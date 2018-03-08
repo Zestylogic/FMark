@@ -261,8 +261,8 @@ let ``preprocess table test`` =
               |cell|*)
             [PIPE;  LITERAL "head"; PIPE; ENDLINE; PIPE; MINUS;MINUS;MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
             ([Table
-                [PCells ([CellLine ([FrmtedString(Literal "head")],true,Left)],true);
-                 PCells ([CellLine ([FrmtedString(Literal "cell")],false,Left)],false)]])|>Ok,
+                [PCells ([CellLine ([FrmtedString(Literal "head")],true,NoAlign)],true);
+                 PCells ([CellLine ([FrmtedString(Literal "cell")],false,NoAlign)],false)]])|>Ok,
             "Sample table"
         );
         (
