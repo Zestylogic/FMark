@@ -5,7 +5,7 @@ open Shared
 open Logger
 open HTMLGenHelpers
 
-let dLogger = Logger(LogLevel.DEBUG)
+let dLogger = Logger(LogLevel.WARNING)
 
 /// convert TFrmtedString to string, with HTML tags where necessary
 let rec strFStr fStr =
@@ -132,32 +132,41 @@ let strToC (toc:Ttoc) =
             sprintf "Create nested with: %A" appendee |> dLogger.Debug None 
             appendee |> appendListItem s
     
-    // let rec appendToNestedHead n (s:TList) appendee =
-    //     match (n,s) with
-    //     | (n,s) when n > 0 ->
-    //         let nextS = appendToNestedHead (n-1) (s.ListItem |> List.head)
-    //         nextS
+    let appendToNestedD n (s:TList) appendee =
+        let getNest = function 
+                | NestedList(l) -> l 
+                | _ -> failwith "Invalid depth."
         
+        let rec appendToNestedD' n s =
+            let recurse = function
+                | head::tail -> ((appendToNestedD' (n-1) (head |> getNest)).ListItem)@tail
+                | [] -> failwithf "List shouldn't be empty: %A" s
+            match (n,s) with
+            | (n,s) when n > 0 ->
+                {s with ListItem = recurse s.ListItem}
+
+            | (0,s) -> (appendee |> appendToNested s)
+            | (n,_) when n < 0 -> failwith "Negative depth, shouldn't happen."
+            | _ -> failwithf "n is: %i, s is: %A" n s
+        appendToNestedD' n s
 
     // Maybe convert header list into a list item
     let fold (s:(TList*int)) =
         function
         |  {HeaderName=headerName; Level=lv} when lv = 1
-        // If it has a greater depth... add a nestedList // If header has depth 1, put it in the main list
+        // If header has depth 1, put it in the main list
             -> StringItem(headerName) |> fstAppendListItem s,lv
         // If lv is > previous level, create nested list
         | {HeaderName=headerName; Level=lv} when lv > snd s
             ->  NestedList({ListType=OL;ListItem=[StringItem(headerName)];Depth=snd s})
-                |> appendToNested (fst s), lv
+                |> appendToNestedD 0 (fst s), lv
         // Append to current nested list
         | {HeaderName=headerName; Level=lv} when lv = snd s
             -> sprintf "Append: %A %i" headerName lv |> dLogger.Debug None
                StringItem(headerName) |> appendToNested (fst s),lv
+        
         | {HeaderName=headerName; Level=lv} when lv < snd s
-            ->  
-                failwithf "Where do I put:\n%Ainto:\n%A\nHead is:%A" (StringItem(headerName)) (fst s) ((fst s).ListItem |> List.head)
-            
-        //    -> s
+            ->  StringItem(headerName) |> appendToNestedD (lv-2) (fst s),lv
         | _ -> s
     
     let rec revList (l:TList) =

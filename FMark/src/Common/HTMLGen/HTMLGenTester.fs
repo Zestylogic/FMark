@@ -227,25 +227,25 @@ let TOCTests =
             </ol>",
             "Deep then shallow TOC"
         );
-        //(
-        //    {HeaderLst=hLst5; MaxDepth=3},
-        //    "<ol>
-        //        <li>header1</li>
-        //        <li>
-        //            <ol>
-        //                <li>header2</li>
-        //                <li>
-        //                    <ol>
-        //                        <li>header3</li>
-        //                    </ol>
-        //                </li>
-        //                <li>header4</li>
-        //            </ol>
-        //        </li>
-        //        <li>header5</li>
-        //    </ol>",
-        //    "Pyramid test"
-        //);
+        (
+            {HeaderLst=hLst5; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <li>
+                    <ol>
+                        <li>header2</li>
+                        <li>
+                            <ol>
+                                <li>header3</li>
+                            </ol>
+                        </li>
+                        <li>header4</li>
+                    </ol>
+                </li>
+                <li>header5</li>
+            </ol>",
+            "Pyramid test"
+        );
     ]
 
 [<Tests>]
