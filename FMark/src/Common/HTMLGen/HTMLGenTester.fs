@@ -136,8 +136,12 @@ let headerTests =
 let inlineFootnoteTests =
     makeExpectoTestList id id strInlineFootnote "inline footnote tests" [
         (
-            3,
-            "<sup><a href=\"#footnote3\">3</a></sup>", "footer3"
+            FtID 3,
+            "<sup><a href=\"#footnote-3\">3</a></sup>", "footer 3"
+        );
+        (
+            RefID "abcd",
+            "<sup><a href=\"#footnote-abcd\">abcd</a></sup>", "footer string"
         );
     ]
 

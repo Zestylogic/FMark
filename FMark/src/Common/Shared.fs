@@ -32,8 +32,8 @@ let (|CharTok|_|) tok =
 let mapTok = function
     | CharTok s -> s
     | CODEBLOCK _ -> "CODEBLOCK"
-    | FOOTER n -> sprintf "FOOTER %d" n
-    | HEADER n -> sprintf "FOOTER %d" n
+    | FOOTER _ -> sprintf "FOOTER found"
+    | HEADER n -> sprintf "HEADER %d" n
     | NUMBER s -> s
     | LITERAL s -> s
     | WHITESPACE n -> String.replicate n " "

@@ -96,9 +96,9 @@ let strHeader header =
 
 /// process inline footnotes
 let strInlineFootnote fnId =
-    let idStr = string fnId
+    let idStr = match fnId with | FtID i -> string i | RefID s -> string s
     idStr
-    |> attachHTMLTag ("a", ["href", "#footnote"+idStr], true)
+    |> attachHTMLTag ("a", ["href", "#footnote-"+idStr], true)
     |> attachSimpleTag "sup"
 
 
