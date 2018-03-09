@@ -11,7 +11,7 @@ function print_help {
     echo ""
     echo "OPTIONS:"
     echo "  -b/--build    Build a specific project, can be set to"
-    echo "                fsharp, js, all"
+    echo "                fsharp, js, all, testall"
     exit 1
 }
 
@@ -36,7 +36,7 @@ if [[ -z $BUILD ]]; then
     BUILD=all
 fi
 
-if [[ $BUILD != "fsharp" ]] && [[ $BUILD != "js" ]] && [[ $BUILD != "all" ]]; then
+if [[ $BUILD != "fsharp" ]] && [[ $BUILD != "js" ]] && [[ $BUILD != "all" ]] && [[ $BUILD != "testall" ]]; then
     print_help
 fi
 
@@ -54,7 +54,21 @@ else
     BASE_DIR=$TRAVIS_BUILD_DIR
 fi
 
-if [[ $BUILD = "all" ]] || [[ $BUILD = "fsharp" ]]; then
+function cd_run_module() {
+    echo "########## Running $1 module tests ###########"
+    cd $BASE_DIR/FMark/src/Common/$1
+    dotnet build
+    dotnet run --no-build
+}
+
+if [[ $BUILD = "testall" ]]; then
+    modules=("Lexer" "TOCite" "Markalc" "Parser" "HTMLGen" "MarkdownGen")
+    for i in "${modules[@]}"; do
+        cd_run_module $i
+    done
+fi
+
+if [[ $BUILD = "testall" ]] || [[ $BUILD = "all" ]] || [[ $BUILD = "fsharp" ]]; then
     echo "Running F# tests"
     cd $BASE_DIR/FMark/src/FMarkCLI
     dotnet build
