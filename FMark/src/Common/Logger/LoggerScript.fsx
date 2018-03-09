@@ -9,4 +9,4 @@ let slowConsoleWrite msg =
         )
 
 let logger = Logger(LogLevel.DEBUG)
-Some 2 |> logger.Debug "Hello world"
+logger.Debug None "Hello World"
