@@ -1,6 +1,7 @@
 module Shared
 
 open Types
+open Logger
 
 // Helpers
 
@@ -37,3 +38,17 @@ let mapTok = function
     | LITERAL s -> s
     | WHITESPACE n -> String.replicate n " "
     | _ -> "\n"
+
+
+let mapLang lang =
+    match lang with
+    | Python -> "python"
+    | FSharp -> "fsharp"
+    | CPP -> "cpp"
+    | C -> "c"
+    | Empty -> ""
+
+let xOnwards x lst = if List.length lst > x then lst.[x..] else []
+let sOnwards s str = if String.length str > s then str.[s..] else ""
+
+let sharedLog = Logger(LogLevel.WARNING)

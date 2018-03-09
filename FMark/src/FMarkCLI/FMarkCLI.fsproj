@@ -7,9 +7,9 @@
 
   <ItemGroup>
     <Compile Include="../Common/Types.fs" />
+    <Compile Include="../Common/Logger/Logger.fs" />
     <Compile Include="../Common/Shared.fs" />
     <Compile Include="../Common/IOFuncs.fs" />
-    <Compile Include="../Common/Logger/Logger.fs" />
     <Compile Include="../Common/Lexer/LexerShared.fs" />
     <Compile Include="../Common/Lexer/Preprocessor.fs" />
     <Compile Include="../Common/Lexer/Lexer.fs" />
@@ -30,6 +30,8 @@
     <Compile Include="../Common/HTMLGen/HTMLGenHelpers.fs" />
     <Compile Include="../Common/HTMLGen/HTMLGen.fs" />
     <Compile Include="../Common/HTMLGen/HTMLGenTester.fs" />
+    <Compile Include="../Common/MarkdownGen/MarkdownGen.fs" />
+    <Compile Include="../Common/MarkdownGen/MarkdownGenTester.fs" />
     <Compile Include="../Common/FMark.fs" />
     <Compile Include="FMarkTests.fs" />
 

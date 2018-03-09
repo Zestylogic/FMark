@@ -1,6 +1,7 @@
 module HTMLGen
 
 open Types
+open Shared
 open HTMLGenHelpers
 
 
@@ -55,6 +56,7 @@ let strTable (rows: PRow list) =
                     | Centre -> ("align", "center")
                     | Right -> ("align", "right")
                     | Left -> ("align", "left")
+                    | NoAlign -> ("","")
                 pStr + attachHTMLTag (tagName, [alignAttr], true) cellContent
         List.fold cellsFolder "" row
     let foldRows rows =
@@ -65,8 +67,7 @@ let strTable (rows: PRow list) =
         List.fold rowsFolder "" rows
     foldRows headerRows |> attachSimpleTag "thead"
     |> fun s ->
-        s + foldRows bodyRows
-    |> attachSimpleTag "tbody"
+        s + (foldRows bodyRows |> attachSimpleTag "tbody")
     |> attachSimpleTag "table"
 
 
@@ -110,6 +111,7 @@ let (|MatchHeaderAndSubHeader|_|) hds =
     | _ -> None
 
 /// process table of contents
+(*
 let strToC toc =
     let displaySingleHeader headerName =
         headerName |> strInlineElements // can insert unique id for linking
@@ -124,13 +126,13 @@ let strToC toc =
                         match fstHd |> strInlineElements |> tocMany currentLv+1 maxLv rHds with
                         | Ok (cStr, rHds) -> (cStr, rHds)
                         | Error
-                    pStr + (
+                    //pStr + (
                         
-                        |> attachSimpleTag "li")
+                    //    |> attachSimpleTag "li")
                     
                 | _ -> pStr + (headerName |> strInlineElements) |> tocMany currentLv maxLv rHds |> Ok
             | hlv when hlv 
-
+*)
 
 
 /// gather footnotes for end of page display
@@ -154,7 +156,7 @@ let strBody pObjs =
         | List l -> strList l
         | Header h -> strHeader h
         | Footnote (fnId, _) -> strInlineFootnote fnId
-        | ContentTable toc -> strToC toc
+        //| ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
 

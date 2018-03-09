@@ -28,7 +28,8 @@ let nextToken = function
         NUMBER m, s
     | RegexMatch (literalString charList) (m, _, s) ->
         LITERAL m, s
-    | s -> toString s.[0] |> LITERAL, s.[1..]
+    | s ->  sprintf "Unrecognised character: %A" s |> (sharedLog.Warn None)
+            toString s.[0] |> LITERAL,(sOnwards 1 s)
 
 /// Lexes a whole string and returns the result as a Token list
 let lexS state (cstr, l) source =

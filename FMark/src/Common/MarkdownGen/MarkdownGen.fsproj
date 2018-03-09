@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,17 +9,14 @@
     <Compile Include="../Types.fs" />
     <Compile Include="../Logger/Logger.fs" />
     <Compile Include="../Shared.fs" />
-    <Compile Include="../Markalc/MarkalcShared.fs" />
-    <Compile Include="../Markalc/Expression.fs" />
-    <Compile Include="../Markalc/Markalc.fs" />
-    <Compile Include="ParserHelperFuncs.fs" />
-    <Compile Include="Parser.fs" />
-    <Compile Include="ParserTest.fs" />
-    <Compile Include="ParserProgram.fs" />
+    <Compile Include="MarkdownGen.fs" />
+    <Compile Include="MarkdownGenTester.fs" />
+    <Compile Include="MarkdownGenProgram.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Expecto" Version="5.1.2" />
     <PackageReference Include="Expecto.FsCheck" Version="5.1.2" />
   </ItemGroup>
+
 </Project>

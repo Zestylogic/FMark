@@ -36,7 +36,7 @@ type TListType = | UL | OL
 type TList = {ListType: TListType; ListItem: TListItem list; Depth: int}
 and TListItem = NestedList of TList | StringItem of TLine
 
-type Alignment = Centre | Right | Left
+type Alignment = Centre | Right | Left | NoAlign
 
 type Cell =
     | Contents of Token list * Header: bool * Align:Alignment
@@ -70,3 +70,5 @@ type Cell with
                        | Contents(_,head,_) -> head
     member c.GetParams = match c with 
                          | Contents(toks,head,align) -> toks,head,align
+
+type OutFormat = HTML | Markdown
