@@ -85,3 +85,8 @@ let (|EscapedChar|_|) tType charList (str: string) =
         | true, (c: string), _ -> Some (tType c.[1..], str.[String.length c..])
         | _ -> i
     (|CharMatch|_|) retLastMatch "\\" charList str
+
+/// Match a single group with a regex
+let (|GroupMatch|_|) str = function
+    | RegexMatch str (_, [t], _) -> Some t
+    | _ -> None

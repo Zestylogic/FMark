@@ -225,6 +225,24 @@ let lexTest =
         "Whitespace",
         "          d    ",
         [WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
+
+        "One line codeblock",
+        "``` python",
+        [CODEBLOCK ("", Python); ENDLINE]
+
+        "One line html",
+        "<span>This is a span element</span>",
+        [LITERAL "<span>This is a span element</span>"; ENDLINE]
+
+        "Online closing html",
+        "<img src=\"https://github.com/IMAGE.png\" />",
+        [LITERAL "<img src=\"https://github.com/IMAGE.png\" />"; ENDLINE]
+
+        "HTML with non-HTML start",
+        "This is an image: <span>Hello</span>",
+        [LITERAL "This"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; LITERAL "an"
+         WHITESPACE 1; LITERAL "image"; COLON; WHITESPACE 1; LITERAL "<span>Hello</span>"
+         ENDLINE]
     ]
 
 /// Tests for the complete lexers with a string list as input
@@ -250,6 +268,19 @@ let lexListTest =
         "Whitespace",
         ["          d    "],
         [WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
+
+        "Multiline codeblock",
+        ["```python"; "This is inside the code block"; "```"],
+        [CODEBLOCK ("This is inside the code block\n", Python); ENDLINE]
+
+        "HTML passthrough",
+        ["This should not be passed through"; "<div>This should just all be passed through, </div>"
+         "This should not, <span>This should not be tokenized []</span>"],
+        [LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"
+         WHITESPACE 1; LITERAL "be"; WHITESPACE 1; LITERAL "passed"; WHITESPACE 1
+         LITERAL "through"; ENDLINE; LITERAL "<div>This should just all be passed through, </div>"
+         ENDLINE; LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"; COMMA; WHITESPACE 1
+         LITERAL "<span>This should not be tokenized []</span>"; ENDLINE]
     ]
 
 // --------------------------------------------------
@@ -268,3 +299,8 @@ let preprocessorPropertyTest =
         let preprocess1 = str |> preprocess
         let preprocess2 = str |> preprocess |> preprocess
         Expect.equal preprocess1 preprocess2 ""
+
+[<PTests>]
+let lexPassThroughPropertyTest =
+    testProperty "LexPassthroughpropertytest" <| fun (s: string) ->
+        Expect.equal 1 1 ""
