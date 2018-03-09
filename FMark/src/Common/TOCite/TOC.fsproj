@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <Compile Include="../Types.fs" />
+    <Compile Include="../Logger/Logger.fs" />
+    <Compile Include="../Shared.fs" />
     <Compile Include="TOCiteHelper.fs" />
     <Compile Include="RefParse.fs" />
     <Compile Include="TOCite.fs" />
