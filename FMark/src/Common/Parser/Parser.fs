@@ -18,7 +18,8 @@ let parseLiteral toks =
         | WHITESPACE _:: toks' -> (str+" ", toks') |> parseLiteral' // reduce spaces to 1
         | MatchMapTok (str', toks') -> (str+str', toks') |> parseLiteral' // convert the rest to string
         | [] -> str, toks                                   // nothing to parse
-        | _ -> sprintf "unmatched token should never happen: %A" toks |> failwith
+        | t -> sprintf "Unmatched token: %A" t |> sharedLog.Warn None
+               sprintf "unmatched token should never happen: %A" toks |> failwith
     parseLiteral' (NOSTRING, toks)
 
 /// parse inline code
@@ -29,14 +30,16 @@ let rec parseCode toks =
         parseCode toks'
         |> Result.map (fun (str, tks) ->
         mapTok tok + str, tks )
-    | _ -> "BACKTICK is not match for inline code" |> Error
+    | e ->  sharedLog.Warn None (sprintf "%A" e)
+            ("\\`", xOnwards 1 toks) |> Ok
 
 /// parse inline text, including links and pictures, terminate on 2>= `ENDLINE`s
 let parseInLineElements toks =
     let rec parseInLineElements' toks =
         match toks with
         | BACKTICK:: _ ->
-            parseCode toks.[1..]
+            xOnwards 1 toks // safe way of doing toks[1..]
+            |> parseCode 
             |> Result.map(fun (str, rtks) -> FrmtedString(Code str), rtks )
         | MatchEmStart (_, sym, toks') ->      // record the start em symbol
             parseInLines toks'
@@ -46,6 +49,7 @@ let parseInLineElements toks =
                     if sym=lsym then
                         (FrmtedString(Emphasis(inlines)), retoks')
                     else        // em does not match -> treat as literal
+                        sprintf "No match for em: %A" lsym |> sharedLog.Warn None 
                         let pstr, rtks = parseLiteral toks'
                         (FrmtedString(Literal ( (mapTEmphasis sym)+pstr) ), rtks)
                 | _ ->

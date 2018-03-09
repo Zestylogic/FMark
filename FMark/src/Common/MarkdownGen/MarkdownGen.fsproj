@@ -7,8 +7,8 @@
 
   <ItemGroup>
     <Compile Include="../Types.fs" />
-    <Compile Include="../Shared.fs" />
     <Compile Include="../Logger/Logger.fs" />
+    <Compile Include="../Shared.fs" />
     <Compile Include="MarkdownGen.fs" />
     <Compile Include="MarkdownGenTester.fs" />
     <Compile Include="MarkdownGenProgram.fs" />
