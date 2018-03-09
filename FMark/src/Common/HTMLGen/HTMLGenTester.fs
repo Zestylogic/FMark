@@ -146,6 +146,109 @@ let inlineFootnoteTests =
     ]
 
 [<Tests>]
+let TOCTests =
+    let hLst1 = [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                     ;{HeaderName=[FrmtedString(Literal "header2")]; Level=1}
+                     ;{HeaderName=[FrmtedString(Literal "header3")]; Level=1}
+                     ]
+    let hLst2 = hLst1@[{HeaderName=[FrmtedString(Literal "header4")]; Level=2}]
+
+    let hLst3 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3}]
+    let hLst4 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=1}]
+    
+    let hLst5 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header5")]; Level=1}]
+    makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents test" [
+        (
+            {HeaderLst=hLst1; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <li>header2</li>
+                <li>header3</li>
+            </ol>",
+            "Simple TOC test, all same level"
+        );
+        (
+            {HeaderLst=hLst2; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <li>header2</li>
+                <li>header3</li>
+                <li>
+                    <ol>
+                        <li>header4</li>
+                    </ol>
+                </li>
+            </ol>",
+            "Simple TOC test, one header2"
+        );
+        (
+            {HeaderLst=hLst3; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <li>
+                    <ol>
+                        <li>header2</li>
+                        <li>header3</li>
+                        <li>
+                            <ol>
+                                <li>header4</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+            </ol>",
+            "Harder TOC test, two header 2s and a header 3"
+        );
+        (
+            {HeaderLst=hLst4; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <li>
+                    <ol>
+                        <li>header2</li>
+                        <li>
+                            <ol>
+                                <li>header3</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>header4</li>
+            </ol>",
+            "Deep then shallow TOC"
+        );
+        //(
+        //    {HeaderLst=hLst5; MaxDepth=3},
+        //    "<ol>
+        //        <li>header1</li>
+        //        <li>
+        //            <ol>
+        //                <li>header2</li>
+        //                <li>
+        //                    <ol>
+        //                        <li>header3</li>
+        //                    </ol>
+        //                </li>
+        //                <li>header4</li>
+        //            </ol>
+        //        </li>
+        //        <li>header5</li>
+        //    </ol>",
+        //    "Pyramid test"
+        //);
+    ]
+
+[<Tests>]
 let fullBodyTests =
     makeExpectoTestList id catStr strBody "full body tests" [
         (

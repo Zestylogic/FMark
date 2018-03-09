@@ -2,8 +2,10 @@ module HTMLGen
 
 open Types
 open Shared
+open Logger
 open HTMLGenHelpers
 
+let dLogger = Logger(LogLevel.DEBUG)
 
 /// convert TFrmtedString to string, with HTML tags where necessary
 let rec strFStr fStr =
@@ -111,28 +113,95 @@ let (|MatchHeaderAndSubHeader|_|) hds =
     | _ -> None
 
 /// process table of contents
-(*
-let strToC toc =
+
+let strToC (toc:Ttoc) =
     let displaySingleHeader headerName =
         headerName |> strInlineElements // can insert unique id for linking
-    let rec tocMany currentLv maxLv headers pStr =
-        match headers with
-        | {HeaderName=headerName; Level=headerLv}::rHds ->
-            match headerLv with
-            | hlv when hlv = currentLv ->
-                match headers with
-                | MatchHeaderAndSubHeader (fstHd, rHds) ->
-                    let (cStr, rHds) =
-                        match fstHd |> strInlineElements |> tocMany currentLv+1 maxLv rHds with
-                        | Ok (cStr, rHds) -> (cStr, rHds)
-                        | Error
-                    //pStr + (
-                        
-                    //    |> attachSimpleTag "li")
-                    
-                | _ -> pStr + (headerName |> strInlineElements) |> tocMany currentLv maxLv rHds |> Ok
-            | hlv when hlv 
-*)
+    let appendListItem s i =
+        {s with ListItem = i::(s.ListItem)}
+    let fstAppendListItem s i = 
+        appendListItem (fst s) i
+    let appendToNested (s:TList) appendee =
+        // if List.head fst s is a nested list, append to that list
+        match s.ListItem with
+        | NestedList(l)::tail -> 
+            sprintf "Append to nested: %A" appendee |> dLogger.Debug None
+            {s with ListItem = NestedList({l with ListItem = appendee::l.ListItem})::tail}
+        // otherwise if the latest element on the list isn't a nested list, just append
+        | _ ->
+            sprintf "Create nested with: %A" appendee |> dLogger.Debug None 
+            appendee |> appendListItem s
+    
+    // let rec appendToNestedHead n (s:TList) appendee =
+    //     match (n,s) with
+    //     | (n,s) when n > 0 ->
+    //         let nextS = appendToNestedHead (n-1) (s.ListItem |> List.head)
+    //         nextS
+        
+
+    // Maybe convert header list into a list item
+    let fold (s:(TList*int)) =
+        function
+        |  {HeaderName=headerName; Level=lv} when lv = 1
+        // If it has a greater depth... add a nestedList // If header has depth 1, put it in the main list
+            -> StringItem(headerName) |> fstAppendListItem s,lv
+        // If lv is > previous level, create nested list
+        | {HeaderName=headerName; Level=lv} when lv > snd s
+            ->  NestedList({ListType=OL;ListItem=[StringItem(headerName)];Depth=snd s})
+                |> appendToNested (fst s), lv
+        // Append to current nested list
+        | {HeaderName=headerName; Level=lv} when lv = snd s
+            -> sprintf "Append: %A %i" headerName lv |> dLogger.Debug None
+               StringItem(headerName) |> appendToNested (fst s),lv
+        | {HeaderName=headerName; Level=lv} when lv < snd s
+            ->  
+                failwithf "Where do I put:\n%Ainto:\n%A\nHead is:%A" (StringItem(headerName)) (fst s) ((fst s).ListItem |> List.head)
+            
+        //    -> s
+        | _ -> s
+    
+    let rec revList (l:TList) =
+        let rec revListItemList (li:TListItem list) =
+            let revRecurse = function 
+                | NestedList(l)->NestedList({l with ListItem=(revListItemList l.ListItem)})
+                | l -> l
+            List.map revRecurse li
+            |> List.rev
+        {l with ListItem=List.rev (revListItemList l.ListItem)}
+
+    //sprintf "%A" (toc.HeaderLst) |> dLogger.Debug None
+    List.fold fold ({Depth=1; ListItem=[]; ListType=OL},1) (toc.HeaderLst)
+    |> fst
+    |> (fun l -> {l with ListItem=List.rev l.ListItem})
+    |> revList
+    |> strList
+    // For each header in the list, print it out as a list element
+    //let folder' maxLv s (header:THeader) =
+    //    // match header with
+    //    // | {HeaderName=str; Level=headerLv}
+
+    //    ""
+    //let folder = folder' (toc.MaxDepth)
+    //List.fold folder "" toc.HeaderLst
+
+    //let rec tocMany currentLv maxLv headers pStr =
+    //    match headers with
+    //    | {HeaderName=headerName; Level=headerLv}::rHds ->
+    //        match headerLv with
+    //        | hlv when hlv = currentLv ->
+    //            match headers with
+    //            | MatchHeaderAndSubHeader (fstHd, rHds) ->
+    //                let (cStr, rHds) =
+    //                    match fstHd |> strInlineElements |> tocMany currentLv+1 maxLv rHds with
+    //                    | Ok (cStr, rHds) -> (cStr, rHds)
+    //                    | Error
+    //                //pStr + (
+    //                    
+    //                //    |> attachSimpleTag "li")
+    //                
+    //            | _ -> pStr + (headerName |> strInlineElements) |> tocMany currentLv maxLv rHds |> Ok
+    //        | hlv when hlv 
+
 
 
 /// gather footnotes for end of page display
@@ -156,7 +225,7 @@ let strBody pObjs =
         | List l -> strList l
         | Header h -> strHeader h
         | Footnote (fnId, _) -> strInlineFootnote fnId
-        //| ContentTable toc -> strToC toc
+        | ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
 
