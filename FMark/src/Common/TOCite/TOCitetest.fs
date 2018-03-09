@@ -80,6 +80,17 @@ let testDataHd = [
     )        
     ]
 
+let failHdData = [
+    "Unclosed emphasis in header text",
+    [ENDLINE; HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"],
+    (
+        [{HeaderName = [FrmtedString (Literal "NotBold");
+            FrmtedString (Literal "*bold")]; Level = 1;}],
+        [HEADER 0]
+    );
+]
+
+
 let makeHdTest (name,inn,out) =
     testCase name <| fun () -> Expect.equal (tocGen' inn 0) out "Unit test"
 
@@ -87,6 +98,10 @@ let makeHdTest (name,inn,out) =
 let hdTests =
     List.map makeHdTest testDataHd
     |> Expecto.Tests.testList "Specific header unit tests"
+[<PTests>]
+let failHdTests =
+    List.map makeHdTest failHdData
+    |> Expecto.Tests.testList "Failing header test"
 // --------------------------------------------------------------------------------
 let testDataFt = [
     "Basic footer text",

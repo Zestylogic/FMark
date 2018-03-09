@@ -1,6 +1,7 @@
 module Markalc
 
 open Types
+open Shared
 open MarkalcShared
 open Expression
 open Logger
@@ -106,7 +107,6 @@ let alignCells' alignList (cells:(Token list * bool) list) =
 let alignCells = liftFirstArg alignCells'
 /// Separate list of tokens into cells with alignment and header/not-header
 let transformTable (table:Token list list)  =
-    let xOnwards x lst = if List.length lst > x then lst.[x..] else []
     // Deal with first two rows of format: header1 | header2 | header3
     // Second row tells us how many columns and correct alignment
     let alignments = table.[1] |> parseAlignRow

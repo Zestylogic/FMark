@@ -1,6 +1,7 @@
 module Shared
 
 open Types
+open Logger
 
 // Helpers
 
@@ -47,4 +48,7 @@ let mapLang lang =
     | C -> "c"
     | Empty -> ""
 
-    
+let xOnwards x lst = if List.length lst > x then lst.[x..] else []
+let sOnwards s str = if String.length str > s then str.[s..] else ""
+
+let sharedLog = Logger(LogLevel.WARNING)
