@@ -1,4 +1,4 @@
 ﻿[<EntryPoint>]
-let TOCiteMain argv =
+let TOCiteMain _ =
     Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
     0

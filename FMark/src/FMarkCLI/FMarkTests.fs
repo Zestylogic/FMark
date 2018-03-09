@@ -47,7 +47,7 @@ let tests =
 
 /// Check if markdown output of FMark is the same if passed through FMark again
 
-[<Tests>]
+[<PTests>]
 let FMarkPropertyTest =
     testProperty "FMarkPropertyTest" <| fun (s: string) ->
         let takeEither = function

@@ -1,5 +1,35 @@
 # FMark - Citations and Table of Contents
 
+## Temperary storage area
+```
+this is inline[^1], and so on.
+
+[^1], this is the text to explain such line.
+      this line as well.
+But not this line.
+
+---
+src:
+This is a citation[^Zifan]. This is another[^Eric] one.
+
+[^Zifan], author= Zifan Wang, title= Not a real book, year= 2018
+[^Eric], author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 4th March 2018
+
+As tokens:
+LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1; LITERAL "Wang"; COMMA;
+LITERAL "title"; EQUAL; WHITESPACE 1; LITERAL "Not a real book"; COMMA
+
+Syntax to indicate format to be fixed.
+%%Citation = Harvard
+```
+How it should show up:
+
+This is a citation(Wang, 2018). This is another(Wang, 2017) one.
+
+Wang, Z. (2018) *Not a real book*.
+
+Wang, E. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
+
 ## Submission Write-up
 
 ### How will (or might) your code contribute to the group deliverable? What have you done to ensure interfaces etc will be compatible? What are your interfaces (enough information for your module to be used by someone else not in your team. Assessment here is based on best efforts while allowing independent development, not whether the code is actually useful. Typical length 1/4 page.
