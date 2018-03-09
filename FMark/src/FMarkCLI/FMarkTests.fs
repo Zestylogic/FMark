@@ -60,7 +60,7 @@ let FMarkPropertyTest =
             let folder (s:string) x = s.Replace(x,"")
             List.fold folder s lst
             //|> logPass None logger.Debug
-        let str = if (isNull s) then "" else removeChars ["\\";"!";"[";"]";"(";")";"╝";"╔";"║";">";":";"<";"╚";"╗";"`";"║";"║"] s
+        let str = if (isNull s) then "" else removeChars ["\\";"!";"[";"]";"(";")";"*";":";"`";"_";">"] s
                   |> logPass None logger.Debug
                   |> splitStr
         let preprocess1 = str |> (takeEither<<processString Markdown)
