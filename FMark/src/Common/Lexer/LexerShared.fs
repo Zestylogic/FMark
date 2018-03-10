@@ -88,5 +88,5 @@ let (|EscapedChar|_|) tType charList (str: string) =
 
 /// Match a single group with a regex
 let (|GroupMatch|_|) str = function
-    | RegexMatch str (_, [t], _) -> Some t
+    | RegexMatch str (m, [t], r) -> Some t
     | _ -> None
