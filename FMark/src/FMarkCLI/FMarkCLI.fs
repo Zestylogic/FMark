@@ -3,6 +3,7 @@ module FMarkCLI
 open Types
 open Argu
 open System
+open System.Text.RegularExpressions
 
 type CLIArguments =
     | [<MainCommand;AltCommandLine("-i")>] Input of path:string
@@ -51,9 +52,11 @@ let main argv =
     match ifFileReadFrom results with
     | None(_) -> ()
     | Some(instr,fname) -> 
-        let strip chars s = (String.map (fun c -> if Seq.exists((=)c) chars then ' ' else c) s).Trim()
-        let outFile = results.GetResult(Output,defaultValue=strip ".md" fname+".html")
+        let replaceChars pat (rep:string) s =
+            Regex.Replace(s,pat,rep)
         let format = results.GetResult(Format,defaultValue = HTML )
+        let defaultOutfile = if format=HTML then replaceChars ".md" ".html" fname  else replaceChars ".md" "1.md" fname
+        let outFile = results.GetResult(Output,defaultValue=defaultOutfile)
         FMark.processString format instr
         |> function
             | Ok(s)
