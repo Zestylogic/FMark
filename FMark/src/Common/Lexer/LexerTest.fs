@@ -225,6 +225,39 @@ let lexTest =
         "Whitespace",
         "          d    ",
         [WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
+
+        "One line codeblock",
+        "``` python",
+        [CODEBLOCK ("", Python); ENDLINE]
+
+        "One line html",
+        "<span>This is a span element</span>",
+        [LITERAL "<span>"; LITERAL "This is a span element"; LITERAL "</span>"; ENDLINE]
+
+        "Online closing html",
+        "<img src=\"https://github.com/IMAGE.png\" />",
+        [LITERAL "<img src=\"https://github.com/IMAGE.png\" />"; ENDLINE]
+
+        "HTML with non-HTML start",
+        "This is an image: <span>Hello</span>",
+        [LITERAL "This"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; LITERAL "an"
+         WHITESPACE 1; LITERAL "image"; COLON; WHITESPACE 1; LITERAL "<span>"
+         LITERAL "Hello"; LITERAL "</span>"; ENDLINE]
+
+        "Singleton HTML passthrough",
+        "Singleton <br> passthrough",
+        [LITERAL "Singleton"; WHITESPACE 1; LITERAL "<br>"; WHITESPACE 1; LITERAL "passthrough"; ENDLINE]
+
+        "HTML image tag",
+        "Embedding an <img src=\"https://github.com/IMAGE\"> in text",
+        [LITERAL "Embedding"; WHITESPACE 1; LITERAL "an"; WHITESPACE 1; LITERAL"<img src=\"https://github.com/IMAGE\">"
+         WHITESPACE 1; LITERAL "in"; WHITESPACE 1; LITERAL "text"; ENDLINE]
+
+        "A lot of nested tags",
+        "<p><p><p><p><p><p><p> </p></p></p></p></p></p></p>",
+        [LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"
+         LITERAL "<p>"; LITERAL " "; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"
+         LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; ENDLINE]
     ]
 
 /// Tests for the complete lexers with a string list as input
@@ -250,6 +283,19 @@ let lexListTest =
         "Whitespace",
         ["          d    "],
         [WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
+
+        "Multiline codeblock",
+        ["```python"; "This is inside the code block"; "```"],
+        [CODEBLOCK ("This is inside the code block\n", Python); ENDLINE]
+
+        "HTML passthrough",
+        ["This should not be passed through"; "<div>This should just all be passed through, </div>"
+         "This should not, <span>This should not be tokenized []</span>"],
+        [LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"
+         WHITESPACE 1; LITERAL "be"; WHITESPACE 1; LITERAL "passed"; WHITESPACE 1
+         LITERAL "through"; ENDLINE; LITERAL "<div>"; LITERAL "This should just all be passed through, "; LITERAL "</div>"
+         ENDLINE; LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"; COMMA; WHITESPACE 1
+         LITERAL "<span>"; LITERAL "This should not be tokenized []"; LITERAL "</span>"; ENDLINE]
     ]
 
 // --------------------------------------------------
@@ -268,3 +314,8 @@ let preprocessorPropertyTest =
         let preprocess1 = str |> preprocess
         let preprocess2 = str |> preprocess |> preprocess
         Expect.equal preprocess1 preprocess2 ""
+
+[<PTests>]
+let lexPassThroughPropertyTest =
+    testProperty "LexPassthroughpropertytest" <| fun (s: string) ->
+        Expect.equal 1 1 ""
