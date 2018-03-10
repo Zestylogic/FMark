@@ -232,7 +232,7 @@ let lexTest =
 
         "One line html",
         "<span>This is a span element</span>",
-        [LITERAL "<span>This is a span element</span>"; ENDLINE]
+        [LITERAL "<span>"; LITERAL "This is a span element"; LITERAL "</span>"; ENDLINE]
 
         "Online closing html",
         "<img src=\"https://github.com/IMAGE.png\" />",
@@ -241,8 +241,12 @@ let lexTest =
         "HTML with non-HTML start",
         "This is an image: <span>Hello</span>",
         [LITERAL "This"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; LITERAL "an"
-         WHITESPACE 1; LITERAL "image"; COLON; WHITESPACE 1; LITERAL "<span>Hello</span>"
-         ENDLINE]
+         WHITESPACE 1; LITERAL "image"; COLON; WHITESPACE 1; LITERAL "<span>"
+         LITERAL "Hello"; LITERAL "</span>"; ENDLINE]
+
+        "Singleton HTML passthrough",
+        "Singleton <br> passthrough",
+        [LITERAL "Singleton"; WHITESPACE 1; LITERAL "<br>"; WHITESPACE 1; LITERAL "passthrough"; ENDLINE]
     ]
 
 /// Tests for the complete lexers with a string list as input
@@ -278,9 +282,9 @@ let lexListTest =
          "This should not, <span>This should not be tokenized []</span>"],
         [LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"
          WHITESPACE 1; LITERAL "be"; WHITESPACE 1; LITERAL "passed"; WHITESPACE 1
-         LITERAL "through"; ENDLINE; LITERAL "<div>This should just all be passed through, </div>"
+         LITERAL "through"; ENDLINE; LITERAL "<div>"; LITERAL "This should just all be passed through, "; LITERAL "</div>"
          ENDLINE; LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"; COMMA; WHITESPACE 1
-         LITERAL "<span>This should not be tokenized []</span>"; ENDLINE]
+         LITERAL "<span>"; LITERAL "This should not be tokenized []"; LITERAL "</span>"; ENDLINE]
     ]
 
 // --------------------------------------------------
