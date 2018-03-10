@@ -50,5 +50,9 @@ let mapLang lang =
 
 let xOnwards x lst = if List.length lst > x then lst.[x..] else []
 let sOnwards s str = if String.length str > s then str.[s..] else ""
-
+let removeChars lst s =
+            let folder (s:string) x = s.Replace(x,"")
+            List.fold folder s lst
+let removeWhitespace (s:string) = 
+    s |> removeChars ["\n";"\t";"\r";" "]
 let sharedLog = Logger(LogLevel.WARNING)
