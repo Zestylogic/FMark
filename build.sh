@@ -62,7 +62,7 @@ function cd_run_module() {
 }
 
 if [[ $BUILD = "testall" ]]; then
-    modules=("Lexer" "TOCite" "Markalc" "Parser" "HTMLGen" "MarkdownGen")
+    modules=("Lexer" "TOCite" "Markalc" "Parser" "HTMLGen" "MarkdownGen" "Logger")
     for i in "${modules[@]}"; do
         cd_run_module $i
     done
