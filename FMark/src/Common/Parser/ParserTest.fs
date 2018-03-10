@@ -19,6 +19,26 @@ let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPai
 //////////////////////////////////
 
 [<Tests>]
+let cutIntoLinesTest =
+    makeExpectoTestList id id cutIntoLines "cutIntoLines test" [
+        (
+            [WHITESPACE 2; WHITESPACE 4; LITERAL "Mike"],
+            [[WHITESPACE 2; WHITESPACE 4; LITERAL "Mike"]],
+            "2 WHITESPACE and LITERAL"
+        );
+        (
+            [LITERAL "Mike";ENDLINE;LITERAL "C"],
+            [[LITERAL "Mike"];[LITERAL "C"]],
+            "2 lines"
+        );
+        (
+            [ENDLINE;LITERAL "Mike";ENDLINE;LITERAL "C";ENDLINE;ENDLINE],
+            [[];[LITERAL "Mike"];[LITERAL "C"];[];[]],
+            "2 lines"
+        );
+    ]
+
+[<Tests>]
 let countSpaceTest =
     makeExpectoTestList id id countSpaces "countSpace test" [
         (
@@ -164,23 +184,23 @@ let emphasisTest =
 let ``multiparagraph emphasis test`` =
     makeExpectoTestList id id parseParagraph "multiparagraph emphasis test" [
         (
-            [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ENDLINE; ENDLINE; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; UNDERSCORE],
-            (Paragraph[[FrmtedString(Literal "I "); FrmtedString(Literal "*am")];
-                [FrmtedString(Emphasis[FrmtedString(Literal "Lord")])]], [])|>Ok,
+            [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ENDLINE; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; UNDERSCORE],
+            Paragraph[[FrmtedString(Literal "I "); FrmtedString(Literal "*am")];
+                [FrmtedString(Emphasis[FrmtedString(Literal "Lord")])]],
             "unmatched emphasis, and new paragraph emphasis"
         );
         (
-            [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ASTERISK; ENDLINE; ENDLINE; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; WHITESPACE 1; LITERAL "M"; TILDE;UNDERSCORE; ENDLINE; LITERAL "the feet of my"; MINUS; PLUS; HASH],
-            (Paragraph[[FrmtedString(Literal "I "); FrmtedString(Emphasis[FrmtedString(Literal "am")])];
-                [FrmtedString(Emphasis[FrmtedString(Literal "Lord M~")]); FrmtedString(Literal "\nthe feet of my-+#")]], [])|>Ok,
+            [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ASTERISK; ENDLINE; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; WHITESPACE 1; LITERAL "M"; TILDE;UNDERSCORE; ENDLINE; LITERAL "the feet of my"; MINUS; PLUS; HASH],
+            Paragraph[[FrmtedString(Literal "I "); FrmtedString(Emphasis[FrmtedString(Literal "am")])];
+                [FrmtedString(Emphasis[FrmtedString(Literal "Lord M~")])]; [FrmtedString(Literal "the feet of my-+#")]],
             "asterisk and underscore em, 1 newline literal, misc Tokens"
         );
         (
             [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; UNDERSCORE; WHITESPACE 1; LITERAL "an"; ASTERISK],
-            (Paragraph[[FrmtedString (Literal "I ");
+            Paragraph[[FrmtedString (Literal "I ");
                 FrmtedString(Emphasis[FrmtedString (Literal "am ");
                     FrmtedString (Emphasis [FrmtedString (Literal "Lord")]);
-                    FrmtedString (Literal " an")])]], [])|>Ok,
+                    FrmtedString (Literal " an")])]],
             "nested emphasis"
         );
     ]
@@ -189,10 +209,10 @@ let ``multiparagraph emphasis test`` =
 let parseParagraphTest =
     makeExpectoTestList id id parseParagraph "parseParagraph test" [
         (
-            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; ENDLINE; LITERAL "dancing"; WHITESPACE 1; LITERAL "at";
+            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; LITERAL "dancing"; WHITESPACE 1; LITERAL "at";
             BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK; LITERAL "na"],
-            (Paragraph[[FrmtedString(Literal "I am")];
-                [FrmtedString(Literal "dancing at"); FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")]], [])|>Ok,
+            Paragraph[[FrmtedString(Literal "I am")];
+                [FrmtedString(Literal "dancing at"); FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")]],
             "two simple paragraphs with code"
         );
     ]
@@ -206,7 +226,7 @@ let testGlobal =
         );
         (
            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike";ENDLINE],
-           [Paragraph[[FrmtedString(Literal "I am Mike\n")]]] |> Ok, "Three literals with endline"
+           [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals with endline"
         );
         (
            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike";ENDLINE;ENDLINE],
@@ -267,12 +287,12 @@ let ``preprocess table test`` =
         );
         (
             [WHITESPACE 1; PIPE; ENDLINE; PIPE; MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
-            ([Paragraph [[FrmtedString (Literal " |\n|-|\n|cell|")]]])|>Ok,
+            [Paragraph[[FrmtedString (Literal " |")]; [FrmtedString (Literal "|-|")];[FrmtedString (Literal "|cell|")]]]|>Ok,
             "Invalid table"
         );
         (
             [WHITESPACE 1; PIPE; ENDLINE; PIPE; MINUS; MINUS;COLON; MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
-            ([Paragraph [[FrmtedString (Literal " |\n|--:-|\n|cell|")]]])|>Ok,
+            [Paragraph[[FrmtedString (Literal " |")]; [FrmtedString (Literal "|--:-|")];[FrmtedString (Literal "|cell|")]]]|>Ok,
             "Invalid table 2"
         )
        

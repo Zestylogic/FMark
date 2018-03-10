@@ -7,6 +7,8 @@ let NOSTRING = ""
 
 type TEmphasis = UNDER | STAR // underscore and asterisk
 
+type ParagraphState = {Par: Token list; ReToks: Token list; ParMatched: bool}
+
 let mapTEmphasis = function
     | UNDER -> "_"
     | STAR -> "*"
@@ -16,6 +18,17 @@ let rec deleteLeadingENDLINEs toks =
     match toks with
     | ENDLINE:: tks -> deleteLeadingENDLINEs tks
     | _ -> toks
+
+let deleteTrailingENDLINEs toks =
+    toks
+    |> List.rev
+    |> deleteLeadingENDLINEs
+    |> List.rev
+
+let trimENDLINEs toks =
+    toks
+    |> deleteLeadingENDLINEs
+    |> deleteTrailingENDLINEs
 
 /// convert all Tokens into a single string
 /// see mapTok for Token mapping
@@ -63,6 +76,20 @@ let cutLine toks =
         | [] -> line |> List.rev, []
     cutLine' [] toks
 
+/// process token list into lines of tokens, no ENDLINE in the end
+let cutIntoLines toks =
+    let rec cutIntoLines' tokLines toks =
+        let endlineSpliter = function | ENDLINE -> true | _ -> false
+        match List.tryFindIndex endlineSpliter toks with
+        | None -> toks::tokLines |> List.rev
+        | Some idx ->
+            match List.splitAt idx toks with
+            | (tokLine, retoks) ->
+                let tokLineNoEL = tokLine |> deleteTrailingENDLINEs
+                cutIntoLines' (tokLineNoEL::tokLines) retoks.Tail
+    toks
+    |> cutIntoLines' []
+
 /// newline but not new paragraoh
 /// is 2>= spaces and 1 newline, and potential spaces
 let (|IsNewTLine|_|) toks =
@@ -98,6 +125,34 @@ let (|IsWordSepAndNewFrmt|_|) toks =
         | IsNewFrmt _ -> toks |> Some
         | _ -> None
     | _ -> None
+
+/// match paragraph
+let (|PickoutParagraph|_|) toks =
+    match toks with
+    | [] -> None
+    | _ ->
+        let folder state tok =
+            let {Par=par;ReToks=reToks;ParMatched=matched} = state
+            if matched then
+                {state with ReToks=tok::reToks}
+            else
+                match tok with
+                | ENDLINE when List.head par = ENDLINE -> {Par=List.tail par;ReToks=reToks;ParMatched=true}
+                | _ -> {state with Par=tok::par}
+        let initState = {Par=[];ReToks=[];ParMatched=false}
+        match List.fold folder initState toks with
+        | {Par=par;ReToks=reToks} ->
+            (par |> List.rev, reToks |> List.rev |> deleteLeadingENDLINEs) |> Some
+
+
+
+/// match emphasis
+// let (|MatchEm|_|) toks =
+//     List.tryFindIndex
+//     match toks with
+//     | WHITESPACE _:: UNDERSCORE:: WHITESPACE _:: _ -> None      // not em
+//     | WHITESPACE _:: UNDERSCORE:: rtks -> (" ", UNDER, rtks) |> Some
+        
 
 /// match underscore and asterisk emphasis start squence
 /// return 1. string, representing a space before UNDERSCORE

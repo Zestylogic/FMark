@@ -3,6 +3,7 @@ open Types
 open Shared
 open ParserHelperFuncs
 open Markalc
+open System.Threading
 
 // helper functions
 
@@ -82,25 +83,16 @@ let parseInLineElements toks =
 /// parse a paragraph which counts for contents in  `<p>`
 /// parseParagraph eats 2>= ENDLINEs
 let parseParagraph toks =
-    let rec parseParagraph' toks =
-        match toks with
-        | MatchNewParagraph toks' -> ([], toks') |> Ok
-        | _ ->
-            parseInLineElements toks
-            |> Result.map (fun (inLines, retoks)->
-                (inLines, retoks) )
-    //let prep, retoks = parseParagraph' toks
-    and parseParagraphs toks =
-        parseParagraph' toks
-        |> Result.bind (fun (p, retoks) ->
-            match retoks with
-            | [] -> ([p], []) |> Ok
-            | MatchNewParagraph retoks' -> ([], retoks') |> Ok
-            | _ ->
-                parseParagraphs retoks
-                |> Result.map (fun (ps, rts) ->
-                    (p::ps, rts)))
-    parseParagraphs toks |> Result.map (fun (lines,tks) -> Paragraph lines, tks)
+    let parseParagraph' lines tokLine =
+        match parseInLineElements tokLine with
+        | Error _ -> lines
+        | Ok (line, _) -> line::lines
+    toks
+    |> trimENDLINEs
+    |> cutIntoLines
+    |> List.fold parseParagraph' []
+    |> List.rev
+    |> Paragraph
 
 /// match table start sequence
 /// return table rows, terminates when [] or two continuous ENDLINEs
@@ -144,8 +136,9 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
     | MatchHeader (level, rtks) ->
         parseInLineElements rtks
         |> Result.map (fun (line, rtks') -> Header{HeaderName=line; Level=level}, rtks' )
-    | _ -> parseParagraph toks
-        |> Result.map (fun (p, tks) -> p, tks)
+    | PickoutParagraph (par, retoks) ->
+        (parseParagraph par, retoks) |> Ok
+    | _ -> sprintf "Nothing matched in parseItem for Tokens:\n%A" toks |> Error
 
 and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
     parseItem toks
