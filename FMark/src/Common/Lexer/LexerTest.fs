@@ -247,6 +247,17 @@ let lexTest =
         "Singleton HTML passthrough",
         "Singleton <br> passthrough",
         [LITERAL "Singleton"; WHITESPACE 1; LITERAL "<br>"; WHITESPACE 1; LITERAL "passthrough"; ENDLINE]
+
+        "HTML image tag",
+        "Embedding an <img src=\"https://github.com/IMAGE\"> in text",
+        [LITERAL "Embedding"; WHITESPACE 1; LITERAL "an"; WHITESPACE 1; LITERAL"<img src=\"https://github.com/IMAGE\">"
+         WHITESPACE 1; LITERAL "in"; WHITESPACE 1; LITERAL "text"; ENDLINE]
+
+        "A lot of nested tags",
+        "<p><p><p><p><p><p><p> </p></p></p></p></p></p></p>",
+        [LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"
+         LITERAL "<p>"; LITERAL " "; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"
+         LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; ENDLINE]
     ]
 
 /// Tests for the complete lexers with a string list as input

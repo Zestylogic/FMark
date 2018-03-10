@@ -46,7 +46,10 @@ let nextToken state s =
             (LITERAL s, r), InHTMLTag (tag, d)
     | HTMLEndTag (s, [t], r), InHTMLTag (tag, d) ->
         if t = tag then
-            (LITERAL s, r), Normal
+            if d = 1 then
+                (LITERAL s, r), Normal
+            else
+                (LITERAL s, r), InHTMLTag (tag, d-1)
         else
             (LITERAL s, r), InHTMLTag (tag, d)
     | HTMLSingleton (s, _, r), _ ->
