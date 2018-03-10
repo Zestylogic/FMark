@@ -12,6 +12,8 @@
     <Compile Include="../Common/Lexer/LexerShared.fs" />
     <Compile Include="../Common/Lexer/Preprocessor.fs" />
     <Compile Include="../Common/Lexer/Lexer.fs" />
+    <Compile Include="../Common/TOCite/TOCiteHelper.fs" />
+    <Compile Include="../Common/TOCite/RefParse.fs" />
     <Compile Include="../Common/TOCite/TOCite.fs" />
     <Compile Include="../Common/Markalc/MarkalcShared.fs" />
     <Compile Include="../Common/Markalc/Expression.fs" />
