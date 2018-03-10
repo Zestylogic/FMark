@@ -78,9 +78,9 @@ let rec strList list =
     let strListItem pStr li =
         pStr + (
             match li with
-            | StringItem(line) -> strInlineElements line
+            | StringItem(line) -> strInlineElements line |> attachSimpleTag "li"
             | NestedList(list) -> strList list
-            |> attachSimpleTag "li")
+            )
     match list with
     | {ListType=lt; ListItem=liS} ->
         let listTag = if lt=UL then "ul" else "ol"

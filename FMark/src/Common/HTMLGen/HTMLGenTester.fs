@@ -115,7 +115,7 @@ let listTests =
                 NestedList{ListType=OL;ListItem=
                 [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=2} ];
             Depth=1},
-            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>", "ol inside ul"
+            "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>", "ol inside ul"
         );
     ]
 
@@ -174,7 +174,7 @@ let TOCTests =
                 <li>header1</li>
                 <li>header2</li>
                 <li>header3</li>
-            </ol>",
+             </ol>",
             "Simple TOC test, all same level"
         );
         (
@@ -183,29 +183,23 @@ let TOCTests =
                 <li>header1</li>
                 <li>header2</li>
                 <li>header3</li>
-                <li>
-                    <ol>
-                        <li>header4</li>
-                    </ol>
-                </li>
-            </ol>",
+                <ol>
+                    <li>header4</li>
+                </ol>
+             </ol>",
             "Simple TOC test, one header2"
         );
         (
             {HeaderLst=hLst3; MaxDepth=3},
             "<ol>
                 <li>header1</li>
-                <li>
+                <ol>
+                    <li>header2</li>
+                    <li>header3</li>
                     <ol>
-                        <li>header2</li>
-                        <li>header3</li>
-                        <li>
-                            <ol>
-                                <li>header4</li>
-                            </ol>
-                        </li>
+                        <li>header4</li>
                     </ol>
-                </li>
+                </ol>
             </ol>",
             "Harder TOC test, two header 2s and a header 3"
         );
@@ -213,16 +207,12 @@ let TOCTests =
             {HeaderLst=hLst4; MaxDepth=3},
             "<ol>
                 <li>header1</li>
-                <li>
+                <ol>
+                    <li>header2</li>
                     <ol>
-                        <li>header2</li>
-                        <li>
-                            <ol>
-                                <li>header3</li>
-                            </ol>
-                        </li>
+                        <li>header3</li>
                     </ol>
-                </li>
+                </ol>
                 <li>header4</li>
             </ol>",
             "Deep then shallow TOC"
@@ -231,17 +221,13 @@ let TOCTests =
             {HeaderLst=hLst5; MaxDepth=3},
             "<ol>
                 <li>header1</li>
-                <li>
+                <ol>
+                    <li>header2</li>
                     <ol>
-                        <li>header2</li>
-                        <li>
-                            <ol>
-                                <li>header3</li>
-                            </ol>
-                        </li>
-                        <li>header4</li>
+                        <li>header3</li>
                     </ol>
-                </li>
+                    <li>header4</li>
+                </ol>
                 <li>header5</li>
             </ol>",
             "Pyramid test"
@@ -264,7 +250,7 @@ let fullBodyTests =
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ],
             ["<h1>header</h1>";
-            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>";
+            "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>";
             "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
             "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>"]
             , "the bodyshop"
