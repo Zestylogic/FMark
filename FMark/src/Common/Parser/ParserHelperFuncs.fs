@@ -1,21 +1,31 @@
 module ParserHelperFuncs
 open Types
 open Shared
+open System.Threading
 
 let SPACE = " "
 let NOSTRING = ""
 
 type TEmphasis = UNDER | STAR // underscore and asterisk
 
-let mapTEmphasis = function
-    | UNDER -> "_"
-    | STAR -> "*"
+type ParagraphState = {Par: Token list; ReToks: Token list; ParMatched: bool}
 
 /// delete leading ENDLINEs and retur the rest
 let rec deleteLeadingENDLINEs toks =
     match toks with
     | ENDLINE:: tks -> deleteLeadingENDLINEs tks
     | _ -> toks
+
+let deleteTrailingENDLINEs toks =
+    toks
+    |> List.rev
+    |> deleteLeadingENDLINEs
+    |> List.rev
+
+let trimENDLINEs toks =
+    toks
+    |> deleteLeadingENDLINEs
+    |> deleteTrailingENDLINEs
 
 /// convert all Tokens into a single string
 /// see mapTok for Token mapping
@@ -55,76 +65,123 @@ let countMinus = countDelim MINUS
 
 /// first element is the line
 /// second element is remaining tokens
-let cutLine toks =
+let cutFirstLine toks =
     let rec cutLine' line rtks =
         match rtks with
-        | ENDLINE:: rtks -> ENDLINE::line |> List.rev, rtks
+        | ENDLINE:: rtks -> line |> List.rev, rtks
         | tok:: rtks -> cutLine' (tok::line) rtks
         | [] -> line |> List.rev, []
     cutLine' [] toks
 
-/// newline but not new paragraoh
-/// is 2>= spaces and 1 newline, and potential spaces
-let (|IsNewTLine|_|) toks =
-    let rec takeAwaySpaces toks =
-        match toks with
-        | WHITESPACE _ :: toks' -> takeAwaySpaces toks'
-        | _ -> toks
-    match countSpaces toks >=2 with
-    | true ->
-        let toksWOSpaces =  toks |> takeAwaySpaces
-        match countNewLines toksWOSpaces = 1 with
-        | true -> toksWOSpaces.[1..] |> takeAwaySpaces |> Some // remove leading spaces in new line
-        | false -> None
-    | false -> None
+/// process token list into lines of tokens, no ENDLINE in the end
+let cutIntoLines toks =
+    let rec cutIntoLines' tokLines toks =
+        let endlineSpliter = function | ENDLINE -> true | _ -> false
+        match List.tryFindIndex endlineSpliter toks with
+        | None -> toks::tokLines |> List.rev
+        | Some idx ->
+            match List.splitAt idx toks with
+            | (tokLine, retoks) ->
+                let tokLineNoEL = tokLine |> deleteTrailingENDLINEs
+                cutIntoLines' (tokLineNoEL::tokLines) retoks.Tail
+    toks
+    |> cutIntoLines' []
 
-/// match potential new inline format
-/// return input Token list
-let (|IsNewFrmt|_|) toks =
-    match toks with
-        | UNDERSCORE::_ | DUNDERSCORE::_ | TUNDERSCORE::_   // em and strong
-        | ASTERISK::_ | DASTERISK::_ | TASTERISK::_         // em and strong
-        | BACKTICK:: _                                      // code
-        | LBRA:: _ | RBRA:: _ | EXCLAMATION:: _ | LSBRA:: _ | RSBRA:: _ //link and picture
-            -> toks |> Some
-        | _ -> None
+/// combine adjacent FrmtedString(Literal "something")
+let combineLiterals line =
+    let combiner line inlineEle =
+        let doNothing = inlineEle::line
+        match List.head line with
+        | FrmtedString (Literal l) ->
+            match inlineEle with
+            | FrmtedString (Literal s) -> FrmtedString (Literal (l+s)) :: line.Tail
+            | _ -> doNothing
+        | _ -> doNothing
+    line
+    |> List.tail
+    |> List.fold combiner [List.head line]
+    |> List.rev
 
-/// match potential em sequence
-/// return input Token list
-let (|IsWordSepAndNewFrmt|_|) toks =
+
+/// match start and end symbol for formatting
+/// return the match content, w/o the symbols
+/// and the rest tokens
+let (|MatchSym|_|) sym toks =
     match toks with
-    | WHITESPACE _::toks' ->
-        match toks' with
-        | IsNewFrmt _ -> toks |> Some
-        | _ -> None
+    | t::tl when t = sym ->
+        match List.tryFindIndex (fun s -> s=sym) (List.tail toks) with
+        | Some idx ->
+            let (content, restTks) = List.splitAt idx tl
+            (content, List.tail restTks) |> Some
+        | None -> None
     | _ -> None
+
+/// match paragraph
+/// return paragraph contents, w/o trailing ENDLINE,
+/// and the rest tokens, w/o leading ENDLINE
+let (|PickoutParagraph|_|) toks =
+    match toks with
+    | [] -> None
+    | _ ->
+        let folder state tok =
+            let {Par=par;ReToks=reToks;ParMatched=matched} = state
+            if matched then
+                {state with ReToks=tok::reToks}
+            else
+                match tok with
+                | ENDLINE when List.head par = ENDLINE -> {Par=List.tail par;ReToks=reToks;ParMatched=true}
+                | _ -> {state with Par=tok::par}
+        let initState = {Par=[];ReToks=[];ParMatched=false}
+        match List.fold folder initState toks with
+        | {Par=par;ReToks=reToks} ->
+            (par |> List.rev, reToks |> List.rev |> deleteLeadingENDLINEs) |> Some
+
+
 
 /// match underscore and asterisk emphasis start squence
-/// return 1. string, representing a space before UNDERSCORE
-/// 2. TEmphasis, emphasis type
-/// 3. Token list after underscore or asterisk
-let (|MatchEmStart|_|) toks =
+/// match underscore and asterisk emphasis end sequence
+/// return content of emphasis, the rest of line,
+/// and the necessary edge InlineElement
+/// e.g. ` _i_`, the edge InlineElements are `Some(FrmtedString(Literal " "))` and `None`
+let (|MatchEm|_|) toks =
+    let attachInlineEle front back = Option.map (fun (x,y) -> x,y,front,back)
     match toks with
     | WHITESPACE _:: UNDERSCORE:: WHITESPACE _:: _ -> None      // not em
-    | WHITESPACE _:: UNDERSCORE:: rtks -> (" ", UNDER, rtks) |> Some
-    | ASTERISK :: WHITESPACE _:: _ -> None                      // nor em
-    | ASTERISK :: rtks -> ("", STAR, rtks) |> Some
-    | _ -> None
-
-
-/// match underscore and asterisk emphasis end sequence
-/// return 1. Token, a Token before emphasis
-/// 2. TEmphasis, emphasis type
-/// 3. Token list after underscore or asterisk
-let (|MatchEmEnd|_|) toks =
-    match toks with
-    | WHITESPACE _:: UNDERSCORE:: _ -> None         // not em end
-    | tk:: UNDERSCORE:: ENDLINE:: _ -> (tk, UNDER, toks.[2..]) |> Some
-    | tk:: UNDERSCORE:: WHITESPACE _:: _ -> (tk, UNDER, toks.[2..]) |> Some
-        // preserve ENDLINE and WHITESPACE
-    | [tk;UNDERSCORE] -> (tk, UNDER, []) |> Some
-    | WHITESPACE _:: ASTERISK:: _ -> None           // nor em end
-    | tk:: ASTERISK:: toks' -> (tk, STAR, toks') |> Some
+    | WHITESPACE frontWhite:: UNDERSCORE:: potential ->
+        let frontLiteral = String.replicate frontWhite " " |> Literal |> FrmtedString |> Some
+        let rec endFinder content toks =
+            match toks with
+            | [] -> None
+            | WHITESPACE _:: UNDERSCORE:: WHITESPACE _:: rtks -> // keep finding
+                endFinder (List.append content toks.[0..2]) rtks
+            | _:: UNDERSCORE:: WHITESPACE backWhite:: rtks ->
+                let backLiteral = String.replicate backWhite " " |> Literal |> FrmtedString |> Some
+                (List.append content [List.head toks], rtks)
+                |> Some
+                |> attachInlineEle frontLiteral backLiteral
+            | _::[UNDERSCORE] ->
+                (List.append content [List.head toks], [])
+                |> Some
+                |> attachInlineEle frontLiteral None
+            | _ ->
+                xOnwards 1 toks
+                |> endFinder (List.append content [toks.[0]])
+        endFinder [] potential
+    | ASTERISK:: WHITESPACE _:: _ -> None // not asterisk em
+    | ASTERISK:: potential ->
+        let rec endFinder content toks =
+            match toks with
+            | [] -> None
+            | WHITESPACE _:: ASTERISK:: rtks -> // keep finding
+                endFinder (List.append content toks.[0..1]) rtks
+            | _:: ASTERISK:: rtks ->
+                (List.append content [List.head toks], rtks)
+                |> Some
+                |> attachInlineEle None None
+            | _ ->
+                xOnwards 1 toks
+                |> endFinder (List.append content [toks.[0]])
+        endFinder [] potential
     | _ -> None
 
 /// match new paragraph sequence
@@ -141,7 +198,8 @@ let (|MatchMapTok|_|) = function
     | _ -> None
 
 /// match hashes
-/// returns no of hashes and the first non-WHITESPACE token
+/// returns no of hashes, the first non-WHITESPACE token list
+/// and the tokens in next lines
 let (|MatchHeader|_|) toks =
     let rec countHashes n tks =
         match tks with
@@ -151,8 +209,19 @@ let (|MatchHeader|_|) toks =
     | no when no > 0 ->
         match toks.[no..] with
         | WHITESPACE _ :: toks' ->
-            (no, toks') |> Some // omit whitespace
+            toks'|> cutFirstLine
+            |> (fun (f,s) -> no, f,s)
+            |> Some // omit whitespace
         | _ -> None
+    | _ -> None
+
+/// match quote
+let (|MatchQuote|_|) toks =
+    match toks with
+    | RABRA:: rtks ->
+        rtks
+        |> cutFirstLine
+        |> Some
     | _ -> None
 
 /// match list begin sequence w/o spaces
@@ -174,7 +243,7 @@ let (|MatchListOpSpace|_|) toks =
 /// return the next line
 /// next line is seperated by 1 ENDLINE
 let (|MatchTableHead|_|) toks =
-    let line, rtks = cutLine toks
+    let line, rtks = cutFirstLine toks
     match line with
     | [] -> None
     | _ -> rtks |> Some
@@ -213,7 +282,7 @@ let minusMatch oToks =
 /// return the rest Tokens |> Some
 /// otherwise, None
 let (|MatchTableFormater|_|) toks =
-    let line, rtks = cutLine toks
+    let line, rtks = cutFirstLine toks
     match (countPipes line, countMinus line) with
     | (p,m) when p>0 && m>2 -> Some(rtks)
     | _ -> None
@@ -228,6 +297,6 @@ let cutTableRows toks =
         | ENDLINE:: rtks -> rows |> List.rev, rtks // one endline followed by another
         | [] -> rows |> List.rev, []
         | _ ->
-            let row, rtks = cutLine toks
+            let row, rtks = cutFirstLine toks
             cutTableRow' (row::rows) rtks
     cutTableRow' [] toks
