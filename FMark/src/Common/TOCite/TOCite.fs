@@ -1,7 +1,6 @@
 module TOCite
 open Types
 open Parser
-open TOCiteHelper
 open RefParse
 
 // --------------------------------------------------------------------------------
@@ -56,14 +55,14 @@ let tocGen tLst maxD =
 
 // --------------------------------------------------------------------------------
 // parse footnotes with mountedParser
-let citeParseIn'' tocLst =
-    let rec citeParseIn3 toParse tail =
+let citeParseIn tocLst =
+    let rec citeParseIn' toParse tail =
         match tail with
-        | ENDLINE::WHITESPACE a::tl when a >= 4 -> citeParseIn3 toParse tl
+        | ENDLINE::WHITESPACE a::tl when a >= 4 -> citeParseIn' toParse tl
         | ENDLINE::tl -> toParse,tl
-        | a::tl -> citeParseIn3 (a::toParse) tl
+        | a::tl -> citeParseIn' (a::toParse) tl
         | [] -> toParse,[]
-    citeParseIn3 [] tocLst
+    citeParseIn' [] tocLst
     |> fun (x,y) -> x |> List.rev |> mountedParser', y
 
 // parse references with refParser
@@ -84,7 +83,7 @@ let rec citeParse' style tocLst :(ID*TLine)list*Token list =
     match tocLst with
     | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
-        | COMMA::tail -> recFit (citeParseIn'' tail) (FtID (int key))
+        | COMMA::tail -> recFit (citeParseIn tail) (FtID (int key))
         | tail ->
             citeParse' style tail
             |> fun (x,y) -> x, FOOTER (FtID (int key))::y

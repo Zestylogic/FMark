@@ -14,7 +14,6 @@
     <Compile Include="../Markalc/Markalc.fs" />
     <Compile Include="../Parser/ParserHelperFuncs.fs" />
     <Compile Include="../Parser/Parser.fs" />
-    <Compile Include="TOCiteHelper.fs" />
     <Compile Include="RefParse.fs" />
     <Compile Include="TOCite.fs" />
 <!--     <Compile Include="../HTMLGen/HTMLGenHelpers.fs" />

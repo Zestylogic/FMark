@@ -24,7 +24,6 @@
     <Compile Include="../Common/Parser/Parser.fs" />
     <Compile Include="../Common/Parser/ParserTest.fs" />
 
-    <Compile Include="../Common/TOCite/TOCiteHelper.fs" />
     <Compile Include="../Common/TOCite/RefParse.fs" />
     <Compile Include="../Common/TOCite/TOCite.fs" />
     <Compile Include="../Common/TOCite/RefParseTest.fs" />
