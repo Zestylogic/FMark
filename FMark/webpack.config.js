@@ -26,7 +26,8 @@ module.exports = {
     output: {
         library: 'fmark',
         libraryTarget: "umd",
-        filename: "fmark.js"
+        filename: "fmark.js",
+        path: path.resolve(__dirname, 'js')
     },
   module: {
     rules: [
