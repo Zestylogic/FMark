@@ -23,10 +23,11 @@ console.log("Bundling for " + (isProduction ? "production" : "development") + ".
 module.exports = {
   devtool: "source-map",
   entry: resolve('./src/FMarkFable/FMarkFable.fsproj'),
-  output: {
-    filename: 'bundle.js',
-    path: resolve('./js/'),
-  },
+    output: {
+        library: 'fmark',
+        libraryTarget: "umd",
+        filename: "fmark.js"
+    },
   module: {
     rules: [
       {
