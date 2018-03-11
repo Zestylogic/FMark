@@ -1,9 +1,21 @@
 module TOCite
 open Types
+open Parser
 open TOCiteHelper
 open RefParse
 
 // --------------------------------------------------------------------------------
+
+let mountedParser tok =
+    let k = parseInLineElements tok
+    match k with
+    | Ok a -> a
+    | Error a -> failwithf a
+
+let mountedParser' tok =
+    mountedParser tok
+    |> fun (a,_) -> a
+
 let rec tocParse tocLst depth index : THeader list * Token list =
     // Detect hashes with whitespace after it
     // printf "tocParse %A\n%A\n" depth tocLst
@@ -24,9 +36,9 @@ let rec tocParse tocLst depth index : THeader list * Token list =
         | Some i ->
             let (h,t) = List.splitAt i tl
             tocParse t 0 (index+1)
-            |> fun (x,y) -> {HeaderName = parseLine' h; Level = depth}::x, HEADER index::y
+            |> fun (x,y) -> {HeaderName = mountedParser' h; Level = depth}::x, HEADER index::y
         | None ->
-            [{HeaderName = parseLine' tl; Level = depth}], [HEADER index]
+            [{HeaderName = mountedParser' tl; Level = depth}], [HEADER index]
     //hash without whitespace, need to rebuild hash
     | a::tl when depth > 0 ->
         tocParse tl 0 index
@@ -42,14 +54,14 @@ let tocGen' tokenLst maxDepth =
     | d when d > 0 ->
         tocParse tokenLst 0 0
         |> fun (x,y) -> List.filter (fun x -> x.Level <= d) x, y
-    | _ -> failwithf "Invalide maxDepth" // will railway this. not necessary yet
+    | _ -> failwithf "Invalid maxDepth" // will railway this. not necessary yet
 
 // call this when ParsedObj wanted
 let tocGen tLst maxD =
     {MaxDepth = maxD; HeaderLst = tocGen' tLst maxD |> fun (x,_)->x}
 
 // --------------------------------------------------------------------------------
-// parse footnotes with parseLine
+// parse footnotes with mountedParser
 let rec citeParseIn' tLne tocLst :TLine*Token list =
     match tocLst with
     // continue if next line is indented
@@ -58,7 +70,7 @@ let rec citeParseIn' tLne tocLst :TLine*Token list =
         |> fun (x,y) -> List.append tLne x, y
     | ENDLINE::tl -> tLne, tl
     | _::_ ->
-        parseLine tocLst
+        mountedParser tocLst
         |> fun(x,y) -> citeParseIn' x y
     | [] -> tLne, []
 
