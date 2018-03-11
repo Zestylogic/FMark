@@ -1,9 +1,14 @@
 module TOCite
 open Types
-open TOCiteHelper
+open Parser
 open RefParse
 
 // --------------------------------------------------------------------------------
+
+
+let mountedParser' tok =
+    parseInLineElements tok
+
 let rec tocParse tocLst depth index : THeader list * Token list =
     // Detect hashes with whitespace after it
     // printf "tocParse %A\n%A\n" depth tocLst
@@ -24,9 +29,9 @@ let rec tocParse tocLst depth index : THeader list * Token list =
         | Some i ->
             let (h,t) = List.splitAt i tl
             tocParse t 0 (index+1)
-            |> fun (x,y) -> {HeaderName = parseLine' h; Level = depth}::x, HEADER index::y
+            |> fun (x,y) -> {HeaderName = mountedParser' h; Level = depth}::x, HEADER index::y
         | None ->
-            [{HeaderName = parseLine' tl; Level = depth}], [HEADER index]
+            [{HeaderName = mountedParser' tl; Level = depth}], [HEADER index]
     //hash without whitespace, need to rebuild hash
     | a::tl when depth > 0 ->
         tocParse tl 0 index
@@ -42,63 +47,77 @@ let tocGen' tokenLst maxDepth =
     | d when d > 0 ->
         tocParse tokenLst 0 0
         |> fun (x,y) -> List.filter (fun x -> x.Level <= d) x, y
-    | _ -> failwithf "Invalide maxDepth" // will railway this. not necessary yet
+    | _ -> failwithf "Invalid maxDepth" // will railway this. not necessary yet
 
 // call this when ParsedObj wanted
 let tocGen tLst maxD =
     {MaxDepth = maxD; HeaderLst = tocGen' tLst maxD |> fun (x,_)->x}
 
 // --------------------------------------------------------------------------------
-// parse footnotes with parseLine
-let rec citeParseIn' tLne tocLst :TLine*Token list =
-    match tocLst with
-    // continue if next line is indented
-    | ENDLINE::WHITESPACE a::tl when a >= 4 ->
-        citeParseIn' tLne tl
-        |> fun (x,y) -> List.append tLne x, y
-    | ENDLINE::tl -> tLne, tl
-    | _::_ ->
-        parseLine tocLst
-        |> fun(x,y) -> citeParseIn' x y
-    | [] -> tLne, []
+// parse footnotes with mountedParser
+let citeParseIn tocLst =
+    let rec citeParseIn' toParse tail =
+        match tail with
+        | ENDLINE::WHITESPACE a::tl when a >= 4 -> citeParseIn' toParse tl
+        | ENDLINE::tl -> toParse,tl
+        | a::tl -> citeParseIn' (a::toParse) tl
+        | [] -> toParse,[]
+    citeParseIn' [] tocLst
+    |> fun (x,y) -> x |> List.rev |> mountedParser', y
 
 // parse references with refParser
-let rec refParse tocLst :TLine*Token list =
+let rec refParse style tocLst :TLine*Token list =
     let ind = tocLst |> List.tryFindIndex (fun x -> x = ENDLINE)
     match ind with
     | Some i ->
         let (h,t) = List.splitAt i tocLst
-        refParser Harvard h, t.Tail
+        refParser style h, t.Tail
     | None ->
-        refParser Harvard tocLst, []
+        refParser style tocLst, []
 
 // main citation parser
-let rec citeParse' tocLst :(ID*TLine)list*Token list =
+let rec citeParse' style tocLst :(ID*TLine)list*Token list =
     let recFit (a,b) c =
-        citeParse' b
+        citeParse' style b
         |> fun (x,y) -> (c,a)::x, y
     match tocLst with
     | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
-        | COMMA::tail -> recFit (citeParseIn' [] tail) (FtID (int key))
+        | COMMA::tail -> recFit (citeParseIn tail) (FtID (int key))
         | tail ->
-            citeParse' tail
+            citeParse' style tail
             |> fun (x,y) -> x, FOOTER (FtID (int key))::y
     | LSBRA::CARET::LITERAL citkey::RSBRA::tl ->
         match tl with
-        | COMMA::tail -> recFit (refParse tail) (RefID citkey)
+        | COMMA::tail -> recFit (refParse style tail) (RefID citkey)
         | tail ->
-            citeParse' tail
+            citeParse' style tail
             |> fun (x,y) -> x, FOOTER (RefID citkey)::y
     | t::tl ->
-        citeParse' tl
+        citeParse' style tl
         |> fun (x,y) -> x, t::y
     | [] -> [], []
+
+let rec styleParse tocLst =
+    let stylify str =
+        match str with
+        | "Harvard" -> Some Harvard
+        | "Chicago" -> Some Chicago
+        | "IEEE" -> Some IEEE
+        | _ -> None  // use default
+    match tocLst with
+    | PERCENT::PERCENT::LITERAL "Style"::EQUAL::WHITESPACE _ ::LITERAL lit::tl -> stylify lit, tl
+    | _::tl -> styleParse tl
+    | [] -> None,[]
 
 //type change and sorting
 // might change now that there are string IDs
 let citeGen' tLst =
-    let ftLst,tLst = citeParse' tLst
+    let style,tl = styleParse tLst
+    let ftLst,tLst =
+        match style with
+        | Some s -> citeParse' s tl
+        | None -> citeParse' Harvard tLst // use harvard as default style
     let k = List.sortBy (fun (x,_) -> x) ftLst
             |> List.map (fun (x,y) -> Footnote(x,y))
     k,tLst
