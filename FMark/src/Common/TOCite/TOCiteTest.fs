@@ -2,7 +2,6 @@ module TOCiteTest
 open Types
 open RefParse
 open TOCite
-open HTMLGen
 open Expecto
 
 // --------------------------------------------------------------------------------

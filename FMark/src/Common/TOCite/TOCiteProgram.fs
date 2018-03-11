@@ -1,8 +1,8 @@
-﻿open TOCiteTest
+﻿(* open TOCiteTest
 open Types
 open RefParse
 open HTMLGen
-
+ *)
 [<EntryPoint>]
 let TOCiteMain _ =
     Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
