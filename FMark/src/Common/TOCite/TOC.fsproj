@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../Types.fs" />
+    <Compile Include="../Logger/Logger.fs" />
+    <Compile Include="../Shared.fs" />
+    <Compile Include="TOCiteHelper.fs" />
+    <Compile Include="RefParse.fs" />
+    <Compile Include="TOCite.fs" />
+    <Compile Include="TOCiteTest.fs" />
+    <Compile Include="TOCiteProgram.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="expecto" Version="5.1.2" />
+    <PackageReference Include="expecto.fscheck" Version="5.1.2" />
+  </ItemGroup>
+
+</Project>
