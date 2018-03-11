@@ -32,8 +32,8 @@ let (|CharTok|_|) tok =
 let mapTok = function
     | CharTok s -> s
     | CODEBLOCK _ -> "CODEBLOCK"
-    | FOOTER n -> sprintf "FOOTER %d" n
-    | HEADER n -> sprintf "FOOTER %d" n
+    | FOOTER _ -> sprintf "FOOTER found"
+    | HEADER n -> sprintf "HEADER %d" n
     | NUMBER s -> s
     | LITERAL s -> s
     | WHITESPACE n -> String.replicate n " "
@@ -55,5 +55,9 @@ let mapLang lang =
 
 let xOnwards x lst = if List.length lst > x then lst.[x..] else []
 let sOnwards s str = if String.length str > s then str.[s..] else ""
-
+let removeChars lst s =
+            let folder (s:string) x = s.Replace(x,"")
+            List.fold folder s lst
+let removeWhitespace (s:string) = 
+    s |> removeChars ["\n";"\t";"\r";" "]
 let sharedLog = Logger(LogLevel.WARNING)

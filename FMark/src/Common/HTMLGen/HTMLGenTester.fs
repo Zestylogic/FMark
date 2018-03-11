@@ -115,7 +115,7 @@ let listTests =
                 NestedList{ListType=OL;ListItem=
                 [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=2} ];
             Depth=1},
-            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>", "ol inside ul"
+            "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>", "ol inside ul"
         );
     ]
 
@@ -136,8 +136,101 @@ let headerTests =
 let inlineFootnoteTests =
     makeExpectoTestList id id strInlineFootnote "inline footnote tests" [
         (
-            3,
-            "<sup><a href=\"#footnote3\">3</a></sup>", "footer3"
+            FtID 3,
+            "<sup><a href=\"#footnote-3\">3</a></sup>", "footer 3"
+        );
+        (
+            RefID "abcd",
+            "<sup><a href=\"#footnote-abcd\">abcd</a></sup>", "footer string"
+        );
+    ]
+
+[<Tests>]
+let TOCTests =
+    let hLst1 = [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                     ;{HeaderName=[FrmtedString(Literal "header2")]; Level=1}
+                     ;{HeaderName=[FrmtedString(Literal "header3")]; Level=1}
+                     ]
+    let hLst2 = hLst1@[{HeaderName=[FrmtedString(Literal "header4")]; Level=2}]
+
+    let hLst3 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3}]
+    let hLst4 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=1}]
+    
+    let hLst5 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header5")]; Level=1}]
+    makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents test" [
+        (
+            {HeaderLst=hLst1; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <li>header2</li>
+                <li>header3</li>
+             </ol>",
+            "Simple TOC test, all same level"
+        );
+        (
+            {HeaderLst=hLst2; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <li>header2</li>
+                <li>header3</li>
+                <ol>
+                    <li>header4</li>
+                </ol>
+             </ol>",
+            "Simple TOC test, one header2"
+        );
+        (
+            {HeaderLst=hLst3; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <ol>
+                    <li>header2</li>
+                    <li>header3</li>
+                    <ol>
+                        <li>header4</li>
+                    </ol>
+                </ol>
+            </ol>",
+            "Harder TOC test, two header 2s and a header 3"
+        );
+        (
+            {HeaderLst=hLst4; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <ol>
+                    <li>header2</li>
+                    <ol>
+                        <li>header3</li>
+                    </ol>
+                </ol>
+                <li>header4</li>
+            </ol>",
+            "Deep then shallow TOC"
+        );
+        (
+            {HeaderLst=hLst5; MaxDepth=3},
+            "<ol>
+                <li>header1</li>
+                <ol>
+                    <li>header2</li>
+                    <ol>
+                        <li>header3</li>
+                    </ol>
+                    <li>header4</li>
+                </ol>
+                <li>header5</li>
+            </ol>",
+            "Pyramid test"
         );
     ]
 
@@ -157,7 +250,7 @@ let fullBodyTests =
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ],
             ["<h1>header</h1>";
-            "<ul><li>first</li><li>second</li><li><ol><li>first</li><li>second</li></ol></li></ul>";
+            "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>";
             "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
             "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>"]
             , "the bodyshop"

@@ -52,6 +52,7 @@ type Logger(logLevel) =
         else ()
 
     // Public API
+    member __.Log = log
     member __.Debug = log LogLevel.DEBUG
     member __.Info = log LogLevel.INFO
     member __.Warn = log LogLevel.WARNING
