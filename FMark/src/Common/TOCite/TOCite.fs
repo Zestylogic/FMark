@@ -6,15 +6,9 @@ open RefParse
 
 // --------------------------------------------------------------------------------
 
-let mountedParser tok =
-    let k = parseInLineElements tok
-    match k with
-    | Ok a -> a
-    | Error a -> failwithf a
 
 let mountedParser' tok =
-    mountedParser tok
-    |> fun (a,_) -> a
+    parseInLineElements tok
 
 let rec tocParse tocLst depth index : THeader list * Token list =
     // Detect hashes with whitespace after it
@@ -62,17 +56,15 @@ let tocGen tLst maxD =
 
 // --------------------------------------------------------------------------------
 // parse footnotes with mountedParser
-let rec citeParseIn' tLne tocLst :TLine*Token list =
-    match tocLst with
-    // continue if next line is indented
-    | ENDLINE::WHITESPACE a::tl when a >= 4 ->
-        citeParseIn' tLne tl
-        |> fun (x,y) -> List.append tLne x, y
-    | ENDLINE::tl -> tLne, tl
-    | _::_ ->
-        mountedParser tocLst
-        |> fun(x,y) -> citeParseIn' x y
-    | [] -> tLne, []
+let citeParseIn'' tocLst =
+    let rec citeParseIn3 toParse tail =
+        match tail with
+        | ENDLINE::WHITESPACE a::tl when a >= 4 -> citeParseIn3 toParse tl
+        | ENDLINE::tl -> toParse,tl
+        | a::tl -> citeParseIn3 (a::toParse) tl
+        | [] -> toParse,[]
+    citeParseIn3 [] tocLst
+    |> fun (x,y) -> x |> List.rev |> mountedParser', y
 
 // parse references with refParser
 let rec refParse style tocLst :TLine*Token list =
@@ -92,7 +84,7 @@ let rec citeParse' style tocLst :(ID*TLine)list*Token list =
     match tocLst with
     | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
-        | COMMA::tail -> recFit (citeParseIn' [] tail) (FtID (int key))
+        | COMMA::tail -> recFit (citeParseIn'' tail) (FtID (int key))
         | tail ->
             citeParse' style tail
             |> fun (x,y) -> x, FOOTER (FtID (int key))::y

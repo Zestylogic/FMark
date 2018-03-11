@@ -81,8 +81,7 @@ let failHdData = [
     "Unclosed emphasis in header text",
     [ENDLINE; HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"],
     (
-        [{HeaderName = [FrmtedString (Literal "NotBold");
-            FrmtedString (Literal "*bold")]; Level = 1;}],
+        [{HeaderName = [FrmtedString (Literal "NotBold*bold")]; Level = 1;}],
         [HEADER 0]
     );
 ]
@@ -148,12 +147,11 @@ let testDataFt = [
         ENDLINE; WHITESPACE 4; LITERAL "text2"; ENDLINE; 
         LITERAL "text3";ENDLINE],
     (
-        [Footnote (FtID 2, [FrmtedString (Literal "text1");
-            FrmtedString (Literal "text2")]);],
+        [Footnote (FtID 2, [FrmtedString (Literal "text1text2")]);],
         [LITERAL "text3"; ENDLINE]
     );
 
-(*    "Footer texts sorting",
+    "Footer texts sorting",
     [LSBRA; CARET; NUMBER "3"; RSBRA; COMMA; LITERAL "text3"; ENDLINE;
         LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "text1"; ENDLINE],
     (
@@ -161,13 +159,14 @@ let testDataFt = [
             Footnote (FtID 3,[FrmtedString (Literal "text3")])],
         []
     )
-*)
+
     "Emphasis in footer",
     [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; WHITESPACE 1; UNDERSCORE;
         LITERAL "text1"; UNDERSCORE; WHITESPACE 1; LITERAL "text2"; ENDLINE],
     (
-        [Footnote (FtID 1,[FrmtedString (Emphasis [FrmtedString (Literal "text1")]);
-            FrmtedString (Literal "text2")])],
+        [Footnote (FtID 1,[FrmtedString (Literal " ");
+            FrmtedString (Emphasis [FrmtedString (Literal "text1")]);
+            FrmtedString (Literal " text2")])],
         []
     )
 
@@ -183,7 +182,7 @@ let ftTests =
 
 // --------------------------------------------------------------------------------
 
-(* let testDataFull =
+let testDataFull =
     [
     "Inline footer and references",
     [LITERAL "textbefore"; LSBRA; CARET; NUMBER "3"; RSBRA;
@@ -214,4 +213,4 @@ let fullTests =
     [testDataFull; testConvHd; testConvFt]
     |> List.reduce List.append
     |> List.map makeFullTest
-    |> Expecto.Tests.testList "Preparser full unit tests" *)
+    |> Expecto.Tests.testList "Preparser full unit tests"
