@@ -10,10 +10,6 @@ type TEmphasis = UNDER | STAR // underscore and asterisk
 
 type ParagraphState = {Par: Token list; ReToks: Token list; ParMatched: bool}
 
-let mapTEmphasis = function
-    | UNDER -> "_"
-    | STAR -> "*"
-
 /// delete leading ENDLINEs and retur the rest
 let rec deleteLeadingENDLINEs toks =
     match toks with
@@ -108,6 +104,8 @@ let combineLiterals line =
 
 
 /// match start and end symbol for formatting
+/// return the match content, w/o the symbols
+/// and the rest tokens
 let (|MatchSym|_|) sym toks =
     match toks with
     | t::tl when t = sym ->
@@ -118,44 +116,9 @@ let (|MatchSym|_|) sym toks =
         | None -> None
     | _ -> None
 
-
-/// newline but not new paragraoh
-/// is 2>= spaces and 1 newline, and potential spaces
-let (|IsNewTLine|_|) toks =
-    let rec takeAwaySpaces toks =
-        match toks with
-        | WHITESPACE _ :: toks' -> takeAwaySpaces toks'
-        | _ -> toks
-    match countSpaces toks >=2 with
-    | true ->
-        let toksWOSpaces =  toks |> takeAwaySpaces
-        match countNewLines toksWOSpaces = 1 with
-        | true -> toksWOSpaces.[1..] |> takeAwaySpaces |> Some // remove leading spaces in new line
-        | false -> None
-    | false -> None
-
-/// match potential new inline format
-/// return input Token list
-let (|IsNewFrmt|_|) toks =
-    match toks with
-        | UNDERSCORE::_ | DUNDERSCORE::_ | TUNDERSCORE::_   // em and strong
-        | ASTERISK::_ | DASTERISK::_ | TASTERISK::_         // em and strong
-        | BACKTICK:: _                                      // code
-        | LBRA:: _ | RBRA:: _ | EXCLAMATION:: _ | LSBRA:: _ | RSBRA:: _ //link and picture
-            -> toks |> Some
-        | _ -> None
-
-/// match potential em sequence
-/// return input Token list
-let (|IsWordSepAndNewFrmt|_|) toks =
-    match toks with
-    | WHITESPACE _::toks' ->
-        match toks' with
-        | IsNewFrmt _ -> toks |> Some
-        | _ -> None
-    | _ -> None
-
 /// match paragraph
+/// return paragraph contents, w/o trailing ENDLINE,
+/// and the rest tokens, w/o leading ENDLINE
 let (|PickoutParagraph|_|) toks =
     match toks with
     | [] -> None
@@ -175,8 +138,11 @@ let (|PickoutParagraph|_|) toks =
 
 
 
-/// match emphasis
-/// bool=true space needs to be added
+/// match underscore and asterisk emphasis start squence
+/// match underscore and asterisk emphasis end sequence
+/// return content of emphasis, the rest of line,
+/// and the necessary edge InlineElement
+/// e.g. ` _i_`, the edge InlineElements are `Some(FrmtedString(Literal " "))` and `None`
 let (|MatchEm|_|) toks =
     let attachInlineEle front back = Option.map (fun (x,y) -> x,y,front,back)
     match toks with
@@ -216,34 +182,6 @@ let (|MatchEm|_|) toks =
                 xOnwards 1 toks
                 |> endFinder (List.append content [toks.[0]])
         endFinder [] potential
-    | _ -> None
-
-/// match underscore and asterisk emphasis start squence
-/// return 1. string, representing a space before UNDERSCORE
-/// 2. TEmphasis, emphasis type
-/// 3. Token list after underscore or asterisk
-let (|MatchEmStart|_|) toks =
-    match toks with
-    | WHITESPACE _:: UNDERSCORE:: WHITESPACE _:: _ -> None      // not em
-    | WHITESPACE _:: UNDERSCORE:: rtks -> (" ", UNDER, rtks) |> Some
-    | ASTERISK :: WHITESPACE _:: _ -> None                      // nor em
-    | ASTERISK :: rtks -> ("", STAR, rtks) |> Some
-    | _ -> None
-
-
-/// match underscore and asterisk emphasis end sequence
-/// return 1. Token, a Token before emphasis
-/// 2. TEmphasis, emphasis type
-/// 3. Token list after underscore or asterisk
-let (|MatchEmEnd|_|) toks =
-    match toks with
-    | WHITESPACE _:: UNDERSCORE:: _ -> None         // not em end
-    | tk:: UNDERSCORE:: ENDLINE:: _ -> (tk, UNDER, toks.[2..]) |> Some
-    | tk:: UNDERSCORE:: WHITESPACE _:: _ -> (tk, UNDER, toks.[2..]) |> Some
-        // preserve ENDLINE and WHITESPACE
-    | [tk;UNDERSCORE] -> (tk, UNDER, []) |> Some
-    | WHITESPACE _:: ASTERISK:: _ -> None           // nor em end
-    | tk:: ASTERISK:: toks' -> (tk, STAR, toks') |> Some
     | _ -> None
 
 /// match new paragraph sequence
