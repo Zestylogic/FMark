@@ -27,7 +27,7 @@ let urlGen style url =
         | Some a -> [Link(Literal a,a)]
     | _ -> []
 
-let chiGen tokLst =
+let plnGen tokLst =
     let rec plainGen' tLst =
         match tLst with
         | LITERAL lit::tl -> lit::plainGen' tl
@@ -38,7 +38,7 @@ let chiGen tokLst =
 
 let div = [FrmtedString (Literal ". ")]
 
-type GenType = HarAut | ChiAut | ChiWeb | ChiWebDate | Acc | Til
+type GenType = HarAut | ChiAut | ChiWeb | ChiWebDate | ChiTil | HarDate | HarTil
 let (|OverallM|) =
     let hAutGen tokLst =
         let rec hAutGen' tLst:TLine =
@@ -50,25 +50,27 @@ let (|OverallM|) =
             | _::tl -> hAutGen' tl
             | [] -> []
         List.rev tokLst |> hAutGen' |> List.rev
-    let cAutGen tokLst = [chiGen tokLst |> Literal |> FrmtedString]
-    let cWebTilGen tokLst = ["\"" + chiGen tokLst + ".\" " |> Literal |> FrmtedString]
-    let cWebDate tokLst = ["Accessed " + chiGen tokLst |> Literal |> FrmtedString]
-    let accGen tokLst = ["[Accessed " + chiGen tokLst + "]" |> Literal |> FrmtedString]
-    let tilGen tokLst = [[chiGen tokLst |> Literal |> FrmtedString] |> Emphasis |> FrmtedString]
+    let cAutGen tokLst = [plnGen tokLst |> Literal |> FrmtedString]
+    let cWebTilGen tokLst = ["\"" + plnGen tokLst + ".\" " |> Literal |> FrmtedString]
+    let cWebDate tokLst = ["Accessed " + plnGen tokLst |> Literal |> FrmtedString]
+    let hDate tokLst = ["[Accessed " + plnGen tokLst + "]." |> Literal |> FrmtedString]
+    let cTil tokLst = [[plnGen tokLst |> Literal |> FrmtedString] |> Emphasis |> FrmtedString]
+    let hTil tokLst = [[plnGen tokLst + ". " |> Literal |> FrmtedString] |> Emphasis |> FrmtedString]
     function
     | HarAut -> hAutGen
+    | HarDate -> hDate
+    | HarTil -> hTil
     | ChiAut -> cAutGen
+    | ChiTil -> cTil
     | ChiWeb -> cWebTilGen
     | ChiWebDate -> cWebDate
-    | Acc -> accGen
-    | Til -> tilGen
 
 let build gType tokLst =
-    match gType with
-    | OverallM t ->
-        match tokLst with
-        | Some tl -> t tl
-        | None -> []
+    match tokLst with
+    | None -> []
+    | Some tl ->
+        match gType with
+        | OverallM f -> f tl
 
 let rec ref2TLine format ref:TLine =
     match format with
@@ -77,16 +79,16 @@ let rec ref2TLine format ref:TLine =
         match ref.Cat with
         | Some Book ->
             [build ChiAut ref.Author; div; yerGen Chicago ref.Year; div;
-                build Til ref.Title; div;]
+                build ChiTil ref.Title; div;]
             |> List.reduce List.append
         | Some Website ->
             [build ChiAut ref.Author; div; yerGen Chicago ref.Year; div;
-                build Til ref.Title; build Acc ref.Access; div; urlGen Chicago ref.URL]
+                build ChiTil ref.Title; build ChiWebDate ref.Access; div; urlGen Chicago ref.URL]
             |> List.reduce List.append
         | None -> [FrmtedString (Literal "Please specify type of reference")]
     | Harvard ->
-        [build HarAut ref.Author; build Til ref.Title; yerGen Harvard ref.Year;
-            urlGen Harvard ref.URL; build Acc ref.Access]
+        [build HarAut ref.Author; yerGen Harvard ref.Year; build HarTil ref.Title;
+            urlGen Harvard ref.URL; build HarDate ref.Access]
         |> List.reduce List.append
 
 // parses a single reference entry

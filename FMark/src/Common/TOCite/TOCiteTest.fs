@@ -2,6 +2,7 @@ module TOCiteTest
 open Types
 open RefParse
 open TOCite
+open HTMLGen
 open Expecto
 
 // --------------------------------------------------------------------------------
@@ -119,7 +120,7 @@ let testDataFt = [
     (
         [Footnote (RefID "Eric", [FrmtedString (Literal "Wang, ");
             FrmtedString (Literal "Z. ");
-            FrmtedString (Emphasis [FrmtedString(Literal "Not a real book")])])],
+            FrmtedString (Emphasis [FrmtedString(Literal "Not a real book. ")])])],
         []
     );
 
@@ -173,8 +174,7 @@ let testDataFt = [
             FrmtedString (Literal "text2")])],
         []
     )
-
-
+    
     ]
 
 let makeFtTest (name,inn,out) =
@@ -205,13 +205,13 @@ let testDataRef =
     "Title only",
     [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"],
     Harvard,
-    [FrmtedString (Emphasis [FrmtedString (Literal "Book1")])];
+    [FrmtedString (Emphasis [FrmtedString (Literal "Book1. ")])];
 
     "Title with multiple words",
     [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
         LITERAL "Subtitle"],
     Harvard,
-    [FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle")])];
+    [FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle. ")])];
 
     "Year only",
     [LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"],
@@ -228,7 +228,7 @@ let testDataRef =
     "Access date only",
     [LITERAL "access";EQUAL; WHITESPACE 1; LITERAL "8th March 2018"],
     Harvard,
-    [FrmtedString (Literal "[Accessed 8th March 2018]")];
+    [FrmtedString (Literal "[Accessed 8th March 2018].")];
 
     "Book reference",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
@@ -237,7 +237,7 @@ let testDataRef =
         LITERAL "2018"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ");
-        FrmtedString (Emphasis [FrmtedString (Literal "Not a real book")])];
+        FrmtedString (Emphasis [FrmtedString (Literal "Not a real book. ")])];
 
     "Website reference",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Eric"; WHITESPACE 1;
@@ -248,10 +248,11 @@ let testDataRef =
         LITERAL "access"; EQUAL; WHITESPACE 1; LITERAL "4th March 2018"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "E. ");
-        FrmtedString (Emphasis [FrmtedString (Literal "Not a real website")]);
-        FrmtedString (Literal "(2017) "); FrmtedString (Literal "Available from: ");
+        FrmtedString (Literal "(2017) ");
+        FrmtedString (Emphasis [FrmtedString (Literal "Not a real website. ")]);
+        FrmtedString (Literal "Available from: ");
         Link (Literal "www.example.com/website","www.example.com/website");
-        FrmtedString (Literal " "); FrmtedString (Literal "[Accessed 4th March 2018]")]
+        FrmtedString (Literal " "); FrmtedString (Literal "[Accessed 4th March 2018].")]
 
     ]
 let makeRefTest (name,inn,frmt,out) =
