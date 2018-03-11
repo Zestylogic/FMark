@@ -19,7 +19,7 @@ let rec parseCode toks =
     | e ->  sharedLog.Warn None (sprintf "%A" e)
             ("\\`", xOnwards 1 toks) |> Ok
 
-/// parse inline text, including links and pictures, terminate on 2>= `ENDLINE`s
+/// parse inline text, including links and pictures, terminates when nothing left
 let parseInLineElements toks =
     let attachInlineEle front back ele =
         [front;ele;back]
@@ -52,15 +52,12 @@ let parseInLineElements toks =
             | _ ->
                 parseInLines newLine retoks
                 |> combineLiterals
-    parseInLines [] toks |> Ok
+    parseInLines [] toks
 
 /// parse a paragraph which counts for contents in  `<p>`
 /// parseParagraph eats 2>= ENDLINEs
 let parseParagraph toks =
-    let parseParagraph' lines tokLine =
-        match parseInLineElements tokLine with
-        | Error _ -> lines
-        | Ok (line) -> line::lines
+    let parseParagraph' lines tokLine = (parseInLineElements tokLine) :: lines
     toks
     |> trimENDLINEs
     |> cutIntoLines
@@ -80,7 +77,7 @@ let (|MatchTable|_|) toks =
         | Ok(rows) -> 
             let toPCellList (cell:Cell) = 
                 let toks,head,align = (cell.GetParams) 
-                let pCellLine = toks |> parseInLineElements |> (function | Ok(x) -> x | Error(e) -> [FrmtedString(Literal(e))])
+                let pCellLine = toks |> parseInLineElements
                 CellLine(pCellLine,head,align)
             let toPRow row = 
                 let clst, rHead = row |> function | Cells(clst',rHead') -> clst',rHead'
@@ -105,11 +102,12 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
     | MatchListOpSpace _ -> "Lists todo" |> Error
     | MatchTable (rows, rtks) -> (rows, rtks) |> Ok
     | MatchQuote (content, rtks) ->
-        parseInLineElements content
-        |> Result.map (fun line -> Quote(line), rtks)
+        (parseInLineElements content |> Quote , rtks)
+        |> Ok
     | MatchHeader (level, content, rtks) ->
-        parseInLineElements content
-        |> Result.map (fun line -> Header{HeaderName=line; Level=level}, rtks )
+        let line = parseInLineElements content
+        (Header{HeaderName=line; Level=level}, rtks)
+        |> Ok
     | PickoutParagraph (par, retoks) ->
         (parseParagraph par, retoks) |> Ok
     | _ -> sprintf "Nothing matched in parseItem for Tokens:\n%A" toks |> Error

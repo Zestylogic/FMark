@@ -94,26 +94,26 @@ let parseInlineElementsTest =
     makeExpectoTestList id id parseInLineElements "parseInLineElements test" [
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"],
-            [FrmtedString(Literal "I am")]|>Ok, "literal and 2 ENDLINEs"
+            [FrmtedString(Literal "I am")], "literal and 2 ENDLINEs"
         );
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 2],
-            [FrmtedString(Literal "I am  ")]|>Ok, "literal with 2 whitespaces and 1 newline"
+            [FrmtedString(Literal "I am  ")], "literal with 2 whitespaces and 1 newline"
         );
         (
             [BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK],
-            [FrmtedString(Code "This  is     code")]|>Ok, "only inline code"
+            [FrmtedString(Code "This  is     code")], "only inline code"
         );
         (
             [BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK; LITERAL "na"],
-            [FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")]|>Ok,
+            [FrmtedString(Code "This  is     code"); FrmtedString(Literal "na")],
             "inline code and literal"
         );
     ]
 
 [<Tests>]
 let emphasisTest =
-    makeExpectoTestList id makeOk parseInLineElements "parseInLineElements emphasis test" [
+    makeExpectoTestList id id parseInLineElements "parseInLineElements emphasis test" [
         (
             [LITERAL "I"; WHITESPACE 2; UNDERSCORE; LITERAL "am"; UNDERSCORE],
             [FrmtedString(Literal "I  "); FrmtedString(Emphasis([FrmtedString (Literal "am")]))],
