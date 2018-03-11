@@ -249,6 +249,17 @@ let ``multiparagraph misc test`` =
         );
     ]
 
+
+[<Tests>]
+let ``symbols test`` =
+    makeExpectoTestList id id parse "symbols test" [
+        (
+            [ENDLINE;COMMA;HASH;PIPE;BACKTICK;LBRA;UNDERSCORE;LSBRA],
+            ([Paragraph[[FrmtedString(Literal ",#|`(_[")]]])|>Ok,
+            "paragraph starting with two ENDLINEs"
+        );
+    ]
+
 [<Tests>]
 let ``preprocess table test`` =
     makeExpectoTestList id id parse "preprocess table test" [
