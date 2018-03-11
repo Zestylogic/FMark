@@ -53,9 +53,9 @@ type PRow =
     | PCells of PCell list * Header:bool
 
 type RefFrmt = IEEE | Harvard | Chicago
-
+type RefType = Book | Website
 // date support for access later
-type Ref = {Author: Token list option; Title: Token list option;
+type Ref = {Cat: RefType option; Author: Token list option; Title: Token list option;
             Year: int option; URL: string option; Access: Token list option}
 
 type ParsedObj =

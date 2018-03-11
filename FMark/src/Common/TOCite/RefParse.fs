@@ -1,67 +1,92 @@
 module RefParse
 open Types
 
-let autGen tokLst =
-    let rec autGen' tLst:TLine =
+let yerGen style year =
+    match style with
+    | Harvard ->
+        match year with
+        | None -> []
+        | Some a -> ["(" + string a + ") "|> Literal |> FrmtedString]
+    | Chicago ->
+        match year with
+        | None -> []
+        | Some a -> [string a |> Literal |> FrmtedString]
+    | _ -> []
+
+let urlGen style url =
+    match style with
+    | Harvard ->
+        match url with
+        | None -> []
+        | Some a ->
+            [FrmtedString (Literal "Available from: "); Link(Literal a,a);
+                FrmtedString (Literal " ")]
+    | Chicago ->
+        match url with
+        | None -> []
+        | Some a -> [Link(Literal a,a)]
+    | _ -> []
+
+let chiGen tokLst =
+    let rec plainGen' tLst =
         match tLst with
-        | LITERAL lit::tl ->
-            match tl with
-            | [] -> [FrmtedString (Literal (lit+", "))]
-            | _ -> FrmtedString (Literal (string lit.[0]+". "))::autGen' tl
-        | _::tl -> autGen' tl
+        | LITERAL lit::tl -> lit::plainGen' tl
+        | WHITESPACE _::tl -> " "::plainGen' tl
+        | _::tl -> plainGen' tl
         | [] -> []
-    match tokLst with
-    | None -> []
-    | Some a -> List.rev a |> autGen' |> List.rev
+    plainGen' tokLst |> List.rev |> List.reduce (+)
 
-let tilGen tokLst = 
-    let rec tilGen' tLst:TLine =
-        match tLst with
-        | LITERAL lit::tl ->
-            match tl with
-            | [] -> [(FrmtedString (Literal lit))]
-            | _ -> FrmtedString (Literal lit)::tilGen' tl
-        | _::tl -> tilGen' tl
-        | [] -> []
-    match tokLst with
-    | None -> []
-    | Some a -> [tilGen' a |> List.rev |> Emphasis |> FrmtedString]
+let div = [FrmtedString (Literal ". ")]
 
-let yerGen year =
-    match year with
-    | None -> []
-    | Some a -> ["(" + string a + ") "|> Literal |> FrmtedString]
+type GenType = HarAut | ChiAut | ChiWeb | ChiWebDate | Acc | Til
+let (|OverallM|) =
+    let hAutGen tokLst =
+        let rec hAutGen' tLst:TLine =
+            match tLst with
+            | LITERAL lit::tl ->
+                match tl with
+                | [] -> [FrmtedString (Literal (lit+", "))]
+                | _ -> FrmtedString (Literal (string lit.[0]+". "))::hAutGen' tl
+            | _::tl -> hAutGen' tl
+            | [] -> []
+        List.rev tokLst |> hAutGen' |> List.rev
+    let cAutGen tokLst = [chiGen tokLst |> Literal |> FrmtedString]
+    let cWebTilGen tokLst = ["\"" + chiGen tokLst + ".\" " |> Literal |> FrmtedString]
+    let cWebDate tokLst = ["Accessed " + chiGen tokLst |> Literal |> FrmtedString]
+    let accGen tokLst = ["[Accessed " + chiGen tokLst + "]" |> Literal |> FrmtedString]
+    let tilGen tokLst = [[chiGen tokLst |> Literal |> FrmtedString] |> Emphasis |> FrmtedString]
+    function
+    | HarAut -> hAutGen
+    | ChiAut -> cAutGen
+    | ChiWeb -> cWebTilGen
+    | ChiWebDate -> cWebDate
+    | Acc -> accGen
+    | Til -> tilGen
 
-let urlGen url =
-    match url with
-    | None -> []
-    | Some a ->
-        [FrmtedString (Literal "Available from: "); Link(Literal a,a);
-            FrmtedString (Literal " ")]
-
-let accGen tokLst =
-    // to include date formatting
-    let rec accGen' tLst:TLine =
-        match tLst with
-        | LITERAL lit::tl ->
-            match tl with
-            | [] -> [(FrmtedString (Literal lit))]
-            | _ -> FrmtedString (Literal lit)::accGen' tl
-        | _::tl -> accGen' tl
-        | [] -> []
-    match tokLst with
-    | None -> []
-    | Some a ->
-        [FrmtedString (Literal "]")]
-        |> List.append (FrmtedString (Literal "[Accessed ")::accGen' a)
+let build gType tokLst =
+    match gType with
+    | OverallM t ->
+        match tokLst with
+        | Some tl -> t tl
+        | None -> []
 
 let rec ref2TLine format ref:TLine =
     match format with
     | IEEE -> [FrmtedString (Literal "IEEE citation not supported yet")]
-    | Chicago -> [FrmtedString (Literal "Chicago citation not supported yet")]
+    | Chicago ->
+        match ref.Cat with
+        | Some Book ->
+            [build ChiAut ref.Author; div; yerGen Chicago ref.Year; div;
+                build Til ref.Title; div;]
+            |> List.reduce List.append
+        | Some Website ->
+            [build ChiAut ref.Author; div; yerGen Chicago ref.Year; div;
+                build Til ref.Title; build Acc ref.Access; div; urlGen Chicago ref.URL]
+            |> List.reduce List.append
+        | None -> [FrmtedString (Literal "Please specify type of reference")]
     | Harvard ->
-        [autGen ref.Author; tilGen ref.Title; yerGen ref.Year;
-            urlGen ref.URL; accGen ref.Access]
+        [build HarAut ref.Author; build Til ref.Title; yerGen Harvard ref.Year;
+            urlGen Harvard ref.URL; build Acc ref.Access]
         |> List.reduce List.append
 
 // parses a single reference entry
@@ -76,6 +101,11 @@ let refParser frmt tLst =
             | [] -> parsing, []
 
         match tLst with
+        | LITERAL "type"::EQUAL::WHITESPACE _::LITERAL t::tl -> 
+            match t with
+            | "Book" -> refPar' {refData with Cat = Some Book} tl
+            | "Website" -> refPar' {refData with Cat = Some Website} tl
+            | _ -> refPar' refData tl
         | LITERAL "author"::EQUAL::WHITESPACE _::tl ->
             refParse' [] tl
             |> fun (x,y) -> refPar' {refData with Author = Some x} y
@@ -93,5 +123,5 @@ let refParser frmt tLst =
         | _::tl -> refPar' refData tl
         | [] -> refData, []
     tLst    
-    |> refPar' {Author = None; Title = None; Year = None; URL = None; Access = None}
+    |> refPar' {Cat = None; Author = None; Title = None; Year = None; URL = None; Access = None}
     |> fun (x,_) -> ref2TLine frmt x

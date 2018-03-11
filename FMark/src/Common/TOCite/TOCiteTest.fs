@@ -211,8 +211,7 @@ let testDataRef =
     [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
         LITERAL "Subtitle"],
     Harvard,
-    [FrmtedString (Emphasis [FrmtedString (Literal "Book1");
-        FrmtedString (Literal "Subtitle")])];
+    [FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle")])];
 
     "Year only",
     [LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"],
@@ -229,8 +228,7 @@ let testDataRef =
     "Access date only",
     [LITERAL "access";EQUAL; WHITESPACE 1; LITERAL "8th March 2018"],
     Harvard,
-    [FrmtedString (Literal "[Accessed ");
-        FrmtedString (Literal "8th March 2018"); FrmtedString (Literal "]")];
+    [FrmtedString (Literal "[Accessed 8th March 2018]")];
 
     "Book reference",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
@@ -253,8 +251,7 @@ let testDataRef =
         FrmtedString (Emphasis [FrmtedString (Literal "Not a real website")]);
         FrmtedString (Literal "(2017) "); FrmtedString (Literal "Available from: ");
         Link (Literal "www.example.com/website","www.example.com/website");
-        FrmtedString (Literal " "); FrmtedString (Literal "[Accessed ");
-        FrmtedString (Literal "4th March 2018"); FrmtedString (Literal "]")]
+        FrmtedString (Literal " "); FrmtedString (Literal "[Accessed 4th March 2018]")]
 
     ]
 let makeRefTest (name,inn,frmt,out) =

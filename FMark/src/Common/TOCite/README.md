@@ -9,6 +9,14 @@ this is inline[^1], and so on.
 But not this line.
 
 ---
+Supported data fields: author, title, year, url, access.
+Supported rendering styles: Harvard - book, Harvard - website
+Todo list:
+  * Chapter of a book, e-Book
+  * Multiple authors
+  * show n.d. when date not available in Chicago
+
+
 src:
 This is a citation[^Zifan]. This is another[^Eric] one.
 
@@ -22,13 +30,23 @@ LITERAL "title"; EQUAL; WHITESPACE 1; LITERAL "Not a real book"; COMMA
 Syntax to indicate format to be fixed.
 %%Citation = Harvard
 ```
-How it should show up:
+How it should show up with Harvard:
 
 This is a citation(Wang, 2018). This is another(Wang, 2017) one.
 
 Wang, Z. (2018) *Not a real book*.
 
 Wang, E. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
+
+if Chicago style is chosen:
+
+This is a citation(Wang 2018). This is another(Wang 2017) one.
+
+Zifan Wang. 2018. *Not a real book*.
+
+Eric Wang. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
+
+
 
 ## Submission Write-up
 

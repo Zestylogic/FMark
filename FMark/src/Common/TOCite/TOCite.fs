@@ -63,42 +63,58 @@ let rec citeParseIn' tLne tocLst :TLine*Token list =
     | [] -> tLne, []
 
 // parse references with refParser
-let rec refParse tocLst :TLine*Token list =
+let rec refParse style tocLst :TLine*Token list =
     let ind = tocLst |> List.tryFindIndex (fun x -> x = ENDLINE)
     match ind with
     | Some i ->
         let (h,t) = List.splitAt i tocLst
-        refParser Harvard h, t.Tail
+        refParser style h, t.Tail
     | None ->
-        refParser Harvard tocLst, []
+        refParser style tocLst, []
 
 // main citation parser
-let rec citeParse' tocLst :(ID*TLine)list*Token list =
+let rec citeParse' style tocLst :(ID*TLine)list*Token list =
     let recFit (a,b) c =
-        citeParse' b
+        citeParse' style b
         |> fun (x,y) -> (c,a)::x, y
     match tocLst with
     | LSBRA::CARET::NUMBER key::RSBRA::tl ->
         match tl with
         | COMMA::tail -> recFit (citeParseIn' [] tail) (FtID (int key))
         | tail ->
-            citeParse' tail
+            citeParse' style tail
             |> fun (x,y) -> x, FOOTER (FtID (int key))::y
     | LSBRA::CARET::LITERAL citkey::RSBRA::tl ->
         match tl with
-        | COMMA::tail -> recFit (refParse tail) (RefID citkey)
+        | COMMA::tail -> recFit (refParse style tail) (RefID citkey)
         | tail ->
-            citeParse' tail
+            citeParse' style tail
             |> fun (x,y) -> x, FOOTER (RefID citkey)::y
     | t::tl ->
-        citeParse' tl
+        citeParse' style tl
         |> fun (x,y) -> x, t::y
     | [] -> [], []
+
+let rec styleParse tocLst =
+    let stylify str =
+        match str with
+        | "Harvard" -> Some Harvard
+        | "Chicago" -> Some Chicago
+        | "IEEE" -> Some IEEE
+        | _ -> None  // use default
+    match tocLst with
+    | PERCENT::PERCENT::LITERAL "Style"::EQUAL::WHITESPACE _ ::LITERAL lit::tl -> stylify lit, tl
+    | _::tl -> styleParse tl
+    | [] -> None,[]
 
 //type change and sorting
 // might change now that there are string IDs
 let citeGen' tLst =
-    let ftLst,tLst = citeParse' tLst
+    let style,tl = styleParse tLst
+    let ftLst,tLst =
+        match style with
+        | Some s -> citeParse' s tl
+        | None -> citeParse' Harvard tLst // use harvard as default style
     let k = List.sortBy (fun (x,_) -> x) ftLst
             |> List.map (fun (x,y) -> Footnote(x,y))
     k,tLst
