@@ -157,6 +157,51 @@ let emphasisTest =
     ]
 
 [<Tests>]
+let ``strong test for parseInLineElements`` =
+    makeExpectoTestList id id parseInLineElements "strong test for parseInLineElements" [
+        (
+            [LITERAL "I"; WHITESPACE 2; DUNDERSCORE; LITERAL "am"; DUNDERSCORE],
+            [FrmtedString(Literal "I  "); FrmtedString(Strong([FrmtedString (Literal "am")]))],
+            "literal and underscore strong literal"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 2; DASTERISK; LITERAL "am"; DASTERISK],
+            [FrmtedString(Literal "I  "); FrmtedString(Strong([FrmtedString (Literal "am")]))],
+            "literal and asterisk strong literal"
+        );
+        (
+            [LITERAL "I";DASTERISK; LITERAL "am"; DASTERISK],
+            [FrmtedString(Literal "I"); FrmtedString(Strong([FrmtedString (Literal "am")]))],
+            "literal and asterisk strong literal, w/o space"
+        );
+        (
+            [LITERAL "I"; DASTERISK; LITERAL "am"; ASTERISK],
+            [FrmtedString(Literal "I**am*")],
+            "unmatched double asterisk"
+        );
+        (
+            [LITERAL "I"; DASTERISK; LITERAL "am"; ASTERISK; LITERAL "Commodo";DASTERISK],
+            [FrmtedString(Literal "I"); FrmtedString(Strong([FrmtedString (Literal "am*Commodo")]))],
+            "unmatched double asterisk, with asterisk inside"
+        );
+    ]
+
+[<Tests>]
+let ``strong and em test for parseInLineElements`` =
+    makeExpectoTestList id id parseInLineElements "strong and em test for parseInLineElements" [
+        (
+            [LITERAL "I"; WHITESPACE 2; TUNDERSCORE; LITERAL "am"; TUNDERSCORE],
+            [FrmtedString(Literal "I  "); FrmtedString(Emphasis[FrmtedString(Strong([FrmtedString (Literal "am")]))])],
+            "literal and underscore strong and em literal"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 2; TASTERISK; LITERAL "am"; TASTERISK],
+            [FrmtedString(Literal "I  "); FrmtedString(Emphasis[FrmtedString(Strong([FrmtedString (Literal "am")]))])],
+            "literal and asterisk strong and em literal"
+        );
+    ]
+
+[<Tests>]
 let ``multiparagraph emphasis test`` =
     makeExpectoTestList id id parseParagraph "multiparagraph emphasis test" [
         (
@@ -180,6 +225,7 @@ let ``multiparagraph emphasis test`` =
             "nested emphasis"
         );
     ]
+
 
 [<Tests>]
 let parseParagraphTest =

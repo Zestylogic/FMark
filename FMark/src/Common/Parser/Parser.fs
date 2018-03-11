@@ -23,21 +23,33 @@ let rec parseCode toks =
 let parseInLineElements toks =
     let attachInlineEle front back ele =
         [front;ele;back]
+    let genFormat (currentLine, inlineContent, frontLiteral, backLiteral) =
+        match frontLiteral, backLiteral with
+            | Some fl, Some bl ->
+                [bl;inlineContent;fl]
+            | Some fl, None ->
+                [inlineContent;fl]
+            | None, Some bl ->
+                [bl;inlineContent]
+            | None, None ->
+                [inlineContent]
+        |> (fun x -> x@currentLine)
+    let makeList x = [x]
     let rec parseInLineElements' currentLine toks =
         match toks with
         | MatchSym BACKTICK (content, rtks) -> (content|> strAllToks|> Code|> FrmtedString )::currentLine, rtks
+        | MatchStrongAndEm (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent =
+                parseInLines [] content |> Strong |> FrmtedString |> makeList |> Emphasis |> FrmtedString
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
+        | MatchStrong (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent = (parseInLines [] content |> Strong |> FrmtedString)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
         | MatchEm (content, rtks, frontLiteral, backLiteral) ->
             let inlineContent = (parseInLines [] content |> Emphasis |> FrmtedString)
-            match frontLiteral, backLiteral with
-                | Some fl, Some bl ->
-                    [bl;inlineContent;fl]
-                | Some fl, None ->
-                    [inlineContent;fl]
-                | None, Some bl ->
-                    [bl;inlineContent]
-                | None, None ->
-                    [inlineContent]
-            |> (fun x -> x@currentLine)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
             , rtks
         | _ ->
             let str = mapTok toks.[0]
