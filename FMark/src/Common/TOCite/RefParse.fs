@@ -1,6 +1,7 @@
 module RefParse
 open Types
 
+// put these two in the big function later
 let yerGen style year =
     match style with
     | Harvard ->
@@ -10,7 +11,7 @@ let yerGen style year =
     | Chicago ->
         match year with
         | None -> []
-        | Some a -> [string a |> Literal |> FrmtedString]
+        | Some a -> [string a + ". " |> Literal |> FrmtedString]
     | _ -> []
 
 let urlGen style url =
@@ -36,11 +37,9 @@ let plnGen tokLst =
         | [] -> []
     plainGen' tokLst |> List.rev |> List.reduce (+)
 
-let div = [FrmtedString (Literal ". ")]
-
-type GenType = HarAut | ChiAut | ChiWeb | ChiWebDate | ChiTil | HarDate | HarTil
+type GenType = HarAut | ChiAut | ChiWebDate | ChiBookTil | ChiWebTil | HarDate | HarTil
 let (|OverallM|) =
-    let hAutGen tokLst =
+    let hAut tokLst =
         let rec hAutGen' tLst:TLine =
             match tLst with
             | LITERAL lit::tl ->
@@ -50,19 +49,19 @@ let (|OverallM|) =
             | _::tl -> hAutGen' tl
             | [] -> []
         List.rev tokLst |> hAutGen' |> List.rev
-    let cAutGen tokLst = [plnGen tokLst |> Literal |> FrmtedString]
-    let cWebTilGen tokLst = ["\"" + plnGen tokLst + ".\" " |> Literal |> FrmtedString]
-    let cWebDate tokLst = ["Accessed " + plnGen tokLst |> Literal |> FrmtedString]
+    let cAut tokLst = [plnGen tokLst + ". " |> Literal |> FrmtedString]
+    let cWebTil tokLst = ["\"" + plnGen tokLst + ".\" " |> Literal |> FrmtedString]
+    let cWebDate tokLst = ["Accessed " + plnGen tokLst + ". " |> Literal |> FrmtedString]
     let hDate tokLst = ["[Accessed " + plnGen tokLst + "]." |> Literal |> FrmtedString]
-    let cTil tokLst = [[plnGen tokLst |> Literal |> FrmtedString] |> Emphasis |> FrmtedString]
+    let cTil tokLst = [[plnGen tokLst + ". " |> Literal |> FrmtedString] |> Emphasis |> FrmtedString]
     let hTil tokLst = [[plnGen tokLst + ". " |> Literal |> FrmtedString] |> Emphasis |> FrmtedString]
     function
-    | HarAut -> hAutGen
+    | HarAut -> hAut
     | HarDate -> hDate
     | HarTil -> hTil
-    | ChiAut -> cAutGen
-    | ChiTil -> cTil
-    | ChiWeb -> cWebTilGen
+    | ChiAut -> cAut
+    | ChiBookTil -> cTil
+    | ChiWebTil -> cWebTil
     | ChiWebDate -> cWebDate
 
 let build gType tokLst =
@@ -78,12 +77,12 @@ let rec ref2TLine format ref:TLine =
     | Chicago ->
         match ref.Cat with
         | Some Book ->
-            [build ChiAut ref.Author; div; yerGen Chicago ref.Year; div;
-                build ChiTil ref.Title; div;]
+            [build ChiAut ref.Author; yerGen Chicago ref.Year;
+                build ChiBookTil ref.Title]
             |> List.reduce List.append
         | Some Website ->
-            [build ChiAut ref.Author; div; yerGen Chicago ref.Year; div;
-                build ChiTil ref.Title; build ChiWebDate ref.Access; div; urlGen Chicago ref.URL]
+            [build ChiAut ref.Author; yerGen Chicago ref.Year; build ChiWebTil ref.Title;
+                build ChiWebDate ref.Access; urlGen Chicago ref.URL]
             |> List.reduce List.append
         | None -> [FrmtedString (Literal "Please specify type of reference")]
     | Harvard ->

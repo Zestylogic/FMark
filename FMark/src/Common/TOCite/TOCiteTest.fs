@@ -187,59 +187,60 @@ let ftTests =
 
 // --------------------------------------------------------------------------------
 // testing single reference parsing
-let testDataRef =
+let testDataRefHarvard =
     [
-    "Author only",
+    "Harvard Author only",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Wang"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ")];
 
-    "Author with multiple given names",
+    "Harvard Author with multiple given names",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "E. ");
         FrmtedString (Literal "Z. ")];
 
-    "Title only",
+    "Harvard Title only",
     [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"],
     Harvard,
     [FrmtedString (Emphasis [FrmtedString (Literal "Book1. ")])];
 
-    "Title with multiple words",
+    "Harvard Title with multiple words",
     [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
         LITERAL "Subtitle"],
     Harvard,
     [FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle. ")])];
 
-    "Year only",
+    "Harvard Year only",
     [LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"],
     Harvard,
     [FrmtedString (Literal "(2018) ")];
 
-    "URL only",
+    "Harvard URL only",
     [LITERAL "url";EQUAL; WHITESPACE 1; LITERAL "www.example.com"],
     Harvard,
     [FrmtedString (Literal "Available from: ");
         Link (Literal "www.example.com","www.example.com");
         FrmtedString (Literal " ")];
 
-    "Access date only",
+    "Harvard Access date only",
     [LITERAL "access";EQUAL; WHITESPACE 1; LITERAL "8th March 2018"],
     Harvard,
     [FrmtedString (Literal "[Accessed 8th March 2018].")];
 
-    "Book reference",
+    "Harvard Book reference",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
         LITERAL "Not a real book"; COMMA; LITERAL "year"; EQUAL; WHITESPACE 1;
-        LITERAL "2018"],
+        NUMBER "2018"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ");
-        FrmtedString (Emphasis [FrmtedString (Literal "Not a real book. ")])];
+        FrmtedString (Literal "(2018) ");
+        FrmtedString (Emphasis [FrmtedString (Literal "Not a real book. ")])]
 
-    "Website reference",
+    "Harvard Website reference",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Eric"; WHITESPACE 1;
         LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
         LITERAL "Not a real website"; COMMA; LITERAL "year"; EQUAL;
@@ -255,6 +256,82 @@ let testDataRef =
         FrmtedString (Literal " "); FrmtedString (Literal "[Accessed 4th March 2018].")]
 
     ]
+
+let testDataRefChicago =
+    [
+    "Chicago Author only",
+    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+        LITERAL "Wang"],
+    Chicago,
+    [FrmtedString (Literal "Zifan Wang. ")];
+
+    "Chicago Author with multiple given names",
+    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+        LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"],
+    Chicago,
+    [FrmtedString (Literal "Zifan Eric Wang. ")];
+
+    "Chicago Title only",
+    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"],
+    Chicago,
+    [FrmtedString (Emphasis [FrmtedString (Literal "Book1. ")])];
+
+    "Chicago Title with multiple words",
+    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
+        LITERAL "Subtitle"],
+    Chicago,
+    [FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle. ")])];
+
+    "Chicago Year only",
+    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"],
+    Chicago,
+    [FrmtedString (Literal "2018. ")];
+
+    "Chicago URL only",
+    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
+        LITERAL "url";EQUAL; WHITESPACE 1; LITERAL "www.example.com"],
+    Chicago,
+    [Link (Literal "www.example.com","www.example.com")];
+
+    "Chicago Access date only",
+    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
+        LITERAL "access";EQUAL; WHITESPACE 1; LITERAL "8th March 2018"],
+    Chicago,
+    [FrmtedString (Literal "Accessed 8th March 2018. ")];
+
+    "Chicago Book reference",
+    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+        LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
+        LITERAL "Not a real book"; COMMA; LITERAL "year"; EQUAL; WHITESPACE 1;
+        NUMBER "2018"],
+    Chicago,
+    [FrmtedString (Literal "Zifan Wang. "); FrmtedString (Literal "2018. ");
+        FrmtedString (Emphasis [FrmtedString (Literal "Not a real book. ")])]
+
+    "Chicago Website reference",
+    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
+        LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Eric"; WHITESPACE 1;
+        LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
+        LITERAL "Not a real website"; COMMA; LITERAL "year"; EQUAL;
+        WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
+        WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
+        LITERAL "access"; EQUAL; WHITESPACE 1; LITERAL "4th March 2018"],
+    Chicago,
+    [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
+        FrmtedString (Literal "\"Not a real website.\" ");
+        FrmtedString (Literal "Accessed 4th March 2018. ");
+        Link (Literal "www.example.com/website","www.example.com/website")]
+
+    ]
+
+
+let testDataRef = List.append testDataRefHarvard testDataRefChicago
 let makeRefTest (name,inn,frmt,out) =
     testCase name <| fun () -> Expect.equal (refParser frmt inn) out "Unit test"
 
