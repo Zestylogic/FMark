@@ -7,7 +7,6 @@ packages
 *.dll
 *.lock
 paket.exe
-js
 
 # Node
 node_modules/

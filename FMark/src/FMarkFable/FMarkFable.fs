@@ -6,7 +6,7 @@ open Fable.Import.Browser
 open Types
 open FMark
 
-let processMarkdownString (str:string) = 
-    str.Split [|'\n'|] 
+let processMarkdownString str =
+    str
     |> Array.toList
     |> processString HTML
