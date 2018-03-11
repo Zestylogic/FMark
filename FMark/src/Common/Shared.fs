@@ -39,6 +39,11 @@ let mapTok = function
     | WHITESPACE n -> String.replicate n " "
     | _ -> "\n"
 
+/// turn all tokens into string
+let strAllToks toks =
+    let pacMan str tok =
+        str + mapTok tok
+    List.fold pacMan "" toks
 
 let mapLang lang =
     match lang with
