@@ -54,9 +54,9 @@ type PRow =
 
 type RefFrmt = IEEE | Harvard | Chicago
 type RefType = Book | Website
-// date support for access later
 type Ref = {Cat: RefType option; Author: Token list option; Title: Token list option;
-            Year: int option; URL: string option; Access: Token list option}
+            Year: int option; AccessDate: (int * int * int) option
+            URL: string option}
 
 type ParsedObj =
     | CodeBlock of string * Language

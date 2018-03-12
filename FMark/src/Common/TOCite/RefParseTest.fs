@@ -3,6 +3,30 @@ open Types
 open RefParse
 open Expecto
 
+let testDataDate =
+    [
+    "Harvard date",
+    Some (2018,8,3), Harvard,
+    [FrmtedString (Literal "[Accessed 3rd August 2018]. ")]
+
+    "Chicago date",
+    Some (2018,12,4), Chicago,
+    [FrmtedString (Literal "Accessed December 4, 2018. ")]
+
+    ]
+
+let makeDateTest (name,inn,style,out) =
+    testCase name <| fun () -> Expect.equal (dateGen style inn) out "Unit test"
+
+[<Tests>]
+let dateTests =
+    List.map makeDateTest testDataDate
+    |> Expecto.Tests.testList "Date generation unit tests"
+// --------------------------------------------------------------------------------
+
+
+
+
 
 // --------------------------------------------------------------------------------
 // testing single reference parsing
@@ -45,9 +69,10 @@ let testDataRefHarvard =
         FrmtedString (Literal " ")];
 
     "Harvard Access date only",
-    [LITERAL "access";EQUAL; WHITESPACE 1; LITERAL "8th March 2018"],
+    [LITERAL "access";EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+        MINUS; NUMBER "8"],
     Harvard,
-    [FrmtedString (Literal "[Accessed 8th March 2018].")];
+    [FrmtedString (Literal "[Accessed 8th March 2018]. ")];
 
     "Harvard Book reference",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
@@ -65,14 +90,15 @@ let testDataRefHarvard =
         LITERAL "Not a real website"; COMMA; LITERAL "year"; EQUAL;
         WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
         WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
-        LITERAL "access"; EQUAL; WHITESPACE 1; LITERAL "4th March 2018"],
+        LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "2";
+        MINUS; NUMBER "4"],
     Harvard,
     [FrmtedString (Literal "Wang, "); FrmtedString (Literal "E. ");
         FrmtedString (Literal "(2017) ");
         FrmtedString (Emphasis [FrmtedString (Literal "Not a real website. ")]);
         FrmtedString (Literal "Available from: ");
         Link (Literal "www.example.com/website","www.example.com/website");
-        FrmtedString (Literal " "); FrmtedString (Literal "[Accessed 4th March 2018].")]
+        FrmtedString (Literal " "); FrmtedString (Literal "[Accessed 4th February 2018]. ")]
 
     ]
 
@@ -119,9 +145,10 @@ let testDataRefChicago =
 
     "Chicago Access date only",
     [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
-        LITERAL "access";EQUAL; WHITESPACE 1; LITERAL "8th March 2018"],
+        LITERAL "access";EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "8";
+        MINUS; NUMBER "8"],
     Chicago,
-    [FrmtedString (Literal "Accessed 8th March 2018. ")];
+    [FrmtedString (Literal "Accessed August 8, 2018. ")];
 
     "Chicago Book reference",
     [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
@@ -140,11 +167,12 @@ let testDataRefChicago =
         LITERAL "Not a real website"; COMMA; LITERAL "year"; EQUAL;
         WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
         WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
-        LITERAL "access"; EQUAL; WHITESPACE 1; LITERAL "4th March 2018"],
+        LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+        MINUS; NUMBER "4"],
     Chicago,
     [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
         FrmtedString (Literal "\"Not a real website.\" ");
-        FrmtedString (Literal "Accessed 4th March 2018. ");
+        FrmtedString (Literal "Accessed March 4, 2018. ");
         Link (Literal "www.example.com/website","www.example.com/website")]
 
     ]
