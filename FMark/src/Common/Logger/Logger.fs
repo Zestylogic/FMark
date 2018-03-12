@@ -1,7 +1,5 @@
 module Logger
 
-open System
-
 type LogLevel =
     | DEBUG=0
     | INFO=1
@@ -42,9 +40,9 @@ type Logger(logLevel) =
 
     let postStr pType msg = function
         | Some l ->
-            sprintf "%s [%s] (%d) %s" pType (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) l msg |> agent.Post
+            sprintf "%s [%s] (%d) %s" pType (System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) l msg |> agent.Post
         | _ ->
-            sprintf "%s [%s] %s" pType (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) msg |> agent.Post
+            sprintf "%s [%s] %s" pType (System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) msg |> agent.Post
 
     let log t l msg =
         if t >= logLevel then

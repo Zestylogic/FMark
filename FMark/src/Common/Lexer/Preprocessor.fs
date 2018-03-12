@@ -1,7 +1,5 @@
 module Preprocessor
 
-open System
-
 open Shared
 open LexerShared
 
