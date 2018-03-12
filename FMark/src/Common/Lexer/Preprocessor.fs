@@ -8,6 +8,7 @@ type Token =
     | LITERAL of string
     | MACRO | OPENDEF | CLOSEDEF | OPENEVAL | CLOSEEVAL | LBRA | RBRA
     | SEMICOLON | ENDLINE | BSLASH
+    | INCLUDE
 
 /// Type of the parser elements
 type Parser =
@@ -27,7 +28,7 @@ let charList = ["{%", OPENDEF; "%}", CLOSEDEF; "{{", OPENEVAL
                 "}}", CLOSEEVAL; "(", LBRA; ")", RBRA; ";", SEMICOLON;
                 "\\", BSLASH]
 
-let keywordList = ["macro", MACRO]
+let keywordList = ["macro", MACRO;"include",INCLUDE]
 
 /// Check if a LITERAL is exclusively whitespace 
 let (|WhiteSpace|NonWhiteSpace|) = function

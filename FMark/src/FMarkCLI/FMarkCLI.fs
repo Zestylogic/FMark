@@ -30,11 +30,10 @@ let ifFlagRunTests (r:ParseResults<CLIArguments>) =
     | false -> ()
 
 let ifFileReadFrom (r:ParseResults<CLIArguments>) =
-    let readLines filePath = System.IO.File.ReadLines(filePath)
     // If Input is present
     r.TryGetResult(Input) 
     |> function 
-    | Some(fname) -> Some(readLines fname |> Seq.toList,fname)
+    | Some(fname) -> Some(FileIO.readFilePath fname,fname)
     | None(_) -> None
 
 [<EntryPoint>]
@@ -59,6 +58,6 @@ let main argv =
         FMark.processString format instr
         |> function
             | Ok(s)
-            | Error(s) -> IOFuncs.printToFile outFile s
+            | Error(s) -> FileIO.writeToFile outFile s
 
     0
