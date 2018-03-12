@@ -239,3 +239,27 @@ let strBody pObjs =
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
 
+
+/// generate HTML head
+let genHead htmlTitle =
+    let metaData =
+        [
+            [("name", "viewport");("content", "width=device-width")]
+        ]
+    let genMetadata pStr md =
+        pStr + attachMetaTag "meta" md
+    List.fold genMetadata "" metaData
+    + attachSimpleTag "title" htmlTitle
+
+    |> attachSimpleTag "head"
+
+/// generate HTML body
+let genBody pObjs =
+    strBody pObjs
+    |> attachSimpleTag "body"
+
+/// top level HTMLGen
+let genHTML (htmlTitle, pObjs) =
+    attachMetaTag "!DOCTYPE" ["html", ""]
+    + genHead htmlTitle
+    + genBody pObjs
