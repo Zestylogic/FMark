@@ -107,12 +107,11 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
         |> Ok
     | PickoutParagraph (par, retoks) ->
         (parseParagraph par, retoks) |> Ok
-    | _ -> toks |> strAllToks |> Error
+    | _ -> sprintf "Parse item did not match: %A" toks |> removeChars ["[";"]"] |> Error
 
 and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
-    match List.isEmpty toks with
-    | true -> ([], None) |> Ok
-    | false -> 
+    match (List.isEmpty toks, not (List.exists (function | WHITESPACE(_) | ENDLINE -> false | _ -> true) toks)) with
+    | (false,false) -> 
         parseItem toks
         |> Result.bind (fun (pobj, re) ->
             match List.isEmpty re with
@@ -122,6 +121,7 @@ and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
                 |> Result.map(fun (pobjs, re') ->
                     pobj::pobjs, re' )
         )
+    | _ -> ([], None) |> Ok // if tokens are only whitespace or endlines, return no parsedObjs
 
 /// top-level Parser, which the user should use
 /// `parse` will either return result monad with either `ParsedObj list` or a string of Error message.

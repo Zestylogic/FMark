@@ -1,7 +1,6 @@
 module ParserHelperFuncs
 open Types
 open Shared
-open System.Threading
 
 let SPACE = " "
 let NOSTRING = ""
@@ -10,7 +9,7 @@ type TEmphasis = UNDER | STAR // underscore and asterisk
 
 type ParagraphState = {Par: Token list; ReToks: Token list; ParMatched: bool}
 
-/// delete leading ENDLINEs and retur the rest
+/// delete leading ENDLINEs and return the rest
 let rec deleteLeadingENDLINEs toks =
     match toks with
     | ENDLINE:: tks -> deleteLeadingENDLINEs tks
