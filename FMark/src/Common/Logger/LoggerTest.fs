@@ -1,5 +1,4 @@
 module LoggerTest
-open System.Reflection.Metadata
 
 open Logger
 open Expecto
