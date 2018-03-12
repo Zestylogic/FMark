@@ -28,7 +28,7 @@ Calcs|39|42|
 |Brackets|`a+(b-c)`|Specify order of operation.|Unit tested.
 |Cell References|`[0,2]`|Evaluates to contents of cell specified (row 0, col 2)|Unit tested|
 |Range Cell Ref|`[0,0]:[2,0]`|Evaluates to list of cell references.|Unit tested, not fully.|
-|Keyword Cell Ref|`[row=0,col]`|Alternative syntax.|Unit tested|
+|Keyword Cell Ref|`[col=2,row=0]`|Alternative syntax, order doens't matter.|Unit tested|
 
 ##### Cell reference behaviour
 
