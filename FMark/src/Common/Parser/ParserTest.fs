@@ -232,6 +232,16 @@ let testGlobal =
                 Paragraph[[FrmtedString(Literal "Yes")]]] |>Ok,
             "CODEBLOCK and new paragraph"
         );
+        (
+            [LITERAL "Yes1"; ENDLINE; ENDLINE; LITERAL "Yes2"],
+            [Paragraph[[FrmtedString(Literal "Yes1")]];Paragraph[[FrmtedString(Literal "Yes2")]]] |>Ok,
+            "Just ENDLINE tokens don't break parser"
+        );
+        (
+            [WHITESPACE(6); ENDLINE; ENDLINE;ENDLINE; LITERAL "Yes2"], // TODO: If there's only whitespace in a line should maybe ignore it.
+            [Paragraph[[FrmtedString(Literal "      ")]];Paragraph[[FrmtedString(Literal "Yes2")]]] |>Ok, 
+            "Just WHITESPACE in a line don't break parser"
+        );
     ]
 
 [<Tests>]
