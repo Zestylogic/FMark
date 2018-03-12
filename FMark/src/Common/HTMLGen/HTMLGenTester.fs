@@ -55,7 +55,7 @@ let paragraphTests =
         );
         (
             [[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]],
-            "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>", "indent test"
+            "<p>Go go go!<a href=\"brokenURL\">broken link</a>"+NewLineStr+"Come!</p>", "indent test"
         );
     ]
 
@@ -142,6 +142,16 @@ let inlineFootnoteTests =
         (
             RefID "abcd",
             "<sup><a href=\"#footnote-abcd\">abcd</a></sup>", "footer string"
+        );
+    ]
+
+[<Tests>]
+let ``HTML head generation test``=
+    makeExpectoTestList id id genHead "HTML head generation test" [
+        (
+            "tiny title",
+            "<head><meta name=\"viewport\" content=\"width=device-width\"><title>tiny title</title></head>",
+            "simple header"
         );
     ]
 
@@ -252,7 +262,25 @@ let fullBodyTests =
             ["<h1>header</h1>";
             "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>";
             "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
-            "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>"]
+            "<p>Go go go!<a href=\"brokenURL\">broken link</a>";NewLineStr;"Come!</p>"]
             , "the bodyshop"
         );
+    ]
+
+[<Tests>]
+let ``global simple test`` =
+    makeExpectoTestList id id genHTML "top level genHTML test" [
+        ("FMarkToHtml fisrt release",
+            [
+                Header{HeaderName=[FrmtedString(Literal "header")]; Level=1};
+                List{ListType=UL;ListItem=
+                    [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
+                        NestedList{ListType=OL;ListItem=
+                        [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];
+                        Depth=2} ];
+                    Depth=1};
+                Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
+                Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
+            ]),
+        "<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>FMarkToHtml fisrt release</title></head><body><h1>header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p></body>", "all in one"
     ]

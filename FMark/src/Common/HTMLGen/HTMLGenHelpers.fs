@@ -4,6 +4,8 @@ open Types
 
 type TagStyle = INLINE | NonInline of indentStr: string
 
+[<Literal>]
+let NewLineStr = "\r\n"
 
 /// concat attributeName and value
 /// with quotes
@@ -40,3 +42,5 @@ let attachHTMLTag (tagName, attributes: list<string * string>, needCloseTag) (co
 
 /// attach (tagName,noAttr,closeTag)
 let attachSimpleTag tagName = attachHTMLTag (tagName,[],true)
+
+let attachMetaTag tagName attrs = attachHTMLTag (tagName,attrs,false) ""
