@@ -1,6 +1,4 @@
 module LexerShared
-
-open System
 open System.Text.RegularExpressions
 
 // --------------------------------------------------
@@ -26,7 +24,7 @@ let strStartsWith (value: string) (str: string) =
 
 /// Convert a single character to a string
 let toString (c: char) =
-    String.Concat [c]
+    System.String.Concat [c]
 
 /// Replace a every occurence of one string in the string s by another
 let strReplace (o: string) (n: string) (s: string) =

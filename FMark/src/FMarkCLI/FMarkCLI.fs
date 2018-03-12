@@ -2,7 +2,6 @@ module FMarkCLI
 
 open Types
 open Argu
-open System
 open System.Text.RegularExpressions
 
 type CLIArguments =
@@ -41,7 +40,7 @@ let ifFileReadFrom (r:ParseResults<CLIArguments>) =
 [<EntryPoint>]
 let main argv =
     printfn "Welcome to FMark!"
-    let errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
+    let errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some System.ConsoleColor.Red)
     let parser = ArgumentParser.Create<CLIArguments>(programName = "FMark", errorHandler = errorHandler)
     let results = parser.ParseCommandLine argv
 

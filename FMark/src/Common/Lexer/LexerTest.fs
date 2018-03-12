@@ -1,8 +1,6 @@
 module LexerTest
 
-open System
 open Expecto
-
 open Preprocessor
 
 /// Higher order function to make tests and remove boilerplate
