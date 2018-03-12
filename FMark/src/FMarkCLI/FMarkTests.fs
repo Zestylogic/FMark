@@ -30,18 +30,31 @@ let htmlTestData = [
     // "# header3";],
     // "<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>12</td><td>tesdfst</td></tr></tbody></table>"
     // |>Ok;
-    //"Invalid table cell ref, semicolon instead of comma",
-    //["|=5|header2|";
-    //"|------|-----|";
-    //"|=[0;0]+7|tesdfst|";],
-    //"<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>12</td><td>tesdfst</td></tr></tbody></table>"
-    //|>Ok;
-    //"Invalid table cell ref, old syntax",
-    //["|=5|header2|";
-    //"|------|-----|";
-    //"|=[0][0]+7|tesdfst|";],
-    //"<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>12</td><td>tesdfst</td></tr></tbody></table>"
-    //|>Ok
+    "Invalid table cell ref, semicolon instead of comma",
+    ["|=5|header2|";
+    "|------|-----|";
+    "|=[0;0]+7|tesdfst|";],
+    "<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>=[0;0]+7</td><td>tesdfst</td></tr></tbody></table>"
+    |>Ok;
+    "Invalid table cell ref, old syntax",
+    ["|=5|header2|";
+    "|------|-----|";
+    "|=[0][0]+7|tesdfst|";],
+    "<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>=[0][0]+7</td><td>tesdfst</td></tr></tbody></table>"
+    |>Ok
+    "Empty line test",
+    ["  ";
+    "";
+    "";
+    "";
+    "     ";
+    "jdkfjd";
+    "";
+    "";
+    "     ";
+    "hello"],
+    "<p>jdkfjd</p><p>hello</p>"
+    |>Ok
 ]
  
 let htmlTest = EQTest (processString' HTMLGen.strBody) "top level html test"
@@ -56,7 +69,7 @@ let tests =
 
 /// Check if markdown output of FMark is the same if passed through FMark again
 
-[<Tests>]
+[<PTests>]
 let FMarkPropertyTest =
     testPropertyWithConfig { FsCheckConfig.defaultConfig with maxTest = 1000 } "FMarkPropertyTest" <| fun (s: string) ->
         let takeEither = function
