@@ -270,7 +270,7 @@ let fullBodyTests =
 [<Tests>]
 let ``global simple test`` =
     makeExpectoTestList id id genHTML "top level genHTML test" [
-        ("title",
+        ("FMarkToHtml fisrt release",
             [
                 Header{HeaderName=[FrmtedString(Literal "header")]; Level=1};
                 List{ListType=UL;ListItem=
@@ -282,5 +282,5 @@ let ``global simple test`` =
                 Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ]),
-        "<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>title</title></head><body><h1>header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p></body>", "all in one"
+        "<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>FMarkToHtml fisrt release</title></head><body><h1>header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p></body>", "all in one"
     ]
