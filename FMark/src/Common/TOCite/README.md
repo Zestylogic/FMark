@@ -1,34 +1,52 @@
-# FMark - Citations and Table of Contents
+# PreParser
 
-## Temperary storage area
+`preParse: Token list -> THeader list * ParsedObj list * Token list`
+
+## Token list
+Headers and footers replaced by
+* `HEADER 0` -> headers with their order of appearance
+* `FOOTER(FtID 0)` -> simple footer with their given ID
+* `FOOTER(RefID "John")` -> references with their given ID
+These are inserted back to provide positional information to the main
+parser, allowing relative linking and other nice things.
+
+## THeader list
+List of all headers found in the document, arranged by order of
+their appearance.
+
+## ParsedObj list
+Both simple footers and references are given as `Footnote (ID * TLine)`
+in the `ParsedObj list`. The two are differenciated by the type of their
+`ID`. Simple footers have `int` and references have `string`. In writing,
+this will be `[^1]` and `[^John]`.
+
+### Simple Footers
 ```
 this is inline[^1], and so on.
 
 [^1], this is the text to explain such line.
       this line as well.
 But not this line.
+```
 
----
+### References
+
 Supported data fields: author, title, year, url, access.
+
 Supported rendering styles: Harvard - book, Harvard - website
+
 Todo list:
-  * Chapter of a book, e-Book
-  * Multiple authors
-  * show n.d. when date not available in Chicago
+- [ ] Chapter of a book, e-Book
+- [ ] Multiple authors
+- [ ] show n.d. when date not available in Chicago
 
+```
+%%Style = Harvard
 
-src:
 This is a citation[^Zifan]. This is another[^Eric] one.
 
 [^Zifan], author= Zifan Wang, title= Not a real book, year= 2018
-[^Eric], author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 4th March 2018
-
-As tokens:
-LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1; LITERAL "Wang"; COMMA;
-LITERAL "title"; EQUAL; WHITESPACE 1; LITERAL "Not a real book"; COMMA
-
-Syntax to indicate format to be fixed.
-%%Citation = Harvard
+[^Eric], author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 2018-3-4
 ```
 How it should show up with Harvard:
 
@@ -47,7 +65,8 @@ Zifan Wang. 2018. *Not a real book*.
 Eric Wang. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
 
 
-
+---
+# ALL INFORMATION AFTER THIS MAYBE OUTDATED
 ## Submission Write-up
 
 ### How will (or might) your code contribute to the group deliverable? What have you done to ensure interfaces etc will be compatible? What are your interfaces (enough information for your module to be used by someone else not in your team. Assessment here is based on best efforts while allowing independent development, not whether the code is actually useful. Typical length 1/4 page.

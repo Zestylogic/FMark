@@ -217,8 +217,8 @@ let testDataFull =
             )
         ],
         [ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; HEADER 0; ENDLINE;
-        LITERAL "text3"; FOOTER (FtID 1); LITERAL "text4"; ENDLINE; ENDLINE;
-        LITERAL "text5"; FOOTER (RefID "Eric"); LITERAL "text6"; ENDLINE; ENDLINE]
+            LITERAL "text3"; FOOTER (FtID 1); LITERAL "text4"; ENDLINE; ENDLINE;
+            LITERAL "text5"; FOOTER (RefID "Eric"); LITERAL "text6"; ENDLINE; ENDLINE]
     )
     
     ]
