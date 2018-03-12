@@ -55,10 +55,10 @@ let tests =
 // PROPERTY BASED TESTS
 
 /// Check if markdown output of FMark is the same if passed through FMark again
-(*
-[<PTests>]
+
+[<Tests>]
 let FMarkPropertyTest =
-    testProperty "FMarkPropertyTest" <| fun (s: string) ->
+    testPropertyWithConfig { FsCheckConfig.defaultConfig with maxTest = 1000 } "FMarkPropertyTest" <| fun (s: string) ->
         let takeEither = function
             | Ok(s)
             | Error(s) -> s
@@ -66,9 +66,9 @@ let FMarkPropertyTest =
         // The functions will not work with a null string
         // There is also a weird interaction with '\' because it escapes itself
             //|> logPass None logger.Debug
-        let str = if (isNull s) then "" else removeChars ["\\";"!";"[";"]";"(";")";"*";":";"`";"_";">"] s
-                  |> logPass None logger.Debug
+        let str = if (isNull s) then "" else removeChars ["\\"] s
+                  //|> logPass None logger.Debug
                   |> splitStr
-        let preprocess1 = str |> (takeEither<<processString Markdown)
-        let preprocess2 = str |> (takeEither<<processString Markdown) |> (takeEither<<processString Markdown<<splitStr)
-        Expect.equal preprocess1 preprocess2 ""*)
+        let preprocess1 = str |> (removeChars ["\n"]<<takeEither<<processString Markdown)
+        let preprocess2 = str |> (takeEither<<processString Markdown) |> (removeChars ["\n"]<<takeEither<<processString Markdown<<splitStr)
+        Expect.equal preprocess1 preprocess2 ""

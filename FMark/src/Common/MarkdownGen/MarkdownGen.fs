@@ -19,13 +19,13 @@ let surround pat str =
 let rec mdFStr fStr =
     match fStr with
     | Literal str -> str
-    | Code str -> surround "\`" str
+    | Code str -> surround "`" str
     | Strong a ->  mdInlineElements a |> surround "**"
     | Emphasis e -> mdInlineElements e |> surround "*"
 
 /// convert InlineElement list to string, with HTML tags where necessary
 /// not tail recursive because the code looks cleaner this way
-and mdInlineElements eles =
+and mdInlineElements' b eles =
     let braSurround = surround "("
     let sbraSurround = surround "["
     let convertMd pStr ele =
@@ -34,8 +34,8 @@ and mdInlineElements eles =
         | FrmtedString fStr -> mdFStr fStr
         | Link (ht, url) -> (mdFStr ht |> sbraSurround) + (url |> braSurround)
         | Picture (alt, url) -> (alt |> sbraSurround |> sprintf "!%s" ) +  (url |> braSurround)
-    List.fold convertMd "" eles
-
+    List.fold convertMd (sprintf "%s" b) eles
+and mdInlineElements = mdInlineElements' ""
 
 /// process Markdown paragraph
 let mdParagraph lines =
@@ -114,7 +114,7 @@ let mdBody pObjs =
         pStr +
         match pObj with
         | Paragraph p -> mdParagraph p
-        //| Quote q -> mdInlineElements q
+        | Quote q -> mdInlineElements' ">" q
         | CodeBlock (c, l) -> surround "```" (mapLang l + "\n" + c + "\n")
         | Table rows -> mdTable rows
         | List l -> mdList l |> sprintf "%s\n"

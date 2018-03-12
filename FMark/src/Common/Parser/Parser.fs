@@ -1,9 +1,7 @@
 module Parser
 open Types
 open Shared
-open ParserHelperFuncs
-open Markalc
-open System.Threading
+open ParserHelperFuncs  
 
 // helper functions
 
@@ -37,8 +35,7 @@ let parseInLineElements toks =
                     [bl;inlineContent]
                 | None, None ->
                     [inlineContent]
-            |> (fun x -> x@currentLine)
-            , rtks
+            |> (fun x -> x@currentLine), rtks
         | _ ->
             let str = mapTok toks.[0]
             FrmtedString (Literal str)::currentLine, xOnwards 1 toks
@@ -110,17 +107,20 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
         |> Ok
     | PickoutParagraph (par, retoks) ->
         (parseParagraph par, retoks) |> Ok
-    | _ -> sprintf "Nothing matched in parseItem for Tokens:\n%A" toks |> Error
+    | _ -> toks |> strAllToks |> Error
 
 and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
-    parseItem toks
-    |> Result.bind (fun (pobj, re) ->
-        match List.isEmpty re with
-        | true -> ([pobj], None) |> Ok
-        | false ->
-            parseItemList re
-            |> Result.map(fun (pobjs, re') ->
-                pobj::pobjs, re' )
+    match List.isEmpty toks with
+    | true -> ([], None) |> Ok
+    | false -> 
+        parseItem toks
+        |> Result.bind (fun (pobj, re) ->
+            match List.isEmpty re with
+            | true -> ([pobj], None) |> Ok
+            | false ->
+                parseItemList re
+                |> Result.map(fun (pobjs, re') ->
+                    pobj::pobjs, re' )
         )
 
 /// top-level Parser, which the user should use
