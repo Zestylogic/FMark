@@ -26,9 +26,9 @@ Calcs|39|42|
 |Subtraction|`a-b`|a minus b|Property based, all integer inputs.
 |Addition|`a+b`|a plus b|Property based, all integer inputs.
 |Brackets|`a+(b-c)`|Specify order of operation.|Unit tested.
-|Cell References|`[row][col]`|Evaluates to contents of cell specified|Unit tested|
+|Cell References|`[0,2]`|Evaluates to contents of cell specified (row 0, col 2)|Unit tested|
 |Range Cell Ref|`[0,0]:[2,0]`|Evaluates to list of cell references.|Unit tested, not fully.|
-|Keyword Cell Ref|`[row][col]`|Alternative syntax.|Unit tested|
+|Keyword Cell Ref|`[col=2,row=0]`|Alternative syntax, order doens't matter.|Unit tested|
 
 ##### Cell reference behaviour
 
