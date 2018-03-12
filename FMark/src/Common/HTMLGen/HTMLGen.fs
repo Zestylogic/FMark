@@ -31,8 +31,9 @@ and strInlineElements eles =
 /// process Markdown paragraph
 let strParagraph lines =
     let folder pLinesStr line =
-        pLinesStr + strInlineElements line
+        pLinesStr + strInlineElements line + newLineStr
     List.fold folder "" lines
+    |> (fun x -> x.Trim()) // remove leading and trailing whitespaces and CRLFs
     |> attachSimpleTag "p"
 
 
