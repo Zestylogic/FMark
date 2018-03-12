@@ -1,32 +1,53 @@
 module RefParse
 open Types
 
+let monthConv m =
+    match m with
+    | 1 -> Some "January"
+    | 2 -> Some "February"
+    | 3 -> Some "March"
+    | 4 -> Some "April"
+    | 5 -> Some "May"
+    | 6 -> Some "June"
+    | 7 -> Some "July"
+    | 8 -> Some "August"
+    | 9 -> Some "September"
+    | 10 -> Some "October"
+    | 11 -> Some "November"
+    | 12 -> Some "December"
+    | _ -> None
+
+let ordinalConv d =
+    let (|OrdinalDates|_|) = function
+        | d when d > 31 || d < 1 -> None
+        | 1 | 21 | 31 -> Some "st"
+        | 2 | 22 -> Some "nd"
+        | 3 | 23 -> Some "rd"
+        | _ -> Some "th"
+    match d with
+    | OrdinalDates s -> Some (string d + s)
+    | _ -> None
+
 // put these two in the big function later
 let yerGen style year =
-    match style with
-    | Harvard ->
-        match year with
-        | None -> []
-        | Some a -> ["(" + string a + ") "|> Literal |> FrmtedString]
-    | Chicago ->
-        match year with
-        | None -> []
-        | Some a -> [string a + ". " |> Literal |> FrmtedString]
-    | _ -> []
+    match year with
+    | None -> []
+    | Some a -> 
+        match style with
+        | Harvard -> ["(" + string a + ") "|> Literal |> FrmtedString]
+        | Chicago -> [string a + ". " |> Literal |> FrmtedString]
+        | IEEE -> []
 
 let urlGen style url =
-    match style with
-    | Harvard ->
-        match url with
-        | None -> []
-        | Some a ->
+    match url with
+    | None -> []
+    | Some a ->
+        match style with
+        | Harvard -> 
             [FrmtedString (Literal "Available from: "); Link(Literal a,a);
                 FrmtedString (Literal " ")]
-    | Chicago ->
-        match url with
-        | None -> []
-        | Some a -> [Link(Literal a,a)]
-    | _ -> []
+        | Chicago -> [Link(Literal a,a)]
+        | IEEE -> []
 
 let plnGen tokLst =
     let rec plainGen' tLst =
@@ -37,7 +58,28 @@ let plnGen tokLst =
         | [] -> []
     plainGen' tokLst |> List.rev |> List.reduce (+)
 
-type GenType = HarAut | ChiAut | ChiWebDate | ChiBookTil | ChiWebTil | HarDate | HarTil
+let dateGen style date =
+    match date with
+    | None -> []
+    | Some (y,m,d) ->
+        let mstr = monthConv m
+        match style with
+        | Harvard ->
+            let dstr = ordinalConv d
+            match mstr, dstr with
+            | Some mm, Some dd ->
+                ["[Accessed "+dd+" "+mm+" "+(string y)+"]. "
+                    |> Literal |> FrmtedString]
+            | _,_ -> []
+        | Chicago ->
+            match mstr with
+            | Some mm ->
+                ["Accessed "+mm+" "+(string d)+", "+(string y)+". "
+                    |> Literal |> FrmtedString]
+            | None -> []
+        | IEEE -> []
+
+type GenType = HarAut | ChiAut | ChiBookTil | ChiWebTil | HarTil
 let (|OverallM|) =
     let hAut tokLst =
         let rec hAutGen' tLst:TLine =
@@ -51,18 +93,14 @@ let (|OverallM|) =
         List.rev tokLst |> hAutGen' |> List.rev
     let cAut tokLst = [plnGen tokLst + ". " |> Literal |> FrmtedString]
     let cWebTil tokLst = ["\"" + plnGen tokLst + ".\" " |> Literal |> FrmtedString]
-    let cWebDate tokLst = ["Accessed " + plnGen tokLst + ". " |> Literal |> FrmtedString]
-    let hDate tokLst = ["[Accessed " + plnGen tokLst + "]." |> Literal |> FrmtedString]
     let cTil tokLst = [[plnGen tokLst + ". " |> Literal |> FrmtedString] |> Emphasis |> FrmtedString]
     let hTil tokLst = [[plnGen tokLst + ". " |> Literal |> FrmtedString] |> Emphasis |> FrmtedString]
     function
     | HarAut -> hAut
-    | HarDate -> hDate
     | HarTil -> hTil
     | ChiAut -> cAut
     | ChiBookTil -> cTil
     | ChiWebTil -> cWebTil
-    | ChiWebDate -> cWebDate
 
 let build gType tokLst =
     match tokLst with
@@ -82,12 +120,12 @@ let rec ref2TLine format ref:TLine =
             |> List.reduce List.append
         | Some Website ->
             [build ChiAut ref.Author; yerGen Chicago ref.Year; build ChiWebTil ref.Title;
-                build ChiWebDate ref.Access; urlGen Chicago ref.URL]
+                dateGen Chicago ref.AccessDate; urlGen Chicago ref.URL]
             |> List.reduce List.append
         | None -> [FrmtedString (Literal "Please specify type of reference")]
     | Harvard ->
         [build HarAut ref.Author; yerGen Harvard ref.Year; build HarTil ref.Title;
-            urlGen Harvard ref.URL; build HarDate ref.Access]
+            urlGen Harvard ref.URL; dateGen Harvard ref.AccessDate]
         |> List.reduce List.append
 
 // parses a single reference entry
@@ -100,6 +138,12 @@ let refParser frmt tLst =
             | ENDLINE::tl -> parsing, tl
             | a::tl -> refParse' (a::parsing) tl
             | [] -> parsing, []
+
+        let dateFormat tail =
+            match tail with
+            | NUMBER y::MINUS::NUMBER m::MINUS::NUMBER d::tl ->
+                Some (int y, int m, int d), tl
+            | _ -> None, tail
 
         match tLst with
         | LITERAL "type"::EQUAL::WHITESPACE _::LITERAL t::tl -> 
@@ -118,11 +162,12 @@ let refParser frmt tLst =
         | LITERAL "url"::EQUAL::WHITESPACE _::LITERAL s::tl ->
             refPar' {refData with URL = Some s} tl
         | LITERAL "access"::EQUAL::WHITESPACE _::tl ->
-            refParse' [] tl
-            |> fun (x,y) -> refPar' {refData with Access = Some x} y
+            dateFormat tl
+            |> fun (x,y) -> refPar' {refData with AccessDate = x} y
         | ENDLINE::tl -> refData,tl
         | _::tl -> refPar' refData tl
         | [] -> refData, []
     tLst    
-    |> refPar' {Cat = None; Author = None; Title = None; Year = None; URL = None; Access = None}
+    |> refPar' {Cat = None; Author = None; Title = None;
+                    Year = None; AccessDate = None; URL = None}
     |> fun (x,_) -> ref2TLine frmt x

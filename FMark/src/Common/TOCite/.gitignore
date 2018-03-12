@@ -4,4 +4,4 @@ Debug
 *.cache
 *.pdb
 *.dll
-FMark/mytest.fsx
+mytest.fmark
