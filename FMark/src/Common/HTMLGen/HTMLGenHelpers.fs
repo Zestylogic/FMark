@@ -40,3 +40,5 @@ let attachHTMLTag (tagName, attributes: list<string * string>, needCloseTag) (co
 
 /// attach (tagName,noAttr,closeTag)
 let attachSimpleTag tagName = attachHTMLTag (tagName,[],true)
+
+let attachMetaTag tagName attrs = attachHTMLTag (tagName,attrs,false) ""
