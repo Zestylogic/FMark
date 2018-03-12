@@ -577,7 +577,7 @@ function except(itemsToExclude, source) {
     var exclusionItems = Array.from(itemsToExclude);
     var testIsNotInExclusionItems = function testIsNotInExclusionItems(element) {
         return !exclusionItems.some(function (excludedItem) {
-            return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["i" /* equals */])(excludedItem, element);
+            return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["j" /* equals */])(excludedItem, element);
         });
     };
     return filter(testIsNotInExclusionItems, source);
@@ -868,22 +868,22 @@ function mapFoldBack(f, xs, acc, transform) {
 }
 function max(xs) {
     return reduce(function (acc, x) {
-        return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["e" /* compare */])(acc, x) === 1 ? acc : x;
+        return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["f" /* compare */])(acc, x) === 1 ? acc : x;
     }, xs);
 }
 function maxBy(f, xs) {
     return reduce(function (acc, x) {
-        return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["e" /* compare */])(f(acc), f(x)) === 1 ? acc : x;
+        return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["f" /* compare */])(f(acc), f(x)) === 1 ? acc : x;
     }, xs);
 }
 function min(xs) {
     return reduce(function (acc, x) {
-        return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["e" /* compare */])(acc, x) === -1 ? acc : x;
+        return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["f" /* compare */])(acc, x) === -1 ? acc : x;
     }, xs);
 }
 function minBy(f, xs) {
     return reduce(function (acc, x) {
-        return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["e" /* compare */])(f(acc), f(x)) === -1 ? acc : x;
+        return Object(__WEBPACK_IMPORTED_MODULE_3__Util__["f" /* compare */])(f(acc), f(x)) === -1 ? acc : x;
     }, xs);
 }
 function pairwise(xs) {
@@ -1179,29 +1179,29 @@ function getType(fullName) {
 "use strict";
 /* unused harmony export NonDeclaredType */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Any; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return Unit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return Unit; });
 /* harmony export (immutable) */ __webpack_exports__["c"] = Option;
 /* unused harmony export Array */
-/* unused harmony export Tuple */
+/* harmony export (immutable) */ __webpack_exports__["d"] = Tuple;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return FableFunction; });
 /* unused harmony export GenericParam */
 /* unused harmony export Interface */
-/* harmony export (immutable) */ __webpack_exports__["l"] = makeGeneric;
+/* harmony export (immutable) */ __webpack_exports__["m"] = makeGeneric;
 /* unused harmony export isGeneric */
 /* unused harmony export getDefinition */
 /* unused harmony export extendInfo */
 /* unused harmony export hasInterface */
 /* unused harmony export getPropertyNames */
 /* unused harmony export isArray */
-/* harmony export (immutable) */ __webpack_exports__["m"] = toString;
+/* harmony export (immutable) */ __webpack_exports__["n"] = toString;
 /* unused harmony export hash */
-/* harmony export (immutable) */ __webpack_exports__["i"] = equals;
-/* harmony export (immutable) */ __webpack_exports__["f"] = comparePrimitives;
-/* harmony export (immutable) */ __webpack_exports__["e"] = compare;
-/* harmony export (immutable) */ __webpack_exports__["j"] = equalsRecords;
-/* harmony export (immutable) */ __webpack_exports__["g"] = compareRecords;
-/* harmony export (immutable) */ __webpack_exports__["k"] = equalsUnions;
-/* harmony export (immutable) */ __webpack_exports__["h"] = compareUnions;
+/* harmony export (immutable) */ __webpack_exports__["j"] = equals;
+/* harmony export (immutable) */ __webpack_exports__["g"] = comparePrimitives;
+/* harmony export (immutable) */ __webpack_exports__["f"] = compare;
+/* harmony export (immutable) */ __webpack_exports__["k"] = equalsRecords;
+/* harmony export (immutable) */ __webpack_exports__["h"] = compareRecords;
+/* harmony export (immutable) */ __webpack_exports__["l"] = equalsUnions;
+/* harmony export (immutable) */ __webpack_exports__["i"] = compareUnions;
 /* unused harmony export createDisposable */
 /* unused harmony export createAtom */
 /* unused harmony export createObj */
@@ -1916,7 +1916,7 @@ var Some = function () {
     _createClass(Some, [{
         key: "ToString",
         value: function ToString() {
-            return Object(__WEBPACK_IMPORTED_MODULE_0__Util__["m" /* toString */])(this.value);
+            return Object(__WEBPACK_IMPORTED_MODULE_0__Util__["n" /* toString */])(this.value);
         }
     }, {
         key: "Equals",
@@ -1924,7 +1924,7 @@ var Some = function () {
             if (other == null) {
                 return false;
             } else {
-                return Object(__WEBPACK_IMPORTED_MODULE_0__Util__["i" /* equals */])(this.value, other instanceof Some ? other.value : other);
+                return Object(__WEBPACK_IMPORTED_MODULE_0__Util__["j" /* equals */])(this.value, other instanceof Some ? other.value : other);
             }
         }
     }, {
@@ -1933,7 +1933,7 @@ var Some = function () {
             if (other == null) {
                 return 1;
             } else {
-                return Object(__WEBPACK_IMPORTED_MODULE_0__Util__["e" /* compare */])(this.value, other instanceof Some ? other.value : other);
+                return Object(__WEBPACK_IMPORTED_MODULE_0__Util__["f" /* compare */])(this.value, other instanceof Some ? other.value : other);
             }
         }
     }]);
@@ -2158,10 +2158,10 @@ function formatOnce(str2, rep) {
                 rep = rep.toExponential(precision);
                 break;
             case "O":
-                rep = Object(__WEBPACK_IMPORTED_MODULE_2__Util__["m" /* toString */])(rep);
+                rep = Object(__WEBPACK_IMPORTED_MODULE_2__Util__["n" /* toString */])(rep);
                 break;
             case "A":
-                rep = Object(__WEBPACK_IMPORTED_MODULE_2__Util__["m" /* toString */])(rep, true);
+                rep = Object(__WEBPACK_IMPORTED_MODULE_2__Util__["n" /* toString */])(rep, true);
                 break;
             case "x":
                 rep = toHex(Number(rep));
@@ -2320,7 +2320,7 @@ function join(delimiter, xs) {
         xs2 = Array.from(xs2);
     }
     return xs2.map(function (x) {
-        return Object(__WEBPACK_IMPORTED_MODULE_2__Util__["m" /* toString */])(x);
+        return Object(__WEBPACK_IMPORTED_MODULE_2__Util__["n" /* toString */])(x);
     }).join(delimiter);
 }
 /** Validates UUID as specified in RFC4122 (versions 1-5). Trims braces. */
@@ -2579,12 +2579,12 @@ var Language = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -2611,12 +2611,12 @@ var ID = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -2643,12 +2643,12 @@ var Token = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -2669,9 +2669,9 @@ var TFrmtedString = function () {
             return {
                 type: "Types.TFrmtedString",
                 interfaces: ["FSharpUnion", "System.IEquatable", "System.IComparable"],
-                cases: [["Strong", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                cases: [["Strong", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: InlineElement
-                })], ["Emphasis", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                })], ["Emphasis", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: InlineElement
                 })], ["Literal", "string"], ["Code", "string"]]
             };
@@ -2679,12 +2679,12 @@ var TFrmtedString = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -2711,12 +2711,12 @@ var InlineElement = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -2738,7 +2738,7 @@ var THeader = function () {
                 type: "Types.THeader",
                 interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
                 properties: {
-                    HeaderName: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    HeaderName: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: InlineElement
                     }),
                     Level: "number"
@@ -2748,12 +2748,12 @@ var THeader = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equalsRecords */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["k" /* equalsRecords */])(this, other);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* compareRecords */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareRecords */])(this, other) | 0;
         }
     }]);
 
@@ -2776,7 +2776,7 @@ var Ttoc = function () {
                 interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
                 properties: {
                     MaxDepth: "number",
-                    HeaderLst: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    HeaderLst: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: THeader
                     })
                 }
@@ -2785,12 +2785,12 @@ var Ttoc = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equalsRecords */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["k" /* equalsRecords */])(this, other);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* compareRecords */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareRecords */])(this, other) | 0;
         }
     }]);
 
@@ -2817,12 +2817,12 @@ var TListType = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -2846,7 +2846,7 @@ var TList = function () {
                 interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
                 properties: {
                     ListType: TListType,
-                    ListItem: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    ListItem: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: TListItem
                     }),
                     Depth: "number"
@@ -2856,12 +2856,12 @@ var TList = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equalsRecords */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["k" /* equalsRecords */])(this, other);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* compareRecords */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareRecords */])(this, other) | 0;
         }
     }]);
 
@@ -2882,7 +2882,7 @@ var TListItem = function () {
             return {
                 type: "Types.TListItem",
                 interfaces: ["FSharpUnion", "System.IEquatable", "System.IComparable"],
-                cases: [["NestedList", TList], ["StringItem", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                cases: [["NestedList", TList], ["StringItem", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: InlineElement
                 })]]
             };
@@ -2890,12 +2890,12 @@ var TListItem = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -2922,12 +2922,12 @@ var Alignment = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -2948,7 +2948,7 @@ var Cell = function () {
             return {
                 type: "Types.Cell",
                 interfaces: ["FSharpUnion", "System.IEquatable", "System.IComparable"],
-                cases: [["Contents", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                cases: [["Contents", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: Token
                 }), "boolean", Alignment]]
             };
@@ -2956,12 +2956,12 @@ var Cell = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }, {
         key: "ReplaceTokens",
@@ -3002,7 +3002,7 @@ var Row = function () {
             return {
                 type: "Types.Row",
                 interfaces: ["FSharpUnion", "System.IEquatable", "System.IComparable"],
-                cases: [["Cells", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                cases: [["Cells", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: Cell
                 }), "boolean"]]
             };
@@ -3010,12 +3010,12 @@ var Row = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -3036,7 +3036,7 @@ var PCell = function () {
             return {
                 type: "Types.PCell",
                 interfaces: ["FSharpUnion", "System.IEquatable", "System.IComparable"],
-                cases: [["CellLine", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                cases: [["CellLine", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: InlineElement
                 }), "boolean", Alignment]]
             };
@@ -3044,12 +3044,12 @@ var PCell = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -3070,7 +3070,7 @@ var PRow = function () {
             return {
                 type: "Types.PRow",
                 interfaces: ["FSharpUnion", "System.IEquatable", "System.IComparable"],
-                cases: [["PCells", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                cases: [["PCells", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: PCell
                 }), "boolean"]]
             };
@@ -3078,12 +3078,12 @@ var PRow = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -3110,12 +3110,12 @@ var RefFrmt = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -3142,12 +3142,12 @@ var RefType = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -3155,15 +3155,15 @@ var RefType = function () {
 }();
 Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_1_fable_core_Symbol__["b" /* setType */])("Types.RefType", RefType);
 var Ref = function () {
-    function Ref(cat, author, title, year, uRL, access) {
+    function Ref(cat, author, title, year, accessDate, uRL) {
         _classCallCheck(this, Ref);
 
         this.Cat = cat;
         this.Author = author;
         this.Title = title;
         this.Year = year;
+        this.AccessDate = accessDate;
         this.URL = uRL;
-        this.Access = access;
     }
 
     _createClass(Ref, [{
@@ -3174,29 +3174,27 @@ var Ref = function () {
                 interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
                 properties: {
                     Cat: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])(RefType),
-                    Author: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    Author: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: Token
                     })),
-                    Title: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    Title: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: Token
                     })),
                     Year: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])("number"),
-                    URL: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])("string"),
-                    Access: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
-                        T: Token
-                    }))
+                    AccessDate: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["d" /* Tuple */])(["number", "number", "number"])),
+                    URL: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["c" /* Option */])("string")
                 }
             };
         }
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equalsRecords */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["k" /* equalsRecords */])(this, other);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* compareRecords */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareRecords */])(this, other) | 0;
         }
     }]);
 
@@ -3217,19 +3215,19 @@ var ParsedObj = function () {
             return {
                 type: "Types.ParsedObj",
                 interfaces: ["FSharpUnion", "System.IEquatable", "System.IComparable"],
-                cases: [["CodeBlock", "string", Language], ["Header", THeader], ["ContentTable", Ttoc], ["List", TList], ["Paragraph", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
-                    T: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                cases: [["CodeBlock", "string", Language], ["Header", THeader], ["ContentTable", Ttoc], ["List", TList], ["Paragraph", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    T: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: InlineElement
                     })
-                })], ["Quote", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                })], ["Quote", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: InlineElement
-                })], ["Table", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                })], ["Table", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: PRow
-                })], ["PreTable", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
-                    T: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                })], ["PreTable", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    T: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: Token
                     })
-                })], ["Footnote", ID, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                })], ["Footnote", ID, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: InlineElement
                 })]]
             };
@@ -3237,12 +3235,12 @@ var ParsedObj = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -3269,12 +3267,12 @@ var OutFormat = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -3311,12 +3309,12 @@ var Result = function () {
     _createClass(Result, [{
         key: "Equals",
         value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["k" /* equalsUnions */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["l" /* equalsUnions */])(this, other);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["h" /* compareUnions */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["i" /* compareUnions */])(this, other);
         }
     }, {
         key: __WEBPACK_IMPORTED_MODULE_0__Symbol__["a" /* default */].reflection,
@@ -3397,7 +3395,7 @@ function listTryFind(s) {
         }(function ($var1) {
             return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_1_fable_core_Map__["b" /* create */])(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["e" /* map */])(function (tupledArg) {
                 return invTuple(tupledArg[0], tupledArg[1]);
-            }, $var1), new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_1_fable_core_Util__["e" /* compare */]));
+            }, $var1), new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_1_fable_core_Util__["f" /* compare */]));
         }($var2));
     });
 }
@@ -3531,7 +3529,7 @@ var List = function () {
         key: "ToString",
         value: function ToString() {
             return "[" + Array.from(this).map(function (x) {
-                return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["m" /* toString */])(x);
+                return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["n" /* toString */])(x);
             }).join("; ") + "]";
         }
     }, {
@@ -3550,7 +3548,7 @@ var List = function () {
                         return cur2.done ? true : false;
                     } else if (cur2.done) {
                         return false;
-                    } else if (!Object(__WEBPACK_IMPORTED_MODULE_1__Util__["i" /* equals */])(cur1.value, cur2.value)) {
+                    } else if (!Object(__WEBPACK_IMPORTED_MODULE_1__Util__["j" /* equals */])(cur1.value, cur2.value)) {
                         return false;
                     }
                 }
@@ -3574,7 +3572,7 @@ var List = function () {
                     } else if (cur2.done) {
                         return 1;
                     } else {
-                        acc = Object(__WEBPACK_IMPORTED_MODULE_1__Util__["e" /* compare */])(cur1.value, cur2.value);
+                        acc = Object(__WEBPACK_IMPORTED_MODULE_1__Util__["f" /* compare */])(cur1.value, cur2.value);
                         if (acc !== 0) {
                             return acc;
                         }
@@ -4127,7 +4125,7 @@ var FableMap = function () {
         key: "ToString",
         value: function ToString() {
             return "map [" + Array.from(this).map(function (x) {
-                return Object(__WEBPACK_IMPORTED_MODULE_5__Util__["m" /* toString */])(x);
+                return Object(__WEBPACK_IMPORTED_MODULE_5__Util__["n" /* toString */])(x);
             }).join("; ") + "]";
         }
     }, {
@@ -4142,7 +4140,7 @@ var FableMap = function () {
 
             return this === m2 ? 0 : Object(__WEBPACK_IMPORTED_MODULE_3__Seq__["c" /* compareWith */])(function (kvp1, kvp2) {
                 var c = _this.comparer.Compare(kvp1[0], kvp2[0]);
-                return c !== 0 ? c : Object(__WEBPACK_IMPORTED_MODULE_5__Util__["e" /* compare */])(kvp1[1], kvp2[1]);
+                return c !== 0 ? c : Object(__WEBPACK_IMPORTED_MODULE_5__Util__["f" /* compare */])(kvp1[1], kvp2[1]);
             }, this, m2);
         }
     }, {
@@ -4246,7 +4244,7 @@ function remove(item, map) {
 }
 function containsValue(v, map) {
     return Object(__WEBPACK_IMPORTED_MODULE_3__Seq__["f" /* fold */])(function (acc, k) {
-        return acc || Object(__WEBPACK_IMPORTED_MODULE_5__Util__["i" /* equals */])(map.get(k), v);
+        return acc || Object(__WEBPACK_IMPORTED_MODULE_5__Util__["j" /* equals */])(map.get(k), v);
     }, false, map.keys());
 }
 function tryGetValue(map, key, defaultValue) {
@@ -4326,7 +4324,7 @@ var Comparer = function () {
     function Comparer(f) {
         _classCallCheck(this, Comparer);
 
-        this.Compare = f || __WEBPACK_IMPORTED_MODULE_1__Util__["e" /* compare */];
+        this.Compare = f || __WEBPACK_IMPORTED_MODULE_1__Util__["f" /* compare */];
     }
 
     _createClass(Comparer, [{
@@ -4622,7 +4620,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
-var logLevelStr = Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_1_fable_core_Map__["b" /* create */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_List__["f" /* ofArray */])([[0, "DEBUG"], [1, "INFO"], [2, "WARNING"], [3, "ERROR"], [4, "FATAL"]]), new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["f" /* comparePrimitives */]));
+var logLevelStr = Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_1_fable_core_Map__["b" /* create */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_List__["f" /* ofArray */])([[0, "DEBUG"], [1, "INFO"], [2, "WARNING"], [3, "ERROR"], [4, "FATAL"]]), new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* comparePrimitives */]));
 var Logger = function () {
     _createClass(Logger, [{
         key: __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_1_fable_core_Symbol__["a" /* default */].reflection,
@@ -4630,12 +4628,12 @@ var Logger = function () {
             return {
                 type: "Logger.Logger",
                 properties: {
-                    Debug: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["d" /* Unit */],
-                    Error: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["d" /* Unit */],
-                    Fatal: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["d" /* Unit */],
-                    Info: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["d" /* Unit */],
-                    Log: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["d" /* Unit */],
-                    Warn: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["d" /* Unit */]
+                    Debug: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["e" /* Unit */],
+                    Error: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["e" /* Unit */],
+                    Fatal: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["e" /* Unit */],
+                    Info: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["e" /* Unit */],
+                    Log: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["e" /* Unit */],
+                    Warn: __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_1_fable_core_Util__["e" /* Unit */]
                 }
             };
         }
@@ -5447,12 +5445,12 @@ var Choice = function () {
     _createClass(Choice, [{
         key: "Equals",
         value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["k" /* equalsUnions */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["l" /* equalsUnions */])(this, other);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["h" /* compareUnions */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__Util__["i" /* compareUnions */])(this, other);
         }
     }, {
         key: __WEBPACK_IMPORTED_MODULE_0__Symbol__["a" /* default */].reflection,
@@ -5712,12 +5710,12 @@ var CellReference = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -5744,12 +5742,12 @@ var Operand = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -5770,7 +5768,7 @@ var Expr = function () {
             return {
                 type: "MarkalcShared.Expr",
                 interfaces: ["FSharpUnion"],
-                cases: [["BinExp", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["b" /* Function */])(["number", "number", "number"]), Expr, Expr], ["Op", Operand], ["CommaFunction", "string", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                cases: [["BinExp", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["b" /* Function */])(["number", "number", "number"]), Expr, Expr], ["Op", Operand], ["CommaFunction", "string", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                     T: Expr
                 })]]
             };
@@ -5787,13 +5785,13 @@ function whitespaceFilter(lst) {
 }
 function countDelim(delim, tokList) {
     return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["d" /* filter */])(function (_arg1) {
-        return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(_arg1, delim) ? true : false;
+        return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(_arg1, delim) ? true : false;
     }, tokList).length | 0;
 }
 function delimSplit(last, delim, t) {
     var delimSplitFirst_ = function delimSplitFirst_(delim_1, before, t_1) {
         delimSplitFirst_: while (true) {
-            var $var1 = t_1.tail != null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(t_1.head, delim_1) ? [0, t_1.tail, t_1.head] : [1] : [1];
+            var $var1 = t_1.tail != null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(t_1.head, delim_1) ? [0, t_1.tail, t_1.head] : [1] : [1];
 
             switch ($var1[0]) {
                 case 0:
@@ -5819,7 +5817,7 @@ function delimSplit(last, delim, t) {
             var $var2 = matchValue[0].tail != null ? matchValue[1] === 1 ? function () {
                 var d = matchValue[0].head;
                 var after_1 = matchValue[0].tail;
-                return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(d, delim_2);
+                return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(d, delim_2);
             }() ? [0, matchValue[0].tail, matchValue[0].head] : [1] : [1] : [1];
 
             switch ($var2[0]) {
@@ -6841,12 +6839,12 @@ var TEmphasis = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -6869,10 +6867,10 @@ var ParagraphState = function () {
                 type: "ParserHelperFuncs.ParagraphState",
                 interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
                 properties: {
-                    Par: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    Par: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: __WEBPACK_IMPORTED_MODULE_3__Types_fs__["o" /* Token */]
                     }),
-                    ReToks: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    ReToks: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: __WEBPACK_IMPORTED_MODULE_3__Types_fs__["o" /* Token */]
                     }),
                     ParMatched: "boolean"
@@ -6882,12 +6880,12 @@ var ParagraphState = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equalsRecords */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["k" /* equalsRecords */])(this, other);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* compareRecords */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareRecords */])(this, other) | 0;
         }
     }]);
 
@@ -6965,7 +6963,7 @@ var countNewLines = Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_cor
 }());
 function countDelim(delim, toks) {
     var counter = function counter(tok) {
-        if (Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(tok, delim)) {
+        if (Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(tok, delim)) {
             return 1;
         } else {
             return 0;
@@ -7062,12 +7060,12 @@ function combineLiterals(line) {
 }
 
 function _MatchSym___(sym, toks) {
-    var $var6 = toks.tail != null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(toks.head, sym) ? [0, toks.head, toks.tail] : [1] : [1];
+    var $var6 = toks.tail != null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(toks.head, sym) ? [0, toks.head, toks.tail] : [1] : [1];
 
     switch ($var6[0]) {
         case 0:
             var matchValue = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_1_fable_core_Seq__["o" /* tryFindIndex */])(function (s) {
-                return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(s, sym);
+                return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(s, sym);
             }, toks.tail);
 
             if (matchValue == null) {
@@ -8484,12 +8482,12 @@ var LexerState = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -8915,12 +8913,12 @@ var Token = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -8947,12 +8945,12 @@ var Parser = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
@@ -8976,10 +8974,10 @@ var Macro = function () {
                 interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
                 properties: {
                     Name: "string",
-                    Args: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    Args: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: "string"
                     }),
-                    Body: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    Body: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: Parser
                     })
                 }
@@ -8988,12 +8986,12 @@ var Macro = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equalsRecords */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["k" /* equalsRecords */])(this, other);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* compareRecords */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareRecords */])(this, other) | 0;
         }
     }]);
 
@@ -9017,7 +9015,7 @@ var Sub = function () {
                 interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
                 properties: {
                     Name: "string",
-                    Args: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["l" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
+                    Args: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["m" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */], {
                         T: "string"
                     }),
                     Raw: "string"
@@ -9027,12 +9025,12 @@ var Sub = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equalsRecords */])(this, other);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["k" /* equalsRecords */])(this, other);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* compareRecords */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareRecords */])(this, other) | 0;
         }
     }]);
 
@@ -9178,7 +9176,7 @@ var tokenizeList = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core
 var _KeyWord___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_1_fable_core_CurriedLambda__["a" /* default */])(function () {
     var listCheckExists = function listCheckExists(t, list) {
         return Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_1_fable_core_Seq__["e" /* exists */])(function (y) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(t, y);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(t, y);
         }, Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["e" /* map */])(function (tupledArg) {
             return tupledArg[1];
         }, list));
@@ -9817,7 +9815,7 @@ function evaluate(pList) {
     var makeEmptyParam = function makeEmptyParam(args) {
         return Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_1_fable_core_Map__["b" /* create */])(function (list2) {
             return Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_1_fable_core_Seq__["n" /* toList */])(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_1_fable_core_Seq__["q" /* zip */])(args, list2));
-        }(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["g" /* replicate */])(args.length, null)), new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["f" /* comparePrimitives */]));
+        }(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["g" /* replicate */])(args.length, null)), new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* comparePrimitives */]));
     };
 
     var addParam = function addParam(p, macro, args_1) {
@@ -9892,7 +9890,7 @@ function evaluate(pList) {
         }
     };
 
-    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["h" /* reverse */])(evalulate_(pList, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */](), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_1_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["f" /* comparePrimitives */])), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_1_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["f" /* comparePrimitives */]))));
+    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["h" /* reverse */])(evalulate_(pList, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_1_fable_core_List__["c" /* default */](), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_1_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* comparePrimitives */])), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_1_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_1_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["g" /* comparePrimitives */]))));
 }
 function parserToString(pList) {
     return Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_1_fable_core_Seq__["f" /* fold */])(function (st, _arg1) {
@@ -10331,12 +10329,12 @@ var TagStyle = function () {
     }, {
         key: "Equals",
         value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* equals */])(this.data, other.data);
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["j" /* equals */])(this.data, other.data);
         }
     }, {
         key: "CompareTo",
         value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["h" /* compareUnions */])(this, other) | 0;
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_1_fable_core_Util__["i" /* compareUnions */])(this, other) | 0;
         }
     }]);
 
