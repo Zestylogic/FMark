@@ -70,13 +70,15 @@ let dateGen style date =
             | Some mm, Some dd ->
                 ["[Accessed "+dd+" "+mm+" "+(string y)+"]. "
                     |> Literal |> FrmtedString]
-            | _,_ -> []
+            | _,_ -> ["Access date invalid, please use yyyy-mm-dd"
+                        |> Literal |> FrmtedString]
         | Chicago ->
             match mstr with
             | Some mm ->
                 ["Accessed "+mm+" "+(string d)+", "+(string y)+". "
                     |> Literal |> FrmtedString]
-            | None -> []
+            | None -> ["Access date invalid, please use yyyy-mm-dd"
+                        |> Literal |> FrmtedString]
         | IEEE -> []
 
 type GenType = HarAut | ChiAut | ChiBookTil | ChiWebTil | HarTil

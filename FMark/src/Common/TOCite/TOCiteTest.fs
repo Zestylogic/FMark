@@ -82,6 +82,7 @@ let testDataHd = [
         [{HeaderName = [FrmtedString (Literal "NotBold*bold")]; Level = 1;}],
         [HEADER 0]
     );
+
     ]
 
 let makeHdTest (name,inn,out) =
@@ -189,6 +190,37 @@ let testDataFull =
             FOOTER (RefID "Eric"); LITERAL "textAfter"; ENDLINE]
     )
 
+    "Stupidly big test",
+    [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago";
+        ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; HASH; WHITESPACE 1;
+        LITERAL "Header1"; ENDLINE; LITERAL "text3"; LSBRA; CARET; NUMBER "1";
+        RSBRA; LITERAL "text4"; ENDLINE; ENDLINE; LSBRA; CARET; NUMBER "1";
+        RSBRA; COMMA; LITERAL "footer1"; ENDLINE; LITERAL "text5"; LSBRA; CARET;
+        LITERAL "Eric"; RSBRA; LITERAL "text6"; ENDLINE; ENDLINE; LSBRA; CARET;
+        LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
+        LITERAL "Website"; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
+        LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title";
+        EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
+        EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
+        WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
+        LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+        MINUS; NUMBER "4"; ENDLINE],
+    (
+        [{HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;}],
+        [Footnote (FtID 1,[FrmtedString (Literal "footer1")]);
+            Footnote (
+                RefID "Eric", [FrmtedString (Literal "Eric Wang. ");
+                FrmtedString (Literal "2017. ");
+                FrmtedString (Literal "\"Not a real website.\" ");
+                FrmtedString (Literal "Accessed March 4, 2018. ");
+                Link (Literal "www.example.com/website","www.example.com/website")]
+            )
+        ],
+        [ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; HEADER 0; ENDLINE;
+        LITERAL "text3"; FOOTER (FtID 1); LITERAL "text4"; ENDLINE; ENDLINE;
+        LITERAL "text5"; FOOTER (RefID "Eric"); LITERAL "text6"; ENDLINE; ENDLINE]
+    )
+    
     ]
 
 let testConvHd =
