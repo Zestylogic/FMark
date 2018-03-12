@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "FMarkFable", "src/FMarkFable.fsproj", "{E5DEFC96-37CF-4844-9C9E-CFA0A9A8AED3}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "FMarkFable", "src/FMarkFable/FMarkFable.fsproj", "{E5DEFC96-37CF-4844-9C9E-CFA0A9A8AED3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
