@@ -1,13 +1,16 @@
 module FMarkCLI
+
+open Types
 open Argu
 open System
+open System.Text.RegularExpressions
 
 type CLIArguments =
     | [<MainCommand;AltCommandLine("-i")>] Input of path:string
     | [<AltCommandLine("-s")>] Stdin of text:string
     | [<AltCommandLine("-o")>] Output of path:string
     | [<AltCommandLine("-l")>] Loglevel of level:int
-    | [<AltCommandLine("-f")>] Format of string
+    | [<AltCommandLine("-f")>] Format of OutFormat
     | [<AltCommandLine("-t")>] Test
 
 with
@@ -34,8 +37,6 @@ let ifFileReadFrom (r:ParseResults<CLIArguments>) =
     |> function 
     | Some(fname) -> Some(readLines fname |> Seq.toList,fname)
     | None(_) -> None
-    
-
 
 [<EntryPoint>]
 let main argv =
@@ -51,9 +52,14 @@ let main argv =
     match ifFileReadFrom results with
     | None(_) -> ()
     | Some(instr,fname) -> 
-        let strip chars s = (String.map (fun c -> if Seq.exists((=)c) chars then ' ' else c) s).Trim()
-        let outFile = results.GetResult(Output,defaultValue=strip ".md" fname+".html")
-        FMark.processDataDummy instr
-        |> IOFuncs.printToFile outFile
+        let replaceChars pat (rep:string) s =
+            Regex.Replace(s,pat,rep)
+        let format = results.GetResult(Format,defaultValue = HTML )
+        let defaultOutfile = if format=HTML then replaceChars ".md" ".html" fname  else replaceChars ".md" "1.md" fname
+        let outFile = results.GetResult(Output,defaultValue=defaultOutfile)
+        FMark.processString format instr
+        |> function
+            | Ok(s)
+            | Error(s) -> IOFuncs.printToFile outFile s
 
     0
