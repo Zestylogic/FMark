@@ -5,7 +5,7 @@ open Types
 type TagStyle = INLINE | NonInline of indentStr: string
 
 [<Literal>]
-let newLineStr = "\r\n"
+let NewLineStr = "\r\n"
 
 /// concat attributeName and value
 /// with quotes

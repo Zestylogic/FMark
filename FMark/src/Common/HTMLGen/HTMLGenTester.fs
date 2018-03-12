@@ -55,7 +55,7 @@ let paragraphTests =
         );
         (
             [[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]],
-            "<p>Go go go!<a href=\"brokenURL\">broken link</a>"+newLineStr+"Come!</p>", "indent test"
+            "<p>Go go go!<a href=\"brokenURL\">broken link</a>"+NewLineStr+"Come!</p>", "indent test"
         );
     ]
 
@@ -252,7 +252,7 @@ let fullBodyTests =
             ["<h1>header</h1>";
             "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>";
             "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
-            "<p>Go go go!<a href=\"brokenURL\">broken link</a>";newLineStr;"Come!</p>"]
+            "<p>Go go go!<a href=\"brokenURL\">broken link</a>";NewLineStr;"Come!</p>"]
             , "the bodyshop"
         );
     ]
