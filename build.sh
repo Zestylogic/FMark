@@ -1,9 +1,50 @@
 #!/usr/bin/env bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Exit with error when any error occurs
+set -e
 
-PREFIX=$DIR
-PATH=$PREFIX/bin:$PATH
+function print_help {
+    echo "This is a build script for FMark"
+    echo ""
+    echo "USAGE:"
+    echo "  ./build.sh [OPTIONS]"
+    echo ""
+    echo "OPTIONS:"
+    echo "  -b/--build    Build a specific project, can be set to"
+    echo "                fsharp, js, all, testall"
+    exit 1
+}
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -b|--build)
+    BUILD="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    *)
+    print_help
+    ;;
+esac
+done
+
+if [[ -z $BUILD ]]; then
+    BUILD=all
+fi
+
+if [[ $BUILD != "fsharp" ]] && [[ $BUILD != "js" ]] && [[ $BUILD != "all" ]] && [[ $BUILD != "testall" ]]; then
+    print_help
+fi
+
+echo "build set to: $BUILD"
+echo ""
+
+# get the current directory of the script, which is at the base of the project
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [[ -z $TRAVIS_BUILD_DIR ]]; then
     echo "Travis not detected"
@@ -11,26 +52,38 @@ if [[ -z $TRAVIS_BUILD_DIR ]]; then
 else
     echo "Running on travis-ci"
     BASE_DIR=$TRAVIS_BUILD_DIR
-    # echo "Compiling mono from source"
-    # git clone -b mono-5.13.0.308 https://github.com/mono/mono.git
-    # cd mono
-    # ./autogen.sh --prefix=$PREFIX >/dev/null
-    # make >/dev/null
-    # make install >/dev/null
-    # mono --version
 fi
 
-# echo "Downloading paket.exe directly"
-# curl https://github.com/fsprojects/Paket/releases/download/5.148.0/paket.exe -o $BASE_DIR/FMark/.paket/paket.exe
+function cd_run_module() {
+    echo "########## Running $1 module tests ###########"
+    cd $BASE_DIR/FMark/src/Common/$1
+    dotnet build
+    dotnet run --no-build
+}
 
-echo "Running F# tests"
-cd $BASE_DIR/FMark/src/FMarkCLI
-dotnet build -v n
-dotnet run --no-build -- -t
+if [[ $BUILD = "testall" ]]; then
+    modules=("Lexer" "TOCite" "Markalc" "Parser" "HTMLGen" "MarkdownGen" "Logger")
+    for i in "${modules[@]}"; do
+        cd_run_module $i
+    done
+fi
 
-if [[ -z $TRAVIS_BUILD_DIR ]]; then
+if [[ $BUILD = "testall" ]] || [[ $BUILD = "all" ]] || [[ $BUILD = "fsharp" ]]; then
+    echo "Running F# tests"
+    cd $BASE_DIR/FMark/src/FMarkCLI
+    dotnet build
+    dotnet run --no-build -- --test
+fi
+
+if [[ $BUILD = "all" ]] || [[ $BUILD = "js" ]]; then
     echo "Running javascript build"
+    cd $BASE_DIR/FMark
+    yarn install
     cd $BASE_DIR/FMark/src/FMarkFable
     dotnet restore
-    dotnet fable yarn-build
+    dotnet fable yarn-dev
+    read -n1 -r -p "Press any key to continue..." key
+    if [[ "$?" != "0" ]]; then
+        exit 1
+    fi
 fi
