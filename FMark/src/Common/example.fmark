@@ -15,7 +15,16 @@
 
 %}
 
-{{ make_table (Welcome;to;FMark;this is;first;row;this is;second;row) }}
+{% macro default_table(10';11';12';20';21';22')
+{{ make_table(default;table;contents;{{10'}};{{11'}};{{12'}};{{20'}};{{21'}};{{22'}}) }}
+%}
+
+<br>
+{{ default_table(hi;my;name;is;geroge;hi) }}
+
+## Including files
+
+{{ include ../../Users/g2/Documents/EIE3/FMark/FMark/src/Common/test.fmark }}
 
 ## Spreadsheet functionality
 
@@ -23,6 +32,3 @@
 |---|---|---|
 |=5|=3|=SUM{[1,0]:[1,1]}|
 |=5%3|=[1,0]*[1,1]/((7-4)+2)|=AVG{[1,0]:[1,2]}|
-
-
-

@@ -3,13 +3,18 @@ open Types
 open RefParse
 open Expecto
 
+// maybe write a random test for the dates
 let testDataDate =
     [
-    "Harvard date",
+    "Harvard date1",
     Some (2018,8,3), Harvard,
     [FrmtedString (Literal "[Accessed 3rd August 2018]. ")]
 
-    "Chicago date",
+    "Harvard date2",
+    Some (2018,31,3), Harvard,
+    [FrmtedString (Literal "Access date invalid, please use yyyy-mm-dd")]
+
+    "Chicago date1",
     Some (2018,12,4), Chicago,
     [FrmtedString (Literal "Accessed December 4, 2018. ")]
 

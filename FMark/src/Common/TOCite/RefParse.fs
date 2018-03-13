@@ -28,7 +28,6 @@ let ordinalConv d =
     | OrdinalDates s -> Some (string d + s)
     | _ -> None
 
-// put these two in the big function later
 let yerGen style year =
     match year with
     | None -> []
@@ -62,21 +61,24 @@ let dateGen style date =
     match date with
     | None -> []
     | Some (y,m,d) ->
+        // check validity of date (Not complete, e.g. Feb-30 passes thru)
         let mstr = monthConv m
+        let dstr = ordinalConv d
         match style with
         | Harvard ->
-            let dstr = ordinalConv d
             match mstr, dstr with
             | Some mm, Some dd ->
                 ["[Accessed "+dd+" "+mm+" "+(string y)+"]. "
                     |> Literal |> FrmtedString]
-            | _,_ -> []
+            | _,_ -> ["Access date invalid, please use yyyy-mm-dd"
+                        |> Literal |> FrmtedString]
         | Chicago ->
-            match mstr with
-            | Some mm ->
+            match mstr, dstr with
+            | Some mm, Some _ ->
                 ["Accessed "+mm+" "+(string d)+", "+(string y)+". "
                     |> Literal |> FrmtedString]
-            | None -> []
+            | _,_ -> ["Access date invalid, please use yyyy-mm-dd"
+                        |> Literal |> FrmtedString]
         | IEEE -> []
 
 type GenType = HarAut | ChiAut | ChiBookTil | ChiWebTil | HarTil
@@ -109,7 +111,23 @@ let build gType tokLst =
         match gType with
         | OverallM f -> f tl
 
-let rec ref2TLine format ref:TLine =
+let refInLine style ref:TLine =
+    match ref.Author, ref.Year with
+    | Some a, Some y ->
+        let surname = (List.rev a).Head
+        // this part is weirddddd
+        match surname with
+        | LITERAL lit ->
+            match style with
+            | IEEE -> []
+            | Chicago ->
+                ["(" + lit + ", " + string(y) + ")" |> Literal |> FrmtedString]
+            | Harvard ->
+                ["(" + lit + " " + string(y) + ")" |> Literal |> FrmtedString]
+        | _ -> []
+    | _,_ -> []
+
+let ref2TLine format ref:TLine =
     match format with
     | IEEE -> [FrmtedString (Literal "IEEE citation not supported yet")]
     | Chicago ->
