@@ -363,8 +363,7 @@ let evaluateWithDir fileDir pList =
             |> readFilePath
             |> tokenizeList
             |> parse
-            |> (fun a -> evaluate' a [] Map.empty<string, Argument<Parser> option> Map.empty<string, Macro<Parser>>)
-            |> evaluate'' tl
+            |> (fun a -> evaluate' (a @ tl) newPList param scope)
         | p :: tl ->
             evaluate'' tl [p]
         | _ -> newPList
@@ -398,10 +397,8 @@ let toStringList pList =
 let pETS dir =
     let stripLastEndline l =
         match List.rev l with
-        | [ParseNewLine] as e ->
-            e
-        | ParseNewLine :: r ->
-            List.rev r
+        | [ParseNewLine] as e -> e
+        | ParseNewLine :: r -> List.rev r
         | _ -> l
     parse >> evaluateWithDir dir >> stripLastEndline
 
