@@ -210,7 +210,7 @@ let testGlobal =
         );
         (
             [HASH; HASH; WHITESPACE 2; LITERAL "h2"],
-            [Header{HeaderName=[FrmtedString(Literal "h2")]; Level=2}] |>Ok, "h2 header"
+            [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2},"HEADER STRING NOT IMPLEMENTED")] |>Ok, "h2 header"
         );
         (
             [HASH; HASH; LITERAL "h2"],

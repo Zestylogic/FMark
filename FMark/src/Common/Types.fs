@@ -7,8 +7,6 @@ type Language =
     | C
     | Empty
 
-type ID = FtID of int | RefID of string
-
 type Token =
     | CODEBLOCK of string * Language
     | LITERAL of string
@@ -18,8 +16,7 @@ type Token =
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT | SEMICOLON
-    | HEADER of int
-    | FOOTER of ID
+    | HEADER of int | FOOTNOTE of int | CITATION of string
 
 type TFrmtedString =
     | Strong of InlineElement list | Emphasis of InlineElement list
@@ -60,15 +57,16 @@ type Ref = {Cat: RefType option; Author: Token list option; Title: Token list op
 
 type ParsedObj =
     | CodeBlock of string * Language
-    | Header of THeader
+    | Header of THeader * string
     | ContentTable of Ttoc
     | List of TList
     | Paragraph of TLine list
     | Quote of TLine
     | Table of PRow list
     | PreTable of Content: Token list list
-    | Footnote of ID * TLine
-
+    | Footnote of int * TLine
+    | Citation of string * TLine * TLine //ID,Inline,End of doc
+    
 type Cell with 
     member c.GetToks = match c with 
                            | Contents(toks,_,_) -> toks
