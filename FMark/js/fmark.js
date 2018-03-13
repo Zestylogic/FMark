@@ -10151,9 +10151,9 @@ function evaluateWithDir(fileDir, pList) {
                     }
                 };
 
-                return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evaluate__)(pList_1.tail)(function (a) {
-                    return evaluate_(a, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["h" /* comparePrimitives */])), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["h" /* comparePrimitives */])));
-                }(parse(tokenizeList(Object(__WEBPACK_IMPORTED_MODULE_11__FableFileIO_fs__["a" /* readFilePath */])(addDir(pList_1.head.data))))));
+                return function (a) {
+                    return evaluate_(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(a, pList_1.tail), newPList, param, scope);
+                }(parse(tokenizeList(Object(__WEBPACK_IMPORTED_MODULE_11__FableFileIO_fs__["a" /* readFilePath */])(addDir(pList_1.head.data)))));
             } else {
                 return evaluate__(pList_1.tail, Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([pList_1.head]));
             }

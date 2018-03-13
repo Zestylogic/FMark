@@ -241,9 +241,9 @@ let preprocessListTest =
         ["arg 1, arg 2"; "arg 3, arg 4"; ""]
     ]
 
-[<Tests>]
+[<PTests>]
 let includeTest =
-    makeSimpleTestList preprocess "Include" [
+    makeSimpleTestList (preprocessWithDir "./tests") "Include" [
         "Simple include",
         "{{ include /home/yannherklotz/Github/FMark/FMark/src/Common/Lexer/tests/include.fmark }}",
         "Hello, world\n"
@@ -251,6 +251,10 @@ let includeTest =
         "Nested include",
         "{{ include /home/yannherklotz/Github/FMark/FMark/src/Common/Lexer/tests/include.fmark }}",
         "Hello, world\n"
+
+        "Relative path include",
+        "{{ include include2.fmark }} {{ x(x1; x2) }}",
+        "x1 x2"
     ]
 
 // Lexer tests
