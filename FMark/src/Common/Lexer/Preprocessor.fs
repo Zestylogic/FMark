@@ -108,6 +108,33 @@ let findParseUntil otok ctok parser =
         | [] -> None
     findParseUntil' 1 parser []
 
+/// Splits a list on a specific element
+let splitList esctok cltok tok list =
+    let rec splitList' curr final list =
+        match list with
+        | a :: tl when a = esctok ->
+            match findParseUntil esctok cltok tl with
+            | Some (l, tl) ->
+                splitList' (CLOSEEVAL :: (List.rev (a :: l)) @ curr) final tl
+            | _ ->
+                splitList' (a :: curr) final tl
+        | a :: tl when a = tok ->
+            splitList' [] (List.rev curr :: final) tl
+        | a :: tl ->
+            splitList' (a :: curr) final tl
+        | [] ->
+            List.rev curr :: final |> List.rev
+    splitList' [] [] list
+
+let splitListEval = splitList OPENEVAL CLOSEEVAL SEMICOLON
+
+/// Strips whitespace from a token list
+let stripWhiteSpace = function
+    | WhiteSpace :: tl | tl ->
+        match List.rev tl with
+        | WhiteSpace :: tl | tl ->
+            List.rev tl
+
 /// Returns if the start of the list of tokens matches a keyword
 let (|KeyWord|_|) =
     let listCheckExists t list =
@@ -154,32 +181,13 @@ let (|ParamList|_|) =
             Some (nl, tl)
         | _ -> None
 
-/// Splits a list on a specific element
-let splitList tok list =
-    let rec splitList' curr final list =
-        match list with
-        | a :: tl when a = tok ->
-            splitList' [] (List.rev curr :: final) tl
-        | a :: tl ->
-            splitList' (a :: curr) final tl
-        | [] ->
-            List.rev curr :: final |> List.rev
-    splitList' [] [] list
-
-/// Strips whitespace from a token list
-let stripWhiteSpace = function
-    | WhiteSpace :: tl | tl ->
-        match List.rev tl with
-        | WhiteSpace :: tl | tl ->
-            List.rev tl
-
 let (|ArgList|_|) = function
     WhiteSpace :: tl | tl ->
         match tl with
         | LBRA :: tl ->
             match findParseUntil LBRA RBRA tl with
             | Some (p, tl) ->
-                Some (splitList SEMICOLON p |> List.map stripWhiteSpace, tl)
+                Some (splitListEval p |> List.map stripWhiteSpace, tl)
             | _ -> None
         | WhiteSpace :: tl ->
             Some ([], tl)

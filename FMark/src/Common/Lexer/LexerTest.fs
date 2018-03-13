@@ -93,7 +93,7 @@ let findParseUntilTest =
 
 [<Tests>]
 let splitListTest =
-    makeSimpleTestList (splitList SEMICOLON) "SplitList" [
+    makeSimpleTestList splitListEval "SplitList" [
         "Simple",
         [LITERAL "Hello"; SEMICOLON; LITERAL "World"],
         [[LITERAL "Hello"]; [LITERAL "World"]]
@@ -103,6 +103,14 @@ let splitListTest =
          LITERAL "Random"; LITERAL "not"; LITERAL "nothing"],
         [[LITERAL "This"; LITERAL "not"; LITERAL "nothing"]; [LITERAL "is"]; [LITERAL "So"];
          [LITERAL "Random"; LITERAL "not"; LITERAL "nothing"]]
+
+        "Nested",
+        [LITERAL "This"; LITERAL "is"; LITERAL "The"; LITERAL "Best"; SEMICOLON; LITERAL "Something"
+         LITERAL "more"; OPENEVAL; LITERAL "Even"; LITERAL "More"; SEMICOLON; LITERAL "And"
+         LITERAL "more"; CLOSEEVAL],
+        [[LITERAL "This"; LITERAL "is"; LITERAL "The"; LITERAL "Best"];
+         [LITERAL "Something"; LITERAL "more"; OPENEVAL; LITERAL "Even"; LITERAL "More"; SEMICOLON
+          LITERAL "And"; LITERAL "more"; CLOSEEVAL]]
     ]
 
 [<Tests>]
@@ -209,6 +217,10 @@ let preprocessTest =
         "Calling macro with eval",
         "{% macro x(a) res: {{a}} %} {% macro y(a) {{a}} {{a}} %} {{ x({{y(Hello)}}) }}",
         "res: Hello Hello"
+
+        "Calling nested macro with two arguments",
+        "{% macro x(a; b) {{a}} {{b}} %} {{x(a; {{x(b; c)}})}}",
+        "a b c"
     ]
 
 /// Complete multiline tests for the preprocessor
