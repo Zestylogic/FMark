@@ -95,14 +95,16 @@ let parseAlignRow (row:Token list) =
 
 // ################ BUSINESS END ###############
 /// Function which takes a parsed row (list of unalignedcells) and the list of alignments, and will create Cells
-let alignCells' alignList (cells:(Token list * bool) list) =
+let alignCells' alignList (row:(Token list * bool) list * bool) =
+    let cells = fst row
+    let head = snd row
     let lengths = (List.length alignList, List.length cells)
     match (fst lengths - snd lengths) with
-    | x when x > 0 -> cells @ (List.replicate x ([], List.head cells |> snd)) // If alignList longer than cells, fill in with blank cells
+    | x when x > 0 -> cells @ (List.replicate x ([], head)) // If alignList longer than cells, fill in with blank cells
     | x when x < 0 -> cells.[0..((fst lengths)-1)]// If cells longer than alignList, ignore the extra cells
     | _ -> cells
     |> (List.zip alignList)
-    |> List.map (fun (a,uc) -> alignCell a uc)
+    |> List.map (fun (a,uc) -> alignCell a uc),head
 
 let alignCells = liftFirstArg alignCells'
 /// Separate list of tokens into cells with alignment and header/not-header
@@ -110,13 +112,20 @@ let transformTable (table:Token list list)  =
     // Deal with first two rows of format: header1 | header2 | header3
     // Second row tells us how many columns and correct alignment
     let alignments = table.[1] |> parseAlignRow
-    let makeRow head = function | Ok(x) -> Ok(x,head) | Error(e) -> Error e
+    // Specify header value true/false and make Row type from cellList
+    let makeRow head cells = (cells,head)
 
-    let header = (List.head table |> parseRow headCellU |> alignCells alignments) 
-                 |> makeRow true  |> (Result.map Cells)
+    let header = List.head table 
+                 |> parseRow headCellU 
+                 |> makeRow true 
+                 |> alignCells alignments 
+                 |> (Result.map Cells)
 
     // Fold parse normal row for the rest of the table
-    let parseAlignPrepend s x = (parseRow defaultCellU x |> alignCells alignments |> makeRow false  |> (Result.map Cells)) :: s
+    let parseAlignPrepend s x = (parseRow defaultCellU x 
+                                |> makeRow false 
+                                |> alignCells alignments  
+                                |> (Result.map Cells)) :: s
     List.fold parseAlignPrepend [header] (xOnwards 2 table)
     |> List.rev
     |> joinErrorList
@@ -148,17 +157,22 @@ let tryEval' maxRefs map e =
 let tryEval = tryEval' 1000
 /// Evaluate all expressions inside a cell list list, leave non-expression cells as they are
 /// No invalid expressions should be matched.
-let evaluateCellList (rowList:Row list) = 
-    let rowUnpack = List.collect (function | Cells(l,_) -> [l])
-    let makeRow (cellList:Cell list) = Cells(cellList, (List.head cellList).GetHead)
-    // Iterate over table, must know "where am I?" for each cell
-    let innerFold row (s:(CellReference*MapContents) list*uint32) (cell:Cell) =
+let evaluateRowList (rowList:Row list) = 
+    // Infer Row header value from (List.head cellList) and create Row
+    // cellList must not be empty, which is ensured by earlier code
+    let inferRow (cellList:Cell list) = Cells(cellList, (List.head cellList).GetHead)
+    // Iterate over table, snd s is current column number.
+    let innerFold row (s:(CellReference*MapContents) list * uint32) (cell:Cell) =
+        let cCol = snd s // current column
+        let cCoord,cMap = RowCol(row,cCol),fst s // current coordinate and map
         match parseExpression (cell.GetToks) with
-        | Ok(ex) ->   (RowCol(row,snd s),MapExp (ex,cell)) :: (fst s), snd s + 1u  // Expression found, put it into the map!
-        | Error(t) -> (RowCol(row,snd s),MapTok (cell)) :: fst s, snd s + 1u // No expression, ignore
-    let outerFold (s:uint32*((CellReference*MapContents)list*uint32)) cells =
-        (fst s + 1u,List.fold (innerFold (fst s)) (fst(snd s),0u) cells)
-    let cellList = rowUnpack rowList
+        | Ok(ex) ->   (cCoord,MapExp (ex,cell)) :: cMap, cCol + 1u  // Expression found, put it into the map!
+        | Error(_) -> (cCoord,MapTok (cell)) :: cMap, cCol + 1u // No expression, ignore
+    // fst s is current row, pass it through to inner fold
+    let outerFold (s:uint32* ((CellReference*MapContents) list * uint32)) cells =
+        let cRow,cMap = fst s, fst (snd s) // current row
+        (cRow + 1u, List.fold (innerFold (cRow)) (cMap,0u) cells)
+    let cellList = List.collect (function | Cells(l,_) -> [l]) rowList
     let rowLength = List.length (List.head cellList)
     List.fold outerFold (0u,([],0u)) cellList 
     |> function 
@@ -173,7 +187,7 @@ let evaluateCellList (rowList:Row list) =
         List.map (snd >> expListEval) expList
         |> (Seq.chunkBySize rowLength) 
         |> Seq.toList 
-        |> List.map (Array.toList>>makeRow)
+        |> List.map (Array.toList>>inferRow)
 
 /// Top level function
 /// Parse tokens into cell list list with all Expressions evaluated.
@@ -184,7 +198,7 @@ let parseEvaluateTable (toks:Token list list) =
     transformTable (List.map (List.filter endlFilt) toks)
     |> function
     | Error(_) -> toks |> Error // If there are any errors just return the unchanged Token list list
-    | Ok(x) -> evaluateCellList x |> Ok // Else return Ok and Cell list list
+    | Ok(x) -> evaluateRowList x |> Ok // Else return Ok and Cell list list
 
 let lexParseEvaluate toks = 
     List.map simpleLex toks

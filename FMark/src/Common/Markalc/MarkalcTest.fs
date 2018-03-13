@@ -114,6 +114,17 @@ let ans head a b c = Cells ([Contents (a,head,Left)  ;
                             Contents (c,head,Right) ], head)
 
 let fullTestData = [
+    "No content after header pipe",
+    ["|"; "---|";],
+    [Cells([Contents ([],true,NoAlign);],true)] |> Ok;
+    "No content after pipe",
+    ["hi"; "---|";"|"; ],
+    [Cells([Contents ([LITERAL("hi")],true,NoAlign);],true);
+     Cells([Contents ([],false,NoAlign);],false)] |> Ok;
+    "Two empty pipes",
+    ["hi|you"; "---|---";"||"; ],
+    [Cells([Contents ([LITERAL("hi")],true,NoAlign);Contents ([LITERAL("you")],true,NoAlign)],true);
+     Cells([Contents ([],false,NoAlign);Contents ([],false,NoAlign)],false)] |> Ok;
     "Single cell table no header pipe",
     ["=2+2"; "---|"; ],
     [Cells([Contents ([NUMBER("4")],true,NoAlign);],true)] |> Ok;
