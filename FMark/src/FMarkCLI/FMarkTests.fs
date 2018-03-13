@@ -57,7 +57,7 @@ let htmlTestData = [
     |>Ok
 ]
  
-let htmlTest = EQTest (processString' HTMLGen.strBody) "top level html test"
+let htmlTest = EQTest (processString' "" HTMLGen.strBody) "top level html test"
 
 [<Tests>]
 let tests = 
@@ -82,6 +82,6 @@ let FMarkPropertyTest =
         let str = if (isNull s) then "" else removeChars ["\\"] s
                   //|> logPass None logger.Debug
                   |> splitStr
-        let preprocess1 = str |> (removeChars ["\n"]<<takeEither<<processString Markdown)
-        let preprocess2 = str |> (takeEither<<processString Markdown) |> (removeChars ["\n"]<<takeEither<<processString Markdown<<splitStr)
+        let preprocess1 = str |> (removeChars ["\n"]<<takeEither<<processString "" Markdown)
+        let preprocess2 = str |> (takeEither<<processString "" Markdown) |> (removeChars ["\n"]<<takeEither<<processString "" Markdown<<splitStr)
         Expect.equal preprocess1 preprocess2 ""

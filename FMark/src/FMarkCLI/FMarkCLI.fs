@@ -55,7 +55,7 @@ let main argv =
         let format = results.GetResult(Format,defaultValue = HTML )
         let defaultOutfile = if format=HTML then replaceChars ".md" ".html" fname  else replaceChars ".md" "1.md" fname
         let outFile = results.GetResult(Output,defaultValue=defaultOutfile)
-        FMark.processString format instr
+        FMark.processString "" format instr
         |> function
             | Ok(s)
             | Error(s) -> FileIO.writeToFile outFile s

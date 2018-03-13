@@ -5,4 +5,4 @@ open FMark
 let processMarkdownString fileDir str =
     str
     |> Array.toList
-    |> processString HTML fileDir
+    |> processString fileDir HTML
