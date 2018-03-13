@@ -1957,10 +1957,10 @@ function filter(predicate, arg) {
 /* unused harmony export startsWith */
 /* unused harmony export indexOfAny */
 /* harmony export (immutable) */ __webpack_exports__["b"] = printf;
-/* harmony export (immutable) */ __webpack_exports__["e"] = toConsole;
+/* harmony export (immutable) */ __webpack_exports__["f"] = toConsole;
 /* unused harmony export toConsoleError */
-/* harmony export (immutable) */ __webpack_exports__["g"] = toText;
-/* harmony export (immutable) */ __webpack_exports__["f"] = toFail;
+/* harmony export (immutable) */ __webpack_exports__["h"] = toText;
+/* harmony export (immutable) */ __webpack_exports__["g"] = toFail;
 /* unused harmony export fsFormat */
 /* unused harmony export format */
 /* unused harmony export endsWith */
@@ -1981,8 +1981,8 @@ function filter(predicate, arg) {
 /* harmony export (immutable) */ __webpack_exports__["c"] = replace;
 /* harmony export (immutable) */ __webpack_exports__["d"] = replicate;
 /* unused harmony export getCharAtIndex */
-/* unused harmony export split */
-/* harmony export (immutable) */ __webpack_exports__["h"] = trim;
+/* harmony export (immutable) */ __webpack_exports__["e"] = split;
+/* harmony export (immutable) */ __webpack_exports__["i"] = trim;
 /* unused harmony export filter */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Date__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__RegExp__ = __webpack_require__(16);
@@ -3455,10 +3455,10 @@ function mapTok(_arg1) {
                 return "CODEBLOCK";
 
             case 38:
-                return Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("FOOTER found"));
+                return Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("FOOTER found"));
 
             case 37:
-                return Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("HEADER %d"))(_arg1.data);
+                return Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("HEADER %d"))(_arg1.data);
 
             case 3:
                 return _arg1.data;
@@ -4672,7 +4672,7 @@ var Logger = function () {
                 return function (builder_) {
                     return builder_.Delay(function () {
                         return builder_.Bind(inbox.receive(), function (_arg1) {
-                            Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["e" /* toConsole */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s"))(_arg1);
+                            Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["f" /* toConsole */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s"))(_arg1);
                             return builder_.ReturnFrom(messageLoop());
                         });
                     });
@@ -4694,11 +4694,11 @@ var Logger = function () {
             if (_arg2 != null) {
                 (objectArg = this.agent, function (arg00) {
                     objectArg.post(arg00);
-                })(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s [%s] (%d) %s"))(pType, (copyOfStruct = Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Date__["b" /* now */])(), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Date__["c" /* toString */])(copyOfStruct, "yyyy-MM-dd HH:mm:ss")), Object(__WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(_arg2), msg));
+                })(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s [%s] (%d) %s"))(pType, (copyOfStruct = Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Date__["b" /* now */])(), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Date__["c" /* toString */])(copyOfStruct, "yyyy-MM-dd HH:mm:ss")), Object(__WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(_arg2), msg));
             } else {
                 (objectArg_1 = this.agent, function (arg00_1) {
                     objectArg_1.post(arg00_1);
-                })(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s [%s] %s"))(pType, (copyOfStruct_1 = Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Date__["b" /* now */])(), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Date__["c" /* toString */])(copyOfStruct_1, "yyyy-MM-dd HH:mm:ss")), msg));
+                })(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s [%s] %s"))(pType, (copyOfStruct_1 = Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Date__["b" /* now */])(), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Date__["c" /* toString */])(copyOfStruct_1, "yyyy-MM-dd HH:mm:ss")), msg));
             }
         }
     }, {
@@ -5871,7 +5871,7 @@ function listCopies(i, lst) {
     } else if (i === 1) {
         return lst;
     } else if (i < 0) {
-        return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["f" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Negative argument: %A"))(i);
+        return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Negative argument: %A"))(i);
     } else {
         return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(lst, listCopies(i - 1, lst));
     }
@@ -5934,156 +5934,156 @@ function simpleLex(txt) {
 
     var simpleLex_ = function simpleLex_(a, txt_2) {
         simpleLex_: while (true) {
-            var activePatternResult892 = _RegexMatch___("[\\s]+", txt_2);
+            var activePatternResult937 = _RegexMatch___("[\\s]+", txt_2);
 
-            if (activePatternResult892 != null) {
-                a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](2, Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult892)[0].length), a);
-                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult892)[1];
+            if (activePatternResult937 != null) {
+                a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](2, Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult937)[0].length), a);
+                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult937)[1];
                 continue simpleLex_;
             } else {
-                var activePatternResult890 = _RegexMatch___("[0-9]+", txt_2);
+                var activePatternResult935 = _RegexMatch___("[0-9]+", txt_2);
 
-                if (activePatternResult890 != null) {
-                    a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](3, Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult890)[0]), a);
-                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult890)[1];
+                if (activePatternResult935 != null) {
+                    a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](3, Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult935)[0]), a);
+                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult935)[1];
                     continue simpleLex_;
                 } else {
-                    var activePatternResult888 = _RegexMatch___("\\^", txt_2);
+                    var activePatternResult933 = _RegexMatch___("\\^", txt_2);
 
-                    if (activePatternResult888 != null) {
+                    if (activePatternResult933 != null) {
                         a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](34), a);
-                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult888)[1];
+                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult933)[1];
                         continue simpleLex_;
                     } else {
-                        var activePatternResult886 = _RegexMatch___("\\%", txt_2);
+                        var activePatternResult931 = _RegexMatch___("\\%", txt_2);
 
-                        if (activePatternResult886 != null) {
+                        if (activePatternResult931 != null) {
                             a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](35), a);
-                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult886)[1];
+                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult931)[1];
                             continue simpleLex_;
                         } else {
-                            var activePatternResult884 = _RegexMatch___("\\*", txt_2);
+                            var activePatternResult929 = _RegexMatch___("\\*", txt_2);
 
-                            if (activePatternResult884 != null) {
+                            if (activePatternResult929 != null) {
                                 a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](9), a);
-                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult884)[1];
+                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult929)[1];
                                 continue simpleLex_;
                             } else {
-                                var activePatternResult882 = _RegexMatch___("\\/", txt_2);
+                                var activePatternResult927 = _RegexMatch___("\\/", txt_2);
 
-                                if (activePatternResult882 != null) {
+                                if (activePatternResult927 != null) {
                                     a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](25), a);
-                                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult882)[1];
+                                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult927)[1];
                                     continue simpleLex_;
                                 } else {
-                                    var activePatternResult880 = _RegexMatch___("\\+", txt_2);
+                                    var activePatternResult925 = _RegexMatch___("\\+", txt_2);
 
-                                    if (activePatternResult880 != null) {
+                                    if (activePatternResult925 != null) {
                                         a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](8), a);
-                                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult880)[1];
+                                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult925)[1];
                                         continue simpleLex_;
                                     } else {
-                                        var activePatternResult878 = _RegexMatch___("\\-", txt_2);
+                                        var activePatternResult923 = _RegexMatch___("\\-", txt_2);
 
-                                        if (activePatternResult878 != null) {
+                                        if (activePatternResult923 != null) {
                                             a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](7), a);
-                                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult878)[1];
+                                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult923)[1];
                                             continue simpleLex_;
                                         } else {
-                                            var activePatternResult876 = _RegexMatch___("\\(", txt_2);
+                                            var activePatternResult921 = _RegexMatch___("\\(", txt_2);
 
-                                            if (activePatternResult876 != null) {
+                                            if (activePatternResult921 != null) {
                                                 a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](22), a);
-                                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult876)[1];
+                                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult921)[1];
                                                 continue simpleLex_;
                                             } else {
-                                                var activePatternResult874 = _RegexMatch___("\\)", txt_2);
+                                                var activePatternResult919 = _RegexMatch___("\\)", txt_2);
 
-                                                if (activePatternResult874 != null) {
+                                                if (activePatternResult919 != null) {
                                                     a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](23), a);
-                                                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult874)[1];
+                                                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult919)[1];
                                                     continue simpleLex_;
                                                 } else {
-                                                    var activePatternResult872 = _RegexMatch___("\\[", txt_2);
+                                                    var activePatternResult917 = _RegexMatch___("\\[", txt_2);
 
-                                                    if (activePatternResult872 != null) {
+                                                    if (activePatternResult917 != null) {
                                                         a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](20), a);
-                                                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult872)[1];
+                                                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult917)[1];
                                                         continue simpleLex_;
                                                     } else {
-                                                        var activePatternResult870 = _RegexMatch___("\\]", txt_2);
+                                                        var activePatternResult915 = _RegexMatch___("\\]", txt_2);
 
-                                                        if (activePatternResult870 != null) {
+                                                        if (activePatternResult915 != null) {
                                                             a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](21), a);
-                                                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult870)[1];
+                                                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult915)[1];
                                                             continue simpleLex_;
                                                         } else {
-                                                            var activePatternResult868 = _RegexMatch___("\\=", txt_2);
+                                                            var activePatternResult913 = _RegexMatch___("\\=", txt_2);
 
-                                                            if (activePatternResult868 != null) {
+                                                            if (activePatternResult913 != null) {
                                                                 a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](6), a);
-                                                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult868)[1];
+                                                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult913)[1];
                                                                 continue simpleLex_;
                                                             } else {
-                                                                var activePatternResult866 = _RegexMatch___("\\.", txt_2);
+                                                                var activePatternResult911 = _RegexMatch___("\\.", txt_2);
 
-                                                                if (activePatternResult866 != null) {
+                                                                if (activePatternResult911 != null) {
                                                                     a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](10), a);
-                                                                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult866)[1];
+                                                                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult911)[1];
                                                                     continue simpleLex_;
                                                                 } else {
-                                                                    var activePatternResult864 = _RegexMatch___("\\,", txt_2);
+                                                                    var activePatternResult909 = _RegexMatch___("\\,", txt_2);
 
-                                                                    if (activePatternResult864 != null) {
+                                                                    if (activePatternResult909 != null) {
                                                                         a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](11), a);
-                                                                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult864)[1];
+                                                                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult909)[1];
                                                                         continue simpleLex_;
                                                                     } else {
-                                                                        var activePatternResult862 = _RegexMatch___("\\{", txt_2);
+                                                                        var activePatternResult907 = _RegexMatch___("\\{", txt_2);
 
-                                                                        if (activePatternResult862 != null) {
+                                                                        if (activePatternResult907 != null) {
                                                                             a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](28), a);
-                                                                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult862)[1];
+                                                                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult907)[1];
                                                                             continue simpleLex_;
                                                                         } else {
-                                                                            var activePatternResult860 = _RegexMatch___("\\}", txt_2);
+                                                                            var activePatternResult905 = _RegexMatch___("\\}", txt_2);
 
-                                                                            if (activePatternResult860 != null) {
+                                                                            if (activePatternResult905 != null) {
                                                                                 a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](29), a);
-                                                                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult860)[1];
+                                                                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult905)[1];
                                                                                 continue simpleLex_;
                                                                             } else {
-                                                                                var activePatternResult858 = _RegexMatch___("[a-zA-z]+[0-9]*( [a-zA-z]+[0-9]*)*", txt_2);
+                                                                                var activePatternResult903 = _RegexMatch___("[a-zA-z]+[0-9]*( [a-zA-z]+[0-9]*)*", txt_2);
 
-                                                                                if (activePatternResult858 != null) {
-                                                                                    a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](1, Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult858)[0]), a);
-                                                                                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult858)[1];
+                                                                                if (activePatternResult903 != null) {
+                                                                                    a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](1, Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult903)[0]), a);
+                                                                                    txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult903)[1];
                                                                                     continue simpleLex_;
                                                                                 } else {
-                                                                                    var activePatternResult856 = _RegexMatch___("\\|", txt_2);
+                                                                                    var activePatternResult901 = _RegexMatch___("\\|", txt_2);
 
-                                                                                    if (activePatternResult856 != null) {
+                                                                                    if (activePatternResult901 != null) {
                                                                                         a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](5), a);
-                                                                                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult856)[1];
+                                                                                        txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult901)[1];
                                                                                         continue simpleLex_;
                                                                                     } else {
-                                                                                        var activePatternResult854 = _RegexMatch___("\\:", txt_2);
+                                                                                        var activePatternResult899 = _RegexMatch___("\\:", txt_2);
 
-                                                                                        if (activePatternResult854 != null) {
+                                                                                        if (activePatternResult899 != null) {
                                                                                             a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](33), a);
-                                                                                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult854)[1];
+                                                                                            txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult899)[1];
                                                                                             continue simpleLex_;
                                                                                         } else {
-                                                                                            var activePatternResult852 = _RegexMatch___("\\;", txt_2);
+                                                                                            var activePatternResult897 = _RegexMatch___("\\;", txt_2);
 
-                                                                                            if (activePatternResult852 != null) {
+                                                                                            if (activePatternResult897 != null) {
                                                                                                 a = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_7__Types_fs__["o" /* Token */](36), a);
-                                                                                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult852)[1];
+                                                                                                txt_2 = Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult897)[1];
                                                                                                 continue simpleLex_;
                                                                                             } else if (txt_2 === "") {
                                                                                                 return a;
                                                                                             } else {
-                                                                                                return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["f" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Unexpected character: %A"))(txt_2);
+                                                                                                return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Unexpected character: %A"))(txt_2);
                                                                                             }
                                                                                         }
                                                                                     }
@@ -6316,8 +6316,8 @@ function processMarkdownString(str) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Lexer_Preprocessor_fs__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Types_fs__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__HTMLGen_HTMLGen_fs__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__HTMLGen_HTMLGen_fs__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(5);
 
 
@@ -6344,7 +6344,7 @@ function processString_(formatFunc) {
 
 
 function processString(format) {
-    return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(format.Equals(new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["e" /* OutFormat */](0)) ? processString_(__WEBPACK_IMPORTED_MODULE_6__HTMLGen_HTMLGen_fs__["a" /* strBody */]) : format.Equals(new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["e" /* OutFormat */](1)) ? processString_(__WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__["a" /* mdBody */]) : Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__["f" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Invalid format type generated, this should not be possible.")));
+    return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(format.Equals(new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["e" /* OutFormat */](0)) ? processString_(__WEBPACK_IMPORTED_MODULE_6__HTMLGen_HTMLGen_fs__["a" /* strBody */]) : format.Equals(new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["e" /* OutFormat */](1)) ? processString_(__WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__["a" /* mdBody */]) : Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Invalid format type generated, this should not be possible.")));
 }
 
 /***/ }),
@@ -6389,7 +6389,7 @@ function parseCode(toks) {
             }, parseCode(toks.tail));
         }
     } else {
-        __WEBPACK_IMPORTED_MODULE_2__Shared_fs__["i" /* sharedLog */].Warn(null, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A"))(toks));
+        __WEBPACK_IMPORTED_MODULE_2__Shared_fs__["i" /* sharedLog */].Warn(null, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A"))(toks));
         return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, ["\\`", Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["k" /* xOnwards */])(1, toks)]);
     }
 }
@@ -6401,18 +6401,18 @@ function parseInLineElements(toks) {
     var parseInLineElements_ = function parseInLineElements_(currentLine, toks_1) {
         var matchValue;
 
-        var activePatternResult1190 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["e" /* $7C$MatchSym$7C$_$7C$ */])(new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["o" /* Token */](30), toks_1);
+        var activePatternResult1235 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["e" /* $7C$MatchSym$7C$_$7C$ */])(new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["o" /* Token */](30), toks_1);
 
-        if (activePatternResult1190 != null) {
-            return [new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["c" /* InlineElement */](0, new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["j" /* TFrmtedString */](3, Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["j" /* strAllToks */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1190)[0]))), currentLine), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1190)[1]];
+        if (activePatternResult1235 != null) {
+            return [new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["c" /* InlineElement */](0, new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["j" /* TFrmtedString */](3, Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["j" /* strAllToks */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1235)[0]))), currentLine), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1235)[1]];
         } else {
-            var activePatternResult1188 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["a" /* $7C$MatchEm$7C$_$7C$ */])(toks_1);
+            var activePatternResult1233 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["a" /* $7C$MatchEm$7C$_$7C$ */])(toks_1);
 
-            if (activePatternResult1188 != null) {
-                var inlineContent = new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["c" /* InlineElement */](0, new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["j" /* TFrmtedString */](1, parseInLines(new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1188)[0])));
+            if (activePatternResult1233 != null) {
+                var inlineContent = new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["c" /* InlineElement */](0, new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["j" /* TFrmtedString */](1, parseInLines(new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1233)[0])));
                 return [function (x) {
                     return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(x, currentLine);
-                }((matchValue = [Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1188)[2], Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1188)[3]], matchValue[0] == null ? matchValue[1] == null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([inlineContent]) : Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), inlineContent]) : matchValue[1] == null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([inlineContent, Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[0])]) : Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), inlineContent, Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[0])]))), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1188)[1]];
+                }((matchValue = [Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1233)[2], Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1233)[3]], matchValue[0] == null ? matchValue[1] == null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([inlineContent]) : Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), inlineContent]) : matchValue[1] == null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([inlineContent, Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[0])]) : Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), inlineContent, Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[0])]))), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1233)[1]];
             } else {
                 var str = Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["e" /* mapTok */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Seq__["h" /* item */])(0, toks_1));
                 return [new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["c" /* InlineElement */](0, new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["j" /* TFrmtedString */](2, str)), currentLine), Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["k" /* xOnwards */])(1, toks_1)];
@@ -6473,12 +6473,12 @@ function _MatchTable___(toks) {
         }(Object(__WEBPACK_IMPORTED_MODULE_8__Markalc_Markalc_fs__["a" /* parseEvaluateTable */])(tupledArg[0]));
     };
 
-    var activePatternResult1209 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["g" /* $7C$MatchTableHead$7C$_$7C$ */])(toks);
+    var activePatternResult1254 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["g" /* $7C$MatchTableHead$7C$_$7C$ */])(toks);
 
-    if (activePatternResult1209 != null) {
-        var activePatternResult1208 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["f" /* $7C$MatchTableFormater$7C$_$7C$ */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1209));
+    if (activePatternResult1254 != null) {
+        var activePatternResult1253 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["f" /* $7C$MatchTableFormater$7C$_$7C$ */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1254));
 
-        if (activePatternResult1208 != null) {
+        if (activePatternResult1253 != null) {
             return tableTransform(Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["k" /* cutTableRows */])(toks));
         } else {
             return null;
@@ -6497,18 +6497,18 @@ function parseItem(rawToks) {
         if (toks.head.tag === 0) {
             $var1 = [0, toks.head.data[0], toks.head.data[1], toks.tail];
         } else {
-            var activePatternResult1223 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["c" /* $7C$MatchListOpSpace$7C$_$7C$ */])(toks);
+            var activePatternResult1268 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["c" /* $7C$MatchListOpSpace$7C$_$7C$ */])(toks);
 
-            if (activePatternResult1223 != null) {
+            if (activePatternResult1268 != null) {
                 $var1 = [1];
             } else {
                 $var1 = [2];
             }
         }
     } else {
-        var activePatternResult1224 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["c" /* $7C$MatchListOpSpace$7C$_$7C$ */])(toks);
+        var activePatternResult1269 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["c" /* $7C$MatchListOpSpace$7C$_$7C$ */])(toks);
 
-        if (activePatternResult1224 != null) {
+        if (activePatternResult1269 != null) {
             $var1 = [1];
         } else {
             $var1 = [2];
@@ -6523,28 +6523,28 @@ function parseItem(rawToks) {
             return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, "Lists todo");
 
         case 2:
-            var activePatternResult1222 = _MatchTable___(toks);
+            var activePatternResult1267 = _MatchTable___(toks);
 
-            if (activePatternResult1222 != null) {
-                return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1222)[0], Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1222)[1]]);
+            if (activePatternResult1267 != null) {
+                return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1267)[0], Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1267)[1]]);
             } else {
-                var activePatternResult1221 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["d" /* $7C$MatchQuote$7C$_$7C$ */])(toks);
+                var activePatternResult1266 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["d" /* $7C$MatchQuote$7C$_$7C$ */])(toks);
 
-                if (activePatternResult1221 != null) {
-                    return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["h" /* ParsedObj */](5, parseInLineElements(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1221)[0])), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1221)[1]]);
+                if (activePatternResult1266 != null) {
+                    return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["h" /* ParsedObj */](5, parseInLineElements(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1266)[0])), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1266)[1]]);
                 } else {
-                    var activePatternResult1220 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["b" /* $7C$MatchHeader$7C$_$7C$ */])(toks);
+                    var activePatternResult1265 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["b" /* $7C$MatchHeader$7C$_$7C$ */])(toks);
 
-                    if (activePatternResult1220 != null) {
-                        var line = parseInLineElements(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1220)[1]);
-                        return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["h" /* ParsedObj */](1, new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["k" /* THeader */](line, Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1220)[0])), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1220)[2]]);
+                    if (activePatternResult1265 != null) {
+                        var line = parseInLineElements(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1265)[1]);
+                        return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["h" /* ParsedObj */](1, new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["k" /* THeader */](line, Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1265)[0])), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1265)[2]]);
                     } else {
-                        var activePatternResult1219 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["h" /* $7C$PickoutParagraph$7C$_$7C$ */])(toks);
+                        var activePatternResult1264 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["h" /* $7C$PickoutParagraph$7C$_$7C$ */])(toks);
 
-                        if (activePatternResult1219 != null) {
-                            return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [parseParagraph(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1219)[0]), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1219)[1]]);
+                        if (activePatternResult1264 != null) {
+                            return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [parseParagraph(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1264)[0]), Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1264)[1]]);
                         } else {
-                            return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["g" /* removeChars */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])(["[", "]"]), Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Parse item did not match: %A"))(toks)));
+                            return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["g" /* removeChars */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])(["[", "]"]), Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Parse item did not match: %A"))(toks)));
                         }
                     }
                 }
@@ -6586,7 +6586,7 @@ function parseItemList(toks) {
 }
 function parse(toks) {
     return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["a" /* bind */])(function (tupledArg) {
-        return tupledArg[1] != null ? new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Some unparsed tokens: %A"))(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(tupledArg[1]))) : new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, tupledArg[0]);
+        return tupledArg[1] != null ? new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Some unparsed tokens: %A"))(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(tupledArg[1]))) : new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, tupledArg[0]);
     }, parseItemList(toks));
 }
 
@@ -7258,10 +7258,10 @@ function _MatchListOpSpace___(toks) {
 
     if (toks.tail != null) {
         if (toks.head.tag === 2) {
-            var activePatternResult1159 = _MatchList___(toks.tail);
+            var activePatternResult1204 = _MatchList___(toks.tail);
 
-            if (activePatternResult1159 != null) {
-                $var15 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1159)];
+            if (activePatternResult1204 != null) {
+                $var15 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1204)];
             } else {
                 $var15 = [1];
             }
@@ -7277,10 +7277,10 @@ function _MatchListOpSpace___(toks) {
             return $var15[1];
 
         case 1:
-            var activePatternResult1158 = _MatchList___(toks);
+            var activePatternResult1203 = _MatchList___(toks);
 
-            if (activePatternResult1158 != null) {
-                return Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1158);
+            if (activePatternResult1203 != null) {
+                return Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1203);
             } else {
                 return null;
             }
@@ -7401,7 +7401,7 @@ function cutTableRows(toks) {
 /* unused harmony export transformTable */
 /* unused harmony export tryEval$27$ */
 /* unused harmony export tryEval */
-/* unused harmony export evaluateCellList */
+/* unused harmony export evaluateRowList */
 /* harmony export (immutable) */ __webpack_exports__["a"] = parseEvaluateTable;
 /* unused harmony export lexParseEvaluate */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__ = __webpack_require__(2);
@@ -7476,7 +7476,7 @@ function joinErrorList(lst) {
 
     var unpackOks = function unpackOks(_arg1) {
         if (_arg1.tag === 1) {
-            return Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["f" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("After filtering, there were still Error monads in the list %A."))(_arg1.data);
+            return Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("After filtering, there were still Error monads in the list %A."))(_arg1.data);
         } else {
             return _arg1.data;
         }
@@ -7484,7 +7484,7 @@ function joinErrorList(lst) {
 
     var combineErrors = function combineErrors(s, x_1) {
         if (x_1.tag === 1) {
-            return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A %A"))(x_1.data, s));
+            return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A %A"))(x_1.data, s));
         } else {
             return s;
         }
@@ -7534,19 +7534,19 @@ function parsePipesD(debug, constructCell, row) {
                     return new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](constructCell(new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]()), a);
                 } else {
                     var after = matchValue.data[1];
-                    __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("empty, %A"))(after));
+                    __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("empty, %A"))(after));
                     a = new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](constructCell(new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]()), a);
                     row_1 = after;
                     continue parsePipes_;
                 }
             } else if (matchValue.data[1].tail == null) {
                 var before = matchValue.data[0];
-                __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A, empty"))(before));
+                __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A, empty"))(before));
                 return new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](constructCell(before), a);
             } else {
                 var before_1 = matchValue.data[0];
                 var after_1 = matchValue.data[1];
-                __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A, %A"))(before_1, after_1));
+                __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A, %A"))(before_1, after_1));
                 a = new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](constructCell(before_1), a);
                 row_1 = after_1;
                 continue parsePipes_;
@@ -7602,7 +7602,7 @@ function parseAlignRow(row) {
                 return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, "Less than 3 dashes for table format");
             }
         } else if (matchValue[1]) {
-            return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Invalid characters in table format, expecting only : or - \n%A\n%A"))(toks, Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["d" /* filter */])(filt, toks)));
+            return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Invalid characters in table format, expecting only : or - \n%A\n%A"))(toks, Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["d" /* filter */])(filt, toks)));
         } else {
             var matchValue_1 = [Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(toks), Object(__WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["e" /* countDelim */])(new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](33), toks)];
             var $var2 = matchValue_1[0].tail != null ? matchValue_1[0].head.tag === 33 ? matchValue_1[1] === 2 ? Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(toks).Equals(new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](33)) ? [0] : [1] : [1] : [1] : [1];
@@ -7625,7 +7625,7 @@ function parseAlignRow(row) {
                             if (matchValue_1[1] === 0) {
                                 return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["a" /* Alignment */](3));
                             } else {
-                                return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("':'s in wrong position %A, %A"))(toks, matchValue_1[1]));
+                                return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("':'s in wrong position %A, %A"))(toks, matchValue_1[1]));
                             }
 
                     }
@@ -7652,41 +7652,42 @@ function parseAlignRow(row) {
     }()));
 }
 
-function alignCells_(alignList, cells) {
+function alignCells_(alignList, row_0, row_1) {
     var matchValue;
+    var row = [row_0, row_1];
+    var cells = row[0];
+    var head = row[1];
     var lengths = [alignList.length, cells.length];
-    return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(function (tupledArg) {
+    return [Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(function (tupledArg) {
         return alignCell(tupledArg[0], tupledArg[1][0], tupledArg[1][1]);
     }, function (list2) {
         return Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["n" /* toList */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["q" /* zip */])(alignList, list2));
-    }((matchValue = lengths[0] - lengths[1] | 0, matchValue > 0 ? Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(cells, Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["h" /* replicate */])(matchValue, [new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(cells)[1]])) : matchValue < 0 ? Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["j" /* slice */])(0, lengths[0] - 1, cells) : cells)));
+    }((matchValue = lengths[0] - lengths[1] | 0, matchValue > 0 ? Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(cells, Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["h" /* replicate */])(matchValue, [new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), head])) : matchValue < 0 ? Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["j" /* slice */])(0, lengths[0] - 1, cells) : cells))), head];
 }
 
 
 var alignCells = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function (arg1, arg2) {
-    return liftFirstArg(alignCells_, arg1, arg2);
+    return liftFirstArg(function (alignList, tupledArg) {
+        return alignCells_(alignList, tupledArg[0], tupledArg[1]);
+    }, arg1, arg2);
 });
 function transformTable(table) {
     var alignments = parseAlignRow(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["h" /* item */])(1, table));
 
-    var makeRow = function makeRow(head, _arg1) {
-        if (_arg1.tag === 1) {
-            return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, _arg1.data);
-        } else {
-            return new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [_arg1.data, head]);
-        }
+    var makeRow = function makeRow(head, cells) {
+        return [cells, head];
     };
 
     var header = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["c" /* map */])(function (tupledArg) {
         return new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["i" /* Row */](0, [tupledArg[0], tupledArg[1]]);
-    }, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(makeRow)(true)(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(alignCells)(alignments)(function (row) {
+    }, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(alignCells)(alignments)(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(makeRow)(true)(function (row) {
         return parseRow(headCellU, row);
     }(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(table)))));
 
     var parseAlignPrepend = function parseAlignPrepend(s, x) {
         return new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["c" /* map */])(function (tupledArg_1) {
             return new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["i" /* Row */](0, [tupledArg_1[0], tupledArg_1[1]]);
-        }, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(makeRow)(false)(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(alignCells)(alignments)(parseRow(defaultCellU, x)))), s);
+        }, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(alignCells)(alignments)(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(makeRow)(false)(parseRow(defaultCellU, x)))), s);
     };
 
     return joinErrorList(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(parseAlignPrepend, Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([header]), Object(__WEBPACK_IMPORTED_MODULE_8__Shared_fs__["k" /* xOnwards */])(2, table))));
@@ -7761,36 +7762,31 @@ function tryEval_(maxRefs, map, e) {
 var tryEval = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function (map, e) {
     return tryEval_(1000, map, e);
 });
-function evaluateCellList(rowList) {
-    var rowUnpack = void 0;
-
-    var mapping = function mapping(_arg1) {
-        return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([_arg1.data[0]]);
-    };
-
-    rowUnpack = function rowUnpack(list) {
-        return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["b" /* collect */])(mapping, list);
-    };
-
-    var makeRow = function makeRow(cellList) {
+function evaluateRowList(rowList) {
+    var inferRow = function inferRow(cellList) {
         return new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["i" /* Row */](0, [cellList, Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(cellList).GetHead]);
     };
 
     var innerFold = function innerFold(row, s, cell) {
+        var cCol = s[1];
+        var patternInput = [new __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["a" /* CellReference */](0, [row, cCol]), s[0]];
         var matchValue = Object(__WEBPACK_IMPORTED_MODULE_11__Expression_fs__["a" /* parseExpression */])(cell.GetToks);
 
         if (matchValue.tag === 1) {
-            return [new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]([new __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["a" /* CellReference */](0, [row, s[1]]), new MapContents(0, cell)], s[0]), s[1] + 1];
+            return [new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]([patternInput[0], new MapContents(0, cell)], patternInput[1]), cCol + 1];
         } else {
-            return [new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]([new __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__["a" /* CellReference */](0, [row, s[1]]), new MapContents(1, [matchValue.data, cell])], s[0]), s[1] + 1];
+            return [new __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]([patternInput[0], new MapContents(1, [matchValue.data, cell])], patternInput[1]), cCol + 1];
         }
     };
 
     var outerFold = function outerFold(s_1, cells) {
-        return [s_1[0] + 1, Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(innerFold)(s_1[0]), [s_1[1][0], 0], cells)];
+        var patternInput_1 = [s_1[0], s_1[1][0]];
+        return [patternInput_1[0] + 1, Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(innerFold)(patternInput_1[0]), [patternInput_1[1], 0], cells)];
     };
 
-    var cellList_1 = rowUnpack(rowList);
+    var cellList_1 = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["b" /* collect */])(function (_arg1) {
+        return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([_arg1.data[0]]);
+    }, rowList);
     var rowLength = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(cellList_1).length | 0;
     return function (_arg2) {
         var expRefList = _arg2[1][0];
@@ -7810,7 +7806,7 @@ function evaluateCellList(rowList) {
         };
 
         return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(function ($var7) {
-            return makeRow(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["n" /* toList */])($var7));
+            return inferRow(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["n" /* toList */])($var7));
         }, Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["n" /* toList */])(function (source) {
             return Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["b" /* chunkBySize */])(rowLength, source);
         }(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(function ($var8) {
@@ -7830,7 +7826,7 @@ function parseEvaluateTable(toks) {
     };
 
     return function (_arg2) {
-        return _arg2.tag === 0 ? new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, evaluateCellList(_arg2.data)) : new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, toks);
+        return _arg2.tag === 0 ? new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, evaluateRowList(_arg2.data)) : new __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, toks);
     }(transformTable(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(function (list) {
         return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["d" /* filter */])(endlFilt, list);
     }, toks)));
@@ -7873,7 +7869,7 @@ function lexParseEvaluate(toks) {
 
 
 function makeFloat(i, d) {
-    return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Double__["a" /* parse */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A.%A"))(i, d));
+    return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Double__["a" /* parse */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A.%A"))(i, d));
 }
 function makeInt(i) {
     return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_Int32__["a" /* parse */])(i) | 0;
@@ -7908,13 +7904,13 @@ function parseExp(toks) {
                     }([$var2[3], $var2[2]]), $var2[1]];
 
                 case 1:
-                    __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Row:%A, Col:%A"))($var2[3], $var2[2]));
+                    __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Row:%A, Col:%A"))($var2[3], $var2[2]));
                     return [function (tupledArg_1) {
                         return makeCellReference(tupledArg_1[0], tupledArg_1[1]);
                     }([$var2[3], $var2[2]]), $var2[1]];
 
                 case 2:
-                    __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Row:%A, Col:%A"))($var2[3], $var2[2]));
+                    __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["g" /* logger */].Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Row:%A, Col:%A"))($var2[3], $var2[2]));
                     return [function (tupledArg_2) {
                         return makeCellReference(tupledArg_2[0], tupledArg_2[1]);
                     }([$var2[3], $var2[2]]), $var2[1]];
@@ -7927,15 +7923,15 @@ function parseExp(toks) {
         var _ExpressionList___ = function _ExpressionList___(_arg3) {
             var $var3 = void 0;
 
-            var activePatternResult919 = _Expression___(_arg3);
+            var activePatternResult964 = _Expression___(_arg3);
 
-            if (activePatternResult919 != null) {
-                if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult919)[1].tail != null) {
-                    if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult919)[1].head.tag === 11) {
-                        var activePatternResult920 = _ExpressionList___(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult919)[1].tail);
+            if (activePatternResult964 != null) {
+                if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult964)[1].tail != null) {
+                    if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult964)[1].head.tag === 11) {
+                        var activePatternResult965 = _ExpressionList___(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult964)[1].tail);
 
-                        if (activePatternResult920 != null) {
-                            $var3 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult920)[1], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult919)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult920)[0]];
+                        if (activePatternResult965 != null) {
+                            $var3 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult965)[1], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult964)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult965)[0]];
                         } else {
                             $var3 = [1];
                         }
@@ -7956,15 +7952,15 @@ function parseExp(toks) {
                 case 1:
                     var $var4 = void 0;
 
-                    var activePatternResult917 = _CellRefPat___(_arg3);
+                    var activePatternResult962 = _CellRefPat___(_arg3);
 
-                    if (activePatternResult917 != null) {
-                        if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult917)[1].tail != null) {
-                            if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult917)[1].head.tag === 33) {
-                                var activePatternResult918 = _CellRefPat___(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult917)[1].tail);
+                    if (activePatternResult962 != null) {
+                        if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult962)[1].tail != null) {
+                            if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult962)[1].head.tag === 33) {
+                                var activePatternResult963 = _CellRefPat___(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult962)[1].tail);
 
-                                if (activePatternResult918 != null) {
-                                    $var4 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult918)[1], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult917)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult918)[0]];
+                                if (activePatternResult963 != null) {
+                                    $var4 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult963)[1], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult962)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult963)[0]];
                                 } else {
                                     $var4 = [1];
                                 }
@@ -7987,10 +7983,10 @@ function parseExp(toks) {
                             }(Object(__WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["d" /* cellRange */])($var4[2], $var4[3]));
 
                         case 1:
-                            var activePatternResult916 = _Expression___(_arg3);
+                            var activePatternResult961 = _Expression___(_arg3);
 
-                            if (activePatternResult916 != null) {
-                                return [Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult916)[0]]), Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult916)[1]];
+                            if (activePatternResult961 != null) {
+                                return [Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult961)[0]]), Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult961)[1]];
                             } else {
                                 return null;
                             }
@@ -8005,14 +8001,14 @@ function parseExp(toks) {
 
             if (_arg5.tail != null) {
                 if (_arg5.head.tag === 29) {
-                    var activePatternResult923 = _ExpressionList___(_arg5.tail);
+                    var activePatternResult968 = _ExpressionList___(_arg5.tail);
 
-                    if (activePatternResult923 != null) {
-                        if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult923)[1].tail != null) {
-                            if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult923)[1].head.tag === 28) {
-                                if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult923)[1].tail.tail != null) {
-                                    if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult923)[1].tail.head.tag === 1) {
-                                        $var6 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult923)[1].tail.tail, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult923)[1].tail.head.data, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult923)[0]];
+                    if (activePatternResult968 != null) {
+                        if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult968)[1].tail != null) {
+                            if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult968)[1].head.tag === 28) {
+                                if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult968)[1].tail.tail != null) {
+                                    if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult968)[1].tail.head.tag === 1) {
+                                        $var6 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult968)[1].tail.tail, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult968)[1].tail.head.data, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult968)[0]];
                                     } else {
                                         $var6 = [1];
                                     }
@@ -8053,25 +8049,25 @@ function parseExp(toks) {
         var _Max___ = Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(funcConstruct)("MAX");
 
         var _FunctionPat___ = function _FunctionPat___(_arg6) {
-            var activePatternResult934 = _Sum___(_arg6);
+            var activePatternResult979 = _Sum___(_arg6);
 
-            if (activePatternResult934 != null) {
-                return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult934)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult934)[1]];
+            if (activePatternResult979 != null) {
+                return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult979)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult979)[1]];
             } else {
-                var activePatternResult933 = _Avg___(_arg6);
+                var activePatternResult978 = _Avg___(_arg6);
 
-                if (activePatternResult933 != null) {
-                    return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult933)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult933)[1]];
+                if (activePatternResult978 != null) {
+                    return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult978)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult978)[1]];
                 } else {
-                    var activePatternResult932 = _Min___(_arg6);
+                    var activePatternResult977 = _Min___(_arg6);
 
-                    if (activePatternResult932 != null) {
-                        return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult932)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult932)[1]];
+                    if (activePatternResult977 != null) {
+                        return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult977)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult977)[1]];
                     } else {
-                        var activePatternResult931 = _Max___(_arg6);
+                        var activePatternResult976 = _Max___(_arg6);
 
-                        if (activePatternResult931 != null) {
-                            return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult931)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult931)[1]];
+                        if (activePatternResult976 != null) {
+                            return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult976)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult976)[1]];
                         } else {
                             return null;
                         }
@@ -8081,31 +8077,31 @@ function parseExp(toks) {
         };
 
         var _BasePat___ = function _BasePat___(_arg7) {
-            var activePatternResult947 = _NumberPat___(_arg7);
+            var activePatternResult992 = _NumberPat___(_arg7);
 
-            if (activePatternResult947 != null) {
-                return [new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["b" /* Expr */](1, new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["c" /* Operand */](2, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult947)[0])), Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult947)[1]];
+            if (activePatternResult992 != null) {
+                return [new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["b" /* Expr */](1, new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["c" /* Operand */](2, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult992)[0])), Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult992)[1]];
             } else {
-                var activePatternResult946 = _FunctionPat___(_arg7);
+                var activePatternResult991 = _FunctionPat___(_arg7);
 
-                if (activePatternResult946 != null) {
-                    return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult946)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult946)[1]];
+                if (activePatternResult991 != null) {
+                    return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult991)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult991)[1]];
                 } else {
-                    var activePatternResult945 = _CellRefPat___(_arg7);
+                    var activePatternResult990 = _CellRefPat___(_arg7);
 
-                    if (activePatternResult945 != null) {
-                        return [new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["b" /* Expr */](1, new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["c" /* Operand */](0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult945)[0])), Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult945)[1]];
+                    if (activePatternResult990 != null) {
+                        return [new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["b" /* Expr */](1, new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["c" /* Operand */](0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult990)[0])), Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult990)[1]];
                     } else {
                         var $var7 = void 0;
 
                         if (_arg7.tail != null) {
                             if (_arg7.head.tag === 23) {
-                                var activePatternResult944 = _Expression___(_arg7.tail);
+                                var activePatternResult989 = _Expression___(_arg7.tail);
 
-                                if (activePatternResult944 != null) {
-                                    if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult944)[1].tail != null) {
-                                        if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult944)[1].head.tag === 22) {
-                                            $var7 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult944)[1].tail, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult944)[0]];
+                                if (activePatternResult989 != null) {
+                                    if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult989)[1].tail != null) {
+                                        if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult989)[1].head.tag === 22) {
+                                            $var7 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult989)[1].tail, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult989)[0]];
                                         } else {
                                             $var7 = [1];
                                         }
@@ -8138,17 +8134,17 @@ function parseExp(toks) {
             var exp2;
             var after_;
 
-            var activePatternResult953 = _PrevPat___(_arg8);
+            var activePatternResult998 = _PrevPat___(_arg8);
 
-            if (activePatternResult953 != null) {
+            if (activePatternResult998 != null) {
                 var $var8 = void 0;
 
-                if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult953)[1].tail != null) {
-                    var activePatternResult952 = _HOFPat___(_PrevPat___, op, t, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult953)[1].tail);
+                if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult998)[1].tail != null) {
+                    var activePatternResult997 = _HOFPat___(_PrevPat___, op, t, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult998)[1].tail);
 
-                    if (activePatternResult952 != null) {
-                        if (exp2 = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult952)[0], after_ = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult952)[1], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult953)[1].head.Equals(t)) {
-                            $var8 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult952)[1], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult952)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult953)[1].head];
+                    if (activePatternResult997 != null) {
+                        if (exp2 = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult997)[0], after_ = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult997)[1], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult998)[1].head.Equals(t)) {
+                            $var8 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult997)[1], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult997)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult998)[1].head];
                         } else {
                             $var8 = [1];
                         }
@@ -8161,10 +8157,10 @@ function parseExp(toks) {
 
                 switch ($var8[0]) {
                     case 0:
-                        return [new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["b" /* Expr */](0, [op, $var8[2], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult953)[0]]), $var8[1]];
+                        return [new __WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["b" /* Expr */](0, [op, $var8[2], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult998)[0]]), $var8[1]];
 
                     case 1:
-                        return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult953)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult953)[1]];
+                        return [Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult998)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult998)[1]];
                 }
             } else {
                 return null;
@@ -8191,10 +8187,10 @@ function parseExp(toks) {
 
         var _FirstPat___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(patterns);
 
-        var activePatternResult960 = _FirstPat___(toks_1);
+        var activePatternResult1005 = _FirstPat___(toks_1);
 
-        if (activePatternResult960 != null) {
-            return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult960);
+        if (activePatternResult1005 != null) {
+            return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1005);
         } else {
             return null;
         }
@@ -8203,11 +8199,11 @@ function parseExp(toks) {
     var matchValue = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(toks);
     var $var9 = void 0;
 
-    var activePatternResult963 = _Expression___(matchValue);
+    var activePatternResult1008 = _Expression___(matchValue);
 
-    if (activePatternResult963 != null) {
-        if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult963)[1].tail == null) {
-            $var9 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult963)[0]];
+    if (activePatternResult1008 != null) {
+        if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1008)[1].tail == null) {
+            $var9 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1008)[0]];
         } else {
             $var9 = [1];
         }
@@ -8220,7 +8216,7 @@ function parseExp(toks) {
             return new __WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, $var9[1]);
 
         case 1:
-            return new __WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Not valid expression %A"))(toks));
+            return new __WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Not valid expression %A"))(toks));
     }
 }
 function parseExpression(toks) {
@@ -8255,7 +8251,7 @@ function parseExpTest(toks) {
         if (_arg1.tag === 0) {
             return new __WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, evalExpTest(_arg1.data));
         } else {
-            Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["e" /* toConsole */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Error parsing expression: %A"))(_arg1.data);
+            Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["f" /* toConsole */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Error parsing expression: %A"))(_arg1.data);
             return new __WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, toks);
         }
     }(parseExp(Object(__WEBPACK_IMPORTED_MODULE_3__MarkalcShared_fs__["i" /* whitespaceFilter */])(toks)));
@@ -8464,24 +8460,24 @@ var _CharacterTok___ = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_
 
 
 function _MatchLang___(_arg1) {
-    var activePatternResult746 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("(p|P)ython", _arg1);
+    var activePatternResult791 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("(p|P)ython", _arg1);
 
-    if (activePatternResult746 != null) {
+    if (activePatternResult791 != null) {
         return new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["d" /* Language */](0);
     } else {
-        var activePatternResult744 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("F#|fsharp|f#", _arg1);
+        var activePatternResult789 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("F#|fsharp|f#", _arg1);
 
-        if (activePatternResult744 != null) {
+        if (activePatternResult789 != null) {
             return new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["d" /* Language */](1);
         } else {
-            var activePatternResult742 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("(C|c)(\\+\\+|pp)", _arg1);
+            var activePatternResult787 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("(C|c)(\\+\\+|pp)", _arg1);
 
-            if (activePatternResult742 != null) {
+            if (activePatternResult787 != null) {
                 return new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["d" /* Language */](2);
             } else {
-                var activePatternResult740 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("C|c", _arg1);
+                var activePatternResult785 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("C|c", _arg1);
 
-                if (activePatternResult740 != null) {
+                if (activePatternResult785 != null) {
                     return new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["d" /* Language */](3);
                 } else {
                     return new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["d" /* Language */](4);
@@ -8519,20 +8515,20 @@ var _CodeBlockStart___ = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fabl
 function nextToken(state, s) {
     var matchValue = [s, state];
 
-    var activePatternResult763 = _EscapedCharTok___(matchValue[0]);
+    var activePatternResult808 = _EscapedCharTok___(matchValue[0]);
 
-    if (activePatternResult763 != null) {
-        return [Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult763), state];
+    if (activePatternResult808 != null) {
+        return [Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult808), state];
     } else {
         var $var1 = void 0;
 
-        var activePatternResult762 = _HTMLStartTag___(matchValue[0]);
+        var activePatternResult807 = _HTMLStartTag___(matchValue[0]);
 
-        if (activePatternResult762 != null) {
-            if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult762)[1].tail != null) {
-                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult762)[1].tail.tail == null) {
+        if (activePatternResult807 != null) {
+            if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult807)[1].tail != null) {
+                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult807)[1].tail.tail == null) {
                     if (matchValue[1].tag === 0) {
-                        $var1 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult762)[2], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult762)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult762)[1].head];
+                        $var1 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult807)[2], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult807)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult807)[1].head];
                     } else {
                         $var1 = [1];
                     }
@@ -8553,13 +8549,13 @@ function nextToken(state, s) {
             case 1:
                 var $var2 = void 0;
 
-                var activePatternResult761 = _HTMLStartTag___(matchValue[0]);
+                var activePatternResult806 = _HTMLStartTag___(matchValue[0]);
 
-                if (activePatternResult761 != null) {
-                    if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult761)[1].tail != null) {
-                        if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult761)[1].tail.tail == null) {
+                if (activePatternResult806 != null) {
+                    if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult806)[1].tail != null) {
+                        if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult806)[1].tail.tail == null) {
                             if (matchValue[1].tag === 2) {
-                                $var2 = [0, matchValue[1].data[1], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult761)[2], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult761)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult761)[1].head, matchValue[1].data[0]];
+                                $var2 = [0, matchValue[1].data[1], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult806)[2], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult806)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult806)[1].head, matchValue[1].data[0]];
                             } else {
                                 $var2 = [1];
                             }
@@ -8584,13 +8580,13 @@ function nextToken(state, s) {
                     case 1:
                         var $var3 = void 0;
 
-                        var activePatternResult760 = _HTMLEndTag___(matchValue[0]);
+                        var activePatternResult805 = _HTMLEndTag___(matchValue[0]);
 
-                        if (activePatternResult760 != null) {
-                            if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult760)[1].tail != null) {
-                                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult760)[1].tail.tail == null) {
+                        if (activePatternResult805 != null) {
+                            if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult805)[1].tail != null) {
+                                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult805)[1].tail.tail == null) {
                                     if (matchValue[1].tag === 2) {
-                                        $var3 = [0, matchValue[1].data[1], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult760)[2], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult760)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult760)[1].head, matchValue[1].data[0]];
+                                        $var3 = [0, matchValue[1].data[1], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult805)[2], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult805)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult805)[1].head, matchValue[1].data[0]];
                                     } else {
                                         $var3 = [1];
                                     }
@@ -8617,18 +8613,18 @@ function nextToken(state, s) {
                                 }
 
                             case 1:
-                                var activePatternResult759 = _HTMLSingleton___(matchValue[0]);
+                                var activePatternResult804 = _HTMLSingleton___(matchValue[0]);
 
-                                if (activePatternResult759 != null) {
-                                    return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](1, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult759)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult759)[2]], state];
+                                if (activePatternResult804 != null) {
+                                    return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](1, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult804)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult804)[2]], state];
                                 } else {
                                     var $var4 = void 0;
 
-                                    var activePatternResult758 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])(".*?(?=<)", matchValue[0]);
+                                    var activePatternResult803 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])(".*?(?=<)", matchValue[0]);
 
-                                    if (activePatternResult758 != null) {
+                                    if (activePatternResult803 != null) {
                                         if (matchValue[1].tag === 2) {
-                                            $var4 = [0, matchValue[1].data[1], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult758)[2], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult758)[0], matchValue[1].data[0]];
+                                            $var4 = [0, matchValue[1].data[1], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult803)[2], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult803)[0], matchValue[1].data[0]];
                                         } else {
                                             $var4 = [1];
                                         }
@@ -8641,27 +8637,27 @@ function nextToken(state, s) {
                                             return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](1, $var4[3]), $var4[2]], new LexerState(2, [$var4[4], $var4[1]])];
 
                                         case 1:
-                                            var activePatternResult756 = _CharacterTok___(matchValue[0]);
+                                            var activePatternResult801 = _CharacterTok___(matchValue[0]);
 
-                                            if (activePatternResult756 != null) {
-                                                return [Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult756), state];
+                                            if (activePatternResult801 != null) {
+                                                return [Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult801), state];
                                             } else {
-                                                var activePatternResult755 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s+", matchValue[0]);
+                                                var activePatternResult800 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s+", matchValue[0]);
 
-                                                if (activePatternResult755 != null) {
-                                                    return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](2, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult755)[0].length), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult755)[2]], state];
+                                                if (activePatternResult800 != null) {
+                                                    return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](2, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult800)[0].length), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult800)[2]], state];
                                                 } else {
-                                                    var activePatternResult753 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^[0-9]+", matchValue[0]);
+                                                    var activePatternResult798 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^[0-9]+", matchValue[0]);
 
-                                                    if (activePatternResult753 != null) {
-                                                        return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](3, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult753)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult753)[2]], state];
+                                                    if (activePatternResult798 != null) {
+                                                        return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](3, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult798)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult798)[2]], state];
                                                     } else {
-                                                        var activePatternResult751 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])(Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["e" /* literalString */])(__WEBPACK_IMPORTED_MODULE_6__Shared_fs__["a" /* charList */]), matchValue[0]);
+                                                        var activePatternResult796 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])(Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["e" /* literalString */])(__WEBPACK_IMPORTED_MODULE_6__Shared_fs__["a" /* charList */]), matchValue[0]);
 
-                                                        if (activePatternResult751 != null) {
-                                                            return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](1, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult751)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult751)[2]], state];
+                                                        if (activePatternResult796 != null) {
+                                                            return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](1, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult796)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult796)[2]], state];
                                                         } else {
-                                                            __WEBPACK_IMPORTED_MODULE_6__Shared_fs__["i" /* sharedLog */].Warn(null)(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Unrecognised character: %A"))(matchValue[0]));
+                                                            __WEBPACK_IMPORTED_MODULE_6__Shared_fs__["i" /* sharedLog */].Warn(null)(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Unrecognised character: %A"))(matchValue[0]));
                                                             return [[new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](1, Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["f" /* toString */])(matchValue[0][0])), Object(__WEBPACK_IMPORTED_MODULE_6__Shared_fs__["h" /* sOnwards */])(1, matchValue[0])], state];
                                                         }
                                                     }
@@ -8693,14 +8689,14 @@ function lexS(state, source) {
     var matchValue = [source, state];
     var $var5 = void 0;
 
-    var activePatternResult773 = _CodeBlockStart___(matchValue[0]);
+    var activePatternResult818 = _CodeBlockStart___(matchValue[0]);
 
-    if (activePatternResult773 != null) {
-        var activePatternResult774 = _MatchLang___(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult773));
+    if (activePatternResult818 != null) {
+        var activePatternResult819 = _MatchLang___(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult818));
 
-        if (activePatternResult774 != null) {
+        if (activePatternResult819 != null) {
             if (matchValue[1].tag === 0) {
-                $var5 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult774)];
+                $var5 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult819)];
             } else {
                 $var5 = [1];
             }
@@ -8718,9 +8714,9 @@ function lexS(state, source) {
         case 1:
             var $var6 = void 0;
 
-            var activePatternResult772 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^```+", matchValue[0]);
+            var activePatternResult817 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^```+", matchValue[0]);
 
-            if (activePatternResult772 != null) {
+            if (activePatternResult817 != null) {
                 if (matchValue[1].tag === 1) {
                     $var6 = [0, matchValue[1].data[1], matchValue[1].data[0]];
                 } else {
@@ -8738,9 +8734,9 @@ function lexS(state, source) {
                     if (matchValue[1].tag === 1) {
                         return [new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), new LexerState(1, [matchValue[1].data[0] + source + "\n", matchValue[1].data[1]])];
                     } else {
-                        var activePatternResult770 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s*$", matchValue[0]);
+                        var activePatternResult815 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s*$", matchValue[0]);
 
-                        if (activePatternResult770 != null) {
+                        if (activePatternResult815 != null) {
                             return [Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["o" /* Token */](32)]), state];
                         } else {
                             return [Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(lexS_(state, source, new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]())), state];
@@ -8787,9 +8783,6 @@ function lexList(strl) {
 
 "use strict";
 /* unused harmony export Token */
-/* unused harmony export Parser */
-/* unused harmony export Macro */
-/* unused harmony export Sub */
 /* unused harmony export charList */
 /* unused harmony export keywordList */
 /* unused harmony export $7C$WhiteSpace$7C$NonWhiteSpace$7C$ */
@@ -8800,12 +8793,20 @@ function lexList(strl) {
 /* unused harmony export nextToken */
 /* unused harmony export tokenize */
 /* unused harmony export tokenizeList */
+/* unused harmony export Macro */
+/* unused harmony export Sub */
+/* unused harmony export Parser */
+/* unused harmony export findParseUntil */
 /* unused harmony export $7C$KeyWord$7C$_$7C$ */
+/* unused harmony export $7C$ParamList$7C$_$7C$ */
+/* unused harmony export splitList */
+/* unused harmony export stripWhiteSpace */
 /* unused harmony export $7C$ArgList$7C$_$7C$ */
 /* unused harmony export $7C$Function$7C$_$7C$ */
 /* unused harmony export $7C$MacroDef$7C$_$7C$ */
 /* unused harmony export $7C$EvalDef$7C$_$7C$ */
 /* unused harmony export $7C$SChar$7C$_$7C$ */
+/* unused harmony export $7C$Include$7C$_$7C$ */
 /* unused harmony export parse */
 /* unused harmony export evaluate */
 /* unused harmony export parserToString */
@@ -8824,9 +8825,11 @@ function lexList(strl) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Seq__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Comparer__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__FableFileIO_fs__ = __webpack_require__(34);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 
 
@@ -8873,118 +8876,6 @@ var Token = function () {
     return Token;
 }();
 Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["b" /* setType */])("Preprocessor.Token", Token);
-var Parser = function () {
-    function Parser(tag, data) {
-        _classCallCheck(this, Parser);
-
-        this.tag = tag | 0;
-        this.data = data;
-    }
-
-    _createClass(Parser, [{
-        key: __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["a" /* default */].reflection,
-        value: function value() {
-            return {
-                type: "Preprocessor.Parser",
-                interfaces: ["FSharpUnion", "System.IEquatable", "System.IComparable"],
-                cases: [["MacroDefinition", Macro], ["MacroSubstitution", Sub], ["ParseText", "string"], ["ParseNewLine"]]
-            };
-        }
-    }, {
-        key: "Equals",
-        value: function Equals(other) {
-            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["k" /* equals */])(this.data, other.data);
-        }
-    }, {
-        key: "CompareTo",
-        value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["j" /* compareUnions */])(this, other) | 0;
-        }
-    }]);
-
-    return Parser;
-}();
-Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["b" /* setType */])("Preprocessor.Parser", Parser);
-var Macro = function () {
-    function Macro(name, args, body) {
-        _classCallCheck(this, Macro);
-
-        this.Name = name;
-        this.Args = args;
-        this.Body = body;
-    }
-
-    _createClass(Macro, [{
-        key: __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["a" /* default */].reflection,
-        value: function value() {
-            return {
-                type: "Preprocessor.Macro",
-                interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
-                properties: {
-                    Name: "string",
-                    Args: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["n" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */], {
-                        T: "string"
-                    }),
-                    Body: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["n" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */], {
-                        T: Parser
-                    })
-                }
-            };
-        }
-    }, {
-        key: "Equals",
-        value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["l" /* equalsRecords */])(this, other);
-        }
-    }, {
-        key: "CompareTo",
-        value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["i" /* compareRecords */])(this, other) | 0;
-        }
-    }]);
-
-    return Macro;
-}();
-Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["b" /* setType */])("Preprocessor.Macro", Macro);
-var Sub = function () {
-    function Sub(name, args, raw) {
-        _classCallCheck(this, Sub);
-
-        this.Name = name;
-        this.Args = args;
-        this.Raw = raw;
-    }
-
-    _createClass(Sub, [{
-        key: __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["a" /* default */].reflection,
-        value: function value() {
-            return {
-                type: "Preprocessor.Sub",
-                interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
-                properties: {
-                    Name: "string",
-                    Args: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["n" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */], {
-                        T: "string"
-                    }),
-                    Raw: "string"
-                }
-            };
-        }
-    }, {
-        key: "Equals",
-        value: function Equals(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["l" /* equalsRecords */])(this, other);
-        }
-    }, {
-        key: "CompareTo",
-        value: function CompareTo(other) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["i" /* compareRecords */])(this, other) | 0;
-        }
-    }]);
-
-    return Sub;
-}();
-Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["b" /* setType */])("Preprocessor.Sub", Sub);
 var charList = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([["{%", new Token(2)], ["%}", new Token(3)], ["{{", new Token(4)], ["}}", new Token(5)], ["(", new Token(6)], [")", new Token(7)], [";", new Token(8)], ["\\", new Token(10)]]);
 var keywordList = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([["macro", new Token(1)], ["include", new Token(11)]]);
 
@@ -8992,9 +8883,9 @@ function _WhiteSpace_NonWhiteSpace_(_arg1) {
     var $var1 = void 0;
 
     if (_arg1.tag === 0) {
-        var activePatternResult620 = Object(__WEBPACK_IMPORTED_MODULE_3__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s*$", _arg1.data);
+        var activePatternResult572 = Object(__WEBPACK_IMPORTED_MODULE_3__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s*$", _arg1.data);
 
-        if (activePatternResult620 != null) {
+        if (activePatternResult572 != null) {
             $var1 = [0];
         } else {
             $var1 = [1];
@@ -9058,20 +8949,20 @@ function nextToken(str) {
     var literalMatch = Object(__WEBPACK_IMPORTED_MODULE_3__LexerShared_fs__["e" /* literalString */])(charList);
     var $var2 = void 0;
 
-    var activePatternResult631 = _EscapedCharParse___(str);
+    var activePatternResult583 = _EscapedCharParse___(str);
 
-    if (activePatternResult631 != null) {
-        $var2 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult631)];
+    if (activePatternResult583 != null) {
+        $var2 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult583)];
     } else {
-        var activePatternResult632 = _CharacterParse___(str);
+        var activePatternResult584 = _CharacterParse___(str);
 
-        if (activePatternResult632 != null) {
-            $var2 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult632)];
+        if (activePatternResult584 != null) {
+            $var2 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult584)];
         } else {
-            var activePatternResult633 = _KeywordParse___(str);
+            var activePatternResult585 = _KeywordParse___(str);
 
-            if (activePatternResult633 != null) {
-                $var2 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult633)];
+            if (activePatternResult585 != null) {
+                $var2 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult585)];
             } else {
                 $var2 = [1];
             }
@@ -9083,15 +8974,15 @@ function nextToken(str) {
             return $var2[1];
 
         case 1:
-            var activePatternResult630 = Object(__WEBPACK_IMPORTED_MODULE_3__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s+", str);
+            var activePatternResult582 = Object(__WEBPACK_IMPORTED_MODULE_3__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s+", str);
 
-            if (activePatternResult630 != null) {
-                return [new Token(0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult630)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult630)[2]];
+            if (activePatternResult582 != null) {
+                return [new Token(0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult582)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult582)[2]];
             } else {
-                var activePatternResult628 = Object(__WEBPACK_IMPORTED_MODULE_3__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])(literalMatch, str);
+                var activePatternResult580 = Object(__WEBPACK_IMPORTED_MODULE_3__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])(literalMatch, str);
 
-                if (activePatternResult628 != null) {
-                    return [new Token(0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult628)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult628)[2]];
+                if (activePatternResult580 != null) {
+                    return [new Token(0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult580)[0]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult580)[2]];
                 } else {
                     return [new Token(0, Object(__WEBPACK_IMPORTED_MODULE_3__LexerShared_fs__["f" /* toString */])(str[0])), str.slice(1, str.length)];
                 }
@@ -9118,6 +9009,162 @@ function tokenize(str) {
 var tokenizeList = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function (list) {
     return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["b" /* collect */])(tokenize, list);
 });
+var Macro = function () {
+    function Macro(name, args, body) {
+        _classCallCheck(this, Macro);
+
+        this.Name = name;
+        this.Args = args;
+        this.Body = body;
+    }
+
+    _createClass(Macro, [{
+        key: __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["a" /* default */].reflection,
+        value: function value() {
+            return {
+                type: "Preprocessor.Macro",
+                interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
+                properties: {
+                    Name: "string",
+                    Args: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["n" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */], {
+                        T: "string"
+                    }),
+                    Body: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["n" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */], {
+                        T: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["c" /* GenericParam */])("T")
+                    })
+                }
+            };
+        }
+    }, {
+        key: "Equals",
+        value: function Equals(other) {
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["l" /* equalsRecords */])(this, other);
+        }
+    }, {
+        key: "CompareTo",
+        value: function CompareTo(other) {
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["i" /* compareRecords */])(this, other) | 0;
+        }
+    }]);
+
+    return Macro;
+}();
+Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["b" /* setType */])("Preprocessor.Macro", Macro);
+var Sub = function () {
+    function Sub(name, args, raw) {
+        _classCallCheck(this, Sub);
+
+        this.Name = name;
+        this.Args = args;
+        this.Raw = raw;
+    }
+
+    _createClass(Sub, [{
+        key: __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["a" /* default */].reflection,
+        value: function value() {
+            return {
+                type: "Preprocessor.Sub",
+                interfaces: ["FSharpRecord", "System.IEquatable", "System.IComparable"],
+                properties: {
+                    Name: "string",
+                    Args: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["n" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */], {
+                        T: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["n" /* makeGeneric */])(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */], {
+                            T: Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["c" /* GenericParam */])("T")
+                        })
+                    }),
+                    Raw: "string"
+                }
+            };
+        }
+    }, {
+        key: "Equals",
+        value: function Equals(other) {
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["l" /* equalsRecords */])(this, other);
+        }
+    }, {
+        key: "CompareTo",
+        value: function CompareTo(other) {
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["i" /* compareRecords */])(this, other) | 0;
+        }
+    }]);
+
+    return Sub;
+}();
+Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["b" /* setType */])("Preprocessor.Sub", Sub);
+var Parser = function () {
+    function Parser(tag, data) {
+        _classCallCheck(this, Parser);
+
+        this.tag = tag | 0;
+        this.data = data;
+    }
+
+    _createClass(Parser, [{
+        key: __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["a" /* default */].reflection,
+        value: function value() {
+            return {
+                type: "Preprocessor.Parser",
+                interfaces: ["FSharpUnion", "System.IEquatable", "System.IComparable"],
+                cases: [["MacroDefinition", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["n" /* makeGeneric */])(Macro, {
+                    T: Parser
+                })], ["MacroSubstitution", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["n" /* makeGeneric */])(Sub, {
+                    T: Parser
+                })], ["IncludeStatement", "string"], ["ParseText", "string"], ["ParseNewLine"]]
+            };
+        }
+    }, {
+        key: "Equals",
+        value: function Equals(other) {
+            return this === other || this.tag === other.tag && Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["k" /* equals */])(this.data, other.data);
+        }
+    }, {
+        key: "CompareTo",
+        value: function CompareTo(other) {
+            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["j" /* compareUnions */])(this, other) | 0;
+        }
+    }]);
+
+    return Parser;
+}();
+Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["b" /* setType */])("Preprocessor.Parser", Parser);
+function findParseUntil(otok, ctok, parser) {
+    var findParseUntil_ = function findParseUntil_(count, parser_1, retlist) {
+        var $var3 = parser_1.tail != null ? (Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["k" /* equals */])(parser_1.head, ctok) ? count === 1 : false) ? [0, parser_1.head, parser_1.tail] : [1] : [1];
+
+        switch ($var3[0]) {
+            case 0:
+                return [Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(retlist), $var3[2]];
+
+            case 1:
+                var $var4 = parser_1.tail != null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["k" /* equals */])(parser_1.head, ctok) ? [0, parser_1.head, parser_1.tail] : [1] : [1];
+
+                switch ($var4[0]) {
+                    case 0:
+                        return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(findParseUntil_)(count - 1, $var4[2])(new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]($var4[1], retlist));
+
+                    case 1:
+                        var $var5 = parser_1.tail != null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["k" /* equals */])(parser_1.head, otok) ? [0, parser_1.head, parser_1.tail] : [1] : [1];
+
+                        switch ($var5[0]) {
+                            case 0:
+                                return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(findParseUntil_)(count + 1, $var5[2])(new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]($var5[1], retlist));
+
+                            case 1:
+                                if (parser_1.tail == null) {
+                                    return null;
+                                } else {
+                                    return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(findParseUntil_)(count, parser_1.tail)(new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](parser_1.head, retlist));
+                                }
+
+                        }
+
+                }
+
+        }
+    };
+
+    return findParseUntil_(1, parser, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]());
+}
 
 var _KeyWord___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function () {
     var listCheckExists = function listCheckExists(t, list) {
@@ -9129,30 +9176,30 @@ var _KeyWord___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_
     };
 
     return function (_arg1) {
-        var $var3 = void 0;
+        var $var6 = void 0;
 
         if (_arg1.tail != null) {
-            var activePatternResult642 = _WhiteSpace_NonWhiteSpace_(_arg1.head);
+            var activePatternResult665 = _WhiteSpace_NonWhiteSpace_(_arg1.head);
 
-            if (activePatternResult642.tag === 0) {
+            if (activePatternResult665.tag === 0) {
                 if (_arg1.tail.tail != null) {
-                    $var3 = [0, _arg1.tail.head, _arg1.tail.tail];
+                    $var6 = [0, _arg1.tail.head, _arg1.tail.tail];
                 } else {
-                    $var3 = [0, _arg1.head, _arg1.tail];
+                    $var6 = [0, _arg1.head, _arg1.tail];
                 }
             } else {
-                $var3 = [0, _arg1.head, _arg1.tail];
+                $var6 = [0, _arg1.head, _arg1.tail];
             }
         } else {
-            $var3 = [1];
+            $var6 = [1];
         }
 
-        switch ($var3[0]) {
+        switch ($var6[0]) {
             case 0:
-                var matchValue = listCheckExists($var3[1], keywordList);
+                var matchValue = listCheckExists($var6[1], keywordList);
 
                 if (matchValue) {
-                    return [$var3[1], $var3[2]];
+                    return [$var6[1], $var6[2]];
                 } else {
                     return null;
                 }
@@ -9165,36 +9212,36 @@ var _KeyWord___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_
 
 
 
-var _ArgList___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function () {
+var _ParamList___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function () {
     var _NameList___ = function _NameList___(_arg1) {
-        var $var4 = void 0;
+        var $var7 = void 0;
 
         if (_arg1.tail != null) {
             if (_arg1.head.tag === 0) {
-                var activePatternResult644 = _NameList___(_arg1.tail);
+                var activePatternResult667 = _NameList___(_arg1.tail);
 
-                if (activePatternResult644 != null) {
-                    $var4 = [0, _arg1.head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult644)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult644)[1]];
+                if (activePatternResult667 != null) {
+                    $var7 = [0, _arg1.head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult667)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult667)[1]];
                 } else {
-                    $var4 = [1];
+                    $var7 = [1];
                 }
             } else {
-                $var4 = [1];
+                $var7 = [1];
             }
         } else {
-            $var4 = [1];
+            $var7 = [1];
         }
 
-        switch ($var4[0]) {
+        switch ($var7[0]) {
             case 0:
-                return [new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]($var4[1], $var4[2]), $var4[3]];
+                return [new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]($var7[1], $var7[2]), $var7[3]];
 
             case 1:
-                var $var5 = _arg1.tail != null ? _arg1.head.tag === 0 ? [0, _arg1.head.data, _arg1.tail] : [1] : [1];
+                var $var8 = _arg1.tail != null ? _arg1.head.tag === 0 ? [0, _arg1.head.data, _arg1.tail] : [1] : [1];
 
-                switch ($var5[0]) {
+                switch ($var8[0]) {
                     case 0:
-                        return [Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([$var5[1]]), $var5[2]];
+                        return [Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([$var8[1]]), $var8[2]];
 
                     case 1:
                         return null;
@@ -9203,62 +9250,62 @@ var _ArgList___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_
         }
     };
 
-    var _ParamList___ = function _ParamList___(_arg2) {
-        var $var6 = void 0;
+    var _ParamList____1 = function _ParamList____1(_arg2) {
+        var $var9 = void 0;
 
         if (_arg2.tail != null) {
-            var activePatternResult649 = _WhiteSpace_NonWhiteSpace_(_arg2.head);
+            var activePatternResult672 = _WhiteSpace_NonWhiteSpace_(_arg2.head);
 
-            if (activePatternResult649.tag === 0) {
-                $var6 = [0, _arg2.tail];
+            if (activePatternResult672.tag === 0) {
+                $var9 = [0, _arg2.tail];
             } else {
-                $var6 = [0, _arg2];
+                $var9 = [0, _arg2];
             }
         } else {
-            $var6 = [0, _arg2];
+            $var9 = [0, _arg2];
         }
 
-        switch ($var6[0]) {
+        switch ($var9[0]) {
             case 0:
-                var $var7 = void 0;
+                var $var10 = void 0;
 
-                var activePatternResult647 = _NameList___($var6[1]);
+                var activePatternResult670 = _NameList___($var9[1]);
 
-                if (activePatternResult647 != null) {
-                    if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult647)[1].tail != null) {
-                        if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult647)[1].head.tag === 8) {
-                            var activePatternResult648 = _ParamList___(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult647)[1].tail);
+                if (activePatternResult670 != null) {
+                    if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult670)[1].tail != null) {
+                        if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult670)[1].head.tag === 8) {
+                            var activePatternResult671 = _ParamList____1(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult670)[1].tail);
 
-                            if (activePatternResult648 != null) {
-                                $var7 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult648)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult647)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult648)[1]];
+                            if (activePatternResult671 != null) {
+                                $var10 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult671)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult670)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult671)[1]];
                             } else {
-                                $var7 = [1];
+                                $var10 = [1];
                             }
                         } else {
-                            $var7 = [1];
+                            $var10 = [1];
                         }
                     } else {
-                        $var7 = [1];
+                        $var10 = [1];
                     }
                 } else {
-                    $var7 = [1];
+                    $var10 = [1];
                 }
 
-                switch ($var7[0]) {
+                switch ($var10[0]) {
                     case 0:
                         return [new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(function (x, y) {
                             return x + y;
-                        }, "", $var7[2]), $var7[1]), $var7[3]];
+                        }, "", $var10[2]), $var10[1]), $var10[3]];
 
                     case 1:
-                        var activePatternResult646 = _NameList___($var6[1]);
+                        var activePatternResult669 = _NameList___($var9[1]);
 
-                        if (activePatternResult646 != null) {
+                        if (activePatternResult669 != null) {
                             return [Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(function (x_1, y_1) {
                                 return x_1 + y_1;
-                            }, "", Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult646)[0])]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult646)[1]];
+                            }, "", Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult669)[0])]), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult669)[1]];
                         } else {
-                            return [new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), $var6[1]];
+                            return [new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), $var9[1]];
                         }
 
                 }
@@ -9267,51 +9314,51 @@ var _ArgList___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_
     };
 
     return function (_arg3) {
-        var $var8 = void 0;
+        var $var11 = void 0;
 
         if (_arg3.tail != null) {
-            var activePatternResult652 = _WhiteSpace_NonWhiteSpace_(_arg3.head);
+            var activePatternResult675 = _WhiteSpace_NonWhiteSpace_(_arg3.head);
 
-            if (activePatternResult652.tag === 0) {
-                $var8 = [0, _arg3.tail];
+            if (activePatternResult675.tag === 0) {
+                $var11 = [0, _arg3.tail];
             } else {
-                $var8 = [0, _arg3];
+                $var11 = [0, _arg3];
             }
         } else {
-            $var8 = [0, _arg3];
+            $var11 = [0, _arg3];
         }
 
-        switch ($var8[0]) {
+        switch ($var11[0]) {
             case 0:
-                var $var9 = void 0;
+                var $var12 = void 0;
 
-                if ($var8[1].tail != null) {
-                    if ($var8[1].head.tag === 6) {
-                        var activePatternResult651 = _ParamList___($var8[1].tail);
+                if ($var11[1].tail != null) {
+                    if ($var11[1].head.tag === 6) {
+                        var activePatternResult674 = _ParamList____1($var11[1].tail);
 
-                        if (activePatternResult651 != null) {
-                            if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult651)[1].tail != null) {
-                                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult651)[1].head.tag === 7) {
-                                    $var9 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult651)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult651)[1].tail];
+                        if (activePatternResult674 != null) {
+                            if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult674)[1].tail != null) {
+                                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult674)[1].head.tag === 7) {
+                                    $var12 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult674)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult674)[1].tail];
                                 } else {
-                                    $var9 = [1];
+                                    $var12 = [1];
                                 }
                             } else {
-                                $var9 = [1];
+                                $var12 = [1];
                             }
                         } else {
-                            $var9 = [1];
+                            $var12 = [1];
                         }
                     } else {
-                        $var9 = [1];
+                        $var12 = [1];
                     }
                 } else {
-                    $var9 = [1];
+                    $var12 = [1];
                 }
 
-                switch ($var9[0]) {
+                switch ($var12[0]) {
                     case 0:
-                        return [$var9[1], $var9[2]];
+                        return [$var12[1], $var12[2]];
 
                     case 1:
                         return null;
@@ -9322,74 +9369,203 @@ var _ArgList___ = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_
 }());
 
 
+function splitList(tok, list) {
+    var splitList_ = function splitList_(curr, _final, list_1) {
+        splitList_: while (true) {
+            var $var13 = list_1.tail != null ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["k" /* equals */])(list_1.head, tok) ? [0, list_1.head, list_1.tail] : [1] : [1];
 
-function _Function___(_arg1) {
-    var $var10 = void 0;
-
-    if (_arg1.tail != null) {
-        var activePatternResult658 = _WhiteSpace_NonWhiteSpace_(_arg1.head);
-
-        if (activePatternResult658.tag === 0) {
-            if (_arg1.tail.tail != null) {
-                if (_arg1.tail.head.tag === 0) {
-                    $var10 = [0, _arg1.tail.head.data, _arg1.tail.tail];
-                } else {
-                    $var10 = [1];
-                }
-            } else {
-                $var10 = [1];
-            }
-        } else {
-            $var10 = [1];
-        }
-    } else {
-        $var10 = [1];
-    }
-
-    switch ($var10[0]) {
-        case 0:
-            var $var11 = void 0;
-
-            var activePatternResult656 = _ArgList___($var10[2]);
-
-            if (activePatternResult656 != null) {
-                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult656)[1].tail != null) {
-                    var activePatternResult657 = _WhiteSpace_NonWhiteSpace_(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult656)[1].head);
-
-                    if (activePatternResult657.tag === 0) {
-                        $var11 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult656)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult656)[1].tail];
-                    } else {
-                        $var11 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult656)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult656)[1]];
-                    }
-                } else {
-                    $var11 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult656)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult656)[1]];
-                }
-            } else {
-                $var11 = [1];
-            }
-
-            switch ($var11[0]) {
+            switch ($var13[0]) {
                 case 0:
-                    return [$var10[1], $var11[1], $var11[2]];
+                    var $var39 = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]();
+                    _final = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(curr), _final);
+                    list_1 = $var13[2];
+                    curr = $var39;
+                    continue splitList_;
 
                 case 1:
-                    var $var12 = void 0;
-
-                    if ($var10[2].tail != null) {
-                        var activePatternResult655 = _WhiteSpace_NonWhiteSpace_($var10[2].head);
-
-                        if (activePatternResult655.tag === 0) {
-                            $var12 = [0, $var10[2].tail];
-                        } else {
-                            $var12 = [0, $var10[2]];
-                        }
+                    if (list_1.tail == null) {
+                        return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(curr), _final));
                     } else {
-                        $var12 = [0, $var10[2]];
+                        curr = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](list_1.head, curr);
+                        _final = _final;
+                        list_1 = list_1.tail;
+                        continue splitList_;
                     }
 
-                    switch ($var12[0]) {
+            }
+        }
+    };
+
+    return splitList_(new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), list);
+}
+function stripWhiteSpace(_arg1) {
+    var $var14 = void 0;
+
+    if (_arg1.tail != null) {
+        var activePatternResult684 = _WhiteSpace_NonWhiteSpace_(_arg1.head);
+
+        if (activePatternResult684.tag === 0) {
+            $var14 = [0, _arg1.tail];
+        } else {
+            $var14 = [0, _arg1];
+        }
+    } else {
+        $var14 = [0, _arg1];
+    }
+
+    switch ($var14[0]) {
+        case 0:
+            var matchValue = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])($var14[1]);
+            var $var15 = void 0;
+
+            if (matchValue.tail != null) {
+                var activePatternResult683 = _WhiteSpace_NonWhiteSpace_(matchValue.head);
+
+                if (activePatternResult683.tag === 0) {
+                    $var15 = [0, matchValue.tail];
+                } else {
+                    $var15 = [0, matchValue];
+                }
+            } else {
+                $var15 = [0, matchValue];
+            }
+
+            switch ($var15[0]) {
+                case 0:
+                    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])($var15[1]);
+            }
+
+    }
+}
+
+function _ArgList___(_arg1) {
+    var $var16 = void 0;
+
+    if (_arg1.tail != null) {
+        var activePatternResult687 = _WhiteSpace_NonWhiteSpace_(_arg1.head);
+
+        if (activePatternResult687.tag === 0) {
+            $var16 = [0, _arg1.tail];
+        } else {
+            $var16 = [0, _arg1];
+        }
+    } else {
+        $var16 = [0, _arg1];
+    }
+
+    switch ($var16[0]) {
+        case 0:
+            var $var17 = void 0;
+
+            if ($var16[1].tail != null) {
+                if ($var16[1].head.tag === 6) {
+                    $var17 = [0, $var16[1].tail];
+                } else {
+                    var activePatternResult686 = _WhiteSpace_NonWhiteSpace_($var16[1].head);
+
+                    if (activePatternResult686.tag === 0) {
+                        $var17 = [1, $var16[1].tail];
+                    } else {
+                        $var17 = [2];
+                    }
+                }
+            } else {
+                $var17 = [2];
+            }
+
+            switch ($var17[0]) {
+                case 0:
+                    var matchValue = findParseUntil(new Token(6), new Token(7), $var17[1]);
+
+                    if (matchValue != null) {
+                        var tl = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue)[1];
+                        var p = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue)[0];
+                        return [function (list) {
+                            return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(stripWhiteSpace, list);
+                        }(splitList(new Token(8), p)), tl];
+                    } else {
+                        return null;
+                    }
+
+                case 1:
+                    return [new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), $var17[1]];
+
+                case 2:
+                    return null;
+            }
+
+    }
+}
+
+
+
+function _Function___(_arg1) {
+    var $var18 = void 0;
+
+    if (_arg1.tail != null) {
+        var activePatternResult693 = _WhiteSpace_NonWhiteSpace_(_arg1.head);
+
+        if (activePatternResult693.tag === 0) {
+            if (_arg1.tail.tail != null) {
+                if (_arg1.tail.head.tag === 0) {
+                    $var18 = [0, _arg1.tail.head.data, _arg1.tail.tail];
+                } else {
+                    $var18 = [1];
+                }
+            } else {
+                $var18 = [1];
+            }
+        } else {
+            $var18 = [1];
+        }
+    } else {
+        $var18 = [1];
+    }
+
+    switch ($var18[0]) {
+        case 0:
+            var $var19 = void 0;
+
+            var activePatternResult691 = _ParamList___($var18[2]);
+
+            if (activePatternResult691 != null) {
+                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult691)[1].tail != null) {
+                    var activePatternResult692 = _WhiteSpace_NonWhiteSpace_(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult691)[1].head);
+
+                    if (activePatternResult692.tag === 0) {
+                        $var19 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult691)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult691)[1].tail];
+                    } else {
+                        $var19 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult691)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult691)[1]];
+                    }
+                } else {
+                    $var19 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult691)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult691)[1]];
+                }
+            } else {
+                $var19 = [1];
+            }
+
+            switch ($var19[0]) {
+                case 0:
+                    return [$var18[1], $var19[1], $var19[2]];
+
+                case 1:
+                    var $var20 = void 0;
+
+                    if ($var18[2].tail != null) {
+                        var activePatternResult690 = _WhiteSpace_NonWhiteSpace_($var18[2].head);
+
+                        if (activePatternResult690.tag === 0) {
+                            $var20 = [0, $var18[2].tail];
+                        } else {
+                            $var20 = [0, $var18[2]];
+                        }
+                    } else {
+                        $var20 = [0, $var18[2]];
+                    }
+
+                    switch ($var20[0]) {
                         case 0:
-                            return [$var10[1], new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), $var12[1]];
+                            return [$var18[1], new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), $var20[1]];
                     }
 
             }
@@ -9402,37 +9578,37 @@ function _Function___(_arg1) {
 
 
 function _MacroDef___(_arg1) {
-    var $var13 = void 0;
+    var $var21 = void 0;
 
     if (_arg1.tail != null) {
         if (_arg1.head.tag === 2) {
-            var activePatternResult660 = _KeyWord___(_arg1.tail);
+            var activePatternResult695 = _KeyWord___(_arg1.tail);
 
-            if (activePatternResult660 != null) {
-                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult660)[0].tag === 1) {
-                    var activePatternResult661 = _Function___(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult660)[1]);
+            if (activePatternResult695 != null) {
+                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult695)[0].tag === 1) {
+                    var activePatternResult696 = _Function___(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult695)[1]);
 
-                    if (activePatternResult661 != null) {
-                        $var13 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult661)];
+                    if (activePatternResult696 != null) {
+                        $var21 = [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult696)];
                     } else {
-                        $var13 = [1];
+                        $var21 = [1];
                     }
                 } else {
-                    $var13 = [1];
+                    $var21 = [1];
                 }
             } else {
-                $var13 = [1];
+                $var21 = [1];
             }
         } else {
-            $var13 = [1];
+            $var21 = [1];
         }
     } else {
-        $var13 = [1];
+        $var21 = [1];
     }
 
-    switch ($var13[0]) {
+    switch ($var21[0]) {
         case 0:
-            return $var13[1];
+            return $var21[1];
 
         case 1:
             return null;
@@ -9442,116 +9618,116 @@ function _MacroDef___(_arg1) {
 
 
 function _EvalDef___(_arg1) {
-    var $var14 = void 0;
+    var $var22 = void 0;
 
     if (_arg1.tail != null) {
         if (_arg1.head.tag === 4) {
             if (_arg1.tail.tail != null) {
-                var activePatternResult667 = _WhiteSpace_NonWhiteSpace_(_arg1.tail.head);
+                var activePatternResult702 = _WhiteSpace_NonWhiteSpace_(_arg1.tail.head);
 
-                if (activePatternResult667.tag === 0) {
-                    $var14 = [0, _arg1.tail.tail];
+                if (activePatternResult702.tag === 0) {
+                    $var22 = [0, _arg1.tail.tail];
                 } else {
-                    $var14 = [0, _arg1.tail];
+                    $var22 = [0, _arg1.tail];
                 }
             } else {
-                $var14 = [0, _arg1.tail];
+                $var22 = [0, _arg1.tail];
             }
         } else {
-            $var14 = [1];
+            $var22 = [1];
         }
     } else {
-        $var14 = [1];
+        $var22 = [1];
     }
 
-    switch ($var14[0]) {
+    switch ($var22[0]) {
         case 0:
-            var $var15 = void 0;
+            var $var23 = void 0;
 
-            if ($var14[1].tail != null) {
-                if ($var14[1].head.tag === 0) {
-                    var activePatternResult665 = _ArgList___($var14[1].tail);
+            if ($var22[1].tail != null) {
+                if ($var22[1].head.tag === 0) {
+                    var activePatternResult700 = _ArgList___($var22[1].tail);
 
-                    if (activePatternResult665 != null) {
-                        if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].tail != null) {
-                            var activePatternResult666 = _WhiteSpace_NonWhiteSpace_(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].head);
+                    if (activePatternResult700 != null) {
+                        if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].tail != null) {
+                            var activePatternResult701 = _WhiteSpace_NonWhiteSpace_(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].head);
 
-                            if (activePatternResult666.tag === 0) {
-                                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].tail.tail != null) {
-                                    if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].tail.head.tag === 5) {
-                                        $var15 = [0, $var14[1].head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].tail.tail];
-                                    } else if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].head.tag === 5) {
-                                        $var15 = [0, $var14[1].head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].tail];
+                            if (activePatternResult701.tag === 0) {
+                                if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].tail.tail != null) {
+                                    if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].tail.head.tag === 5) {
+                                        $var23 = [0, $var22[1].head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].tail.tail];
+                                    } else if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].head.tag === 5) {
+                                        $var23 = [0, $var22[1].head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].tail];
                                     } else {
-                                        $var15 = [1];
+                                        $var23 = [1];
                                     }
-                                } else if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].head.tag === 5) {
-                                    $var15 = [0, $var14[1].head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].tail];
+                                } else if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].head.tag === 5) {
+                                    $var23 = [0, $var22[1].head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].tail];
                                 } else {
-                                    $var15 = [1];
+                                    $var23 = [1];
                                 }
-                            } else if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].head.tag === 5) {
-                                $var15 = [0, $var14[1].head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult665)[1].tail];
+                            } else if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].head.tag === 5) {
+                                $var23 = [0, $var22[1].head.data, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult700)[1].tail];
                             } else {
-                                $var15 = [1];
+                                $var23 = [1];
                             }
                         } else {
-                            $var15 = [1];
+                            $var23 = [1];
                         }
                     } else {
-                        $var15 = [1];
+                        $var23 = [1];
                     }
                 } else {
-                    $var15 = [1];
+                    $var23 = [1];
                 }
             } else {
-                $var15 = [1];
+                $var23 = [1];
             }
 
-            switch ($var15[0]) {
+            switch ($var23[0]) {
                 case 0:
-                    return [$var15[1], $var15[2], $var15[3]];
+                    return [$var23[1], $var23[2], $var23[3]];
 
                 case 1:
-                    var $var16 = void 0;
+                    var $var24 = void 0;
 
-                    if ($var14[1].tail != null) {
-                        if ($var14[1].head.tag === 0) {
-                            if ($var14[1].tail.tail != null) {
-                                var activePatternResult664 = _WhiteSpace_NonWhiteSpace_($var14[1].tail.head);
+                    if ($var22[1].tail != null) {
+                        if ($var22[1].head.tag === 0) {
+                            if ($var22[1].tail.tail != null) {
+                                var activePatternResult699 = _WhiteSpace_NonWhiteSpace_($var22[1].tail.head);
 
-                                if (activePatternResult664.tag === 0) {
-                                    if ($var14[1].tail.tail.tail != null) {
-                                        if ($var14[1].tail.tail.head.tag === 5) {
-                                            $var16 = [0, $var14[1].head.data, $var14[1].tail.tail.tail];
-                                        } else if ($var14[1].tail.head.tag === 5) {
-                                            $var16 = [0, $var14[1].head.data, $var14[1].tail.tail];
+                                if (activePatternResult699.tag === 0) {
+                                    if ($var22[1].tail.tail.tail != null) {
+                                        if ($var22[1].tail.tail.head.tag === 5) {
+                                            $var24 = [0, $var22[1].head.data, $var22[1].tail.tail.tail];
+                                        } else if ($var22[1].tail.head.tag === 5) {
+                                            $var24 = [0, $var22[1].head.data, $var22[1].tail.tail];
                                         } else {
-                                            $var16 = [1];
+                                            $var24 = [1];
                                         }
-                                    } else if ($var14[1].tail.head.tag === 5) {
-                                        $var16 = [0, $var14[1].head.data, $var14[1].tail.tail];
+                                    } else if ($var22[1].tail.head.tag === 5) {
+                                        $var24 = [0, $var22[1].head.data, $var22[1].tail.tail];
                                     } else {
-                                        $var16 = [1];
+                                        $var24 = [1];
                                     }
-                                } else if ($var14[1].tail.head.tag === 5) {
-                                    $var16 = [0, $var14[1].head.data, $var14[1].tail.tail];
+                                } else if ($var22[1].tail.head.tag === 5) {
+                                    $var24 = [0, $var22[1].head.data, $var22[1].tail.tail];
                                 } else {
-                                    $var16 = [1];
+                                    $var24 = [1];
                                 }
                             } else {
-                                $var16 = [1];
+                                $var24 = [1];
                             }
                         } else {
-                            $var16 = [1];
+                            $var24 = [1];
                         }
                     } else {
-                        $var16 = [1];
+                        $var24 = [1];
                     }
 
-                    switch ($var16[0]) {
+                    switch ($var24[0]) {
                         case 0:
-                            return [$var16[1], new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), $var16[2]];
+                            return [$var24[1], new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), $var24[2]];
 
                         case 1:
                             return null;
@@ -9577,6 +9753,100 @@ function _SChar___(tok) {
 }
 
 
+
+function _Include___(_arg1) {
+    var $var25 = void 0;
+
+    if (_arg1.tail != null) {
+        if (_arg1.head.tag === 4) {
+            if (_arg1.tail.tail != null) {
+                var activePatternResult707 = _WhiteSpace_NonWhiteSpace_(_arg1.tail.head);
+
+                if (activePatternResult707.tag === 0) {
+                    $var25 = [0, _arg1.tail.tail];
+                } else {
+                    $var25 = [0, _arg1.tail];
+                }
+            } else {
+                $var25 = [0, _arg1.tail];
+            }
+        } else {
+            $var25 = [1];
+        }
+    } else {
+        $var25 = [1];
+    }
+
+    switch ($var25[0]) {
+        case 0:
+            var $var26 = void 0;
+
+            if ($var25[1].tail != null) {
+                if ($var25[1].head.tag === 11) {
+                    if ($var25[1].tail.tail != null) {
+                        var activePatternResult705 = _WhiteSpace_NonWhiteSpace_($var25[1].tail.head);
+
+                        if (activePatternResult705.tag === 0) {
+                            if ($var25[1].tail.tail.tail != null) {
+                                if ($var25[1].tail.tail.head.tag === 0) {
+                                    if ($var25[1].tail.tail.tail.tail != null) {
+                                        var activePatternResult706 = _WhiteSpace_NonWhiteSpace_($var25[1].tail.tail.tail.head);
+
+                                        if (activePatternResult706.tag === 0) {
+                                            if ($var25[1].tail.tail.tail.tail.tail != null) {
+                                                if ($var25[1].tail.tail.tail.tail.head.tag === 5) {
+                                                    $var26 = [0, $var25[1].tail.tail.head.data, $var25[1].tail.tail.tail.tail.tail];
+                                                } else if ($var25[1].tail.tail.tail.head.tag === 5) {
+                                                    $var26 = [0, $var25[1].tail.tail.head.data, $var25[1].tail.tail.tail.tail];
+                                                } else {
+                                                    $var26 = [1];
+                                                }
+                                            } else if ($var25[1].tail.tail.tail.head.tag === 5) {
+                                                $var26 = [0, $var25[1].tail.tail.head.data, $var25[1].tail.tail.tail.tail];
+                                            } else {
+                                                $var26 = [1];
+                                            }
+                                        } else if ($var25[1].tail.tail.tail.head.tag === 5) {
+                                            $var26 = [0, $var25[1].tail.tail.head.data, $var25[1].tail.tail.tail.tail];
+                                        } else {
+                                            $var26 = [1];
+                                        }
+                                    } else {
+                                        $var26 = [1];
+                                    }
+                                } else {
+                                    $var26 = [1];
+                                }
+                            } else {
+                                $var26 = [1];
+                            }
+                        } else {
+                            $var26 = [1];
+                        }
+                    } else {
+                        $var26 = [1];
+                    }
+                } else {
+                    $var26 = [1];
+                }
+            } else {
+                $var26 = [1];
+            }
+
+            switch ($var26[0]) {
+                case 0:
+                    return [$var26[1], $var26[2]];
+
+                case 1:
+                    return null;
+            }
+
+        case 1:
+            return null;
+    }
+}
+
+
 function parse(tList) {
     var getRaw = function getRaw(list) {
         var getRaw_ = function getRaw_(list_1, curr) {
@@ -9597,151 +9867,166 @@ function parse(tList) {
     var parse_ = function parse_(endToken, tList_1, pList) {
         var tl_1;
         var e;
-        var a;
+        var a_1;
         var tl_2;
         var e_1;
-        var a_1;
+        var a_2;
         var tl_3;
         var e_2;
-        var a_2;
+        var a_3;
         var tl_4;
         var e_3;
-        var a_3;
+        var a_4;
 
         var pRec = function pRec(f, c, tl) {
             return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(parse_)(endToken, tl)(new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](f(c), pList));
         };
 
         var recText = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(pRec)(function (arg0) {
-            return new Parser(2, arg0);
+            return new Parser(3, arg0);
         });
         var matchValue = [tList_1, endToken];
 
-        var activePatternResult686 = _MacroDef___(matchValue[0]);
+        var activePatternResult729 = _MacroDef___(matchValue[0]);
 
-        if (activePatternResult686 != null) {
-            var patternInput = parse_(new Token(3), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult686)[2], new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]());
+        if (activePatternResult729 != null) {
+            var patternInput = parse_(new Token(3), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult729)[2], new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]());
             return pRec(function (arg0_1) {
                 return new Parser(0, arg0_1);
-            }, new Macro(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult686)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult686)[1], Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(patternInput[0])), patternInput[1]);
+            }, new Macro(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult729)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult729)[1], Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(patternInput[0])), patternInput[1]);
         } else {
-            var activePatternResult685 = _EvalDef___(matchValue[0]);
+            var activePatternResult728 = _EvalDef___(matchValue[0]);
 
-            if (activePatternResult685 != null) {
+            if (activePatternResult728 != null) {
+                var args_ = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(function ($var27) {
+                    return function (tupledArg) {
+                        return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(tupledArg[0]);
+                    }(function (a) {
+                        return parse_(null, a, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]());
+                    }($var27));
+                }, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult728)[1]);
                 return pRec(function (arg0_2) {
                     return new Parser(1, arg0_2);
-                }, new Sub(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult685)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult685)[1], tokToString(getRaw(tList_1))), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult685)[2]);
+                }, new Sub(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult728)[0], args_, tokToString(getRaw(tList_1))), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult728)[2]);
             } else {
-                var $var17 = void 0;
+                var activePatternResult727 = _Include___(matchValue[0]);
 
-                if (matchValue[0].tail != null) {
-                    if (matchValue[0].head.tag === 9) {
-                        $var17 = [0, matchValue[0].tail];
-                    } else {
-                        var activePatternResult684 = _WhiteSpace_NonWhiteSpace_(matchValue[0].head);
+                if (activePatternResult727 != null) {
+                    return pRec(function (arg0_3) {
+                        return new Parser(2, arg0_3);
+                    }, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult727)[0], Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult727)[1]);
+                } else {
+                    var $var28 = void 0;
 
-                        if (activePatternResult684.tag === 0) {
-                            if (matchValue[0].tail.tail != null) {
-                                if (matchValue[1] != null) {
-                                    if (tl_1 = matchValue[0].tail.tail, e = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), a = matchValue[0].tail.head, e.Equals(a)) {
-                                        $var17 = [1, matchValue[0].tail.head, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), matchValue[0].tail.tail];
-                                    } else if (tl_2 = matchValue[0].tail, e_1 = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), a_1 = matchValue[0].head, e_1.Equals(a_1)) {
-                                        $var17 = [1, matchValue[0].head, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), matchValue[0].tail];
+                    if (matchValue[0].tail != null) {
+                        if (matchValue[0].head.tag === 9) {
+                            $var28 = [0, matchValue[0].tail];
+                        } else {
+                            var activePatternResult726 = _WhiteSpace_NonWhiteSpace_(matchValue[0].head);
+
+                            if (activePatternResult726.tag === 0) {
+                                if (matchValue[0].tail.tail != null) {
+                                    if (matchValue[1] != null) {
+                                        if (tl_1 = matchValue[0].tail.tail, e = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), a_1 = matchValue[0].tail.head, e.Equals(a_1)) {
+                                            $var28 = [1, matchValue[0].tail.head, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), matchValue[0].tail.tail];
+                                        } else if (tl_2 = matchValue[0].tail, e_1 = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), a_2 = matchValue[0].head, e_1.Equals(a_2)) {
+                                            $var28 = [1, matchValue[0].head, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), matchValue[0].tail];
+                                        } else {
+                                            $var28 = [2];
+                                        }
                                     } else {
-                                        $var17 = [2];
+                                        $var28 = [2];
+                                    }
+                                } else if (matchValue[1] != null) {
+                                    if (tl_3 = matchValue[0].tail, e_2 = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), a_3 = matchValue[0].head, e_2.Equals(a_3)) {
+                                        $var28 = [1, matchValue[0].head, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), matchValue[0].tail];
+                                    } else {
+                                        $var28 = [2];
                                     }
                                 } else {
-                                    $var17 = [2];
+                                    $var28 = [2];
                                 }
                             } else if (matchValue[1] != null) {
-                                if (tl_3 = matchValue[0].tail, e_2 = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), a_2 = matchValue[0].head, e_2.Equals(a_2)) {
-                                    $var17 = [1, matchValue[0].head, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), matchValue[0].tail];
+                                if (tl_4 = matchValue[0].tail, e_3 = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), a_4 = matchValue[0].head, e_3.Equals(a_4)) {
+                                    $var28 = [1, matchValue[0].head, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), matchValue[0].tail];
                                 } else {
-                                    $var17 = [2];
+                                    $var28 = [2];
                                 }
                             } else {
-                                $var17 = [2];
+                                $var28 = [2];
                             }
-                        } else if (matchValue[1] != null) {
-                            if (tl_4 = matchValue[0].tail, e_3 = Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), a_3 = matchValue[0].head, e_3.Equals(a_3)) {
-                                $var17 = [1, matchValue[0].head, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue[1]), matchValue[0].tail];
-                            } else {
-                                $var17 = [2];
-                            }
-                        } else {
-                            $var17 = [2];
                         }
+                    } else {
+                        $var28 = [2];
                     }
-                } else {
-                    $var17 = [2];
-                }
 
-                switch ($var17[0]) {
-                    case 0:
-                        return pRec(function (x) {
-                            return x;
-                        }, new Parser(3), $var17[1]);
+                    switch ($var28[0]) {
+                        case 0:
+                            return pRec(function (x) {
+                                return x;
+                            }, new Parser(4), $var28[1]);
 
-                    case 1:
-                        var $var18 = void 0;
+                        case 1:
+                            var $var29 = void 0;
 
-                        if ($var17[3].tail != null) {
-                            var activePatternResult680 = _WhiteSpace_NonWhiteSpace_($var17[3].head);
+                            if ($var28[3].tail != null) {
+                                var activePatternResult722 = _WhiteSpace_NonWhiteSpace_($var28[3].head);
 
-                            if (activePatternResult680.tag === 0) {
-                                if ($var17[3].tail.tail != null) {
-                                    if ($var17[3].tail.head.tag === 9) {
-                                        $var18 = [0, $var17[3].tail.tail];
+                                if (activePatternResult722.tag === 0) {
+                                    if ($var28[3].tail.tail != null) {
+                                        if ($var28[3].tail.head.tag === 9) {
+                                            $var29 = [0, $var28[3].tail.tail];
+                                        } else {
+                                            $var29 = [0, $var28[3].tail];
+                                        }
                                     } else {
-                                        $var18 = [0, $var17[3].tail];
+                                        $var29 = [0, $var28[3].tail];
                                     }
+                                } else if ($var28[3].head.tag === 9) {
+                                    $var29 = [0, $var28[3].tail];
                                 } else {
-                                    $var18 = [0, $var17[3].tail];
+                                    $var29 = [0, $var28[3]];
                                 }
-                            } else if ($var17[3].head.tag === 9) {
-                                $var18 = [0, $var17[3].tail];
                             } else {
-                                $var18 = [0, $var17[3]];
+                                $var29 = [0, $var28[3]];
                             }
-                        } else {
-                            $var18 = [0, $var17[3]];
-                        }
 
-                        switch ($var18[0]) {
-                            case 0:
-                                return [pList, $var18[1]];
-                        }
+                            switch ($var29[0]) {
+                                case 0:
+                                    return [pList, $var29[1]];
+                            }
 
-                    case 2:
-                        var $var19 = void 0;
+                        case 2:
+                            var $var30 = void 0;
 
-                        if (matchValue[0].tail != null) {
-                            if (matchValue[0].head.tag === 0) {
-                                $var19 = [0, matchValue[0].head.data, matchValue[0].tail];
-                            } else {
-                                var activePatternResult683 = _SChar___(matchValue[0].head);
-
-                                if (activePatternResult683 != null) {
-                                    $var19 = [1, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult683), matchValue[0].tail];
+                            if (matchValue[0].tail != null) {
+                                if (matchValue[0].head.tag === 0) {
+                                    $var30 = [0, matchValue[0].head.data, matchValue[0].tail];
                                 } else {
-                                    $var19 = [2];
+                                    var activePatternResult725 = _SChar___(matchValue[0].head);
+
+                                    if (activePatternResult725 != null) {
+                                        $var30 = [1, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult725), matchValue[0].tail];
+                                    } else {
+                                        $var30 = [2];
+                                    }
                                 }
+                            } else {
+                                $var30 = [2];
                             }
-                        } else {
-                            $var19 = [2];
-                        }
 
-                        switch ($var19[0]) {
-                            case 0:
-                                return recText($var19[1], $var19[2]);
+                            switch ($var30[0]) {
+                                case 0:
+                                    return recText($var30[1], $var30[2]);
 
-                            case 1:
-                                return recText($var19[1], $var19[2]);
+                                case 1:
+                                    return recText($var30[1], $var30[2]);
 
-                            case 2:
-                                return [pList, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]()];
-                        }
+                                case 2:
+                                    return [pList, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]()];
+                            }
 
+                    }
                 }
             }
         }
@@ -9774,18 +10059,18 @@ function evaluate(pList) {
         return Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["a" /* add */])(k, v, map);
     };
 
-    var evalulate_ = function evalulate_(pList_1, newPList, param, scope) {
-        var evalulateInv_ = function evalulateInv_(pList_2, newPList_1, scope_1, param_1) {
-            return evalulate_(pList_2, newPList_1, param_1, scope_1);
+    var evaluate_ = function evaluate_(pList_1, newPList, param, scope) {
+        var evaluateInv_ = function evaluateInv_(pList_2, newPList_1, scope_1, param_1) {
+            return evaluate_(pList_2, newPList_1, param_1, scope_1);
         };
 
-        var evalulate__ = function evalulate__(pList_3, list_1) {
-            return evalulate_(pList_3, Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(list_1, newPList), param, scope);
+        var evaluate__ = function evaluate__(pList_3, list_1) {
+            return evaluate_(pList_3, Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(list_1, newPList), param, scope);
         };
 
         if (pList_1.tail != null) {
             if (pList_1.head.tag === 0) {
-                return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evalulate_)(pList_1.tail, newPList, param)(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(mapAdd)(scope, pList_1.head.data.Name)(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(makeMacro)(pList_1.head.data.Name, pList_1.head.data.Args)(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evalulateInv_)(pList_1.head.data.Body, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), scope)(makeEmptyParam(pList_1.head.data.Args)))));
+                return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evaluate_)(pList_1.tail, newPList, param)(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(mapAdd)(scope, pList_1.head.data.Name)(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(makeMacro)(pList_1.head.data.Name, pList_1.head.data.Args)(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evaluateInv_)(pList_1.head.data.Body, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), scope)(makeEmptyParam(pList_1.head.data.Args)))));
             } else if (pList_1.head.tag === 1) {
                 var _eval = void 0;
 
@@ -9793,53 +10078,57 @@ function evaluate(pList) {
 
                 if (matchValue != null) {
                     if (Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue) != null) {
-                        _eval = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([new Parser(2, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue)))]);
+                        _eval = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(evaluate_(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue)), new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), param, scope));
                     } else {
                         _eval = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([pList_1.head]);
                     }
                 } else {
                     var matchValue_1 = Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["d" /* tryFind */])(pList_1.head.data.Name, scope);
-                    var $var20 = matchValue_1 != null ? pList_1.head.data.Args.tail == null ? [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue_1)] : [1] : [1];
+                    var $var31 = matchValue_1 != null ? pList_1.head.data.Args.tail == null ? [0, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue_1)] : [1] : [1];
 
-                    switch ($var20[0]) {
+                    switch ($var31[0]) {
                         case 0:
-                            _eval = $var20[1].Body;
+                            _eval = $var31[1].Body;
                             break;
 
                         case 1:
                             if (matchValue_1 != null) {
-                                _eval = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evalulateInv_)(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue_1).Body, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), scope)(addParam(param, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue_1), pList_1.head.data.Args)));
+                                _eval = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evaluateInv_)(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue_1).Body, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), scope)(addParam(param, Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue_1), pList_1.head.data.Args)));
                             } else {
-                                _eval = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([new Parser(2, pList_1.head.data.Raw)]);
+                                _eval = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([new Parser(3, pList_1.head.data.Raw)]);
                             }
 
                             break;
                     }
                 }
 
-                return evalulate__(pList_1.tail, _eval);
+                return evaluate__(pList_1.tail, _eval);
+            } else if (pList_1.head.tag === 2) {
+                return Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evaluate__)(pList_1.tail)(function (a) {
+                    return evaluate_(a, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["h" /* comparePrimitives */])), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["h" /* comparePrimitives */])));
+                }(parse(tokenizeList(Object(__WEBPACK_IMPORTED_MODULE_11__FableFileIO_fs__["a" /* readFilePath */])(pList_1.head.data)))));
             } else {
-                return evalulate__(pList_1.tail, Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([pList_1.head]));
+                return evaluate__(pList_1.tail, Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([pList_1.head]));
             }
         } else {
             return newPList;
         }
     };
 
-    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(evalulate_(pList, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["h" /* comparePrimitives */])), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["h" /* comparePrimitives */]))));
+    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(evaluate_(pList, new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["h" /* comparePrimitives */])), Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Map__["b" /* create */])(null, new __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Comparer__["a" /* default */](__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__["h" /* comparePrimitives */]))));
 }
 function parserToString(pList) {
     return Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(function (st, _arg1) {
-        return _arg1.tag === 2 ? st + _arg1.data : _arg1.tag === 3 ? st + "\n" : st;
+        return _arg1.tag === 3 ? st + _arg1.data : _arg1.tag === 4 ? st + "\n" : st;
     }, "", pList);
 }
 function toStringList(pList) {
     var f = function f(st, n) {
         var matchValue = [st, n];
 
-        if (matchValue[1].tag === 3) {
+        if (matchValue[1].tag === 4) {
             return new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]("", st);
-        } else if (matchValue[1].tag === 2) {
+        } else if (matchValue[1].tag === 3) {
             if (matchValue[0].tail != null) {
                 return new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](matchValue[0].head + matchValue[1].data, matchValue[0].tail);
             } else {
@@ -9855,41 +10144,78 @@ function toStringList(pList) {
 var pETS = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function () {
     var stripLastEndline = function stripLastEndline(l) {
         var matchValue = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(l);
-        var $var21 = matchValue.tail != null ? matchValue.head.tag === 3 ? matchValue.tail.tail == null ? [0, matchValue] : [1, matchValue.tail] : [2] : [2];
+        var $var32 = matchValue.tail != null ? matchValue.head.tag === 4 ? matchValue.tail.tail == null ? [0, matchValue] : [1, matchValue.tail] : [2] : [2];
 
-        switch ($var21[0]) {
+        switch ($var32[0]) {
             case 0:
-                return $var21[1];
+                return $var32[1];
 
             case 1:
-                return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])($var21[1]);
+                return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])($var32[1]);
 
             case 2:
                 return l;
         }
     };
 
-    return function ($var23) {
-        return stripLastEndline(function ($var22) {
-            return evaluate(parse($var22));
-        }($var23));
+    return function ($var34) {
+        return stripLastEndline(function ($var33) {
+            return evaluate(parse($var33));
+        }($var34));
     };
 }());
-var preprocess = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function ($var25) {
-    return parserToString(function ($var24) {
-        return pETS(tokenize($var24));
-    }($var25));
+var preprocess = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function ($var36) {
+    return parserToString(function ($var35) {
+        return pETS(tokenize($var35));
+    }($var36));
 });
-var preprocessList = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function ($var27) {
-    return toStringList(function ($var26) {
+var preprocessList = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function ($var38) {
+    return toStringList(function ($var37) {
         return pETS(function (list) {
             return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["b" /* collect */])(tokenize, list);
-        }($var26));
-    }($var27));
+        }($var37));
+    }($var38));
 });
 
 /***/ }),
 /* 34 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export writeToFile */
+/* unused harmony export splitString */
+/* harmony export (immutable) */ __webpack_exports__["a"] = readFilePath;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_fs__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_fs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_fs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_Option__ = __webpack_require__(4);
+
+
+
+
+function writeToFile(str, path) {
+    var errorHandler = function errorHandler(_err) {};
+
+    __WEBPACK_IMPORTED_MODULE_0_fs__["writeFile"](path, str, errorHandler);
+}
+function splitString(s) {
+    return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__["n" /* toList */])(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_String__["e" /* split */])(s, ["\n"], null, 0));
+}
+function readFilePath(path) {
+    return splitString(function (s) {
+        return s.toString();
+    }(__WEBPACK_IMPORTED_MODULE_0_fs__["readFileSync"](path, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_Option__["c" /* makeSome */])())));
+}
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
+/***/ }),
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9909,7 +10235,7 @@ var preprocessList = Object(__WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_co
 /* unused harmony export genBody */
 /* unused harmony export genHTML */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Logger_Logger_fs__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_Seq__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(5);
@@ -9951,7 +10277,7 @@ function strParagraph(lines) {
     };
 
     return Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["c" /* attachSimpleTag */])("p")(function (x) {
-        return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* trim */])(x, "both");
+        return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["i" /* trim */])(x, "both");
     }(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(folder, "", lines)));
 }
 function strTable(rows) {
@@ -10038,10 +10364,6 @@ function _MatchHeaderAndSubHeader___(hds) {
 function strToC(toc) {
     var ListItem_7;
 
-    var displaySingleHeader = function displaySingleHeader(headerName) {
-        return strInlineElements(headerName);
-    };
-
     var appendListItem = function appendListItem(s, i) {
         var ListItem = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](i, s.ListItem);
         return new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["l" /* TList */](s.ListType, ListItem, s.Depth);
@@ -10057,12 +10379,12 @@ function strToC(toc) {
 
         switch ($var3[0]) {
             case 0:
-                dLogger.Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Append to nested: %A"))(appendee));
+                dLogger.Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Append to nested: %A"))(appendee));
                 var ListItem_2 = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["m" /* TListItem */](0, (ListItem_1 = new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](appendee, $var3[1].ListItem), new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["l" /* TList */]($var3[1].ListType, ListItem_1, $var3[1].Depth))), $var3[2]);
                 return new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["l" /* TList */](s_2.ListType, ListItem_2, s_2.Depth);
 
             case 1:
-                dLogger.Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Create nested with: %A"))(appendee));
+                dLogger.Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Create nested with: %A"))(appendee));
                 return Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(appendListItem)(s_2)(appendee);
         }
     };
@@ -10079,7 +10401,7 @@ function strToC(toc) {
         var appendToNestedD_ = function appendToNestedD_(n_1, s_4) {
             var recurse = function recurse(_arg2) {
                 if (_arg2.tail == null) {
-                    return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["f" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("List shouldn't be empty: %A"))(s_4);
+                    return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("List shouldn't be empty: %A"))(s_4);
                 } else {
                     return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(appendToNestedD_(n_1 - 1, getNest(_arg2.head)).ListItem, _arg2.tail);
                 }
@@ -10095,7 +10417,7 @@ function strToC(toc) {
             } else if (matchValue[0] < 0) {
                 throw new Error("Negative depth, shouldn't happen.");
             } else {
-                return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["f" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("n is: %i, s is: %A"))(n_1, s_4);
+                return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toFail */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("n is: %i, s is: %A"))(n_1, s_4);
             }
         };
 
@@ -10108,7 +10430,7 @@ function strToC(toc) {
         } else if (_arg3.Level > s_5[1]) {
             return [Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(appendToNestedD)(0, s_5[0])(new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["m" /* TListItem */](0, new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["l" /* TList */](new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["n" /* TListType */](1), Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["m" /* TListItem */](1, _arg3.HeaderName)]), s_5[1]))), _arg3.Level];
         } else if (_arg3.Level === s_5[1]) {
-            dLogger.Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Append: %A %i"))(_arg3.HeaderName, _arg3.Level));
+            dLogger.Debug(null)(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Append: %A %i"))(_arg3.HeaderName, _arg3.Level));
             return [Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(appendToNested)(s_5[0])(new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["m" /* TListItem */](1, _arg3.HeaderName)), _arg3.Level];
         } else if (_arg3.Level < s_5[1]) {
             return [Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(appendToNestedD)(_arg3.Level - 2, s_5[0])(new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["m" /* TListItem */](1, _arg3.HeaderName)), _arg3.Level];
@@ -10181,7 +10503,7 @@ function strBody(pObjs) {
                     return strToC(pObj.data);
 
                 default:
-                    return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A is not implemented"))(pObj);
+                    return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A is not implemented"))(pObj);
             }
         }();
     };
@@ -10205,7 +10527,7 @@ function genHTML(htmlTitle, pObjs) {
 }
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10310,7 +10632,7 @@ function attachMetaTag(tagName, attrs) {
 }
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10341,7 +10663,7 @@ function attachMetaTag(tagName, attrs) {
 var logger = new __WEBPACK_IMPORTED_MODULE_0__Logger_Logger_fs__["a" /* Logger */](1);
 function surround(pat, str) {
     var pat2 = pat === "(" ? ")" : pat === "[" ? "]" : pat === "{" ? "}" : pat;
-    return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s%s%s"))(pat, str, pat2);
+    return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s%s%s"))(pat, str, pat2);
 }
 function mdFStr(fStr) {
     if (fStr.tag === 3) {
@@ -10365,10 +10687,10 @@ function mdInlineElements_(b, eles) {
     };
 
     var convertMd = function convertMd(pStr, ele) {
-        return pStr + (ele.tag === 1 ? sbraSurround(mdFStr(ele.data[0])) + braSurround(ele.data[1]) : ele.tag === 2 ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("!%s"))(sbraSurround(ele.data[0])) + braSurround(ele.data[1]) : mdFStr(ele.data));
+        return pStr + (ele.tag === 1 ? sbraSurround(mdFStr(ele.data[0])) + braSurround(ele.data[1]) : ele.tag === 2 ? Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("!%s"))(sbraSurround(ele.data[0])) + braSurround(ele.data[1]) : mdFStr(ele.data));
     };
 
-    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(convertMd, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s"))(b), eles);
+    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(convertMd, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s"))(b), eles);
 }
 
 
@@ -10436,7 +10758,7 @@ function mdList(list) {
             return retFold(mdList(li.data));
         } else {
             return retFold(function (s_1) {
-                return ord ? Object(__WEBPACK_IMPORTED_MODULE_0__Logger_Logger_fs__["b" /* logPassN */])(logger.Debug, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s%i. %s\n"))(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["d" /* replicate */])(tab, "\t"), tupledArg[1], s_1)) : Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s- %s\n"))(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["d" /* replicate */])(tab, "\t"), s_1);
+                return ord ? Object(__WEBPACK_IMPORTED_MODULE_0__Logger_Logger_fs__["b" /* logPassN */])(logger.Debug, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s%i. %s\n"))(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["d" /* replicate */])(tab, "\t"), tupledArg[1], s_1)) : Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s- %s\n"))(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["d" /* replicate */])(tab, "\t"), s_1);
             }(mdInlineElements(li.data)));
         }
     };
@@ -10445,7 +10767,7 @@ function mdList(list) {
     return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(mdListItem)(ord_1, list.Depth - 1), ["", 1], list.ListItem)[0];
 }
 function mdHeader(header) {
-    return Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s %s\n")))(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["d" /* replicate */])(header.Level, "#"))(mdInlineElements(header.HeaderName));
+    return Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s %s\n")))(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["d" /* replicate */])(header.Level, "#"))(mdInlineElements(header.HeaderName));
 }
 function mdBody(pObjs) {
     var folder = function folder(pStr, pObj) {
@@ -10464,13 +10786,13 @@ function mdBody(pObjs) {
                     return mdTable(pObj.data);
 
                 case 3:
-                    return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s\n"))(mdList(pObj.data));
+                    return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s\n"))(mdList(pObj.data));
 
                 case 1:
                     return mdHeader(pObj.data);
 
                 default:
-                    return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["g" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A is not implemented"))(pObj);
+                    return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A is not implemented"))(pObj);
             }
         }();
     };

@@ -6,10 +6,10 @@ let writeToFile str path =
     let errorHandler _err = () // Ignore all errors
     fs.writeFile(path, str, errorHandler)
 
-let readFilePath path = 
-    let mutable outStr = ""
-    fs.readFile(path, (fun err data ->
-        match err with
-        | Some _ -> () // If error while reading file, return empty string
-        | None -> outStr <- data.toString () ())) |> ignore
-    outStr.Split("\n") |> Array.toList
+let splitString (s:string) =
+    s.Split("\n") |> Array.toList
+let readFilePath path =
+    fs.readFileSync(path,()) 
+    |> (fun s -> s.toString ())
+    |> splitString
+
