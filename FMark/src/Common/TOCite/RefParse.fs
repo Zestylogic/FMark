@@ -148,7 +148,7 @@ let ref2TLine format ref:TLine =
 
 // parses a single reference entry
 // This probably should never see ENDLINE
-let refParser frmt tLst =
+let refParser style tLst =
     let rec refPar' refData tLst =
         let rec refParse' parsing tail =
             match tail with
@@ -188,4 +188,15 @@ let refParser frmt tLst =
     tLst    
     |> refPar' {Cat = None; Author = None; Title = None;
                     Year = None; AccessDate = None; URL = None}
-    |> fun (x,_) -> ref2TLine frmt x
+    |> fun (x,_) -> refInLine style x, ref2TLine style x
+
+
+// parse references with refParser
+let refParse style tocLst =
+    let ind = tocLst |> List.tryFindIndex (fun x -> x = ENDLINE)
+    match ind with
+    | Some i ->
+        let (h,t) = List.splitAt i tocLst
+        refParser style h |> fun (a,b) -> a,b,t.Tail
+    | None ->
+        refParser style tocLst |> fun (a,b) -> a,b,[]

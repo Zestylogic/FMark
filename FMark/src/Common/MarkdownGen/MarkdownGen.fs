@@ -118,7 +118,7 @@ let mdBody pObjs =
         | CodeBlock (c, l) -> surround "```" (mapLang l + "\n" + c + "\n")
         | Table rows -> mdTable rows
         | List l -> mdList l |> sprintf "%s\n"
-        | Header h -> mdHeader h
+        | Header (h,s) -> mdHeader h //#### DO SOMETHING WITH STRING HERE
         //| Footnote (fnId, _) -> mdInlineFootnote fnId
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs

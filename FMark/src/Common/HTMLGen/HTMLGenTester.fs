@@ -136,11 +136,11 @@ let headerTests =
 let inlineFootnoteTests =
     makeExpectoTestList id id strInlineFootnote "inline footnote tests" [
         (
-            FtID 3,
+            string 3,
             "<sup><a href=\"#footnote-3\">3</a></sup>", "footer 3"
         );
         (
-            RefID "abcd",
+            "abcd",
             "<sup><a href=\"#footnote-abcd\">abcd</a></sup>", "footer string"
         );
     ]
@@ -249,7 +249,7 @@ let fullBodyTests =
     makeExpectoTestList id catStr strBody "full body tests" [
         (
             [
-                Header{HeaderName=[FrmtedString(Literal "header")]; Level=1};
+                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"HEADER STRING NOT IMPLEMENTED");
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
                         NestedList{ListType=OL;ListItem=
@@ -272,7 +272,7 @@ let ``global simple test`` =
     makeExpectoTestList id id genHTML "top level genHTML test" [
         ("FMarkToHtml first release",
             [
-                Header{HeaderName=[FrmtedString(Literal "header")]; Level=1};
+                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"HEADER STRING NOT IMPLEMENTED");
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
                         NestedList{ListType=OL;ListItem=

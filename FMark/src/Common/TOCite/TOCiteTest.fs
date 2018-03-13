@@ -98,7 +98,7 @@ let testDataFt = [
     "Basic footer text",
     [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "text1"; LITERAL "text2"; ENDLINE],
     (
-        [Footnote (FtID 1, [FrmtedString (Literal "text1text2")])],
+        [Footnote (1, [FrmtedString (Literal "text1text2")])],
         []
     );
 
@@ -108,7 +108,7 @@ let testDataFt = [
         WHITESPACE 1; LITERAL "Not a real book"; COMMA; LITERAL "year"; EQUAL;
         WHITESPACE 1; LITERAL "2018"; ENDLINE],
     (
-        [Footnote (RefID "Eric", [FrmtedString (Literal "Wang, ");
+        [Citation ("Eric",[], [FrmtedString (Literal "Wang, ");
             FrmtedString (Literal "Z. ");
             FrmtedString (Emphasis [FrmtedString(Literal "Not a real book. ")])])],
         []
@@ -119,7 +119,7 @@ let testDataFt = [
         LITERAL "textAfter"; ENDLINE],
     (
         [],
-        [LITERAL "textbefore"; FOOTER (FtID 3); LITERAL "textAfter"; ENDLINE]
+        [LITERAL "textbefore"; FOOTNOTE 3; LITERAL "textAfter"; ENDLINE]
     );
 
     "Basic reference within text",
@@ -127,7 +127,7 @@ let testDataFt = [
         LITERAL "textAfter"; ENDLINE],
     (
         [],
-        [LITERAL "textbefore"; FOOTER (RefID "Eric"); LITERAL "textAfter"; ENDLINE]
+        [LITERAL "textbefore"; CITATION "Eric"; LITERAL "textAfter"; ENDLINE]
     );
 
     "Fake footer",
@@ -142,16 +142,16 @@ let testDataFt = [
         ENDLINE; WHITESPACE 4; LITERAL "text2"; ENDLINE; 
         LITERAL "text3";ENDLINE],
     (
-        [Footnote (FtID 2, [FrmtedString (Literal "text1text2")]);],
+        [Footnote (2, [FrmtedString (Literal "text1text2")]);],
         [LITERAL "text3"; ENDLINE]
     );
 
-    "Footer texts sorting",
+    "Footer texts no sorting",
     [LSBRA; CARET; NUMBER "3"; RSBRA; COMMA; LITERAL "text3"; ENDLINE;
         LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "text1"; ENDLINE],
     (
-        [Footnote (FtID 1,[FrmtedString (Literal "text1")]);
-            Footnote (FtID 3,[FrmtedString (Literal "text3")])],
+        [Footnote (3,[FrmtedString (Literal "text3")]);
+            Footnote (1,[FrmtedString (Literal "text1")])],
         []
     )
 
@@ -159,7 +159,7 @@ let testDataFt = [
     [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; WHITESPACE 1; UNDERSCORE;
         LITERAL "text1"; UNDERSCORE; WHITESPACE 1; LITERAL "text2"; ENDLINE],
     (
-        [Footnote (FtID 1,[FrmtedString (Literal " ");
+        [Footnote (1,[FrmtedString (Literal " ");
             FrmtedString (Emphasis [FrmtedString (Literal "text1")]);
             FrmtedString (Literal " text2")])],
         []
@@ -186,8 +186,8 @@ let testDataFull =
     (
         [],
         [],
-        [LITERAL "textbefore"; FOOTER (FtID 3); LITERAL "textBetween";
-            FOOTER (RefID "Eric"); LITERAL "textAfter"; ENDLINE]
+        [LITERAL "textbefore"; FOOTNOTE 3; LITERAL "textBetween";
+            CITATION "Eric"; LITERAL "textAfter"; ENDLINE]
     )
 
     "Stupidly big test",
@@ -207,9 +207,11 @@ let testDataFull =
         MINUS; NUMBER "4"; ENDLINE],
     (
         [{HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;}],
-        [Footnote (FtID 1,[FrmtedString (Literal "footer1")]);
-            Footnote (
-                RefID "Eric", [FrmtedString (Literal "Eric Wang. ");
+        [Footnote (1,[FrmtedString (Literal "footer1")]);
+            Citation (
+                "Eric",
+                [FrmtedString (Literal "(Eric, 2017)")],
+                [FrmtedString (Literal "Eric Wang. ");
                 FrmtedString (Literal "2017. ");
                 FrmtedString (Literal "\"Not a real website.\" ");
                 FrmtedString (Literal "Accessed March 4, 2018. ");
@@ -217,8 +219,8 @@ let testDataFull =
             )
         ],
         [ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; HEADER 0; ENDLINE;
-            LITERAL "text3"; FOOTER (FtID 1); LITERAL "text4"; ENDLINE; ENDLINE;
-            LITERAL "text5"; FOOTER (RefID "Eric"); LITERAL "text6"; ENDLINE; ENDLINE]
+            LITERAL "text3"; FOOTNOTE 1; LITERAL "text4"; ENDLINE; ENDLINE;
+            LITERAL "text5"; CITATION "Eric"; LITERAL "text6"; ENDLINE; ENDLINE]
     )
     
     ]

@@ -17,40 +17,6 @@ let rec parseCode toks =
     | e ->  sharedLog.Warn None (sprintf "%A" e)
             ("\\`", xOnwards 1 toks) |> Ok
 
-/// parse inline text, including links and pictures, terminates when nothing left
-let parseInLineElements toks =
-    let attachInlineEle front back ele =
-        [front;ele;back]
-    let rec parseInLineElements' currentLine toks =
-        match toks with
-        | MatchSym BACKTICK (content, rtks) -> (content|> strAllToks|> Code|> FrmtedString )::currentLine, rtks
-        | MatchEm (content, rtks, frontLiteral, backLiteral) ->
-            let inlineContent = (parseInLines [] content |> Emphasis |> FrmtedString)
-            match frontLiteral, backLiteral with
-                | Some fl, Some bl ->
-                    [bl;inlineContent;fl]
-                | Some fl, None ->
-                    [inlineContent;fl]
-                | None, Some bl ->
-                    [bl;inlineContent]
-                | None, None ->
-                    [inlineContent]
-            |> (fun x -> x@currentLine), rtks
-        | _ ->
-            let str = mapTok toks.[0]
-            FrmtedString (Literal str)::currentLine, xOnwards 1 toks
-    and parseInLines currentLine toks =
-        match toks with
-        | [] -> []
-        | _ ->
-            let (newLine, retoks) = parseInLineElements' currentLine toks
-            match retoks with
-            | [] -> newLine |> List.rev
-            | _ ->
-                parseInLines newLine retoks
-                |> combineLiterals
-    parseInLines [] toks
-
 /// parse a paragraph which counts for contents in  `<p>`
 /// parseParagraph eats 2>= ENDLINEs
 let parseParagraph toks =
@@ -103,7 +69,7 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
         |> Ok
     | MatchHeader (level, content, rtks) ->
         let line = parseInLineElements content
-        (Header{HeaderName=line; Level=level}, rtks)
+        (Header({HeaderName=line; Level=level},"HEADER STRING NOT IMPLEMENTED"), rtks)
         |> Ok
     | PickoutParagraph (par, retoks) ->
         (parseParagraph par, retoks) |> Ok

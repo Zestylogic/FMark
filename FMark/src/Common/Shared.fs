@@ -32,7 +32,8 @@ let (|CharTok|_|) tok =
 let mapTok = function
     | CharTok s -> s
     | CODEBLOCK _ -> "CODEBLOCK"
-    | FOOTER _ -> sprintf "FOOTER found"
+    | FOOTNOTE _ -> sprintf "FOOTNOTE found"
+    | CITATION _ -> sprintf "CITATION found"
     | HEADER n -> sprintf "HEADER %d" n
     | NUMBER s -> s
     | LITERAL s -> s

@@ -98,10 +98,9 @@ let strHeader header =
         |> attachSimpleTag tagName
 
 /// process inline footnotes
-let strInlineFootnote fnId =
-    let idStr = match fnId with | FtID i -> string i | RefID s -> string s
-    idStr
-    |> attachHTMLTag ("a", ["href", "#footnote-"+idStr], true)
+let strInlineFootnote s =
+    s
+    |> attachHTMLTag ("a", ["href", "#footnote-"+s], true)
     |> attachSimpleTag "sup"
 
 
@@ -195,8 +194,9 @@ let strBody pObjs =
         | CodeBlock (c, l) -> attachHTMLTag ("code", [("language", mapLang l)], true) c
         | Table rows -> strTable rows
         | List l -> strList l
-        | Header h -> strHeader h
-        | Footnote (fnId, _) -> strInlineFootnote fnId
+        | Header (h,s) -> strHeader h //#### DO SOMETHING WITH STRING HERE
+        | Footnote (i,_) -> strInlineFootnote (string i)
+        | Citation (s,_,_) -> strInlineFootnote s
         | ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
