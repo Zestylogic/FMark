@@ -1,6 +1,6 @@
 module Preprocessor
 
-open Logger
+open FileIO
 open Shared
 open LexerShared
 
@@ -12,8 +12,7 @@ open LexerShared
 type Token =
     | LITERAL of string
     | MACRO | OPENDEF | CLOSEDEF | OPENEVAL | CLOSEEVAL | LBRA | RBRA
-    | SEMICOLON | ENDLINE | BSLASH
-    | INCLUDE
+    | SEMICOLON | ENDLINE | BSLASH | INCLUDE
 
 /// Character list for the preprocessor
 let charList = ["{%", OPENDEF; "%}", CLOSEDEF; "{{", OPENEVAL
@@ -90,6 +89,7 @@ type Sub<'T> = {Name: string; Args: Argument<'T> list; Raw: string}
 type Parser =
     | MacroDefinition of Macro<Parser>
     | MacroSubstitution of Sub<Parser>
+    | IncludeStatement of link: string
     | ParseText of content: string
     | ParseNewLine
 
@@ -225,6 +225,15 @@ let (|SChar|_|) tok =
     |> Map.ofList
     |> mapTryFind tok
 
+/// Include statement match
+let (|Include|_|) = function
+    | OPENEVAL :: WhiteSpace :: tl | OPENEVAL :: tl ->
+        match tl with
+        | INCLUDE :: WhiteSpace :: LITERAL link :: WhiteSpace :: CLOSEEVAL :: tl
+        | INCLUDE :: WhiteSpace :: LITERAL link :: CLOSEEVAL :: tl -> Some (link, tl)
+        | _ -> None
+    | _ -> None
+
 /// Parses a Token list into a Parser list
 let parse tList =
 
@@ -251,6 +260,8 @@ let parse tList =
         | EvalDef (n, args, tl), _ ->
             let args' = List.map ((fun a -> parse' None a []) >> (fun (a, _) -> List.rev a)) args
             pRec MacroSubstitution {Name=n; Args=args'; Raw=getRaw tList |> tokToString} tl
+        | Include (link, tl), _ ->
+            pRec IncludeStatement link tl
         | ENDLINE :: tl, _ ->
             pRec id ParseNewLine tl
         | WhiteSpace :: a :: tl, Some e | a :: tl, Some e when e = a ->
@@ -335,7 +346,12 @@ let evaluate pList =
                     | _ ->
                         [ParseText raw]
             evaluate'' tl eval
-
+        | IncludeStatement link :: tl ->
+            readFilePath link
+            |> tokenizeList
+            |> parse
+            |> (fun a -> evaluate' a [] Map.empty<string, Argument<Parser> option> Map.empty<string, Macro<Parser>>)
+            |> evaluate'' tl
         | p :: tl ->
             evaluate'' tl [p]
         | _ -> newPList

@@ -229,6 +229,18 @@ let preprocessListTest =
         ["arg 1, arg 2"; "arg 3, arg 4"; ""]
     ]
 
+[<Tests>]
+let includeTest =
+    makeSimpleTestList preprocess "Include" [
+        "Simple include",
+        "{{ include /home/yannherklotz/Github/FMark/FMark/src/Common/Lexer/tests/include.fmark }}",
+        "Hello, world\n"
+
+        "Nested include",
+        "{{ include /home/yannherklotz/Github/FMark/FMark/src/Common/Lexer/tests/include.fmark }}",
+        "Hello, world\n"
+    ]
+
 // Lexer tests
 
 open Types
