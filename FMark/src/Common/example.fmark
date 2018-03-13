@@ -2,6 +2,8 @@
 
 ## Table of contents
 
+%%TOC
+
 ## Macros
 
 {% macro make_table(00;01;02;10;11;12;20;21;22) 

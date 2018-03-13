@@ -71,10 +71,60 @@ let preprocessorTokenizeTest =
          LITERAL "literal"; LITERAL ")"; ENDLINE]
     ]
 
+/// Tests for the find until token function
+[<Tests>]
+let findParseUntilTest =
+    let makeSomeTest = makeTestList id Some
+    makeSomeTest (findParseUntil LBRA RBRA) "FindParseUntil" [
+        "Simple finding of bracket",
+        [LITERAL "Start"; RBRA; ENDLINE],
+        ([LITERAL "Start"], [ENDLINE])
+
+        "More complicated matches",
+        [MACRO; INCLUDE; LITERAL "Hello world, this is really random"
+         RBRA; LITERAL "Even more random stuff"; ENDLINE],
+        ([MACRO; INCLUDE; LITERAL "Hello world, this is really random"],
+         [LITERAL "Even more random stuff"; ENDLINE])
+
+        "Nested",
+        [LITERAL "Hello"; LBRA; LBRA; RBRA; RBRA; RBRA; LITERAL "Other"],
+        ([LITERAL "Hello"; LBRA; LBRA; RBRA; RBRA], [LITERAL "Other"])
+    ]
+
+[<Tests>]
+let splitListTest =
+    makeSimpleTestList splitListEval "SplitList" [
+        "Simple",
+        [LITERAL "Hello"; SEMICOLON; LITERAL "World"],
+        [[LITERAL "Hello"]; [LITERAL "World"]]
+
+        "Longer",
+        [LITERAL "This"; LITERAL "not"; LITERAL "nothing"; SEMICOLON; LITERAL "is"; SEMICOLON; LITERAL "So"; SEMICOLON
+         LITERAL "Random"; LITERAL "not"; LITERAL "nothing"],
+        [[LITERAL "This"; LITERAL "not"; LITERAL "nothing"]; [LITERAL "is"]; [LITERAL "So"];
+         [LITERAL "Random"; LITERAL "not"; LITERAL "nothing"]]
+
+        "Nested",
+        [LITERAL "This"; LITERAL "is"; LITERAL "The"; LITERAL "Best"; SEMICOLON; LITERAL "Something"
+         LITERAL "more"; OPENEVAL; LITERAL "Even"; LITERAL "More"; SEMICOLON; LITERAL "And"
+         LITERAL "more"; CLOSEEVAL],
+        [[LITERAL "This"; LITERAL "is"; LITERAL "The"; LITERAL "Best"];
+         [LITERAL "Something"; LITERAL "more"; OPENEVAL; LITERAL "Even"; LITERAL "More"; SEMICOLON
+          LITERAL "And"; LITERAL "more"; CLOSEEVAL]]
+    ]
+
+[<Tests>]
+let stripWhiteSpaceTest =
+    makeSimpleTestList stripWhiteSpace "StripWhiteSpace" [
+        "Simple",
+        [LITERAL "      "; LITERAL "Hello"; LITERAL "World"; LITERAL "             "],
+        [LITERAL "Hello"; LITERAL "World"]
+    ]
+
 /// Parse tests for the preprocessor
 [<Tests>]
 let preprocessorParseTest =
-    let makeParseTestList f = makeTestList tokenize id f
+    let makeParseTestList = makeTestList tokenize id
     makeParseTestList parse "PreprocessorParse" [
         "Macro with no args",
         "{% macro Hello Body %}",
@@ -98,15 +148,20 @@ let preprocessorParseTest =
 
         "Substitution with argument",
         "{{ x(arg1) }}",
-        [MacroSubstitution {Name="x"; Args=["arg1"]; Raw="{{ x(arg1) }}"}; ParseNewLine]
+        [MacroSubstitution {Name="x"; Args=[[ParseText "arg1"]]; Raw="{{ x(arg1) }}"}; ParseNewLine]
 
         "Substitution with multiple arguments",
         "{{ x(arg1; arg2) }}",
-        [MacroSubstitution {Name="x"; Args=["arg1"; "arg2"]; Raw="{{ x(arg1; arg2) }}"}; ParseNewLine]
+        [MacroSubstitution {Name="x"; Args=[[ParseText "arg1"]; [ParseText "arg2"]]; Raw="{{ x(arg1; arg2) }}"}; ParseNewLine]
 
         "Substitution with argument and spaces",
         "{{ x(This is the first argument; This is the second argument) }}",
-        [MacroSubstitution {Name="x"; Args=["This is the first argument"; "This is the second argument"]
+        [MacroSubstitution {Name="x"; Args=[[ParseText "This"; ParseText " "; ParseText "is";
+                                             ParseText " "; ParseText "the"; ParseText " "
+                                             ParseText "first"; ParseText " "; ParseText "argument"]
+                                            [ParseText "This"; ParseText " ";ParseText "is"; ParseText " ";
+                                             ParseText "the"; ParseText " ";ParseText "second"; ParseText " ";
+                                             ParseText "argument"]]
                             Raw="{{ x(This is the first argument; This is the second argument) }}"}
          ParseNewLine]
     ]
@@ -143,7 +198,7 @@ let preprocessTest =
         "\\{% macro x (y) {{ y }} y %} {{ x(argument one;) }}",
         "{% macro x (y) {{ y }} y %} {{ x(argument one;) }}"
 
-        "Shadowed macros and arguments",
+        "Shaadowed macros and arguments",
         "{% macro x () macro X %} {% macro y (x) macro Y {{ x }} %} {{ x }}, {{ y(: not x) }}",
         "macro X, macro Y : not x"
 
@@ -158,6 +213,14 @@ let preprocessTest =
         "Macro with long name",
         "{% macro this_is_a_macro_with_a_long_name(arg1; arg2) {{arg1}}, {{arg2}} %} {{ this_is_a_macro_with_a_long_name(a 1; a 2) }}",
         "a 1, a 2"
+
+        "Calling macro with eval",
+        "{% macro x(a) res: {{a}} %} {% macro y(a) {{a}} {{a}} %} {{ x({{y(Hello)}}) }}",
+        "res: Hello Hello"
+
+        "Calling nested macro with two arguments",
+        "{% macro x(a; b) {{a}} {{b}} %} {{x(a; {{x(b; c)}})}}",
+        "a b c"
     ]
 
 /// Complete multiline tests for the preprocessor
@@ -176,6 +239,22 @@ let preprocessListTest =
         ["{% macro x(arg1; arg2; arg3; arg4)"; "{{arg1}}, {{arg2}}"; "{{arg3}}, {{arg4}}"; "%}"
          "{{ x(arg 1; arg 2; arg 3; arg 4)}}"],
         ["arg 1, arg 2"; "arg 3, arg 4"; ""]
+    ]
+
+[<PTests>]
+let includeTest =
+    makeSimpleTestList (preprocessWithDir "./tests") "Include" [
+        "Simple include",
+        "{{ include /home/yannherklotz/Github/FMark/FMark/src/Common/Lexer/tests/include.fmark }}",
+        "Hello, world\n"
+
+        "Nested include",
+        "{{ include /home/yannherklotz/Github/FMark/FMark/src/Common/Lexer/tests/include.fmark }}",
+        "Hello, world\n"
+
+        "Relative path include",
+        "{{ include include2.fmark }} {{ x(x1; x2) }}",
+        "x1 x2"
     ]
 
 // Lexer tests

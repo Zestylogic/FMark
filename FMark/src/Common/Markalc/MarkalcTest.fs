@@ -227,7 +227,7 @@ let testMarkdown print =
                     (printTestMarkdown "Basic table parse" (getFst3 basicTableData)) +
                     (printTestMarkdown "Full Markalc test" (getFst3 fullTestData))
     // printToFile "TESTS.md" //sprintf "%s" |>
-    if print then IOFuncs.printToFile "TESTS.md" testTable else ()
+    if print then FileIO.writeToFile "TESTS.md" testTable else ()
 let funcList = [( % ),"%";( ** ),"^";( + ),"+";( - ),"-"; ( * ),"*"; ( / ),"/"]
 let expressionPropertyTest op = 
     testProperty (sprintf "Num %A Num is Num %A Num" op op) <|

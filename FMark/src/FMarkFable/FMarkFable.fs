@@ -2,7 +2,7 @@ module Main
 open Types
 open FMark
 
-let processMarkdownString str =
+let processMarkdownString fileDir str =
     str
     |> Array.toList
-    |> processString HTML
+    |> processString fileDir HTML

@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Include="../Types.fs" />
+    <Compile Include="../CLIFileIO.fs" />
     <Compile Include="../Logger/Logger.fs" />
     <Compile Include="../Shared.fs" />
     <Compile Include="LexerShared.fs" />
