@@ -295,7 +295,7 @@ let parse tList =
 /// by seeing which macros are in scope or if the substitution is a parameter.
 /// This supports shadowing of previously defined macros, and scopes can be defined
 /// by declaring a macro inside another macro
-let evaluate pList =
+let evaluateWithDir fileDir pList =
 
     /// Makes an empty parmeter list for the current parameters, so that they
     /// are not substituted
@@ -355,7 +355,12 @@ let evaluate pList =
                         [ParseText raw]
             evaluate'' tl eval
         | IncludeStatement link :: tl ->
-            readFilePath link
+            let addDir str =
+                match str with
+                | RegexMatch "^\\/" _ -> str
+                | _ -> fileDir + str
+            addDir link
+            |> readFilePath
             |> tokenizeList
             |> parse
             |> (fun a -> evaluate' a [] Map.empty<string, Argument<Parser> option> Map.empty<string, Macro<Parser>>)
@@ -365,6 +370,8 @@ let evaluate pList =
         | _ -> newPList
     evaluate' pList [] Map.empty<string, Argument<Parser> option> Map.empty<string, Macro<Parser>>
     |> List.rev
+
+let evaluate = evaluateWithDir ""
 
 /// Converts a Parser list to a string
 let parserToString pList =
@@ -388,7 +395,7 @@ let toStringList pList =
 
 /// perform the parsing, evaluation, while stripping the last endline which is redundant
 /// as it was added by the tokenizer
-let pETS =
+let pETS dir =
     let stripLastEndline l =
         match List.rev l with
         | [ParseNewLine] as e ->
@@ -396,7 +403,7 @@ let pETS =
         | ParseNewLine :: r ->
             List.rev r
         | _ -> l
-    parse >> evaluate >> stripLastEndline
+    parse >> evaluateWithDir dir >> stripLastEndline
 
 // --------------------------------------------------
 // Public API
@@ -404,9 +411,15 @@ let pETS =
 
 /// Preprocess a string and output a string with the macro evaluated
 let preprocess =
-    tokenize >> pETS >> parserToString
+    tokenize >> pETS "" >> parserToString
+
+let preprocessWithDir dir =
+    tokenize >> pETS dir >> parserToString
 
 /// Preprocess a list of strings which is returned as a list of strings with the
 /// macro evaluated
 let preprocessList =
-    List.collect tokenize >> pETS >> toStringList
+    List.collect tokenize >> pETS "" >> toStringList
+
+let preprocessListWithDir dir =
+    List.collect tokenize >> pETS dir >> toStringList
