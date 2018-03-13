@@ -21,6 +21,7 @@ var isProduction = process.argv.indexOf("-p") >= 0;
 console.log("Bundling for " + (isProduction ? "production" : "development") + "...");
 
 module.exports = {
+  target: 'node',
   devtool: "source-map",
   entry: resolve('./src/FMarkFable/FMarkFable.fsproj'),
     output: {
