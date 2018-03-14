@@ -15,6 +15,8 @@ type Expr =
     | BinExp of (float->float->float)*Expr*Expr
     | Op of Operand
     | CommaFunction of string*(Expr list)
+
+type TExpr = DPExp of Expr*int
 let whitespaceFilter lst = List.filter (function | WHITESPACE(_) -> false | _ -> true) lst
 // Count number of delim in token list
 let countDelim delim tokList =
@@ -102,5 +104,6 @@ let simpleLex txt =
 // let stringLex (txt:string)=
 //     List.map simpleLex (Array.toList (txt.Split("\n")))
 let lexY (x,y,z) = x,y|>simpleLex,z
-
+let round (dp:int) (f:float) =
+    System.Math.Round(f,dp)
 let logger = Logger(LogLevel.INFO)
