@@ -129,6 +129,7 @@ let (|PickoutParagraph|_|) toks =
             else
                 match tok with
                 | ENDLINE when List.head par = ENDLINE -> {Par=List.tail par;ReToks=reToks;ParMatched=true}
+                | HEADER _ -> {Par=par;ReToks=tok::reToks;ParMatched=true}
                 | _ -> {state with Par=tok::par}
         let initState = {Par=[];ReToks=[];ParMatched=false}
         match List.fold folder initState toks with
