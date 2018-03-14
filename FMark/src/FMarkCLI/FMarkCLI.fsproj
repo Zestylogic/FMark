@@ -21,13 +21,12 @@
     <Compile Include="../Common/Markalc/MarkalcTest.fs" />
 
     <Compile Include="../Common/Parser/ParserHelperFuncs.fs" />
-    <Compile Include="../Common/Parser/Parser.fs" />
-    <Compile Include="../Common/Parser/ParserTest.fs" />
-
     <Compile Include="../Common/TOCite/RefParse.fs" />
     <Compile Include="../Common/TOCite/TOCite.fs" />
     <Compile Include="../Common/TOCite/RefParseTest.fs" />
     <Compile Include="../Common/TOCite/TOCiteTest.fs" />
+    <Compile Include="../Common/Parser/Parser.fs" />
+    <Compile Include="../Common/Parser/ParserTest.fs" />
 
     <Compile Include="../Common/HTMLGen/HTMLGenHelpers.fs" />
     <Compile Include="../Common/HTMLGen/HTMLGen.fs" />
