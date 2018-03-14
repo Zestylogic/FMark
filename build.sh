@@ -51,14 +51,14 @@ if [[ -z $TRAVIS_BUILD_DIR ]]; then
     BASE_DIR=$DIR
 else
     echo "Running on travis-ci"
-    BASE_DIR=$TRAVIS_BUILD_D
+    BASE_DIR=$TRAVIS_BUILD_DIR
 fi
 
 function cd_run_module() {
     echo "########## Running $1 module tests ###########"
     cd $BASE_DIR/FMark/src/Common/$1
     dotnet build
-    dotnet run --no-build --sequenced
+    dotnet run --no-build -- --sequenced
 }
 
 if [[ $BUILD = "testall" ]]; then
