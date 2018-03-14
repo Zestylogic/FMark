@@ -41,10 +41,16 @@ let expressionData = [
     27.0 |> Ok; // For test evaluation function without table CellRefs evaluate to 13.0
     "Test left associativity with extra whitespace",
     "2 -4 +6 -1 -1- 0 +8",
-    10.0 |> Ok
+    10.0 |> Ok;
     "Pow precendence test",
     "2 ^4 +6 -1 -1- 0 +8",
-    28.0 |> Ok
+    28.0 |> Ok;
+    "Decimal place test",
+    "1/3,2",
+    0.33 |> Ok;
+    "Decimal place test 3dp",
+    "1/3,3",
+    0.333 |> Ok
 ]
 let parseDefaultRowData = [
     "All Pipes",
@@ -137,6 +143,9 @@ let fullTestData = [
     "Single row table",
     ["=2+2|header2|header3"; align; ],
     [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"]] |> Ok;
+    "Deciaml point test",
+    ["=1/3,2|=[0,0]*3|=[0,0],5"; align; ],
+    [ans true [NUMBER "0.33"] [NUMBER "1"] [NUMBER "0.33333"]] |> Ok;
     "Full evaluation test with cell references",
     ["=2+2|header2|header3"; align;
      "=[0,0]+1|tesdfst|stduff";
@@ -255,7 +264,7 @@ let tests =
 
 
     
-[<Tests>]
+[<PTests>]
 let propertyTests =
     List.map (expressionPropertyTest) funcList
     |> Expecto.Tests.testList "Expression property tests."

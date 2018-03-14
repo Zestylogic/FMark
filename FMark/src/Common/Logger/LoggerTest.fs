@@ -4,7 +4,7 @@ open Logger
 open Expecto
 
 /// Tests the log functions.
-[<Tests>]
+[<PTests>]
 let loggerPropertyTest =
     testProperty "LoggerPropertyTest" <| fun (logLevel: LogLevel) ->
         let logger = Logger(logLevel)

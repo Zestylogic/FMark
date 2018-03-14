@@ -8,7 +8,7 @@ open Logger
 
 type MapContents =
     | MapTok of Cell
-    | MapExp of Expr * Cell
+    | MapExp of TExpr * Cell
 
 // ################### HELPER FUNCTIONS ###################
 /// Return everything (before,after) the first PIPE token
@@ -133,27 +133,32 @@ let transformTable (table:Token list list)  =
 // Try to evaluate expression, set maxRefs to number of CellRefs before assuming circular reference
 let tryEval' maxRefs map e =
     // Evaluate expression
-    let rec evalExp r map e =
-        // Evaluate cell reference
-        let evalCellRef ref = 
-            match Map.tryFind ref map with
-            | Some(MapExp(e2,_)) -> evalExp (r+1) map e2
-            | _ -> nan // invalid reference
-        // Apply f over list of cell references between two cells
-        let rangeFunc f x y = match cellRange (x,y) with
-                              | Some(l) -> f l
-                              | None -> nan
-        if r > maxRefs then nan else // Return nan if too many recursive calls, probably circular reference
-        match e with
-        | BinExp(f,x,y) -> f (evalExp r map x) (evalExp r map y)
-        | Op (Float(x)) -> x
-        | Op (CellRef(ref)) -> evalCellRef ref
-        | CommaFunction("SUM",l) -> List.sumBy (evalExp r map) l
-        | CommaFunction("AVG",l) -> List.averageBy (evalExp r map) l
-        | CommaFunction("MIN",l) -> List.min (List.map (evalExp r map) l)
-        | CommaFunction("MAX",l) -> List.max (List.map(evalExp r map) l)
-        | _ -> 11.0
-    evalExp 0 map e
+    let rec evalExp (e:TExpr) = 
+        let rec evalExp' r map (e:Expr) =
+            // Evaluate cell reference
+            let evalCellRef ref = 
+                match Map.tryFind ref map with
+                | Some(MapExp(e2,_)) -> evalExp' (r+1) map (e2|>function|DPExp(e2',_)->e2')  // Evaluating cell references
+                | _ -> nan // invalid reference
+            // Apply f over list of cell references between two cells
+            let rangeFunc f x y = match cellRange (x,y) with
+                                  | Some(l) -> f l
+                                  | None -> nan
+            if r > maxRefs then nan else // Return nan if too many recursive calls, probably circular reference
+            match e with
+            | BinExp(f,x,y) -> f (evalExp' r map x) (evalExp' r map y)
+            | Op (Float(x)) -> x
+            | Op (CellRef(ref)) -> evalCellRef ref
+            | CommaFunction("SUM",l) -> List.sumBy (evalExp' r map) l
+            | CommaFunction("AVG",l) -> List.averageBy (evalExp' r map) l
+            | CommaFunction("MIN",l) -> List.min (List.map (evalExp' r map) l)
+            | CommaFunction("MAX",l) -> List.max (List.map(evalExp' r map) l)
+            | _ -> 11.0
+        e |> function
+        | DPExp(exp,dp) when dp < 0 -> evalExp' 0 map exp
+        | DPExp(exp,dp) -> evalExp' 0 map exp |> round dp
+           
+    evalExp e
 let tryEval = tryEval' 1000
 /// Evaluate all expressions inside a cell list list, leave non-expression cells as they are
 /// No invalid expressions should be matched.
