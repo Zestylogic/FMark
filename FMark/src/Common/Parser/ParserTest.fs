@@ -265,7 +265,16 @@ let testGlobal2 =
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
                 Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"HEADER STRING NOT IMPLEMENTED");
                 Paragraph [[Link (Literal "Footer1","./#1"); FrmtedString (Literal "text4")]];
-                Paragraph [[FrmtedString (Literal "(Eric, 2017)text6")]]]
+                Paragraph [[FrmtedString (Literal "(Eric, 2017)text6")]];
+                Footnote (1,[FrmtedString (Literal "footer1")]);
+                Citation (
+                    "Eric",[FrmtedString (Literal "(Eric, 2017)")],
+                    [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
+                    FrmtedString (Literal "\"Not a real website.\" ");
+                    FrmtedString (Literal "Accessed March 4, 2018. ");
+                    Link (Literal "www.example.com/website","www.example.com/website")]
+                )
+            ]
             |> Ok, "Inherited big test"
         )
     ]        

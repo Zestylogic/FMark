@@ -89,6 +89,7 @@ and parseItemList hdLst ftLst toks : Result<ParsedObj list * option<Token list>,
         )
     | _ -> ([], None) |> Ok // if tokens are only whitespace or endlines, return no parsedObjs
 
+
 /// top-level Parser, which the user should use
 /// `parse` will either return result monad with either `ParsedObj list` or a string of Error message.
 /// Unparsed Tokens will be in the returned in the Error message.
@@ -99,3 +100,4 @@ let parse toks =
         match retoks with
         | None -> pobjs |> Ok
         | Some retoks -> sprintf "Some unparsed tokens: %A" retoks |> Error)
+    |> Result.map (fun pObjs -> List.append pObjs ft)
