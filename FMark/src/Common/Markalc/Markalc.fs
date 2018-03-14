@@ -24,7 +24,9 @@ let joinErrorList lst =
                  | Ok(_) -> false
     let unpackOks = function
                  | Ok(x') -> x'
-                 | Error(y) -> failwithf "After filtering, there were still Error monads in the list %A." y
+                 | Error(y) ->  sprintf "After filtering, there were still Error monads in the list %A." y
+                                |> logPass (Some 27) globLog.Fatal
+                                |> failwith
     let combineErrors s x = match x with
                             | Ok(_) -> s // This should never be matched in this usage.
                             | Error(x') -> sprintf "%A %A" x' s |> Error
@@ -209,7 +211,8 @@ let parseEvaluateTable (toks:Token list list) =
     let endlFilt = function | ENDLINE -> false | _ -> true
     transformTable (List.map (List.filter endlFilt) toks)
     |> function
-    | Error(_) -> toks |> Error // If there are any errors just return the unchanged Token list list
+    | Error(e) -> sprintf "Markalc/top\nNot a table because of errors: %s\nReturning unchanged tokens.$" e |> globLog.Debug (Some 214)
+                  toks |> Error // If there are any errors just return the unchanged Token list list
     | Ok(x) -> evaluateRowList x |> Ok // Else return Ok and Cell list list
 
 let lexParseEvaluate toks = 
