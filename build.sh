@@ -47,13 +47,13 @@ echo ""
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [[ -z $TRAVIS_BUILD_DIR ]]; then
+    TRAVIS=false
     echo "Travis not detected"
     BASE_DIR=$DIR
-    TRAVIS=false
 else
+    TRAVIS=true
     echo "Running on travis-ci"
     BASE_DIR=$TRAVIS_BUILD_D
-    TRAVIS=true
 fi
 
 function cd_run_module() {
