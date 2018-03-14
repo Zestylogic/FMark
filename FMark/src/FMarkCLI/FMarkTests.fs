@@ -69,9 +69,9 @@ let tests =
 
 /// Check if markdown output of FMark is the same if passed through FMark again
 
-[<PTests>]
+[<Tests>]
 let FMarkPropertyTest =
-    testPropertyWithConfig { FsCheckConfig.defaultConfig with maxTest = 1000 } "FMarkPropertyTest" <| fun (s: string) ->
+    testProperty "FMarkPropertyTest" <| fun (s: string) ->
         let takeEither = function
             | Ok(s)
             | Error(s) -> s

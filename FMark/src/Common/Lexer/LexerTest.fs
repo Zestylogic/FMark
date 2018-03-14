@@ -378,7 +378,6 @@ let lexListTest =
 // --------------------------------------------------
 // Property Tests
 // --------------------------------------------------
-
 /// Check if output of preprocessor is the same if passed through the preprocessor again
 [<Tests>]
 let preprocessorPropertyTest =
@@ -392,7 +391,7 @@ let preprocessorPropertyTest =
         let preprocess2 = str |> preprocess |> preprocess
         Expect.equal preprocess1 preprocess2 ""
 
-[<PTests>]
+[<Tests>]
 let lexPassThroughPropertyTest =
     testProperty "LexPassthroughpropertytest" <| fun (s: string) ->
         Expect.equal 1 1 ""

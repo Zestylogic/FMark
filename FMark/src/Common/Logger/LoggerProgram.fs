@@ -4,5 +4,5 @@ open Expecto
 
 [<EntryPoint>]
 let main argv =
-    Tests.runTestsInAssembly Tests.defaultConfig [||] |> ignore
+    Tests.runTestsInAssembly Tests.defaultConfig argv |> ignore
     0 // return an integer exit code

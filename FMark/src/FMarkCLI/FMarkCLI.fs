@@ -4,14 +4,14 @@ open Types
 open Argu
 open System.Text.RegularExpressions
 open Logger
+open Expecto
 
 type CLIArguments =
     | [<MainCommand;AltCommandLine("-i")>] Input of path:string
     | [<AltCommandLine("-o")>] Output of path:string
     | [<AltCommandLine("-l")>] Loglevel of LogLevel
     | [<AltCommandLine("-f")>] Format of OutFormat
-    | [<AltCommandLine("-t")>] Test
-
+    | [<AltCommandLine("-t")>] Test of sequential:bool option
 with
     interface IArgParserTemplate with
         member s.Usage =
@@ -24,7 +24,13 @@ with
 
 let ifFlagRunTests (r:ParseResults<CLIArguments>) =
     r.TryGetResult(Test) |> function 
-    | Some(_) -> Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
+    | Some(s) -> s |> function
+                      | Some(true) -> 
+                        globLog.Info (Some 30) "Running tests sequentially."
+                        Tests.runTestsInAssembly defaultConfig [|"--sequenced"|] |> ignore
+                      | _ -> 
+                        globLog.Info (Some 33) "Running tests in parallel."
+                        Tests.runTestsInAssembly defaultConfig [||] |> ignore
     | None(_) -> ()
     r
 

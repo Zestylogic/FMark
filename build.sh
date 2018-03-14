@@ -49,16 +49,18 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [[ -z $TRAVIS_BUILD_DIR ]]; then
     echo "Travis not detected"
     BASE_DIR=$DIR
+    TRAVIS=false
 else
     echo "Running on travis-ci"
-    BASE_DIR=$TRAVIS_BUILD_DIR
+    BASE_DIR=$TRAVIS_BUILD_D
+    TRAVIS=true
 fi
 
 function cd_run_module() {
     echo "########## Running $1 module tests ###########"
     cd $BASE_DIR/FMark/src/Common/$1
     dotnet build
-    dotnet run --no-build
+    dotnet run --no-build --sequenced
 }
 
 if [[ $BUILD = "testall" ]]; then
@@ -72,7 +74,11 @@ if [[ $BUILD = "testall" ]] || [[ $BUILD = "all" ]] || [[ $BUILD = "fsharp" ]]; 
     echo "Running F# tests"
     cd $BASE_DIR/FMark/src/FMarkCLI
     dotnet build
-    dotnet run --no-build -- --test
+    if [ "$TRAVIS" = true ] ; then
+        dotnet run --no-build -- --test true -l info
+    else
+        dotnet run --no-build -- --test -l info
+    fi
 fi
 
 if [[ $BUILD = "all" ]] || [[ $BUILD = "js" ]]; then
