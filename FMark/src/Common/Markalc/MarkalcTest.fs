@@ -264,7 +264,7 @@ let tests =
 
 
     
-[<PTests>]
+[<Tests>]
 let propertyTests =
     List.map (expressionPropertyTest) funcList
     |> Expecto.Tests.testList "Expression property tests."
