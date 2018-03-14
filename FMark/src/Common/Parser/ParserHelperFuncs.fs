@@ -301,10 +301,10 @@ let cutTableRows toks =
     cutTableRow' [] toks
 
 /// parse inline text, including links and pictures, terminates when nothing left
-let parseInLineElements toks =
+let parseInLineElements2 ftLst toks =
     let attachInlineEle front back ele =
         [front;ele;back]
-    let rec parseInLineElements' currentLine toks =
+    let rec parseInLineElements' ftLst currentLine toks =
         match toks with
         | MatchSym BACKTICK (content, rtks) -> (content|> strAllToks|> Code|> FrmtedString )::currentLine, rtks
         | MatchEm (content, rtks, frontLiteral, backLiteral) ->
@@ -319,6 +319,28 @@ let parseInLineElements toks =
                 | None, None ->
                     [inlineContent]
             |> (fun x -> x@currentLine), rtks
+        | FOOTNOTE i :: rtks ->
+            let rec matchFootnote id pObjs = 
+                match pObjs with
+                | Footnote (i, _)::_ when i = id -> true
+                | _ -> false
+            let ft = matchFootnote i ftLst
+            if ft then //make into link if exist
+                [(("Footer" + string i |> Literal),"./#"+string i) |> Link], rtks
+            else //just superscript if does not exist
+                ["Footer" + string i |> Literal |> FrmtedString], rtks
+        | CITATION str :: rtks ->
+            let rec matchCitation id pObjs = 
+                match pObjs with
+                | Citation (s, inLineRef, _) :: _ when s = id -> Some inLineRef
+                | _ :: tl -> matchCitation id tl
+                | [] -> None
+            let ft = matchCitation str ftLst
+            match ft with
+            | Some ref -> //make into link if exist
+                ref, rtks
+            | None -> //just superscript if does not exist
+                ["Footer " + str |> Literal |> FrmtedString], rtks
         | _ ->
             let str = mapTok toks.[0]
             FrmtedString (Literal str)::currentLine, xOnwards 1 toks
@@ -326,10 +348,12 @@ let parseInLineElements toks =
         match toks with
         | [] -> []
         | _ ->
-            let (newLine, retoks) = parseInLineElements' currentLine toks
+            let (newLine, retoks) = parseInLineElements' ftLst currentLine toks
             match retoks with
             | [] -> newLine |> List.rev
             | _ ->
                 parseInLines newLine retoks
                 |> combineLiterals
     parseInLines [] toks
+
+let parseInLineElements toks = parseInLineElements2 [] toks

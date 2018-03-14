@@ -158,7 +158,7 @@ let emphasisTest =
 
 [<Tests>]
 let ``multiparagraph emphasis test`` =
-    makeExpectoTestList id id parseParagraph "multiparagraph emphasis test" [
+    makeExpectoTestList id id (parseParagraph []) "multiparagraph emphasis test" [
         (
             [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ENDLINE; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; UNDERSCORE],
             Paragraph[[FrmtedString(Literal "I *am")];
@@ -183,7 +183,7 @@ let ``multiparagraph emphasis test`` =
 
 [<Tests>]
 let parseParagraphTest =
-    makeExpectoTestList id id parseParagraph "parseParagraph test" [
+    makeExpectoTestList id id (parseParagraph [])"parseParagraph test" [
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; LITERAL "dancing"; WHITESPACE 1; LITERAL "at";
             BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK; LITERAL "na"],
@@ -209,7 +209,7 @@ let testGlobal =
            [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals and new empty paragraph"
         );
         (
-            [HASH; HASH; WHITESPACE 2; LITERAL "h2"],
+            [ENDLINE; HASH; HASH; WHITESPACE 2; LITERAL "h2"],
             [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2},"HEADER STRING NOT IMPLEMENTED")] |>Ok, "h2 header"
         );
         (
