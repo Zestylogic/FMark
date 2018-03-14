@@ -46,14 +46,17 @@ let alignCell alignment cellU = Contents (fst cellU, snd cellU, alignment)
 // ###################### PARSE TABLE ROWS #####################
 // Parse a line into a list of cells
 let parsePipesD debug constructCell (row:Token list) =
+    let parsePipesDebug line a b =
+        if debug then
+            sprintf "Markalc/Parse PIPES:\nBefore:%A\nAfter:%A$\n" a b |> globLog.Debug (Some line)
     let rec parsePipes' a row =
         match pipeSplit row with
         | Ok([],[])       -> (constructCell []):: a
-        | Ok([],after)    -> sprintf "empty, %A" after |> logger.Debug None
+        | Ok([],after)    -> parsePipesDebug 55 [] after 
                              parsePipes' ((constructCell [])::a) after // If before is empty and after is not, empty cell
-        | Ok(before,[])   -> sprintf "%A, empty" before |> logger.Debug None
+        | Ok(before,[])   -> parsePipesDebug 57 before [] 
                              (constructCell before) :: a // If after is empty, add before and stop
-        | Ok(before,after) -> sprintf "%A, %A" before after |> logger.Debug None
+        | Ok(before,after) -> parsePipesDebug 59 before after
                               parsePipes' ((constructCell before) :: a) after
         | Error(_) -> if List.isEmpty row then a else (constructCell row)::a  // If there is content, add it
     parsePipes' [] row
@@ -71,20 +74,24 @@ let parseRow constructCell row =
 let parseDefaultRow = parseRow defaultCellU
 /// Parse the second row of the table which defines number of columns and alignment
 let parseAlignRow (row:Token list) = 
+    let parseAlignDebug line s =
+        sprintf "Markalc/parseAlignRow\n%s$" s |> logPass (Some line) globLog.Debug
     let getAlignment (toks: Token list) =
         let filt = function | COLON -> true | MINUS -> true | _ -> false 
         // Check it has at least three dashes
         match (countDelim MINUS toks < 3, List.filter filt toks |> List.length <> List.length toks) with
-            | (true,false) -> "Less than 3 dashes for table format" |> Error 
-            | (false,true) -> sprintf "Invalid characters in table format, expecting only : or - \n%A\n%A" toks (List.filter filt toks) |> Error
-            | (true,true) -> "Less than 3 dashes for table format and invalid characters" |> Error 
+            | (true,false) -> "Less than 3 dashes for table format" |> parseAlignDebug 83 |> Error 
+            | (false,true) -> sprintf "Invalid characters in table format, expecting only : or - \n%A\n%A" toks (List.filter filt toks) 
+                              |> parseAlignDebug 84
+                              |> Error
+            | (true,true) -> "Less than 3 dashes for table format and invalid characters" |> parseAlignDebug 87 |> Error 
             | (false,false) ->
                 match (List.rev toks, countDelim COLON toks) with
                 | (COLON :: _, 2) when List.head toks = COLON -> Centre |> Ok
                 | (COLON :: _, 1) -> Right |> Ok
                 | (_,1) when List.head toks = COLON -> Left |> Ok
                 | (_,0) -> NoAlign |> Ok
-                | (_,x) -> sprintf "\':\'s in wrong position %A, %A" toks x |> Error
+                | (_,x) -> sprintf "\':\'s in wrong position %A, %A" toks x |> parseAlignDebug 94 |> Error
     let parseAlign' = parsePipes getAlignment
     // Ignore the first pipe if there is nothing before it
     match whitespaceFilter row with
