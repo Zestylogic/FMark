@@ -47,11 +47,9 @@ echo ""
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [[ -z $TRAVIS_BUILD_DIR ]]; then
-    TRAVIS=false
     echo "Travis not detected"
     BASE_DIR=$DIR
 else
-    TRAVIS=true
     echo "Running on travis-ci"
     BASE_DIR=$TRAVIS_BUILD_D
 fi
@@ -74,11 +72,7 @@ if [[ $BUILD = "testall" ]] || [[ $BUILD = "all" ]] || [[ $BUILD = "fsharp" ]]; 
     echo "Running F# tests"
     cd $BASE_DIR/FMark/src/FMarkCLI
     dotnet build
-    if [ "$TRAVIS" = true ] ; then
-        dotnet run --no-build -- --test true -l info
-    else
-        dotnet run --no-build -- --test -l info
-    fi
+    dotnet run --no-build -- --test true -l info
 fi
 
 if [[ $BUILD = "all" ]] || [[ $BUILD = "js" ]]; then
