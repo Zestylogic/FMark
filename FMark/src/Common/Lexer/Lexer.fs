@@ -99,11 +99,13 @@ let returnTokens = function
 
 /// Lex a single string
 let lex s =
-    lexS Normal s |> returnTokens
+    let cons a b =
+        List.Cons (a, b)
+    lexS Normal s |> returnTokens |> cons BOF
 
 /// Lexes a list of strings and returns the Token list
 let lexList strl =
     let f (flist, state) nstr =
         let (lst, st) = lexS state nstr
         flist @ lst, st
-    List.fold f ([], Normal) strl |> returnTokens
+    List.fold f ([BOF], Normal) strl |> returnTokens
