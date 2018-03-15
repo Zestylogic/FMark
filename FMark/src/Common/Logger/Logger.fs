@@ -64,3 +64,4 @@ let logPass line log s =
 let logPassN log s =
     s |> log None
     s
+let mutable globLog = Logger(LogLevel.DEBUG)
