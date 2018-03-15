@@ -90,11 +90,13 @@ let rec mdList list =
             let retFold s = pStr + s, pCount + 1;
             match li with
             | StringItem(line) -> mdInlineElements line |> (fun s -> 
-                if ord 
-                then 
+                match ord,s with
+                | _,"" -> ""
+                | true,_ -> 
                     sprintf "%s%i. %s\n" (makeTabs tab) pCount s
                     |> logPassN logger.Debug
-                else sprintf "%s- %s\n" (makeTabs tab) s) |> retFold
+                | false,_ -> 
+                    sprintf "%s- %s\n" (makeTabs tab) s) |> retFold
             | NestedList(list) -> mdList list |> retFold
             
     match list with

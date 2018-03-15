@@ -1,4 +1,3 @@
 ﻿[<EntryPoint>]
 let TOCiteMain argv =
-    Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig argv |> ignore
-    0
+    Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig argv
