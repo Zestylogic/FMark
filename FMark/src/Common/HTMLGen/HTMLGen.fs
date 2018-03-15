@@ -97,12 +97,10 @@ let strHeader (header,id) =
         |> strInlineElements
         |> attachHTMLTag (tagName, ["id", id], true)
 
-/// process inline footnotes
-let strInlineFootnote s =
-    s
-    |> attachHTMLTag ("a", ["href", "#footnote-"+s], true)
-    |> attachSimpleTag "sup"
-
+/// process footnotes
+let strFootnote (id, s) =
+    strInlineElements s
+    |> attachHTMLTag ("p", ["id", "#footnote-"+id], true)
 
 let (|MatchHeaderAndSubHeader|_|) hds =
     match hds with
@@ -175,15 +173,6 @@ let strToC (toc:Ttoc) =
     |> revList
     |> strList
 
-/// gather footnotes for end of page display
-let gatherFootnotes pObjs =
-    let footnotesFilter pObj =
-        match pObj with
-        | Footnote _ -> true
-        | _ -> false
-    List.filter footnotesFilter pObjs
-
-
 /// process HTML body part
 let strBody pObjs =
     let folder pStr pObj =
@@ -195,8 +184,8 @@ let strBody pObjs =
         | Table rows -> strTable rows
         | List l -> strList l
         | Header (h,s) -> strHeader (h,s)
-        | Footnote (i,_) -> strInlineFootnote (string i)
-        | Citation (s,_,_) -> strInlineFootnote s
+        | Footnote (i,s) -> strFootnote ((string i), s)
+        | Citation (i,_,s) -> strFootnote (i, s)
         | ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs

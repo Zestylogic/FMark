@@ -133,15 +133,15 @@ let headerTests =
     ]
 
 [<Tests>]
-let inlineFootnoteTests =
-    makeExpectoTestList id id strInlineFootnote "inline footnote tests" [
+let footnoteTests =
+    makeExpectoTestList id id strFootnote "footnote tests" [
         (
-            string 3,
-            "<sup><a href=\"#footnote-3\">3</a></sup>", "footer 3"
+            (string 3, [FrmtedString (Literal "footer3")]),
+            "<p id=\"#footnote-3\">footer3</p>", "footer 3"
         );
         (
-            "abcd",
-            "<sup><a href=\"#footnote-abcd\">abcd</a></sup>", "footer string"
+            ("abcd",[FrmtedString (Literal "footer3")]),
+            "<p id=\"#footnote-abcd\">footer3</p>", "footer string"
         );
     ]
 
@@ -283,7 +283,7 @@ let reallyBigTest =
                     FrmtedString (Literal "Accessed March 4, 2018. ");
                     Link (Literal "www.example.com/website","www.example.com/website")]
                 )
-            ]),"<!DOCTYPE html><head><meta name="viewport" content="width=device-width"><title>big HTML test</title></head><body><p>text1#text2</p><h1 id="Header10">Header1</h1><p><a href="#footnote-1">Footer1</a>text4</p><p><a href="#footnot-Eric">(Wang, 2017)</a>text6</p><sup><a href="#footnote-1">1</a></sup><sup><a href="#footnote-Eric">Eric</a></sup></body>",
+            ]),"<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>big HTML test</title></head><body><p>text1#text2</p><h1 id=\"Header10\">Header1</h1><p><a href=\"#footnote-1\">Footer1</a>text4</p><p><a href=\"#footnot-Eric\">(Wang, 2017)</a>text6</p><p id=\"#footnote-1\">footer1</p><p id=\"#footnote-Eric\">Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p></body>",
         "wow very big"
     ]
 
