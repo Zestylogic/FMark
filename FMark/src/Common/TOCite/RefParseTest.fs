@@ -41,35 +41,35 @@ let testDataRefHarvard =
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Wang"],
     Harvard,
-    ([],[FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ")]);
+    (Literal "(Wang)",[FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ")]);
 
     "Harvard Author with multiple given names",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"],
     Harvard,
-    ([],[FrmtedString (Literal "Wang, "); FrmtedString (Literal "E. ");
+    (Literal "(Wang)",[FrmtedString (Literal "Wang, "); FrmtedString (Literal "E. ");
         FrmtedString (Literal "Z. ")]);
 
     "Harvard Title only",
     [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"],
     Harvard,
-    ([],[FrmtedString (Emphasis [FrmtedString (Literal "Book1. ")])]);
+    (Literal "(n.d.)",[FrmtedString (Emphasis [FrmtedString (Literal "Book1. ")])]);
 
     "Harvard Title with multiple words",
     [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
         LITERAL "Subtitle"],
     Harvard,
-    ([],[FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle. ")])]);
+    (Literal "(n.d.)",[FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle. ")])]);
 
     "Harvard Year only",
     [LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"],
     Harvard,
-    ([],[FrmtedString (Literal "(2018) ")]);
+    (Literal "(2018)",[FrmtedString (Literal "(2018) ")]);
 
     "Harvard URL only",
     [LITERAL "url";EQUAL; WHITESPACE 1; LITERAL "www.example.com"],
     Harvard,
-    ([],[FrmtedString (Literal "Available from: ");
+    (Literal "(n.d.)",[FrmtedString (Literal "Available from: ");
         Link (Literal "www.example.com","www.example.com");
         FrmtedString (Literal " ")]);
 
@@ -77,7 +77,7 @@ let testDataRefHarvard =
     [LITERAL "access";EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
         MINUS; NUMBER "8"],
     Harvard,
-    ([],[FrmtedString (Literal "[Accessed 8th March 2018]. ")]);
+    (Literal "(n.d.)",[FrmtedString (Literal "[Accessed 8th March 2018]. ")]);
 
     "Harvard Book reference",
     [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
@@ -86,7 +86,7 @@ let testDataRefHarvard =
         NUMBER "2018"],
     Harvard,
     (
-        [FrmtedString (Literal "(Zifan 2018)")],
+        Literal "(Wang 2018)",
         [FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ");
             FrmtedString (Literal "(2018) ");
             FrmtedString (Emphasis [FrmtedString (Literal "Not a real book. ")])]
@@ -102,7 +102,7 @@ let testDataRefHarvard =
         MINUS; NUMBER "4"],
     Harvard,
     (
-        [FrmtedString (Literal "(Eric 2017)")],
+        Literal "(Wang 2017)",
         [FrmtedString (Literal "Wang, "); FrmtedString (Literal "E. ");
             FrmtedString (Literal "(2017) ");
             FrmtedString (Emphasis [FrmtedString (Literal "Not a real website. ")]);
@@ -120,46 +120,46 @@ let testDataRefChicago =
         LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Wang"],
     Chicago,
-    ([],[FrmtedString (Literal "Zifan Wang. ")]);
+    (Literal "(Wang)",[FrmtedString (Literal "Zifan Wang. ")]);
 
     "Chicago Author with multiple given names",
     [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
         LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"],
     Chicago,
-    ([],[FrmtedString (Literal "Zifan Eric Wang. ")]);
+    (Literal "(Wang)",[FrmtedString (Literal "Zifan Eric Wang. ")]);
 
     "Chicago Title only",
     [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
         LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"],
     Chicago,
-    ([],[FrmtedString (Emphasis [FrmtedString (Literal "Book1. ")])]);
+    (Literal "(n.d.)",[FrmtedString (Emphasis [FrmtedString (Literal "Book1. ")])]);
 
     "Chicago Title with multiple words",
     [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
         LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
         LITERAL "Subtitle"],
     Chicago,
-    ([],[FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle. ")])]);
+    (Literal "(n.d.)",[FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle. ")])]);
 
     "Chicago Year only",
     [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
         LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"],
     Chicago,
-    ([],[FrmtedString (Literal "2018. ")]);
+    (Literal "(2018)",[FrmtedString (Literal "2018. ")]);
 
     "Chicago URL only",
     [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
         LITERAL "url";EQUAL; WHITESPACE 1; LITERAL "www.example.com"],
     Chicago,
-    ([],[Link (Literal "www.example.com","www.example.com")]);
+    (Literal "(n.d.)",[Link (Literal "www.example.com","www.example.com")]);
 
     "Chicago Access date only",
     [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
         LITERAL "access";EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "8";
         MINUS; NUMBER "8"],
     Chicago,
-    ([],[FrmtedString (Literal "Accessed August 8, 2018. ")]);
+    (Literal "(n.d.)",[FrmtedString (Literal "Accessed August 8, 2018. ")]);
 
     "Chicago Book reference",
     [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
@@ -169,7 +169,7 @@ let testDataRefChicago =
         NUMBER "2018"],
     Chicago,
     (
-        [FrmtedString (Literal "(Zifan, 2018)")],
+        Literal "(Wang, 2018)",
         [FrmtedString (Literal "Zifan Wang. "); FrmtedString (Literal "2018. ");
             FrmtedString (Emphasis [FrmtedString (Literal "Not a real book. ")])]
     );
@@ -185,7 +185,7 @@ let testDataRefChicago =
         MINUS; NUMBER "4"],
     Chicago,
     (
-        [FrmtedString (Literal "(Eric, 2017)")],
+        Literal "(Wang, 2017)",
         [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
             FrmtedString (Literal "\"Not a real website.\" ");
             FrmtedString (Literal "Accessed March 4, 2018. ");

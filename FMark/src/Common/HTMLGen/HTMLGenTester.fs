@@ -268,6 +268,28 @@ let fullBodyTests =
     ]
 
 [<Tests>]
+let reallyBigTest =
+    makeExpectoTestList id id genHTML "inherited big test" [
+        ("big HTML test",
+            [Paragraph [[FrmtedString (Literal "text1#text2")]];
+                Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
+                Paragraph [[Link (Literal "Footer1","#footnote-1"); FrmtedString (Literal "text4")]];
+                Paragraph [[Link (Literal "(Wang, 2017)","#footnot-Eric"); FrmtedString (Literal "text6")]];
+                Footnote (1,[FrmtedString (Literal "footer1")]);
+                Citation (
+                    "Eric",Literal "(Wang, 2017)",
+                    [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
+                    FrmtedString (Literal "\"Not a real website.\" ");
+                    FrmtedString (Literal "Accessed March 4, 2018. ");
+                    Link (Literal "www.example.com/website","www.example.com/website")]
+                )
+            ]),"hi",
+        "what"
+    ]
+
+
+
+[<Tests>]
 let ``global simple test`` =
     makeExpectoTestList id id genHTML "top level genHTML test" [
         ("FMarkToHtml first release",

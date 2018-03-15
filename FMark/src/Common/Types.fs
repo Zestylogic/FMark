@@ -19,8 +19,10 @@ type Token =
     | HEADER of int | FOOTNOTE of int | CITATION of string
 
 type TFrmtedString =
-    | Strong of InlineElement list | Emphasis of InlineElement list
-    | Literal of string | Code of string
+    | Strong of InlineElement list
+    | Emphasis of InlineElement list
+    | Literal of string
+    | Code of string
 and InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
@@ -65,7 +67,7 @@ type ParsedObj =
     | Table of PRow list
     | PreTable of Content: Token list list
     | Footnote of int * TLine
-    | Citation of string * TLine * TLine //ID,Inline,End of doc
+    | Citation of string * TFrmtedString * TLine //ID,Inline,End of doc
     
 type Cell with 
     member c.GetToks = match c with 
