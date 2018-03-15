@@ -1,8 +1,8 @@
 module Parser
 open Types
 open Shared
-open ParserHelperFuncs  
-open System.Dynamic
+open ParserHelperFuncs
+open Logger
 
 // helper functions
 
@@ -60,49 +60,56 @@ let (|MatchTable|_|) toks =
 let parseList toks =
     // call itself if list item has a higher level
     // return if list item has lower level
-
-    /// return list type, list level, and list content
-    let (|GetLIContent|_|) toks =
-        // return list level and remaining toks
-        let takeAwayWhiteSpaces toks =
+    let ignoreError result = match result with | Ok x -> x | Error x -> x
+    let takeAwayWhiteSpaces toks =
             match toks with
             | WHITESPACE n:: rtks -> (n/2, rtks)
             | _ -> (0, toks)
+    /// return list type, list level, and list content
+    let (|GetLIContent|_|) toks =
+        // return list level and remaining toks
         let (level, retoks) = takeAwayWhiteSpaces toks
         match retoks with
         | ASTERISK:: WHITESPACE _:: _ | MINUS:: WHITESPACE _:: _ -> // unordered list
             (UL, level, xOnwards 2 retoks) |> Some
         | NUMBER _:: DOT:: WHITESPACE _:: _ ->  // ordered list
             (OL, level, xOnwards 3 retoks) |> Some
-        | _ -> (OL, level, retoks) |> Some
+        | _ -> None
 
     let getLIContent toks =
         match toks with
-        | GetLIContent result -> result
-        | _ -> failwith "getLIContent shoud not fail"
+        | GetLIContent result -> result |> Ok
+        | _ ->
+            let (level, retoks) = takeAwayWhiteSpaces toks
+            (UL, level, retoks) |> Error
 
     /// get all list items in current item level and sub lists
     let rec getCurrentList level listItems lines =
         match lines with
         | line:: reLines ->
-            match line with
-            | GetLIContent (_, liLevel, _) when liLevel >= level -> // list item and sub list item
+            match line |> getLIContent |> ignoreError with
+            | (_, liLevel, _) when liLevel >= level -> // list item and sub list item
                 getCurrentList level (line::listItems) reLines
             | _ -> listItems |> List.rev
         | [] -> listItems |> List.rev
 
     let rec parseList' level lines =
-        let (listType, depth, _) = List.head lines |> getLIContent
+        let (listType, depth, _) =
+            match List.head lines |> getLIContent with
+            | Ok result -> result
+            | Error result ->
+                globLog.Warn (Some 100) "invalid list item, line does not begin with [*;-;number]\ndefault to UL"
+                result
         let listFolder (currentLv, listItems, (skipNo: int option), currentLine) line =
             match skipNo with
             | None ->
-                match line |> getLIContent with
+                match line |> getLIContent |> ignoreError with
                 | (_, level, content) when level=currentLv ->
                     let tLine = content |> parseInLineElements
                     (currentLv, StringItem(tLine)::listItems, None, currentLine+1)
                 | (_, level, _) when level>currentLv ->
                     let (listItem, skip) =
-                        lines.[currentLine..]
+                        xOnwards currentLine lines
                         |> getCurrentList (currentLv+1) []
                         |> parseList' (currentLv+1)
                     (currentLv, NestedList(listItem)::listItems, skip, currentLine+1)
