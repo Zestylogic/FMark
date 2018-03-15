@@ -314,6 +314,11 @@ let listTestData =
             "UL, 1 li, 2 sub li"
         );
         (
+            asLiToks@[WHITESPACE 2]@asLiToks@asLiToks,
+            {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1});liPObj]; Depth=0},
+            "UL, 2 li, 1 sub li"
+        );
+        (
             muLiToks@[WHITESPACE 2]@muLiToks@[WHITESPACE 2]@asLiToks@asLiToks,
             {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
             "UL, 1 li, 2 sub li, minus and asterisk mixed"
