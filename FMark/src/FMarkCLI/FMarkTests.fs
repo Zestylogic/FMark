@@ -77,6 +77,29 @@ let htmlTestData = [
         </ul>
         <li>ul3</li>
     </ul>"
+    |> Shared.removeWhitespace |>Ok;
+    "List test, using tabs instead",
+    ["* ul1";
+     "* ul2";
+     "  * nest1";
+     "  * nest12";
+     "\t\t* nest2";
+     "  * nest13";
+     "* ul3";
+     ""],
+    "<ul>
+        <li>ul1</li>
+        <li>ul2</li>
+        <ul>
+            <li>nest1</li>
+            <li>nest12</li>
+            <ul>
+                <li>nest2</li>
+            </ul>
+            <li>nest13</li>
+        </ul>
+        <li>ul3</li>
+    </ul>"
     |> Shared.removeWhitespace |>Ok
 ]
  

@@ -2,8 +2,8 @@ module FMarkCLI
 
 open Types
 open Argu
-open System.Text.RegularExpressions
 open Logger
+open Shared
 open Expecto
 
 type CLIArguments =
@@ -51,9 +51,6 @@ let logArgs (r:ParseResults<CLIArguments>) =
     sprintf "Got parse results %A" <| r.GetAllResults()
     |> globLog.Info None
     r
-let replaceChars pat (rep:string) s =
-    Regex.Replace(s,pat,rep)
-
 let processCLI argv =
     let errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some System.ConsoleColor.Red)
     let parser = ArgumentParser.Create<CLIArguments>(programName = "FMark", errorHandler = errorHandler)

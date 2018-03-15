@@ -58,7 +58,8 @@ let nextToken state s =
         (LITERAL s, r), InHTMLTag (t, d)
     | CharacterTok n, _ -> n, state
     | RegexMatch @"^\s+" (m, _, s), _ ->
-        (String.length m |> WHITESPACE, s), state
+        (Shared.replaceChars "\t" "  " m 
+        |> String.length |> WHITESPACE, s), state
     | RegexMatch "^[0-9]+" (m, _, s), _->
         (NUMBER m, s), state
     | RegexMatch (literalString charList) (m, _, s), _ ->
