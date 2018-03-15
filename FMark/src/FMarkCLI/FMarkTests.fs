@@ -60,7 +60,7 @@ let htmlTestData = [
      "* ul2";
      "  * nest1";
      "  * nest12";
-     "      * nest2";
+     "    * nest2";
      "  * nest13";
      "* ul3";
      ""],
@@ -70,9 +70,9 @@ let htmlTestData = [
         <ul>
             <li>nest1</li>
             <li>nest12</li>
-            <ul><ul>
+            <ul>
                 <li>nest2</li>
-            </ul></ul>
+            </ul>
             <li>nest13</li>
         </ul>
         <li>ul3</li>
