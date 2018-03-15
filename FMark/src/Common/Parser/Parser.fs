@@ -120,7 +120,12 @@ let parseList toks =
                 | n when n>1 -> (currentLv, listItems, Some (skip-1), currentLine+1)
                 | _ -> failwith "negative or zero skip number, not possible"
         List.fold listFolder (level, [], None, 0) lines
-        |> (fun (_, lis, _, _) -> {ListType=listType; ListItem=lis |> List.rev; Depth=depth}, List.length lines |> Some)
+        |> (fun (_, lis, _, _) ->
+            let doSkip =
+                match List.length lines with
+                | 0 -> None
+                | n -> Some n
+            {ListType=listType; ListItem=lis |> List.rev; Depth=depth}, doSkip)
     toks
     |> cutIntoLines
     |> parseList' 0
