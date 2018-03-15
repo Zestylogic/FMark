@@ -108,7 +108,7 @@ let testDataFt = [
         WHITESPACE 1; LITERAL "Not a real book"; COMMA; LITERAL "year"; EQUAL;
         WHITESPACE 1; LITERAL "2018"; ENDLINE],
     (
-        [Citation ("Eric",[], [FrmtedString (Literal "Wang, ");
+        [Citation ("Eric", Literal "(Wang)", [FrmtedString (Literal "Wang, ");
             FrmtedString (Literal "Z. ");
             FrmtedString (Emphasis [FrmtedString(Literal "Not a real book. ")])])],
         []
@@ -210,7 +210,7 @@ let testDataFull =
         [Footnote (1,[FrmtedString (Literal "footer1")]);
             Citation (
                 "Eric",
-                [FrmtedString (Literal "(Eric, 2017)")],
+                Literal "(Wang, 2017)",
                 [FrmtedString (Literal "Eric Wang. ");
                 FrmtedString (Literal "2017. ");
                 FrmtedString (Literal "\"Not a real website.\" ");

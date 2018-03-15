@@ -2,6 +2,7 @@ module Parser
 open Types
 open Shared
 open ParserHelperFuncs
+open TOCite
 open Logger
 
 // helper functions
@@ -20,8 +21,8 @@ let rec parseCode toks =
 
 /// parse a paragraph which counts for contents in  `<p>`
 /// parseParagraph eats 2>= ENDLINEs
-let parseParagraph toks =
-    let parseParagraph' lines tokLine = (parseInLineElements tokLine) :: lines
+let parseParagraph ftLst toks =
+    let parseParagraph' lines tokLine = (parseInLineElements2 ftLst tokLine) :: lines
     toks
     |> trimENDLINEs
     |> cutIntoLines
@@ -56,6 +57,15 @@ let (|MatchTable|_|) toks =
         | _ -> None
     | _ -> None
 
+/// strip header to a minimal string for id purposes
+let headerIDGen id hd =
+    let hdLine = hd.HeaderName
+    let rec headerIDGen' hdLine =
+        match hdLine with
+        | FrmtedString (Literal a)::tl -> a + headerIDGen' tl
+        | FrmtedString (Emphasis a)::tl -> (headerIDGen' a) + (headerIDGen' tl)
+        | _ -> ""
+    headerIDGen' hdLine + string id
 /// parse list
 let parseList toks =
     // call itself if list item has a higher level
@@ -139,43 +149,43 @@ let parseList toks =
 /// parse supported `ParsedObj`s, turn them into a list
 /// assuming each item start at the beginning of the line
 /// the returned token head does not have 2>= ENDLINE
-let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string> =
+let rec parseItem (hdLst: THeader list) (ftLst: ParsedObj list) (rawToks: Token list) : Result<ParsedObj * Token list, string> =
     let toks = deleteLeadingENDLINEs rawToks
     match toks with
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
     | MatchTable (rows, rtks) -> (rows, rtks) |> Ok
     | MatchQuote (content, rtks) ->
-        (parseInLineElements content |> Quote , rtks)
+        (parseInLineElements2 ftLst content |> Quote , rtks)
         |> Ok
-    | MatchHeader (level, content, rtks) ->
-        let line = parseInLineElements content
-        (Header({HeaderName=line; Level=level},"HEADER STRING NOT IMPLEMENTED"), rtks)
-        |> Ok
+    | HEADER i :: rtks -> (Header (hdLst.[i],(headerIDGen i hdLst.[i])), rtks) |> Ok
     | PickoutList (list, retoks) -> (parseList list |> List, retoks) |> Ok
     | PickoutParagraph (par, retoks) ->
-        (parseParagraph par, retoks) |> Ok
+        (parseParagraph ftLst par, retoks) |> Ok
     | _ -> sprintf "Parse item did not match: %A" toks |> removeChars ["[";"]"] |> Error
 
-and parseItemList toks : Result<ParsedObj list * option<Token list>, string> =
+and parseItemList hdLst ftLst toks : Result<ParsedObj list * option<Token list>, string> =
     match (List.isEmpty toks, not (List.exists (function | WHITESPACE(_) | ENDLINE -> false | _ -> true) toks)) with
     | (false,false) -> 
-        parseItem toks
+        parseItem hdLst ftLst toks
         |> Result.bind (fun (pobj, re) ->
             match List.isEmpty re with
             | true -> ([pobj], None) |> Ok
             | false ->
-                parseItemList re
+                parseItemList hdLst ftLst re
                 |> Result.map(fun (pobjs, re') ->
                     pobj::pobjs, re' )
         )
     | _ -> ([], None) |> Ok // if tokens are only whitespace or endlines, return no parsedObjs
 
+
 /// top-level Parser, which the user should use
 /// `parse` will either return result monad with either `ParsedObj list` or a string of Error message.
 /// Unparsed Tokens will be in the returned in the Error message.
 let parse toks =
-    parseItemList toks
+    let (hd, ft, rtoks) = preParser toks
+    parseItemList hd ft rtoks
     |> Result.bind (fun (pobjs, retoks) ->
         match retoks with
         | None -> pobjs |> Ok
         | Some retoks -> sprintf "Some unparsed tokens: %A" retoks |> Error)
+    |> Result.map (fun pObjs -> List.append pObjs ft)

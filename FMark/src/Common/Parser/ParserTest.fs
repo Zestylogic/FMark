@@ -158,7 +158,7 @@ let emphasisTest =
 
 [<Tests>]
 let ``multiparagraph emphasis test`` =
-    makeExpectoTestList id id parseParagraph "multiparagraph emphasis test" [
+    makeExpectoTestList id id (parseParagraph []) "multiparagraph emphasis test" [
         (
             [LITERAL "I"; WHITESPACE 1; ASTERISK; LITERAL "am"; ENDLINE; WHITESPACE 1; UNDERSCORE; LITERAL "Lord"; UNDERSCORE],
             Paragraph[[FrmtedString(Literal "I *am")];
@@ -183,7 +183,7 @@ let ``multiparagraph emphasis test`` =
 
 [<Tests>]
 let parseParagraphTest =
-    makeExpectoTestList id id parseParagraph "parseParagraph test" [
+    makeExpectoTestList id id (parseParagraph [])"parseParagraph test" [
         (
             [LITERAL "I"; WHITESPACE 1; LITERAL "am"; ENDLINE; LITERAL "dancing"; WHITESPACE 1; LITERAL "at";
             BACKTICK; LITERAL "This"; WHITESPACE 2; LITERAL "is"; WHITESPACE 5;LITERAL "code"; BACKTICK; LITERAL "na"],
@@ -209,8 +209,8 @@ let testGlobal =
            [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals and new empty paragraph"
         );
         (
-            [HASH; HASH; WHITESPACE 2; LITERAL "h2"],
-            [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2},"HEADER STRING NOT IMPLEMENTED")] |>Ok, "h2 header"
+            [ENDLINE; HASH; HASH; WHITESPACE 2; LITERAL "h2"],
+            [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2},"h20")] |>Ok, "h2 header"
         );
         (
             [HASH; HASH; LITERAL "h2"],
@@ -243,6 +243,42 @@ let testGlobal =
             "Just WHITESPACE in a line don't break parser"
         );
     ]
+
+[<Tests>]
+let testGlobal2 =
+    makeExpectoTestList id id parse "top level test part 2" [
+        (
+            [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago";
+                ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; HASH; WHITESPACE 1;
+                LITERAL "Header1"; ENDLINE; LITERAL "text3"; LSBRA; CARET; NUMBER "1";
+                RSBRA; LITERAL "text4"; ENDLINE; ENDLINE; LSBRA; CARET; NUMBER "1";
+                RSBRA; COMMA; LITERAL "footer1"; ENDLINE; LITERAL "text5"; LSBRA; CARET;
+                LITERAL "Eric"; RSBRA; LITERAL "text6"; ENDLINE; ENDLINE; LSBRA; CARET;
+                LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
+                LITERAL "Website"; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
+                LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title";
+                EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
+                EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
+                WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
+                LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+                MINUS; NUMBER "4"; ENDLINE],
+            [Paragraph [[FrmtedString (Literal "text1#text2")]];
+                Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
+                Paragraph [[Link (Literal "Footer1","#footnote-1"); FrmtedString (Literal "text4")]];
+                Paragraph [[Link (Literal "(Wang, 2017)","#footnot-Eric"); FrmtedString (Literal "text6")]];
+                Footnote (1,[FrmtedString (Literal "footer1")]);
+                Citation (
+                    "Eric",Literal "(Wang, 2017)",
+                    [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
+                    FrmtedString (Literal "\"Not a real website.\" ");
+                    FrmtedString (Literal "Accessed March 4, 2018. ");
+                    Link (Literal "www.example.com/website","www.example.com/website")]
+                )
+            ]
+            |> Ok, "Inherited big test"
+        )
+    ]        
+
 
 [<Tests>]
 let ``multiparagraph misc test`` =
