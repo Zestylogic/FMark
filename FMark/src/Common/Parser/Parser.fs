@@ -1,7 +1,8 @@
 module Parser
 open Types
 open Shared
-open ParserHelperFuncs  
+open ParserHelperFuncs
+open Logger
 
 // helper functions
 
@@ -55,6 +56,83 @@ let (|MatchTable|_|) toks =
         | _ -> None
     | _ -> None
 
+/// parse list
+let parseList toks =
+    // call itself if list item has a higher level
+    // return if list item has lower level
+    let ignoreError result = match result with | Ok x -> x | Error x -> x
+    let takeAwayWhiteSpaces toks =
+            match toks with
+            | WHITESPACE n:: rtks -> (n/2, rtks)
+            | _ -> (0, toks)
+    /// return list type, list level, and list content
+    let (|GetLIContent|_|) toks =
+        // return list level and remaining toks
+        let (level, retoks) = takeAwayWhiteSpaces toks
+        match retoks with
+        | ASTERISK:: WHITESPACE _:: _ | MINUS:: WHITESPACE _:: _ -> // unordered list
+            (UL, level, xOnwards 2 retoks) |> Some
+        | NUMBER _:: DOT:: WHITESPACE _:: _ ->  // ordered list
+            (OL, level, xOnwards 3 retoks) |> Some
+        | _ -> None
+
+    let getLIContent toks =
+        match toks with
+        | GetLIContent result -> result |> Ok
+        | _ ->
+            let (level, retoks) = takeAwayWhiteSpaces toks
+            (UL, level, retoks) |> Error
+
+    /// get all list items in current item level and sub lists
+    let rec getCurrentList level listItems lines =
+        match lines with
+        | line:: reLines ->
+            match line |> getLIContent |> ignoreError with
+            | (_, liLevel, _) when liLevel >= level -> // list item and sub list item
+                getCurrentList level (line::listItems) reLines
+            | _ -> listItems |> List.rev
+        | [] -> listItems |> List.rev
+
+    let rec parseList' level lines =
+        let (listType, depth, _) =
+            match List.head lines |> getLIContent with
+            | Ok result -> result
+            | Error result ->
+                globLog.Warn (Some 100) "invalid list item, line does not begin with [*;-;number]\ndefault to UL"
+                result
+        let listFolder (currentLv, listItems, (skipNo: int option), currentLine) line =
+            match skipNo with
+            | None ->
+                match line |> getLIContent |> ignoreError with
+                | (_, level, content) when level=currentLv ->
+                    let tLine = content |> parseInLineElements
+                    (currentLv, StringItem(tLine)::listItems, None, currentLine+1)
+                | (_, level, _) when level>currentLv ->
+                    let (listItem, skip) =
+                        xOnwards currentLine lines
+                        |> getCurrentList (currentLv+1) []
+                        |> parseList' (currentLv+1)
+                    if skip =  Some(1) 
+                    then 
+                        (currentLv, NestedList(listItem)::listItems, None, currentLine+1)
+                    else
+                        (currentLv, NestedList(listItem)::listItems, skip, currentLine+1)
+                | _ -> failwith "list item level < current level, not possible"
+            | Some skip ->
+                match skip-1 with
+                | 1 -> (currentLv, listItems, None, currentLine+1)
+                | n when n>0 -> (currentLv, listItems, Some (skip-1), currentLine+1)
+                | _ -> failwith "negative or zero skip number, not possible"
+        List.fold listFolder (level, [], None, 0) lines
+        |> (fun (_, lis, _, _) -> {ListType=listType; ListItem=lis |> List.rev; Depth=depth}, List.length lines |> Some)
+    toks
+    |> cutIntoLines
+    |> parseList' 0
+    |> fst
+
+
+
+
 /// parse supported `ParsedObj`s, turn them into a list
 /// assuming each item start at the beginning of the line
 /// the returned token head does not have 2>= ENDLINE
@@ -62,7 +140,6 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
     let toks = deleteLeadingENDLINEs rawToks
     match toks with
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
-    | MatchListOpSpace _ -> "Lists todo" |> Error
     | MatchTable (rows, rtks) -> (rows, rtks) |> Ok
     | MatchQuote (content, rtks) ->
         (parseInLineElements content |> Quote , rtks)
@@ -71,6 +148,7 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
         let line = parseInLineElements content
         (Header({HeaderName=line; Level=level},"HEADER STRING NOT IMPLEMENTED"), rtks)
         |> Ok
+    | PickoutList (list, retoks) -> (parseList list |> List, retoks) |> Ok
     | PickoutParagraph (par, retoks) ->
         (parseParagraph par, retoks) |> Ok
     | _ -> sprintf "Parse item did not match: %A" toks |> removeChars ["[";"]"] |> Error

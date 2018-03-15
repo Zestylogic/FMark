@@ -115,6 +115,7 @@ let (|MatchSym|_|) sym toks =
         | None -> None
     | _ -> None
 
+
 /// match paragraph
 /// return paragraph contents, w/o trailing ENDLINE,
 /// and the rest tokens, w/o leading ENDLINE
@@ -134,6 +135,17 @@ let (|PickoutParagraph|_|) toks =
         match List.fold folder initState toks with
         | {Par=par;ReToks=reToks} ->
             (par |> List.rev, reToks |> List.rev |> deleteLeadingENDLINEs) |> Some
+
+/// match lists
+let (|PickoutList|_|) toks =
+    match toks with
+    | [] -> None
+    | ASTERISK:: WHITESPACE _:: _ | MINUS:: WHITESPACE _:: _ // unordered list
+    | NUMBER _:: DOT:: WHITESPACE _:: _ ->  // ordered list
+        match toks with
+        | PickoutParagraph result -> Some result
+        | _ -> None
+    | _ -> None
 
 
 

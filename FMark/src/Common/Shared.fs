@@ -2,8 +2,14 @@ module Shared
 
 open Types
 open Logger
+open Expecto
 
 // Helpers
+
+// SHARED TEST Helpers #####
+let EQTest func fname name inp outp =
+    testCase name <| fun () ->
+    Expect.equal (func inp) outp (sprintf "%s" fname)
 
 /// Inverse the values in a tuple
 let invTuple (a, b) = b, a
