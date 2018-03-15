@@ -6,81 +6,81 @@ open Expecto
 // --------------------------------------------------------------------------------
 let testDataHd = [
     "Basic Test",
-    [ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"],
+    [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"],
     (
         [{HeaderName = [FrmtedString (Literal "H1")]; Level = 1;}],
-        [HEADER 0]
+        [ENDLINE;ENDLINE;HEADER 0]
     );
 
     "Depth Test",
-    [ENDLINE; HASH; HASH; HASH; WHITESPACE 1; LITERAL "h3"],
+    [ENDLINE;ENDLINE; HASH; HASH; HASH; WHITESPACE 1; LITERAL "h3"],
     (
         [{HeaderName = [FrmtedString (Literal "h3")]; Level = 3;}],
-        [HEADER 0]
+        [ENDLINE;ENDLINE;HEADER 0]
     );
 
     "Need space between hash and header text",
-    [ENDLINE; HASH; LITERAL "H1"],
+    [ENDLINE;ENDLINE; HASH; LITERAL "H1"],
     (
         [],
-        [ENDLINE; HASH; LITERAL "H1"]
+        [ENDLINE;ENDLINE; HASH; LITERAL "H1"]
     );
 
     "More fake hashes",
-    [ENDLINE; HASH; HASH; HASH; LITERAL "NotHeader"; ENDLINE],
+    [ENDLINE;ENDLINE; HASH; HASH; HASH; LITERAL "NotHeader"; ENDLINE],
     (
         [],
-        [ENDLINE; HASH; HASH; HASH; LITERAL "NotHeader"; ENDLINE]
+        [ENDLINE;ENDLINE; HASH; HASH; HASH; LITERAL "NotHeader"; ENDLINE]
     )
 
     "Hash character support within header text",
-    [ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"; HASH; WHITESPACE 1; LITERAL "H2"],
+    [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"; HASH; WHITESPACE 1; LITERAL "H2"],
     (
         [{HeaderName = [FrmtedString (Literal "H1# H2")]; Level = 1;}],
-        [HEADER 0]
+        [ENDLINE;ENDLINE;HEADER 0]
     );
 
     "Picking out header in document",
-    [LITERAL "text1"; ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"; ENDLINE;
+    [LITERAL "text1"; ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"; ENDLINE;ENDLINE;
         LITERAL "text2"; ENDLINE],
     (
         [{HeaderName = [FrmtedString (Literal "H1")]; Level = 1;}],
-        [LITERAL "text1"; HEADER 0; ENDLINE; LITERAL "text2"; ENDLINE]
+        [LITERAL "text1"; ENDLINE;ENDLINE;HEADER 0; ENDLINE;ENDLINE; LITERAL "text2"; ENDLINE]
     );
 
     "Header numbering",
-    [ENDLINE; HASH; HASH; WHITESPACE 1; LITERAL "h1"; ENDLINE;
+    [ENDLINE;ENDLINE; HASH; HASH; WHITESPACE 1; LITERAL "h1"; ENDLINE;ENDLINE;
         HASH; WHITESPACE 1; LITERAL "h2"],
     (
         [{HeaderName = [FrmtedString (Literal "h1")]; Level = 2;};
             {HeaderName = [FrmtedString (Literal "h2")]; Level = 1;}],
-        [HEADER 0; HEADER 1]
+        [ENDLINE;ENDLINE;HEADER 0; ENDLINE;ENDLINE;HEADER 1]
     )
 
     "Emphasis in header text",
-    [ENDLINE; HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"; ASTERISK],
+    [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"; ASTERISK],
     (
         [{HeaderName = [FrmtedString (Literal "NotBold");
             FrmtedString (Emphasis [FrmtedString (Literal "bold")])]; Level = 1;}],
-        [HEADER 0]
+        [ENDLINE;ENDLINE;HEADER 0]
     );
         
     "Multiple headers with emphasis",
-    [ENDLINE; HASH; HASH; WHITESPACE 1;LITERAL "h1"; LITERAL "h2";
-        ENDLINE; LITERAL "This is a Paragraph"; ENDLINE; HASH; HASH; HASH; WHITESPACE 3;
+    [ENDLINE;ENDLINE; HASH; HASH; WHITESPACE 1;LITERAL "h1"; LITERAL "h2";
+        ENDLINE;ENDLINE; LITERAL "This is a Paragraph"; ENDLINE;ENDLINE; HASH; HASH; HASH; WHITESPACE 3;
         ASTERISK; LITERAL "Another Title"; ASTERISK; ENDLINE],
     (
         [{HeaderName =[FrmtedString (Literal "h1h2")]; Level = 2;};
             {HeaderName = [FrmtedString (Emphasis [FrmtedString (Literal "Another Title")])];
             Level = 3;}],
-        [HEADER 0; ENDLINE; LITERAL "This is a Paragraph"; HEADER 1; ENDLINE]
+        [ENDLINE;ENDLINE;HEADER 0; ENDLINE;ENDLINE; LITERAL "This is a Paragraph"; ENDLINE;ENDLINE;HEADER 1; ENDLINE]
     );
 
     "Unclosed emphasis in header text",
-    [ENDLINE; HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"],
+    [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"],
     (
         [{HeaderName = [FrmtedString (Literal "NotBold*bold")]; Level = 1;}],
-        [HEADER 0]
+        [ENDLINE;ENDLINE;HEADER 0]
     );
 
     ]
@@ -192,7 +192,7 @@ let testDataFull =
 
     "Stupidly big test",
     [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago";
-        ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; HASH; WHITESPACE 1;
+        ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; ENDLINE; HASH; WHITESPACE 1;
         LITERAL "Header1"; ENDLINE; LITERAL "text3"; LSBRA; CARET; NUMBER "1";
         RSBRA; LITERAL "text4"; ENDLINE; ENDLINE; LSBRA; CARET; NUMBER "1";
         RSBRA; COMMA; LITERAL "footer1"; ENDLINE; LITERAL "text5"; LSBRA; CARET;
@@ -218,7 +218,7 @@ let testDataFull =
                 Link (Literal "www.example.com/website","www.example.com/website")]
             )
         ],
-        [ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; HEADER 0; ENDLINE;
+        [ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE;ENDLINE;HEADER 0; ENDLINE;
             LITERAL "text3"; FOOTNOTE 1; LITERAL "text4"; ENDLINE; ENDLINE;
             LITERAL "text5"; CITATION "Eric"; LITERAL "text6"; ENDLINE; ENDLINE]
     )

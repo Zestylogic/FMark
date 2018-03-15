@@ -209,7 +209,7 @@ let testGlobal =
            [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals and new empty paragraph"
         );
         (
-            [ENDLINE; HASH; HASH; WHITESPACE 2; LITERAL "h2"],
+            [ENDLINE;ENDLINE; HASH; HASH; WHITESPACE 2; LITERAL "h2"],
             [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2},"h20")] |>Ok, "h2 header"
         );
         (
@@ -249,7 +249,7 @@ let testGlobal2 =
     makeExpectoTestList id id parse "top level test part 2" [
         (
             [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago";
-                ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; HASH; WHITESPACE 1;
+                ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; ENDLINE; HASH; WHITESPACE 1;
                 LITERAL "Header1"; ENDLINE; LITERAL "text3"; LSBRA; CARET; NUMBER "1";
                 RSBRA; LITERAL "text4"; ENDLINE; ENDLINE; LSBRA; CARET; NUMBER "1";
                 RSBRA; COMMA; LITERAL "footer1"; ENDLINE; LITERAL "text5"; LSBRA; CARET;
