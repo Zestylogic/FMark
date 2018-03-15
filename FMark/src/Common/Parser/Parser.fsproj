@@ -13,7 +13,6 @@
     <Compile Include="../Markalc/Expression.fs" />
     <Compile Include="../Markalc/Markalc.fs" />
     <Compile Include="ParserHelperFuncs.fs" />
-    <Compile Include="../Logger/Logger.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="ParserTest.fs" />
     <Compile Include="ParserProgram.fs" />
