@@ -210,7 +210,7 @@ let testGlobal =
         );
         (
             [ENDLINE; HASH; HASH; WHITESPACE 2; LITERAL "h2"],
-            [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2},"HEADER STRING NOT IMPLEMENTED")] |>Ok, "h2 header"
+            [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2},"h20")] |>Ok, "h2 header"
         );
         (
             [HASH; HASH; LITERAL "h2"],
@@ -263,7 +263,7 @@ let testGlobal2 =
                 LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
                 MINUS; NUMBER "4"; ENDLINE],
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
-                Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"HEADER STRING NOT IMPLEMENTED");
+                Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
                 Paragraph [[Link (Literal "Footer1","./#1"); FrmtedString (Literal "text4")]];
                 Paragraph [[FrmtedString (Literal "(Eric, 2017)text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);

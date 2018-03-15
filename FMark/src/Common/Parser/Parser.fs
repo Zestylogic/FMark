@@ -56,7 +56,14 @@ let (|MatchTable|_|) toks =
         | _ -> None
     | _ -> None
 
-
+let headerIDGen id hd =
+    let hdLine = hd.HeaderName
+    let rec headerIDGen' hdLine =
+        match hdLine with
+        | FrmtedString (Literal a)::tl -> a + headerIDGen' tl
+        | FrmtedString (Emphasis a)::tl -> (headerIDGen' a) + (headerIDGen' tl)
+        | _ -> ""
+    headerIDGen' hdLine + string id
 
 /// parse supported `ParsedObj`s, turn them into a list
 /// assuming each item start at the beginning of the line
@@ -70,7 +77,7 @@ let rec parseItem (hdLst: THeader list) (ftLst: ParsedObj list) (rawToks: Token 
     | MatchQuote (content, rtks) ->
         (parseInLineElements2 ftLst content |> Quote , rtks)
         |> Ok
-    | HEADER i :: rtks -> (Header (hdLst.[i],"HEADER STRING NOT IMPLEMENTED"), rtks) |> Ok
+    | HEADER i :: rtks -> (Header (hdLst.[i],(headerIDGen i hdLst.[i])), rtks) |> Ok
     | PickoutParagraph (par, retoks) ->
         (parseParagraph ftLst par, retoks) |> Ok
     | _ -> sprintf "Parse item did not match: %A" toks |> removeChars ["[";"]"] |> Error
