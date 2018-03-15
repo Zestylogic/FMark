@@ -136,7 +136,6 @@ let rec parseItem (rawToks: Token list) : Result<ParsedObj * Token list, string>
     let toks = deleteLeadingENDLINEs rawToks
     match toks with
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
-    | MatchListOpSpace _ -> "Lists todo" |> Error
     | MatchTable (rows, rtks) -> (rows, rtks) |> Ok
     | MatchQuote (content, rtks) ->
         (parseInLineElements content |> Quote , rtks)
