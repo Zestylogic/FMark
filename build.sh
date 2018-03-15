@@ -59,6 +59,9 @@ function cd_run_module() {
     cd $BASE_DIR/FMark/src/Common/$1
     dotnet build
     dotnet run --no-build -- --sequenced
+    if [[ "$?" != "0" ]]; then
+        exit 1
+    fi
 }
 
 if [[ $BUILD = "testall" ]]; then
@@ -73,6 +76,9 @@ if [[ $BUILD = "testall" ]] || [[ $BUILD = "all" ]] || [[ $BUILD = "fsharp" ]]; 
     cd $BASE_DIR/FMark/src/FMarkCLI
     dotnet build
     dotnet run --no-build -- --test true -l info
+    if [[ "$?" != "0" ]]; then
+        exit 1
+    fi
 fi
 
 if [[ $BUILD = "all" ]] || [[ $BUILD = "js" ]]; then

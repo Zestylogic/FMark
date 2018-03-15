@@ -100,6 +100,29 @@ let htmlTestData = [
         </ul>
         <li>ul3</li>
     </ul>"
+    |> Shared.removeWhitespace |>Ok;
+    "List test double indent sublist",
+    ["* ul1";
+     "* ul2";
+     "  * nest1";
+     "  * nest12";
+     "      * nest2";
+     "  * nest13";
+     "* ul3";
+     ""],
+    "<ul>
+        <li>ul1</li>
+        <li>ul2</li>
+        <ul>
+            <li>nest1</li>
+            <li>nest12</li>
+            <ul><ul>
+                <li>nest2</li>
+            </ul></ul>
+            <li>nest13</li>
+        </ul>
+        <li>ul3</li>
+    </ul>"
     |> Shared.removeWhitespace |>Ok
 ]
  
@@ -130,4 +153,4 @@ let FMarkPropertyTest =
                   |> splitStr
         let preprocess1 = str |> (removeChars ["\n"]<<takeEither<<processString "" Markdown)
         let preprocess2 = str |> (takeEither<<processString "" Markdown) |> (removeChars ["\n"]<<takeEither<<processString "" Markdown<<splitStr)
-        Expect.equal preprocess1 preprocess2 ""
+        Expect.equal preprocess2 preprocess1 "" // actual, expected
