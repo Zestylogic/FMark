@@ -98,10 +98,10 @@ let returnTokens = function
         tok
 
 /// Lex a single string
-let lex s =
+let lex =
     let cons a b =
         List.Cons (a, b)
-    lexS Normal s |> returnTokens |> cons BOF
+    lexS Normal >> returnTokens >> cons BOF
 
 /// Lexes a list of strings and returns the Token list
 let lexList strl =
