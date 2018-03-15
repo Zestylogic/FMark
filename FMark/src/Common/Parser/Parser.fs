@@ -101,11 +101,17 @@ let parseList toks =
                     let tLine = content |> parseInLineElements
                     (currentLv, StringItem(tLine)::listItems, None, currentLine+1)
                 | (_, level, _) when level>currentLv ->
-                    let (listItem, skip) = parseList' (currentLv+1) lines.[currentLine..]
+                    let (listItem, skip) =
+                        lines.[currentLine..]
+                        |> getCurrentList (currentLv+1) []
+                        |> parseList' (currentLv+1)
                     (currentLv, NestedList(listItem)::listItems, skip, currentLine+1)
                 | _ -> failwith "list item level < current level, not possible"
             | Some skip ->
-                (currentLv, listItems, Some (skip-1), currentLine+1)
+                match skip-1 with
+                | 1 -> (currentLv, listItems, None, currentLine+1)
+                | n when n>1 -> (currentLv, listItems, Some (skip-1), currentLine+1)
+                | _ -> failwith "negative or zero skip number, not possible"
         List.fold listFolder (level, [], None, 0) lines
         |> (fun (_, lis, _, _) -> {ListType=listType; ListItem=lis |> List.rev; Depth=depth}, List.length lines |> Some)
     toks
