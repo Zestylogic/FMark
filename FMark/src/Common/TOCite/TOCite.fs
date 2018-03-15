@@ -12,11 +12,11 @@ let rec tocParse tocLst depth index : THeader list * Token list =
     // rebuild hash if no whitespace after
     let rec fakehash dep =
         match dep with
-        | 0 -> [ENDLINE]
+        | 0 -> [ENDLINE;ENDLINE]
         | _ -> HASH :: fakehash (dep-1)
 
     match tocLst with
-    | ENDLINE::HASH::tl -> tocParse tl 1 index
+    | ENDLINE::ENDLINE::HASH::tl -> tocParse tl 1 index
     | HASH::tl when depth > 0 -> tocParse tl (depth+1) index
     | WHITESPACE _ ::tl when depth > 0 ->
         let ind = tl |> List.tryFindIndex (fun x -> x = ENDLINE)
@@ -25,9 +25,9 @@ let rec tocParse tocLst depth index : THeader list * Token list =
         | Some i ->
             let (h,t) = List.splitAt i tl
             tocParse t 0 (index+1)
-            |> fun (x,y) -> {HeaderName = parseInLineElements h; Level = depth}::x, HEADER index::y
+            |> fun (x,y) -> {HeaderName = parseInLineElements h; Level = depth}::x, ENDLINE::ENDLINE::(HEADER index)::y
         | None ->
-            [{HeaderName = parseInLineElements tl; Level = depth}], [HEADER index]
+            [{HeaderName = parseInLineElements tl; Level = depth}], [ENDLINE;ENDLINE;HEADER index]
     //hash without whitespace, need to rebuild hash
     | a::tl when depth > 0 ->
         tocParse tl 0 index
