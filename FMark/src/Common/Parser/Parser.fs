@@ -65,6 +65,7 @@ let parseList toks =
             match toks with
             | WHITESPACE n:: rtks -> (n/2, rtks)
             | _ -> (0, toks)
+    let excludeSelfSkip x = match x with | None -> None | Some 1 -> None | Some n -> Some (n-1)
     /// return list type, list level, and list content
     let (|GetLIContent|_|) toks =
         // return list level and remaining toks
@@ -112,12 +113,12 @@ let parseList toks =
                         xOnwards currentLine lines
                         |> getCurrentList (currentLv+1) []
                         |> parseList' (currentLv+1)
-                    (currentLv, NestedList(listItem)::listItems, skip, currentLine+1)
+                    (currentLv, NestedList(listItem)::listItems, skip |> excludeSelfSkip, currentLine+1)
                 | _ -> failwith "list item level < current level, not possible"
             | Some skip ->
-                match skip-1 with
+                match skip with
                 | 1 -> (currentLv, listItems, None, currentLine+1)
-                | n when n>1 -> (currentLv, listItems, Some (skip-1), currentLine+1)
+                | n when n>1 -> (currentLv, listItems, Some (n-1), currentLine+1)
                 | _ -> failwith "negative or zero skip number, not possible"
         List.fold listFolder (level, [], None, 0) lines
         |> (fun (_, lis, _, _) ->
@@ -127,6 +128,7 @@ let parseList toks =
                 | n -> Some n
             {ListType=listType; ListItem=lis |> List.rev; Depth=depth}, doSkip)
     toks
+    |> trimENDLINEs
     |> cutIntoLines
     |> parseList' 0
     |> fst
