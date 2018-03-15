@@ -10678,7 +10678,15 @@ function mdList(list) {
             return retFold(mdList(li.data));
         } else {
             return retFold(function (s_1) {
-                return ord ? Object(__WEBPACK_IMPORTED_MODULE_0__Logger_Logger_fs__["d" /* logPassN */])(logger.Debug, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s%i. %s\n"))(makeTabs(tab), tupledArg[1], s_1)) : Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s- %s\n"))(makeTabs(tab), s_1);
+                var matchValue = [ord, s_1];
+
+                if (matchValue[1] === "") {
+                    return "";
+                } else if (matchValue[0]) {
+                    return Object(__WEBPACK_IMPORTED_MODULE_0__Logger_Logger_fs__["d" /* logPassN */])(logger.Debug, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s%i. %s\n"))(makeTabs(tab), tupledArg[1], s_1));
+                } else {
+                    return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%s- %s\n"))(makeTabs(tab), s_1);
+                }
             }(mdInlineElements(li.data)));
         }
     };
