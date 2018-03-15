@@ -89,13 +89,13 @@ let rec strList list =
         |> attachSimpleTag listTag
 
 /// process header
-let strHeader header =
+let strHeader (header,id) =
     match header with
     | {HeaderName=line;Level=lv} ->
         let tagName = "h" + string(lv)
         line
         |> strInlineElements
-        |> attachSimpleTag tagName
+        |> attachHTMLTag (tagName, ["id", id], true)
 
 /// process inline footnotes
 let strInlineFootnote s =
@@ -194,7 +194,7 @@ let strBody pObjs =
         | CodeBlock (c, l) -> attachHTMLTag ("code", [("language", mapLang l)], true) c
         | Table rows -> strTable rows
         | List l -> strList l
-        | Header (h,s) -> strHeader h //#### DO SOMETHING WITH STRING HERE
+        | Header (h,s) -> strHeader (h,s)
         | Footnote (i,_) -> strInlineFootnote (string i)
         | Citation (s,_,_) -> strInlineFootnote s
         | ContentTable toc -> strToC toc

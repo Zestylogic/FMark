@@ -123,12 +123,12 @@ let listTests =
 let headerTests =
     makeExpectoTestList id id strHeader "header tests" [
         (
-            {HeaderName=[FrmtedString(Literal "header")]; Level=1},
-            "<h1>header</h1>", "h1"
+            ({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1"),
+            "<h1 id=\"header1\">header</h1>", "h1"
         );
         (
-            {HeaderName=[FrmtedString(Literal "header")]; Level=2},
-            "<h2>header</h2>", "h2"
+            ({HeaderName=[FrmtedString(Literal "header")]; Level=2},"header2"),
+            "<h2 id=\"header2\">header</h2>", "h2"
         );
     ]
 
@@ -249,7 +249,7 @@ let fullBodyTests =
     makeExpectoTestList id catStr strBody "full body tests" [
         (
             [
-                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"HEADER STRING NOT IMPLEMENTED");
+                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1");
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
                         NestedList{ListType=OL;ListItem=
@@ -259,7 +259,7 @@ let fullBodyTests =
                 Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ],
-            ["<h1>header</h1>";
+            ["<h1 id=\"header1\">header</h1>";
             "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>";
             "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
             "<p>Go go go!<a href=\"brokenURL\">broken link</a>";NewLineStr;"Come!</p>"]
@@ -272,7 +272,7 @@ let ``global simple test`` =
     makeExpectoTestList id id genHTML "top level genHTML test" [
         ("FMarkToHtml first release",
             [
-                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"HEADER STRING NOT IMPLEMENTED");
+                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1");
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
                         NestedList{ListType=OL;ListItem=
@@ -282,6 +282,6 @@ let ``global simple test`` =
                 Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ]),
-        sprintf "<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>FMarkToHtml first release</title></head><body><h1>header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>%sCome!</p></body>" NewLineStr,
+        sprintf "<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>FMarkToHtml first release</title></head><body><h1 id=\"header1\">header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>%sCome!</p></body>" NewLineStr,
          "all in one"
     ]
