@@ -18,6 +18,9 @@ let makeSimpleTestList f = makeTestList id id f
 let makeTestFromCharList l e =
     List.map (fun (a, b) -> (sprintf "Token %s" a), a, [b; e]) l
 
+let makeTestFromCharListWithB l e beg =
+    List.map (fun (a, b) -> (sprintf "Token %s" a), a, [beg; b; e]) l
+
 // --------------------------------------------------
 // Unit Tests
 // --------------------------------------------------
@@ -266,7 +269,7 @@ open Lexer
 /// Check if all the tokens are lexed properly
 [<Tests>]
 let lexTokenizeTokenTest =
-    let tokenTests = makeTestFromCharList charList ENDLINE
+    let tokenTests = makeTestFromCharListWithB charList ENDLINE BOF
     makeSimpleTestList lex "PreprocessorTokenize" tokenTests
 
 /// Tests for the complete lexer
@@ -275,64 +278,64 @@ let lexTest =
     makeSimpleTestList lex "Lex" [
         "Literal",
         "Hello",
-        [LITERAL "Hello"; ENDLINE]
+        [BOF; LITERAL "Hello"; ENDLINE]
 
         "Number",
         "9",
-        [NUMBER "9"; ENDLINE]
+        [BOF; NUMBER "9"; ENDLINE]
 
         "WhiteSpace",
         "d          ",
-        [LITERAL "d"; WHITESPACE 10; ENDLINE]
+        [BOF; LITERAL "d"; WHITESPACE 10; ENDLINE]
 
         "Very simple markdown",
         "Hello, world",
-        [Types.Token.LITERAL "Hello"; COMMA; WHITESPACE 1; Types.Token.LITERAL "world"; Types.Token.ENDLINE]
+        [BOF; LITERAL "Hello"; COMMA; WHITESPACE 1; LITERAL "world"; ENDLINE]
 
         "With special characters",
         "There is _nothing_ to do",
-        [LITERAL "There"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; UNDERSCORE
+        [BOF; LITERAL "There"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; UNDERSCORE
          LITERAL "nothing"; UNDERSCORE; WHITESPACE 1; LITERAL "to"; WHITESPACE 1
          LITERAL "do"; ENDLINE]
 
         "Escaping characters",
         @"\_\\\***\%\+",
-        [LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE]
+        [BOF; LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE]
 
         "Whitespace",
         "          d    ",
-        [WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
+        [BOF; WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
 
         "One line codeblock",
         "``` python",
-        [CODEBLOCK ("", Python); ENDLINE]
+        [BOF; CODEBLOCK ("", Python); ENDLINE]
 
         "One line html",
         "<span>This is a span element</span>",
-        [LITERAL "<span>"; LITERAL "This is a span element"; LITERAL "</span>"; ENDLINE]
+        [BOF; LITERAL "<span>"; LITERAL "This is a span element"; LITERAL "</span>"; ENDLINE]
 
         "Online closing html",
         "<img src=\"https://github.com/IMAGE.png\" />",
-        [LITERAL "<img src=\"https://github.com/IMAGE.png\" />"; ENDLINE]
+        [BOF; LITERAL "<img src=\"https://github.com/IMAGE.png\" />"; ENDLINE]
 
         "HTML with non-HTML start",
         "This is an image: <span>Hello</span>",
-        [LITERAL "This"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; LITERAL "an"
+        [BOF; LITERAL "This"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; LITERAL "an"
          WHITESPACE 1; LITERAL "image"; COLON; WHITESPACE 1; LITERAL "<span>"
          LITERAL "Hello"; LITERAL "</span>"; ENDLINE]
 
         "Singleton HTML passthrough",
         "Singleton <br> passthrough",
-        [LITERAL "Singleton"; WHITESPACE 1; LITERAL "<br>"; WHITESPACE 1; LITERAL "passthrough"; ENDLINE]
+        [BOF; LITERAL "Singleton"; WHITESPACE 1; LITERAL "<br>"; WHITESPACE 1; LITERAL "passthrough"; ENDLINE]
 
         "HTML image tag",
         "Embedding an <img src=\"https://github.com/IMAGE\"> in text",
-        [LITERAL "Embedding"; WHITESPACE 1; LITERAL "an"; WHITESPACE 1; LITERAL"<img src=\"https://github.com/IMAGE\">"
+        [BOF; LITERAL "Embedding"; WHITESPACE 1; LITERAL "an"; WHITESPACE 1; LITERAL"<img src=\"https://github.com/IMAGE\">"
          WHITESPACE 1; LITERAL "in"; WHITESPACE 1; LITERAL "text"; ENDLINE]
 
         "A lot of nested tags",
         "<p><p><p><p><p><p><p> </p></p></p></p></p></p></p>",
-        [LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"
+        [BOF; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"
          LITERAL "<p>"; LITERAL " "; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"
          LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; ENDLINE]
     ]
@@ -343,32 +346,32 @@ let lexListTest =
     makeSimpleTestList lexList "LexList" [
         "Very simple multiline markdown",
         ["Hello, world"; "Line 2"],
-        [LITERAL "Hello"; COMMA; WHITESPACE 1; LITERAL "world"; ENDLINE; LITERAL "Line"; WHITESPACE 1
+        [BOF; LITERAL "Hello"; COMMA; WHITESPACE 1; LITERAL "world"; ENDLINE; LITERAL "Line"; WHITESPACE 1
          NUMBER "2"; ENDLINE]
 
         "With special characters",
         ["__Bold__"; "_Emphasis_"],
-        [DUNDERSCORE; LITERAL "Bold"; DUNDERSCORE; ENDLINE; UNDERSCORE; LITERAL "Emphasis"; UNDERSCORE
+        [BOF; DUNDERSCORE; LITERAL "Bold"; DUNDERSCORE; ENDLINE; UNDERSCORE; LITERAL "Emphasis"; UNDERSCORE
          ENDLINE]
 
         "Escaping characters",
         [@"\_\\\***\%\+"; @"\_\\\***\%\+"; @"\_\\\*\%\+"],
-        [LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
+        [BOF; LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
          LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
          LITERAL "_"; LITERAL @"\"; LITERAL "*"; LITERAL "%"; LITERAL "+"; ENDLINE]
 
         "Whitespace",
         ["          d    "],
-        [WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
+        [BOF; WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
 
         "Multiline codeblock",
         ["```python"; "This is inside the code block"; "```"],
-        [CODEBLOCK ("This is inside the code block\n", Python); ENDLINE]
+        [BOF; CODEBLOCK ("This is inside the code block\n", Python); ENDLINE]
 
         "HTML passthrough",
         ["This should not be passed through"; "<div>This should just all be passed through, </div>"
          "This should not, <span>This should not be tokenized []</span>"],
-        [LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"
+        [BOF; LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"
          WHITESPACE 1; LITERAL "be"; WHITESPACE 1; LITERAL "passed"; WHITESPACE 1
          LITERAL "through"; ENDLINE; LITERAL "<div>"; LITERAL "This should just all be passed through, "; LITERAL "</div>"
          ENDLINE; LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"; COMMA; WHITESPACE 1
