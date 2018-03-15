@@ -264,7 +264,7 @@ let testGlobal2 =
                 MINUS; NUMBER "4"; ENDLINE],
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
                 Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
-                Paragraph [[Link (Literal "Footer1","./#1"); FrmtedString (Literal "text4")]];
+                Paragraph [[Link (Literal "Footer1","#1"); FrmtedString (Literal "text4")]];
                 Paragraph [[FrmtedString (Literal "(Eric, 2017)text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);
                 Citation (

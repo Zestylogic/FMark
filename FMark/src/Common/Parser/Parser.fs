@@ -56,6 +56,7 @@ let (|MatchTable|_|) toks =
         | _ -> None
     | _ -> None
 
+/// strip header to a minimal string for id purposes
 let headerIDGen id hd =
     let hdLine = hd.HeaderName
     let rec headerIDGen' hdLine =

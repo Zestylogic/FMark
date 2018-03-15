@@ -327,7 +327,7 @@ let parseInLineElements2 ftLst toks =
                 | _ -> false
             let ft = matchFootnote i ftLst
             if ft then //make into link if exist
-                [(("Footer" + string i |> Literal),"./#"+string i) |> Link], rtks
+                [(("Footer" + string i |> Literal),"#"+string i) |> Link], rtks
             else //just superscript if does not exist
                 ["Footer" + string i |> Literal |> FrmtedString], rtks
         | CITATION str :: rtks ->
@@ -338,10 +338,9 @@ let parseInLineElements2 ftLst toks =
                 | [] -> None
             let ft = matchCitation str ftLst
             match ft with
-            | Some ref -> //make into link if exist
-                ref, rtks
-            | None -> //just superscript if does not exist
-                ["Footer " + str |> Literal |> FrmtedString], rtks
+            | Some ref -> ref, rtks
+            | None ->
+                ["Footer " + str + " not found" |> Literal |> FrmtedString], rtks
         | _ ->
             let str = mapTok toks.[0]
             FrmtedString (Literal str)::currentLine, xOnwards 1 toks
