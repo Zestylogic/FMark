@@ -4,9 +4,11 @@ open Types
 open MarkalcShared
 open Markalc
 open Expression
-open Shared
 open Expecto.ExpectoFsCheck
 open Expecto
+let EQTest func fname name inp outp =
+    testCase name <| fun () ->
+    Expect.equal (func inp) outp (sprintf "%s" fname)
 
 // ####################### DATA ###################
 let expressionData = [
