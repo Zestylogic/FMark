@@ -284,8 +284,7 @@ let ``preprocess table test`` =
        
     ]
 
-[<Tests>]
-let ``parse list test`` =
+let listTestData =
     let liPObj = StringItem([FrmtedString(Literal "li1")])
     let asLiToks = [ASTERISK;WHITESPACE 1;LITERAL "li1";ENDLINE]
     let muLiToks = [MINUS;WHITESPACE 1;LITERAL "li1";ENDLINE]
@@ -293,7 +292,7 @@ let ``parse list test`` =
     let invalidNOliToks = [LITERAL "li1";ENDLINE]
     let ulPObj = {ListType=UL; ListItem=[liPObj]; Depth=0}
     let olPObj = {ListType=OL; ListItem=[liPObj]; Depth=0}
-    makeExpectoTestList deleteTrailingENDLINEs id parseList "parse list test" [
+    [
         (
             asLiToks,
             {ListType=UL; ListItem=[liPObj]; Depth=0},
@@ -347,6 +346,15 @@ let ``parse list test`` =
             "OL, two nested lists"
         );
     ]
+
+[<Tests>]
+let ``parse list test`` =
+    makeExpectoTestList deleteTrailingENDLINEs id parseList "parse list test" listTestData
+
+[<Tests>]
+let ``parse list test global`` =
+    let makeOkAndList x = [x |> List] |> Ok
+    makeExpectoTestList deleteTrailingENDLINEs makeOkAndList parse "parse list global test" listTestData
 //let allTestsWithExpecto() =
 //    runTestsInAssembly defaultConfig [||]
 //let runParserTest =
