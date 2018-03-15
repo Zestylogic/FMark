@@ -6,6 +6,10 @@ open Logger
 open Shared
 open Expecto
 
+let mutable testResult = 0
+let setTestResult i =
+    testResult <- i
+
 type CLIArguments =
     | [<MainCommand;AltCommandLine("-i")>] Input of path:string
     | [<AltCommandLine("-o")>] Output of path:string
@@ -27,10 +31,10 @@ let ifFlagRunTests (r:ParseResults<CLIArguments>) =
     | Some(s) -> s |> function
                       | Some(true) -> 
                         globLog.Info (Some 30) "Running tests sequentially."
-                        Tests.runTestsInAssembly defaultConfig [|"--sequenced"|] |> ignore
+                        Tests.runTestsInAssembly defaultConfig [|"--sequenced"|] |> setTestResult
                       | _ -> 
                         globLog.Info (Some 33) "Running tests in parallel."
-                        Tests.runTestsInAssembly defaultConfig [||] |> ignore
+                        Tests.runTestsInAssembly defaultConfig [||] |> setTestResult
     | None(_) -> ()
     r
 
@@ -72,9 +76,7 @@ let processCLI argv =
         |> function
             | Ok(s)
             | Error(s) -> FileIO.writeToFile outFile s
-
-
 [<EntryPoint>]
 let main argv =
     processCLI argv
-    0
+    testResult // Return test result as exit code, if no tests ran it will default to 0
