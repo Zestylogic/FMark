@@ -6,6 +6,9 @@ open Markalc
 open Expression
 open Expecto.ExpectoFsCheck
 open Expecto
+let EQTest func fname name inp outp =
+    testCase name <| fun () ->
+    Expect.equal (func inp) outp (sprintf "%s" fname)
 
 // ####################### DATA ###################
 let expressionData = [
@@ -209,9 +212,6 @@ let fullTestData = [
      ans false [NUMBER "5"] [NUMBER "19"] [NUMBER "12"]] |> Ok;
 ]
 // ####################### FUNCTIONS #####################
-let EQTest func fname name inp outp =
-    testCase name <| fun () ->
-    Expect.equal (func inp) outp (sprintf "%s" fname)
 let addTestList test name dataTransform data = 
     (List.map (dataTransform >> (unfoldTuple3 test)) data)
     |> Expecto.Tests.testList name
