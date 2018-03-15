@@ -85,14 +85,16 @@ let mdTable (rows: PRow list) =
 /// recursively process a list
 let rec mdList list =
     let mdListItem ord tab (pStr,pCount) li =
+            let makeTabs num = 
+                if num <= 0 then "" else String.replicate num "\t"
             let retFold s = pStr + s, pCount + 1;
             match li with
             | StringItem(line) -> mdInlineElements line |> (fun s -> 
                 if ord 
                 then 
-                    sprintf "%s%i. %s\n" (String.replicate tab "\t") pCount s
+                    sprintf "%s%i. %s\n" (makeTabs tab) pCount s
                     |> logPassN logger.Debug
-                else sprintf "%s- %s\n" (String.replicate tab "\t") s) |> retFold
+                else sprintf "%s- %s\n" (makeTabs tab) s) |> retFold
             | NestedList(list) -> mdList list |> retFold
             
     match list with
