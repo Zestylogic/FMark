@@ -112,16 +112,12 @@ let parseList toks =
                         xOnwards currentLine lines
                         |> getCurrentList (currentLv+1) []
                         |> parseList' (currentLv+1)
-                    if skip =  Some(1) 
-                    then 
-                        (currentLv, NestedList(listItem)::listItems, None, currentLine+1)
-                    else
-                        (currentLv, NestedList(listItem)::listItems, skip, currentLine+1)
+                    (currentLv, NestedList(listItem)::listItems, skip, currentLine+1)
                 | _ -> failwith "list item level < current level, not possible"
             | Some skip ->
                 match skip-1 with
                 | 1 -> (currentLv, listItems, None, currentLine+1)
-                | n when n>0 -> (currentLv, listItems, Some (skip-1), currentLine+1)
+                | n when n>1 -> (currentLv, listItems, Some (skip-1), currentLine+1)
                 | _ -> failwith "negative or zero skip number, not possible"
         List.fold listFolder (level, [], None, 0) lines
         |> (fun (_, lis, _, _) -> {ListType=listType; ListItem=lis |> List.rev; Depth=depth}, List.length lines |> Some)
