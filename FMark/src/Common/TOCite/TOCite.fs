@@ -12,7 +12,7 @@ let rec tocParse tocLst depth index : THeader list * Token list =
     // rebuild hash if no whitespace after
     let rec fakehash dep =
         match dep with
-        | 0 -> [ENDLINE]
+        | 0 -> [ENDLINE;ENDLINE]
         | _ -> HASH :: fakehash (dep-1)
 
     match tocLst with
