@@ -283,8 +283,8 @@ let reallyBigTest =
                     FrmtedString (Literal "Accessed March 4, 2018. ");
                     Link (Literal "www.example.com/website","www.example.com/website")]
                 )
-            ]),"hi",
-        "what"
+            ]),"<!DOCTYPE html><head><meta name="viewport" content="width=device-width"><title>big HTML test</title></head><body><p>text1#text2</p><h1 id="Header10">Header1</h1><p><a href="#footnote-1">Footer1</a>text4</p><p><a href="#footnot-Eric">(Wang, 2017)</a>text6</p><sup><a href="#footnote-1">1</a></sup><sup><a href="#footnote-Eric">Eric</a></sup></body>",
+        "wow very big"
     ]
 
 
