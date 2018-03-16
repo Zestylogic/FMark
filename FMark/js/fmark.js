@@ -7222,8 +7222,8 @@ function processString_(dir, formatFunc) {
 
 
 function processString(dir, format) {
-    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(format.tag === 1 ? processString_(dir, __WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__["a" /* mdBody */]) : processString_(dir, function (pObjs_1) {
-        return Object(__WEBPACK_IMPORTED_MODULE_8__HTMLGen_HTMLGen_fs__["a" /* genHTML */])(dir, pObjs_1);
+    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(format.tag === 1 ? processString_(dir, __WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__["a" /* mdBody */]) : processString_(dir, function (x) {
+        return Object(__WEBPACK_IMPORTED_MODULE_8__HTMLGen_HTMLGen_fs__["a" /* genHTML */])(dir, x);
     }));
 }
 
