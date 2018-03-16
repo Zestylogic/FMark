@@ -207,10 +207,12 @@ let genHead htmlTitle =
 /// generate HTML body
 let genBody pObjs =
     strBody pObjs
-    |> attachSimpleTag "body"
+
+let HTMLify title s = 
+    attachMetaTag "!DOCTYPE" ["html", ""]
+    + genHead title
+    + (s|>attachSimpleTag "body")
 
 /// top level HTMLGen
 let genHTML htmlTitle pObjs =
-    attachMetaTag "!DOCTYPE" ["html", ""]
-    + genHead htmlTitle
-    + genBody pObjs
+    genBody pObjs |> (HTMLify htmlTitle)
