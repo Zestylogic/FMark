@@ -150,7 +150,7 @@ let ``HTML head generation test``=
     makeExpectoTestList id id genHead "HTML head generation test" [
         (
             "tiny title",
-            "<head><meta name=\"viewport\" content=\"width=device-width\"><title>tiny title</title></head>",
+            "<head><meta name=\"viewport\" content=\"width=device-width\"><title>tiny title</title><script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head>",
             "simple header"
         );
     ]
@@ -283,7 +283,7 @@ let reallyBigTest =
                     FrmtedString (Literal "Accessed March 4, 2018. ");
                     Link (Literal "www.example.com/website","www.example.com/website")]
                 )
-            ]),"<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>big HTML test</title></head><body><p>text1#text2</p><h1 id=\"Header10\">Header1</h1><p><a href=\"#footnote-1\">Footer1</a>text4</p><p><a href=\"#footnot-Eric\">(Wang, 2017)</a>text6</p><p id=\"#footnote-1\">footer1</p><p id=\"#footnote-Eric\">Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p></body>",
+            ]),"<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>big HTML test</title><script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head><body><p>text1#text2</p><h1 id=\"Header10\">Header1</h1><p><a href=\"#footnote-1\">Footer1</a>text4</p><p><a href=\"#footnot-Eric\">(Wang, 2017)</a>text6</p><p id=\"#footnote-1\">footer1</p><p id=\"#footnote-Eric\">Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p></body>",
         "wow very big"
     ]
 
@@ -304,6 +304,6 @@ let ``global simple test`` =
                 Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ]),
-        sprintf "<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>FMarkToHtml first release</title></head><body><h1 id=\"header1\">header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>%sCome!</p></body>" NewLineStr,
+        sprintf "<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>FMarkToHtml first release</title><script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head><body><h1 id=\"header1\">header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>%sCome!</p></body>" NewLineStr,
          "all in one"
     ]
