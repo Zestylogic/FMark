@@ -99,7 +99,9 @@ let returnTokens = function
 
 /// Lex a single string
 let lex =
-    lexS Normal >> returnTokens
+    let cons a b = 
+        a@b
+    lexS Normal >> returnTokens >> cons [ENDLINE;ENDLINE]
 
 /// Lexes a list of strings and returns the Token list
 let lexList strl =
