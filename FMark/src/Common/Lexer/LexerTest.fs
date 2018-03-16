@@ -287,7 +287,7 @@ let lexTest =
 
         "Very simple markdown",
         "Hello, world",
-        [Types.Token.LITERAL "Hello"; COMMA; WHITESPACE 1; Types.Token.LITERAL "world"; Types.Token.ENDLINE]
+        [LITERAL "Hello"; COMMA; WHITESPACE 1; LITERAL "world"; ENDLINE]
 
         "With special characters",
         "There is _nothing_ to do",

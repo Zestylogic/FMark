@@ -98,8 +98,8 @@ let returnTokens = function
         tok
 
 /// Lex a single string
-let lex s =
-    lexS Normal s |> returnTokens
+let lex =
+    lexS Normal >> returnTokens
 
 /// Lexes a list of strings and returns the Token list
 let lexList strl =
