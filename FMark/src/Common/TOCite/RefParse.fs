@@ -111,21 +111,27 @@ let build gType tokLst =
         match gType with
         | OverallM f -> f tl
 
-let refInLine style ref:TLine =
+let refInLine style ref: TFrmtedString =
     match ref.Author, ref.Year with
     | Some a, Some y ->
-        let surname = (List.rev a).Head
         // this part is weirddddd
-        match surname with
-        | LITERAL lit ->
+        match a with
+        | LITERAL lit :: _ ->
             match style with
-            | IEEE -> []
+            | IEEE -> Literal "NOT IMPLEMENTED"
             | Chicago ->
-                ["(" + lit + ", " + string(y) + ")" |> Literal |> FrmtedString]
+                "(" + lit + ", " + string(y) + ")" |> Literal
             | Harvard ->
-                ["(" + lit + " " + string(y) + ")" |> Literal |> FrmtedString]
-        | _ -> []
-    | _,_ -> []
+                "(" + lit + " " + string(y) + ")" |> Literal
+        | _ -> "(Name unavailable)" |> Literal // to change?
+    | None, Some y ->
+        "("+string(y)+")" |> Literal
+    | Some a,_ ->
+        match a with
+        | LITERAL lit :: _ ->
+            "("+lit+")" |> Literal
+        | _ -> "(Name unavailable)" |> Literal
+    | _, _ -> "(n.d.)" |> Literal    
 
 let ref2TLine format ref:TLine =
     match format with
