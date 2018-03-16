@@ -34,6 +34,7 @@ and mdInlineElements' b eles =
         | FrmtedString fStr -> mdFStr fStr
         | Link (ht, url) -> (mdFStr ht |> sbraSurround) + (url |> braSurround)
         | Picture (alt, url) -> (alt |> sbraSurround |> sprintf "!%s" ) +  (url |> braSurround)
+        | Reference (ht, _) -> ("^" + ht) |> sbraSurround
     List.fold convertMd (sprintf "%s" b) eles
 and mdInlineElements = mdInlineElements' ""
 
