@@ -205,18 +205,30 @@ let genHead htmlTitle =
         pStr + attachMetaTag "meta" md
     List.fold genMetadata "" metaData
     + attachSimpleTag "title" htmlTitle
-    + "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>"
+    
     |> attachSimpleTag "head"
 
 /// generate HTML body
-let genBody pObjs =
+let genBody (pObjs,toc) =
     strBody pObjs
+    + // insert table of contents
+    match toc with
+    | Some x -> 
+        strToC x
+    | None -> ""
+    // insert javascript in the end of HTML doc to make page rendering faster
+    +
+    attachHTMLTag ("script",
+        [
+            ("type", "text/javascript");
+            ("async", "");
+            ("src", "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML")
+        ], true) ""
+    |> attachSimpleTag "body"
 
-let HTMLify title s = 
-    attachMetaTag "!DOCTYPE" ["html", ""]
-    + genHead title
-    + (s|>attachSimpleTag "body")
 
 /// top level HTMLGen
-let genHTML (htmlTitle,pObjs) =
-    genBody pObjs |> (HTMLify htmlTitle)
+let genHTML (htmlTitle, pObjs, toc:Ttoc option) =
+    attachMetaTag "!DOCTYPE" ["html", ""]
+    + genHead htmlTitle
+    + genBody (pObjs,toc)
