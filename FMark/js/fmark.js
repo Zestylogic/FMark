@@ -1980,45 +1980,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
-<<<<<<< HEAD
-"use strict";
-/* unused harmony export compare */
-/* unused harmony export compareTo */
-/* unused harmony export startsWith */
-/* unused harmony export indexOfAny */
-/* harmony export (immutable) */ __webpack_exports__["b"] = printf;
-/* harmony export (immutable) */ __webpack_exports__["f"] = toConsole;
-/* unused harmony export toConsoleError */
-/* harmony export (immutable) */ __webpack_exports__["h"] = toText;
-/* harmony export (immutable) */ __webpack_exports__["g"] = toFail;
-/* unused harmony export fsFormat */
-/* unused harmony export format */
-/* unused harmony export endsWith */
-/* unused harmony export initialize */
-/* unused harmony export insert */
-/* unused harmony export isNullOrEmpty */
-/* unused harmony export isNullOrWhiteSpace */
-/* harmony export (immutable) */ __webpack_exports__["a"] = join;
-/* unused harmony export validateGuid */
-/* unused harmony export newGuid */
-/* unused harmony export guidToArray */
-/* unused harmony export arrayToGuid */
-/* unused harmony export toBase64String */
-/* unused harmony export fromBase64String */
-/* unused harmony export padLeft */
-/* unused harmony export padRight */
-/* unused harmony export remove */
-/* harmony export (immutable) */ __webpack_exports__["c"] = replace;
-/* harmony export (immutable) */ __webpack_exports__["d"] = replicate;
-/* unused harmony export getCharAtIndex */
-/* harmony export (immutable) */ __webpack_exports__["e"] = split;
-/* harmony export (immutable) */ __webpack_exports__["i"] = trim;
-/* unused harmony export filter */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Date__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__RegExp__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Util__ = __webpack_require__(3);
-=======
->>>>>>> htmlgen
 
 
 var Language = function () {
@@ -2336,240 +2297,6 @@ var Alignment = function () {
 
         this.tag = tag | 0;
     }
-<<<<<<< HEAD
-    throw new Error("Guid should contain 32 digits with 4 dashes: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
-}
-/* tslint:disable */
-// From https://gist.github.com/LeverOne/1308368
-function newGuid() {
-    var b = "";
-    for (var a = 0; a++ < 36; b += a * 51 & 52 ? (a ^ 15 ? 8 ^ Math.random() * (a ^ 20 ? 16 : 4) : 4).toString(16) : "-") {}
-    return b;
-}
-// Maps for number <-> hex string conversion
-var _convertMapsInitialized = false;
-var _byteToHex = void 0;
-var _hexToByte = void 0;
-function initConvertMaps() {
-    _byteToHex = new Array(256);
-    _hexToByte = {};
-    for (var i = 0; i < 256; i++) {
-        _byteToHex[i] = (i + 0x100).toString(16).substr(1);
-        _hexToByte[_byteToHex[i]] = i;
-    }
-    _convertMapsInitialized = true;
-}
-/** Parse a UUID into it's component bytes */
-// Adapted from https://github.com/zefferus/uuid-parse
-function guidToArray(s) {
-    if (!_convertMapsInitialized) {
-        initConvertMaps();
-    }
-    var i = 0;
-    var buf = new Uint8Array(16);
-    s.toLowerCase().replace(/[0-9a-f]{2}/g, function (oct) {
-        switch (i) {
-            // .NET saves first three byte groups with differten endianness
-            // See https://stackoverflow.com/a/16722909/3922220
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                buf[3 - i++] = _hexToByte[oct];
-                break;
-            case 4:
-            case 5:
-                buf[9 - i++] = _hexToByte[oct];
-                break;
-            case 6:
-            case 7:
-                buf[13 - i++] = _hexToByte[oct];
-                break;
-            case 8:
-            case 9:
-            case 10:
-            case 11:
-            case 12:
-            case 13:
-            case 14:
-            case 15:
-                buf[i++] = _hexToByte[oct];
-                break;
-        }
-    });
-    // Zero out remaining bytes if string was short
-    while (i < 16) {
-        buf[i++] = 0;
-    }
-    return buf;
-}
-/** Convert UUID byte array into a string */
-function arrayToGuid(buf) {
-    if (buf.length !== 16) {
-        throw new Error("Byte array for GUID must be exactly 16 bytes long");
-    }
-    if (!_convertMapsInitialized) {
-        initConvertMaps();
-    }
-    return _byteToHex[buf[3]] + _byteToHex[buf[2]] + _byteToHex[buf[1]] + _byteToHex[buf[0]] + "-" + _byteToHex[buf[5]] + _byteToHex[buf[4]] + "-" + _byteToHex[buf[7]] + _byteToHex[buf[6]] + "-" + _byteToHex[buf[8]] + _byteToHex[buf[9]] + "-" + _byteToHex[buf[10]] + _byteToHex[buf[11]] + _byteToHex[buf[12]] + _byteToHex[buf[13]] + _byteToHex[buf[14]] + _byteToHex[buf[15]];
-}
-/* tslint:enable */
-function notSupported(name) {
-    throw new Error("The environment doesn't support '" + name + "', please use a polyfill.");
-}
-function toBase64String(inArray) {
-    var str = "";
-    for (var i = 0; i < inArray.length; i++) {
-        str += String.fromCharCode(inArray[i]);
-    }
-    return typeof btoa === "function" ? btoa(str) : notSupported("btoa");
-}
-function fromBase64String(b64Encoded) {
-    var binary = typeof atob === "function" ? atob(b64Encoded) : notSupported("atob");
-    var bytes = new Uint8Array(binary.length);
-    for (var i = 0; i < binary.length; i++) {
-        bytes[i] = binary.charCodeAt(i);
-    }
-    return bytes;
-}
-function padLeft(str, len, ch, isRight) {
-    ch = ch || " ";
-    str = String(str);
-    len = len - str.length;
-    for (var i = 0; i < len; i++) {
-        str = isRight ? str + ch : ch + str;
-    }
-    return str;
-}
-function padRight(str, len, ch) {
-    return padLeft(str, len, ch, true);
-}
-function remove(str, startIndex, count) {
-    if (startIndex >= str.length) {
-        throw new Error("startIndex must be less than length of string");
-    }
-    if (typeof count === "number" && startIndex + count > str.length) {
-        throw new Error("Index and count must refer to a location within the string.");
-    }
-    return str.slice(0, startIndex) + (typeof count === "number" ? str.substr(startIndex + count) : "");
-}
-function replace(str, search, replace) {
-    return str.replace(new RegExp(Object(__WEBPACK_IMPORTED_MODULE_1__RegExp__["b" /* escape */])(search), "g"), replace);
-}
-function replicate(n, x) {
-    return initialize(n, function () {
-        return x;
-    });
-}
-function getCharAtIndex(input, index) {
-    if (index < 0 || index > input.length) {
-        throw new Error("System.IndexOutOfRangeException: Index was outside the bounds of the array.");
-    }
-    return input[index];
-}
-function split(str, splitters, count, removeEmpty) {
-    count = typeof count === "number" ? count : null;
-    removeEmpty = typeof removeEmpty === "number" ? removeEmpty : null;
-    if (count < 0) {
-        throw new Error("Count cannot be less than zero");
-    }
-    if (count === 0) {
-        return [];
-    }
-    var splitters2 = splitters;
-    if (!Array.isArray(splitters)) {
-        var len = arguments.length;
-        splitters2 = Array(len - 1);
-        for (var key = 1; key < len; key++) {
-            splitters2[key - 1] = arguments[key];
-        }
-    }
-    splitters2 = splitters2.map(function (x) {
-        return Object(__WEBPACK_IMPORTED_MODULE_1__RegExp__["b" /* escape */])(x);
-    });
-    splitters2 = splitters2.length > 0 ? splitters2 : [" "];
-    var i = 0;
-    var splits = [];
-    var reg = new RegExp(splitters2.join("|"), "g");
-    while (count == null || count > 1) {
-        var m = reg.exec(str);
-        if (m === null) {
-            break;
-        }
-        if (!removeEmpty || m.index - i > 0) {
-            count = count != null ? count - 1 : count;
-            splits.push(str.substring(i, m.index));
-        }
-        i = reg.lastIndex;
-    }
-    if (!removeEmpty || str.length - i > 0) {
-        splits.push(str.substring(i));
-    }
-    return splits;
-}
-function trim(str, side) {
-    for (var _len4 = arguments.length, chars = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
-        chars[_key4 - 2] = arguments[_key4];
-    }
-
-    if (side === "both" && chars.length === 0) {
-        return str.trim();
-    }
-    if (side === "start" || side === "both") {
-        var reg = chars.length === 0 ? /^\s+/ : new RegExp("^[" + Object(__WEBPACK_IMPORTED_MODULE_1__RegExp__["b" /* escape */])(chars.join("")) + "]+");
-        str = str.replace(reg, "");
-    }
-    if (side === "end" || side === "both") {
-        var _reg = chars.length === 0 ? /\s+$/ : new RegExp("[" + Object(__WEBPACK_IMPORTED_MODULE_1__RegExp__["b" /* escape */])(chars.join("")) + "]+$");
-        str = str.replace(_reg, "");
-    }
-    return str;
-}
-function filter(pred, x) {
-    return x.split("").filter(pred).join("");
-}
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return Language; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return Token; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return TFrmtedString; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return InlineElement; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return THeader; });
-/* unused harmony export Ttoc */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return TListType; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return TList; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return TListItem; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Alignment; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Cell; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Row; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return PCell; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return PRow; });
-/* unused harmony export RefFrmt */
-/* unused harmony export RefType */
-/* unused harmony export Ref */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return ParsedObj; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return OutFormat; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-
-
-
-
-var Language = function () {
-    function Language(tag) {
-        _classCallCheck(this, Language);
-
-        this.tag = tag | 0;
-=======
 
     _createClass(Alignment, [{
         key: __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["a" /* default */].reflection,
@@ -2601,7 +2328,6 @@ var Cell = function () {
 
         this.tag = tag | 0;
         this.data = data;
->>>>>>> htmlgen
     }
 
     _createClass(Cell, [{
@@ -3245,31 +2971,6 @@ function createPrinter(str, cont) {
                 }
             }
         }
-<<<<<<< HEAD
-    }]);
-
-    return OutFormat;
-}();
-Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__["b" /* setType */])("Types.OutFormat", OutFormat);
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["c"] = map;
-/* unused harmony export mapError */
-/* harmony export (immutable) */ __webpack_exports__["a"] = bind;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Util__ = __webpack_require__(3);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-
-
-=======
->>>>>>> htmlgen
 
         return fsFormatRegExp.test(strCopy) ? createPrinter(strCopy, cont) : cont(strCopy.replace(/%%/g, "%"));
     };
@@ -3354,60 +3055,11 @@ function initialize(n, f) {
     }
     return xs.join("");
 }
-<<<<<<< HEAD
-
-/***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = invTuple;
-/* harmony export (immutable) */ __webpack_exports__["f"] = mapTryFind;
-/* harmony export (immutable) */ __webpack_exports__["c"] = listTryFind;
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return charList; });
-/* unused harmony export charMap */
-/* unused harmony export $7C$CharTok$7C$_$7C$ */
-/* harmony export (immutable) */ __webpack_exports__["e"] = mapTok;
-/* harmony export (immutable) */ __webpack_exports__["k"] = strAllToks;
-/* harmony export (immutable) */ __webpack_exports__["d"] = mapLang;
-/* harmony export (immutable) */ __webpack_exports__["l"] = xOnwards;
-/* harmony export (immutable) */ __webpack_exports__["i"] = sOnwards;
-/* harmony export (immutable) */ __webpack_exports__["g"] = removeChars;
-/* harmony export (immutable) */ __webpack_exports__["h"] = replaceChars;
-/* unused harmony export removeWhitespace */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return sharedLog; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Map__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_Comparer__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Util__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Types_fs__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Option__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Seq__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_RegExp__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__Logger_Logger_fs__ = __webpack_require__(10);
-
-
-
-
-
-
-
-
-
-
-
-
-function invTuple(a, b) {
-    return [b, a];
-=======
 function insert(str, startIndex, value) {
     if (startIndex < 0 || startIndex > str.length) {
         throw new Error("startIndex is negative or greater than the length of this instance.");
     }
     return str.substring(0, startIndex) + value + str.substring(startIndex);
->>>>>>> htmlgen
 }
 function isNullOrEmpty(str) {
     return typeof str !== "string" || str.length === 0;
@@ -3635,30 +3287,11 @@ function filter(pred, x) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-<<<<<<< HEAD
-/* unused harmony export logLevelStr */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Logger; });
-/* harmony export (immutable) */ __webpack_exports__["c"] = logPass;
-/* harmony export (immutable) */ __webpack_exports__["d"] = logPassN;
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return globLog; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Map__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_Comparer__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_Util__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Symbol__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_MailboxProcessor__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_AsyncBuilder__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Date__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Option__ = __webpack_require__(4);
-=======
 /* harmony export (immutable) */ __webpack_exports__["c"] = map;
 /* unused harmony export mapError */
 /* harmony export (immutable) */ __webpack_exports__["a"] = bind;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Util__ = __webpack_require__(3);
->>>>>>> htmlgen
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4255,8 +3888,6 @@ function groupBy(f, xs) {
         if (vs == null) {
             keys.push(k);
             acc = add(k, [cur.value], acc);
-<<<<<<< HEAD
-=======
         } else {
             Object(__WEBPACK_IMPORTED_MODULE_2__Option__["b" /* getValue */])(vs).push(cur.value);
         }
@@ -5436,7 +5067,6 @@ function parseRaw(str) {
         if (/^(?:[01]?\d|2[0-3]):(?:[0-5]?\d)(?::[0-5]?\d(?:\.\d+)?)?(?:\s*[AaPp][Mm])?$/.test(str)) {
             var d = new Date();
             date = new Date(d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + str);
->>>>>>> htmlgen
         } else {
             throw new Error("The string is not a valid Date.");
         }
@@ -6068,29 +5698,6 @@ function chunkBySize(size, xs) {
     }
     return result;
 }
-<<<<<<< HEAD
-
-/***/ }),
-/* 13 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export fromEqualityComparer */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Util__ = __webpack_require__(3);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-
-
-
-var Comparer = function () {
-    function Comparer(f) {
-        _classCallCheck(this, Comparer);
-
-        this.Compare = f || __WEBPACK_IMPORTED_MODULE_1__Util__["g" /* compare */];
-=======
 function getSubArray(xs, startIndex, count) {
     return xs.slice(startIndex, startIndex + count);
 }
@@ -6100,7 +5707,6 @@ function fill(target, targetIndex, count, value) {
 function splitAt(index, xs) {
     if (index < 0) {
         throw new Error("The input must be non-negative.");
->>>>>>> htmlgen
     }
     if (index > xs.length) {
         throw new Error("The input sequence has an insufficient number of elements.");
@@ -6796,16 +6402,7 @@ function parseInLineElements2(ftLst, toks) {
     var parseInLineElements_ = function parseInLineElements_(ftLst_1, currentLine, toks_1) {
         var matchValue;
 
-<<<<<<< HEAD
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = choice1Of2;
-/* harmony export (immutable) */ __webpack_exports__["b"] = choice2Of2;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Util__ = __webpack_require__(3);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-=======
         var activePatternResult1258 = _MatchSym___(new __WEBPACK_IMPORTED_MODULE_3__Types_fs__["r" /* Token */](30), toks_1);
->>>>>>> htmlgen
 
         if (activePatternResult1258 != null) {
             return [new __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_3__Types_fs__["c" /* InlineElement */](0, new __WEBPACK_IMPORTED_MODULE_3__Types_fs__["m" /* TFrmtedString */](3, Object(__WEBPACK_IMPORTED_MODULE_4__Shared_fs__["k" /* strAllToks */])(Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1258)[0]))), currentLine), Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1258)[1]];
@@ -7407,278 +7004,8 @@ var logger = new __WEBPACK_IMPORTED_MODULE_9__Logger_Logger_fs__["a" /* Logger *
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_RegExp__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
-<<<<<<< HEAD
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__ = __webpack_require__(4);
-
-
-
-
-
-function takeFirst(a, _arg1, _arg2) {
-    return a;
-}
-function strRegexMatch(regex, str) {
-    var m = Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_RegExp__["c" /* match */])(Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_RegExp__["a" /* create */])(regex), str);
-
-    if (m != null) {
-        var mLst = Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__["n" /* toList */])(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__["d" /* delay */])(function () {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__["i" /* map */])(function (x) {
-                return x || "";
-            }, m);
-        }));
-        return [Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(mLst), Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["l" /* tail */])(mLst)];
-    } else {
-        return null;
-    }
-}
-function strStartsWith(value, str) {
-    return str.indexOf(value) === 0;
-}
-function toString(c) {
-    return Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["a" /* join */])("", Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([c]));
-}
-function strReplace(o, n, s) {
-    return Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["c" /* replace */])(s, o, n);
-}
-
-function _RegexMatch___(regex, str) {
-    var matchValue = strRegexMatch(regex, str);
-
-    if (matchValue != null) {
-        var m = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue)[0];
-        var grp = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(matchValue)[1];
-        var lchar = m.length | 0;
-        return [m, grp, str.slice(lchar, str.length)];
-    } else {
-        return null;
-    }
-}
-
-
-function literalString(charList) {
-    var addEscape = function addEscape(tupledArg) {
-        var folder;
-        return (folder = function folder(st, n) {
-            return strReplace(n, "\\" + n, st);
-        }, function (list) {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(folder, tupledArg[0], list);
-        })(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])(["\\", ".", "^", "$", "*", "+", "-", "?", "(", ")", "[", "]", "{", "}", "|", "/"]));
-    };
-
-    return function (c) {
-        return "^.+?(?=\\s|" + c + "$)";
-    }(Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(function (x, y) {
-        return x + y;
-    }, "", Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(function ($var1) {
-        return function (a) {
-            return a + "|";
-        }(addEscape($var1));
-    }, charList)));
-}
-
-function _CharMatch___(retLastMatch, a, charList, str) {
-    var state;
-
-    var testStartWith = function testStartWith(tupledArg) {
-        var ch = a + tupledArg[0];
-        return [strStartsWith(ch, str), ch, tupledArg[1]];
-    };
-
-    return (state = null, function (list) {
-        return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(retLastMatch, state, list);
-    })(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(testStartWith, charList));
-}
-
-
-
-function _Character___(charList, str) {
-    var retLastMatch = function retLastMatch(i, _arg1) {
-        if (_arg1[0]) {
-            return [_arg1[2], str.slice(_arg1[1].length, str.length)];
-        } else {
-            return i;
-        }
-    };
-
-    return _CharMatch___(retLastMatch, "", charList, str);
-}
-
-
-
-function _EscapedChar___(tType, charList, str) {
-    var retLastMatch = function retLastMatch(i, _arg1) {
-        if (_arg1[0]) {
-            return [tType(_arg1[1].slice(1, _arg1[1].length)), str.slice(_arg1[1].length, str.length)];
-        } else {
-            return i;
-        }
-    };
-
-    return _CharMatch___(retLastMatch, "\\", charList, str);
-}
-
-
-
-function _GroupMatch___(str, _arg1) {
-    var $var2 = void 0;
-
-    var activePatternResult539 = _RegexMatch___(str, _arg1);
-
-    if (activePatternResult539 != null) {
-        if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult539)[1].tail != null) {
-            if (Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult539)[1].tail.tail == null) {
-                $var2 = [0, Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult539)[0], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult539)[2], Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult539)[1].head];
-            } else {
-                $var2 = [1];
-            }
-        } else {
-            $var2 = [1];
-        }
-    } else {
-        $var2 = [1];
-    }
-
-    switch ($var2[0]) {
-        case 0:
-            return $var2[3];
-
-        case 1:
-            return null;
-    }
-}
-
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FMarkFable_fs__ = __webpack_require__(23);
-/* harmony namespace reexport (by provided) */ __webpack_require__.d(__webpack_exports__, "processMarkdownString", function() { return __WEBPACK_IMPORTED_MODULE_0__FMarkFable_fs__["a"]; });
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = processMarkdownString;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Common_FMark_fs__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Common_Types_fs__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_Seq__ = __webpack_require__(1);
-
-
-
-function processMarkdownString(fileDir, str) {
-    return Object(__WEBPACK_IMPORTED_MODULE_0__Common_FMark_fs__["a" /* processString */])(fileDir, new __WEBPACK_IMPORTED_MODULE_1__Common_Types_fs__["e" /* OutFormat */](0))(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_Seq__["n" /* toList */])(str));
-}
-
-/***/ }),
-/* 24 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export preLexParse */
-/* unused harmony export processString$27$ */
-/* harmony export (immutable) */ __webpack_exports__["a"] = processString;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Parser_Parser_fs__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Lexer_Lexer_fs__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Lexer_Preprocessor_fs__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarkdownGen_MarkdownGen_fs__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__HTMLGen_HTMLGen_fs__ = __webpack_require__(37);
-
-
-
-
-
-
-
-function preLexParse(dir) {
-    return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function ($var2) {
-        return Object(__WEBPACK_IMPORTED_MODULE_1__Parser_Parser_fs__["a" /* parse */])(function ($var1) {
-            return Object(__WEBPACK_IMPORTED_MODULE_2__Lexer_Lexer_fs__["a" /* lexList */])(Object(__WEBPACK_IMPORTED_MODULE_3__Lexer_Preprocessor_fs__["a" /* preprocessListWithDir */])(dir)($var1));
-        }($var2));
-    });
-}
-
-function processString_(dir, formatFunc) {
-    return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function ($var3) {
-        return function (result) {
-            return Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Result__["c" /* map */])(formatFunc, result);
-        }(preLexParse(dir)($var3));
-    });
-}
-
-
-function processString(dir, format) {
-    return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(format.tag === 1 ? processString_(dir, __WEBPACK_IMPORTED_MODULE_5__MarkdownGen_MarkdownGen_fs__["a" /* mdBody */]) : processString_(dir, __WEBPACK_IMPORTED_MODULE_6__HTMLGen_HTMLGen_fs__["a" /* strBody */]));
-}
-
-/***/ }),
-/* 25 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export parseCode */
-/* unused harmony export parseParagraph */
-/* unused harmony export $7C$MatchTable$7C$_$7C$ */
-/* unused harmony export parseList */
-/* unused harmony export parseItem */
-/* unused harmony export parseItemList */
-/* harmony export (immutable) */ __webpack_exports__["a"] = parse;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Shared_fs__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Types_fs__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Markalc_Markalc_fs__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__Logger_Logger_fs__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__ = __webpack_require__(5);
-
-
-
-
-
-
-
-
-
-
-
-
-
-function parseCode(toks) {
-    if (toks.tail != null) {
-        if (toks.head.tag === 30) {
-            return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, ["", Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["j" /* slice */])(1, null, toks)]);
-        } else {
-            return Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["c" /* map */])(function (tupledArg) {
-                return [Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["e" /* mapTok */])(toks.head) + tupledArg[0], tupledArg[1]];
-            }, parseCode(toks.tail));
-        }
-    } else {
-        __WEBPACK_IMPORTED_MODULE_2__Shared_fs__["j" /* sharedLog */].Warn(null, Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("%A"))(toks));
-        return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, ["\\`", Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["l" /* xOnwards */])(1, toks)]);
-    }
-}
-function parseParagraph(toks) {
-    var state;
-
-    var parseParagraph_ = function parseParagraph_(lines, tokLine) {
-        return new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["j" /* parseInLineElements */])(tokLine), lines);
-    };
-=======
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_Option__ = __webpack_require__(4);
->>>>>>> htmlgen
 
 
 
@@ -7754,50 +7081,17 @@ function _CharMatch___(retLastMatch, a, charList, str) {
         return [strStartsWith(ch, str), ch, tupledArg[1]];
     };
 
-<<<<<<< HEAD
-    var excludeSelfSkip = function excludeSelfSkip(x) {
-        if (x != null) {
-            if (Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(x) === 1) {
-                return null;
-            } else {
-                return Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(x) - 1;
-            }
-        } else {
-            return null;
-        }
-    };
-
-    var _GetLIContent___ = function _GetLIContent___(toks_2) {
-        var patternInput = takeAwayWhiteSpaces(toks_2);
-        var $var2 = patternInput[1].tail != null ? patternInput[1].head.tag === 9 ? patternInput[1].tail.tail != null ? patternInput[1].tail.head.tag === 2 ? [0] : [2] : [2] : patternInput[1].head.tag === 7 ? patternInput[1].tail.tail != null ? patternInput[1].tail.head.tag === 2 ? [0] : [2] : [2] : patternInput[1].head.tag === 3 ? patternInput[1].tail.tail != null ? patternInput[1].tail.head.tag === 10 ? patternInput[1].tail.tail.tail != null ? patternInput[1].tail.tail.head.tag === 2 ? [1] : [2] : [2] : [2] : [2] : [2] : [2];
-
-        switch ($var2[0]) {
-            case 0:
-                return [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["n" /* TListType */](0), patternInput[0], Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["l" /* xOnwards */])(2, patternInput[1])];
-
-            case 1:
-                return [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["n" /* TListType */](1), patternInput[0], Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["l" /* xOnwards */])(3, patternInput[1])];
-=======
     return (state = null, function (list) {
         return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(retLastMatch, state, list);
     })(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(testStartWith, charList));
 }
->>>>>>> htmlgen
 
 
-<<<<<<< HEAD
-    var getLIContent = function getLIContent(toks_3) {
-        var activePatternResult1283 = _GetLIContent___(toks_3);
-
-        if (activePatternResult1283 != null) {
-            return new __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1283));
-=======
 
 function _Character___(charList, str) {
     var retLastMatch = function retLastMatch(i, _arg1) {
         if (_arg1[0]) {
             return [_arg1[2], str.slice(_arg1[1].length, str.length)];
->>>>>>> htmlgen
         } else {
             return i;
         }
@@ -7817,51 +7111,6 @@ function _EscapedChar___(tType, charList, str) {
         }
     };
 
-<<<<<<< HEAD
-        var listFolder = function listFolder(tupledArg, line) {
-            if (tupledArg[2] != null) {
-                if (Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(tupledArg[2]) === 1) {
-                    return [tupledArg[0], tupledArg[1], null, tupledArg[3] + 1];
-                } else if (Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(tupledArg[2]) > 1) {
-                    return [tupledArg[0], tupledArg[1], Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(tupledArg[2]) - 1, tupledArg[3] + 1];
-                } else {
-                    throw new Error("negative or zero skip number, not possible");
-                }
-            } else {
-                var matchValue_2 = ignoreError(getLIContent(line));
-
-                if (matchValue_2[1] === tupledArg[0]) {
-                    var tLine = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["j" /* parseInLineElements */])(matchValue_2[2]);
-                    return [tupledArg[0], new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["m" /* TListItem */](1, tLine), tupledArg[1]), null, tupledArg[3] + 1];
-                } else if (matchValue_2[1] > tupledArg[0]) {
-                    var patternInput_3 = Object(__WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(parseList_)(tupledArg[0] + 1)(Object(__WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(getCurrentList)(tupledArg[0] + 1, new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */]())(Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["l" /* xOnwards */])(tupledArg[3], lines_1)));
-                    return [tupledArg[0], new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["m" /* TListItem */](0, patternInput_3[0]), tupledArg[1]), excludeSelfSkip(patternInput_3[1]), tupledArg[3] + 1];
-                } else {
-                    throw new Error("list item level < current level, not possible");
-                }
-            }
-        };
-
-        return function (tupledArg_1) {
-            var doSkip = void 0;
-            var matchValue_3 = lines_1.length | 0;
-
-            if (matchValue_3 === 0) {
-                doSkip = null;
-            } else {
-                doSkip = matchValue_3;
-            }
-
-            return [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["l" /* TList */](patternInput_2[0], Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["i" /* reverse */])(tupledArg_1[1]), patternInput_2[1]), doSkip];
-        }(Object(__WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(listFolder, [level_1, new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), null, 0], lines_1));
-    };
-
-    return Object(__WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(parseList_)(0)(Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["g" /* cutIntoLines */])(Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["k" /* trimENDLINEs */])(toks)))[0];
-}
-function parseItem(rawToks) {
-    var toks = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["i" /* deleteLeadingENDLINEs */])(rawToks);
-    var $var3 = void 0;
-=======
     return _CharMatch___(retLastMatch, "\\", charList, str);
 }
 
@@ -7869,7 +7118,6 @@ function parseItem(rawToks) {
 
 function _GroupMatch___(str, _arg1) {
     var $var2 = void 0;
->>>>>>> htmlgen
 
     var activePatternResult539 = _RegexMatch___(str, _arg1);
 
@@ -7982,51 +7230,6 @@ function processString(dir, format) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-<<<<<<< HEAD
-/* unused harmony export SPACE */
-/* unused harmony export NOSTRING */
-/* unused harmony export TEmphasis */
-/* unused harmony export ParagraphState */
-/* harmony export (immutable) */ __webpack_exports__["i"] = deleteLeadingENDLINEs;
-/* unused harmony export deleteTrailingENDLINEs */
-/* harmony export (immutable) */ __webpack_exports__["k"] = trimENDLINEs;
-/* unused harmony export stringAllTokens */
-/* unused harmony export countToks */
-/* unused harmony export countSpaces */
-/* unused harmony export countNewLines */
-/* unused harmony export countDelim */
-/* unused harmony export countPipes */
-/* unused harmony export countMinus */
-/* unused harmony export cutFirstLine */
-/* harmony export (immutable) */ __webpack_exports__["g"] = cutIntoLines;
-/* unused harmony export combineLiterals */
-/* unused harmony export $7C$MatchSym$7C$_$7C$ */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return _PickoutParagraph___; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return _PickoutList___; });
-/* unused harmony export $7C$MatchEm$7C$_$7C$ */
-/* unused harmony export $7C$MatchNewParagraph$7C$_$7C$ */
-/* unused harmony export $7C$MatchMapTok$7C$_$7C$ */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _MatchHeader___; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _MatchQuote___; });
-/* unused harmony export $7C$MatchList$7C$_$7C$ */
-/* unused harmony export $7C$MatchListOpSpace$7C$_$7C$ */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return _MatchTableHead___; });
-/* unused harmony export pipeMatch */
-/* unused harmony export minusMatch */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _MatchTableFormater___; });
-/* harmony export (immutable) */ __webpack_exports__["h"] = cutTableRows;
-/* harmony export (immutable) */ __webpack_exports__["j"] = parseInLineElements;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_Util__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Types_fs__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Shared_fs__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_Seq__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Option__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(6);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-=======
 /* unused harmony export parseCode */
 /* unused harmony export parseParagraph */
 /* unused harmony export $7C$MatchTable$7C$_$7C$ */
@@ -8047,7 +7250,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__Logger_Logger_fs__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__TOCite_TOCite_fs__ = __webpack_require__(32);
->>>>>>> htmlgen
 
 
 
@@ -8913,49 +8115,8 @@ function tryEval_(maxRefs, map, e) {
                     case 3:
                         return Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Seq__["m" /* sumBy */])(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evalExp_)(r, map_1), $var6[1]);
 
-<<<<<<< HEAD
-"use strict";
-/* unused harmony export MapContents */
-/* unused harmony export pipeSplit */
-/* unused harmony export toToken */
-/* unused harmony export joinErrorList */
-/* unused harmony export liftFirstArg */
-/* unused harmony export makeCellU */
-/* unused harmony export defaultCellU */
-/* unused harmony export headCellU */
-/* unused harmony export alignCell */
-/* unused harmony export parsePipesD */
-/* unused harmony export parsePipes */
-/* unused harmony export parseRow */
-/* unused harmony export parseDefaultRow */
-/* unused harmony export parseAlignRow */
-/* unused harmony export alignCells$27$ */
-/* unused harmony export alignCells */
-/* unused harmony export transformTable */
-/* unused harmony export tryEval$27$ */
-/* unused harmony export tryEval */
-/* unused harmony export evaluateRowList */
-/* harmony export (immutable) */ __webpack_exports__["a"] = parseEvaluateTable;
-/* unused harmony export lexParseEvaluate */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Types_fs__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarkalcShared_fs__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Logger_Logger_fs__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_String__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__nuget_packages_fable_core_1_3_11_fable_core_Result__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Seq__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__Shared_fs__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__nuget_packages_fable_core_1_3_11_fable_core_Map__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__nuget_packages_fable_core_1_3_11_fable_core_Option__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__Expression_fs__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__nuget_packages_fable_core_1_3_11_fable_core_Comparer__ = __webpack_require__(13);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-=======
                     case 4:
                         return Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Seq__["a" /* averageBy */])(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(evalExp_)(r, map_1), $var6[1]);
->>>>>>> htmlgen
 
                     case 5:
                         return Object(__WEBPACK_IMPORTED_MODULE_7__nuget_packages_fable_core_1_3_11_fable_core_Seq__["l" /* reduce */])(function (x, y) {
@@ -10384,11 +9545,7 @@ function refParse(style, tocLst) {
 /* unused harmony export lex */
 /* harmony export (immutable) */ __webpack_exports__["a"] = lexList;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Symbol__ = __webpack_require__(2);
-<<<<<<< HEAD
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Types_fs__ = __webpack_require__(7);
-=======
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Types_fs__ = __webpack_require__(5);
->>>>>>> htmlgen
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_Util__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__ = __webpack_require__(6);
