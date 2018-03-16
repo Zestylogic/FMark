@@ -24,7 +24,6 @@
 
 ## Including files
 
-{{ include ./test.fmark }}
 
 ## Spreadsheet functionality
 
@@ -32,3 +31,6 @@
 |---|---|---|
 |=5|=3|=SUM{[1,0]:[1,1]}|
 |=5%3|=[1,0]*[1,1]/((7-4)+2)|=AVG{[1,0]:[1,2]}|
+
+## LateX Maths
+$$2^2$$

@@ -15,5 +15,5 @@ let processString' dir formatFunc =
 
 let processString dir format =
     match format with
-    | HTML -> processString' dir HTMLGen.strBody
+    | HTML -> processString' dir (HTMLGen.genHTML dir)
     | Markdown -> processString' dir MarkdownGen.mdBody

@@ -210,7 +210,7 @@ let genBody pObjs =
     |> attachSimpleTag "body"
 
 /// top level HTMLGen
-let genHTML (htmlTitle, pObjs) =
+let genHTML htmlTitle pObjs =
     attachMetaTag "!DOCTYPE" ["html", ""]
     + genHead htmlTitle
     + genBody pObjs

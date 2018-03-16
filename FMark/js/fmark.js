@@ -7222,7 +7222,9 @@ function processString_(dir, formatFunc) {
 
 
 function processString(dir, format) {
-    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(format.tag === 1 ? processString_(dir, __WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__["a" /* mdBody */]) : processString_(dir, __WEBPACK_IMPORTED_MODULE_8__HTMLGen_HTMLGen_fs__["a" /* strBody */]));
+    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(format.tag === 1 ? processString_(dir, __WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__["a" /* mdBody */]) : processString_(dir, function (pObjs_1) {
+        return Object(__WEBPACK_IMPORTED_MODULE_8__HTMLGen_HTMLGen_fs__["a" /* genHTML */])(dir, pObjs_1);
+    }));
 }
 
 /***/ }),
@@ -11642,10 +11644,10 @@ function mdBody(pObjs) {
 /* unused harmony export strFootnote */
 /* unused harmony export $7C$MatchHeaderAndSubHeader$7C$_$7C$ */
 /* unused harmony export strToC */
-/* harmony export (immutable) */ __webpack_exports__["a"] = strBody;
+/* unused harmony export strBody */
 /* unused harmony export genHead */
 /* unused harmony export genBody */
-/* unused harmony export genHTML */
+/* harmony export (immutable) */ __webpack_exports__["a"] = genHTML;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Logger_Logger_fs__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
