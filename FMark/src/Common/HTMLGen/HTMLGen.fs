@@ -205,16 +205,18 @@ let genHead htmlTitle =
         pStr + attachMetaTag "meta" md
     List.fold genMetadata "" metaData
     + attachSimpleTag "title" htmlTitle
-
+    + "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>"
     |> attachSimpleTag "head"
 
 /// generate HTML body
 let genBody pObjs =
     strBody pObjs
-    |> attachSimpleTag "body"
+
+let HTMLify title s = 
+    attachMetaTag "!DOCTYPE" ["html", ""]
+    + genHead title
+    + (s|>attachSimpleTag "body")
 
 /// top level HTMLGen
-let genHTML (htmlTitle, pObjs) =
-    attachMetaTag "!DOCTYPE" ["html", ""]
-    + genHead htmlTitle
-    + genBody pObjs
+let genHTML (htmlTitle,pObjs) =
+    genBody pObjs |> (HTMLify htmlTitle)

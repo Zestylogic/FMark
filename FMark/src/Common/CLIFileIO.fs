@@ -9,5 +9,10 @@ let writeToFile fpath s =
     sw.Close()
 
 let readFilePath path = 
-     System.IO.File.ReadLines(path)
-     |> Seq.toList
+    path
+    |> System.IO.File.Exists
+    |> function
+    | true ->
+        System.IO.File.ReadLines(path)
+        |> Seq.toList
+    | false -> []
