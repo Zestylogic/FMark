@@ -26,6 +26,10 @@ and strInlineElements eles =
         | Picture (alt, url) ->
             let attrs = [("src", url); ("alt", alt)]
             attachHTMLTag ("img", attrs, false) ""
+        | Reference (ht, id) ->
+            ht
+            |> attachHTMLTag ("a", [("href", "#"+id)], true)
+            |> attachSimpleTag "sup"
     List.fold convertHtml "" eles
 
 /// process Markdown paragraph
