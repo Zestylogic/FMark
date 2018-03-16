@@ -7222,7 +7222,9 @@ function processString_(dir, formatFunc) {
 
 
 function processString(dir, format) {
-    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(format.tag === 1 ? processString_(dir, __WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__["a" /* mdBody */]) : processString_(dir, __WEBPACK_IMPORTED_MODULE_8__HTMLGen_HTMLGen_fs__["a" /* strBody */]));
+    return Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(format.tag === 1 ? processString_(dir, __WEBPACK_IMPORTED_MODULE_7__MarkdownGen_MarkdownGen_fs__["a" /* mdBody */]) : processString_(dir, function (x) {
+        return Object(__WEBPACK_IMPORTED_MODULE_8__HTMLGen_HTMLGen_fs__["a" /* genHTML */])(dir, x);
+    }));
 }
 
 /***/ }),
@@ -11642,10 +11644,11 @@ function mdBody(pObjs) {
 /* unused harmony export strFootnote */
 /* unused harmony export $7C$MatchHeaderAndSubHeader$7C$_$7C$ */
 /* unused harmony export strToC */
-/* harmony export (immutable) */ __webpack_exports__["a"] = strBody;
+/* unused harmony export strBody */
 /* unused harmony export genHead */
 /* unused harmony export genBody */
-/* unused harmony export genHTML */
+/* unused harmony export HTMLify */
+/* harmony export (immutable) */ __webpack_exports__["a"] = genHTML;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Logger_Logger_fs__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__ = __webpack_require__(0);
@@ -11923,13 +11926,18 @@ function genHead(htmlTitle) {
         return pStr + Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["b" /* attachMetaTag */])("meta", md);
     };
 
-    return Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["c" /* attachSimpleTag */])("head")(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(genMetadata, "", metaData) + Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["c" /* attachSimpleTag */])("title")(htmlTitle));
+    return Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["c" /* attachSimpleTag */])("head")(Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(genMetadata, "", metaData) + Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["c" /* attachSimpleTag */])("title")(htmlTitle) + "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>");
 }
 function genBody(pObjs) {
-    return Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["c" /* attachSimpleTag */])("body")(strBody(pObjs));
+    return strBody(pObjs);
+}
+function HTMLify(title, s) {
+    return Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["b" /* attachMetaTag */])("!DOCTYPE", Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([["html", ""]])) + genHead(title) + Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["c" /* attachSimpleTag */])("body")(s);
 }
 function genHTML(htmlTitle, pObjs) {
-    return Object(__WEBPACK_IMPORTED_MODULE_1__HTMLGenHelpers_fs__["b" /* attachMetaTag */])("!DOCTYPE", Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([["html", ""]])) + genHead(htmlTitle) + genBody(pObjs);
+    return function (s) {
+        return HTMLify(htmlTitle, s);
+    }(genBody(pObjs));
 }
 
 /***/ }),
