@@ -9927,7 +9927,7 @@ function lexList(strl) {
 
     return function (tupledArg_1) {
         return returnTokens(tupledArg_1[0], tupledArg_1[1]);
-    }(Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(f, [new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), new LexerState(0)], strl));
+    }(Object(__WEBPACK_IMPORTED_MODULE_9__nuget_packages_fable_core_1_3_11_fable_core_Seq__["f" /* fold */])(f, [Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["g" /* ofArray */])([new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["r" /* Token */](32), new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["r" /* Token */](32)]), new LexerState(0)], strl));
 }
 
 /***/ }),

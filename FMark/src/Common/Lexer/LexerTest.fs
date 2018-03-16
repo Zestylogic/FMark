@@ -343,32 +343,32 @@ let lexListTest =
     makeSimpleTestList lexList "LexList" [
         "Very simple multiline markdown",
         ["Hello, world"; "Line 2"],
-        [LITERAL "Hello"; COMMA; WHITESPACE 1; LITERAL "world"; ENDLINE; LITERAL "Line"; WHITESPACE 1
+        [ENDLINE;ENDLINE;LITERAL "Hello"; COMMA; WHITESPACE 1; LITERAL "world"; ENDLINE; LITERAL "Line"; WHITESPACE 1
          NUMBER "2"; ENDLINE]
 
         "With special characters",
         ["__Bold__"; "_Emphasis_"],
-        [DUNDERSCORE; LITERAL "Bold"; DUNDERSCORE; ENDLINE; UNDERSCORE; LITERAL "Emphasis"; UNDERSCORE
+        [ENDLINE;ENDLINE;DUNDERSCORE; LITERAL "Bold"; DUNDERSCORE; ENDLINE; UNDERSCORE; LITERAL "Emphasis"; UNDERSCORE
          ENDLINE]
 
         "Escaping characters",
         [@"\_\\\***\%\+"; @"\_\\\***\%\+"; @"\_\\\*\%\+"],
-        [LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
+        [ENDLINE;ENDLINE;LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
          LITERAL "_"; LITERAL @"\"; LITERAL "***"; LITERAL "%"; LITERAL "+"; ENDLINE
          LITERAL "_"; LITERAL @"\"; LITERAL "*"; LITERAL "%"; LITERAL "+"; ENDLINE]
 
         "Whitespace",
         ["          d    "],
-        [WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
+        [ENDLINE;ENDLINE;WHITESPACE 10; LITERAL "d"; WHITESPACE 4; ENDLINE]
 
         "Multiline codeblock",
         ["```python"; "This is inside the code block"; "```"],
-        [CODEBLOCK ("This is inside the code block\n", Python); ENDLINE]
+        [ENDLINE;ENDLINE;CODEBLOCK ("This is inside the code block\n", Python); ENDLINE]
 
         "HTML passthrough",
         ["This should not be passed through"; "<div>This should just all be passed through, </div>"
          "This should not, <span>This should not be tokenized []</span>"],
-        [LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"
+        [ENDLINE;ENDLINE;LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"
          WHITESPACE 1; LITERAL "be"; WHITESPACE 1; LITERAL "passed"; WHITESPACE 1
          LITERAL "through"; ENDLINE; LITERAL "<div>"; LITERAL "This should just all be passed through, "; LITERAL "</div>"
          ENDLINE; LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"; COMMA; WHITESPACE 1

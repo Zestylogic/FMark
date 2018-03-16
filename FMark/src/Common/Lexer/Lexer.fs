@@ -106,4 +106,4 @@ let lexList strl =
     let f (flist, state) nstr =
         let (lst, st) = lexS state nstr
         flist @ lst, st
-    List.fold f ([], Normal) strl |> returnTokens
+    List.fold f ([ENDLINE;ENDLINE;], Normal) strl |> returnTokens
