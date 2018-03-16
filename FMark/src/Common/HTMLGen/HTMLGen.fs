@@ -214,5 +214,5 @@ let HTMLify title s =
     + (s|>attachSimpleTag "body")
 
 /// top level HTMLGen
-let genHTML htmlTitle pObjs =
+let genHTML (htmlTitle,pObjs) =
     genBody pObjs |> (HTMLify htmlTitle)
