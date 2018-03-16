@@ -8,8 +8,16 @@ let writeToFile str path =
 
 let splitString (s:string) =
     s.Split("\n") |> Array.toList
+
+let checkExists (path:string) =
+    fs.existsSync(Fable.Core.U2.Case1 path)
 let readFilePath path =
-    fs.readFileSync(path,()) 
-    |> (fun s -> s.toString ())
-    |> splitString
+    path 
+    |> checkExists
+    |> function
+    | true ->
+        fs.readFileSync(path,()) 
+        |> (fun s -> s.toString ())
+        |> splitString
+    | false -> []
 

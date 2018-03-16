@@ -24,6 +24,7 @@
 
 ## Including files
 
+{{ include test.fmark }}
 
 ## Spreadsheet functionality
 
