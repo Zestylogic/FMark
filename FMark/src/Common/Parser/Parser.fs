@@ -65,7 +65,7 @@ let headerIDGen id hd =
         | FrmtedString (Literal a)::tl -> a + headerIDGen' tl
         | FrmtedString (Emphasis a)::tl -> (headerIDGen' a) + (headerIDGen' tl)
         | _ -> ""
-    headerIDGen' hdLine + string id
+    (headerIDGen' hdLine |> replaceChars "\ " "_") + string id
 /// parse list
 let parseList toks =
     // call itself if list item has a higher level
@@ -144,7 +144,27 @@ let parseList toks =
     |> fst
 
 
+// Match TOC token
+let (|MatchTOC|_|) hdList toks =
+    let createLinks (hdList:THeader list) =
+        let makeRelLink i (h:THeader) =
+            let linkText = Line(h.HeaderName)
+            let linkID = headerIDGen i hdList.[i]
+            {h with HeaderName = [Link (linkText, sprintf "#%s" linkID)]}
+            //{h with HeaderName = Link((h.HeaderName), sprintf "#HEADER%i" i)} // Link of HyperText: TFrmtedString * URL: string
+        let linksLst = List.mapi makeRelLink hdList
+        {HeaderLst=linksLst}
+    let filterHeaders d hdLst =
+        // TODO: filter headers according to depth
+        hdLst
 
+    match toks with
+    //| PERCENT::PERCENT::LITERAL("TOC")::// Options
+    | PERCENT::PERCENT::LITERAL("TOC")::rst ->
+        // No depth specified
+       (createLinks hdList, rst)
+        |> Some
+    | _ -> None
 
 /// parse supported `ParsedObj`s, turn them into a list
 /// assuming each item start at the beginning of the line
@@ -152,6 +172,7 @@ let parseList toks =
 let rec parseItem (hdLst: THeader list) (ftLst: ParsedObj list) (rawToks: Token list) : Result<ParsedObj * Token list, string> =
     let toks = deleteLeadingENDLINEs rawToks
     match toks with
+    | MatchTOC hdLst (toc,rtks) -> (ContentTable toc,rtks) |> Ok
     | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
     | MatchTable (rows, rtks) -> (rows, rtks) |> Ok
     | MatchQuote (content, rtks) ->

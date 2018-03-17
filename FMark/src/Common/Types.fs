@@ -21,6 +21,7 @@ type Token =
 type TFrmtedString =
     | Strong of InlineElement list
     | Emphasis of InlineElement list
+    | Line of InlineElement list
     | Literal of string
     | Code of string
 and InlineElement =
@@ -32,7 +33,7 @@ type TLine = InlineElement list
 
 type THeader = {HeaderName: TLine; Level: int}
 
-type Ttoc = {MaxDepth: int; HeaderLst: THeader list}
+type Ttoc = {HeaderLst: THeader list}
 
 type TListType = | UL | OL
 type TList = {ListType: TListType; ListItem: TListItem list; Depth: int}

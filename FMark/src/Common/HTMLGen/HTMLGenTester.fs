@@ -179,7 +179,7 @@ let TOCTests =
                       ;{HeaderName=[FrmtedString(Literal "header5")]; Level=1}]
     makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents test" [
         (
-            {HeaderLst=hLst1; MaxDepth=3},
+            {HeaderLst=hLst1},
             "<ol>
                 <li>header1</li>
                 <li>header2</li>
@@ -188,7 +188,7 @@ let TOCTests =
             "Simple TOC test, all same level"
         );
         (
-            {HeaderLst=hLst2; MaxDepth=3},
+            {HeaderLst=hLst2},
             "<ol>
                 <li>header1</li>
                 <li>header2</li>
@@ -200,7 +200,7 @@ let TOCTests =
             "Simple TOC test, one header2"
         );
         (
-            {HeaderLst=hLst3; MaxDepth=3},
+            {HeaderLst=hLst3},
             "<ol>
                 <li>header1</li>
                 <ol>
@@ -214,7 +214,7 @@ let TOCTests =
             "Harder TOC test, two header 2s and a header 3"
         );
         (
-            {HeaderLst=hLst4; MaxDepth=3},
+            {HeaderLst=hLst4},
             "<ol>
                 <li>header1</li>
                 <ol>
@@ -228,7 +228,7 @@ let TOCTests =
             "Deep then shallow TOC"
         );
         (
-            {HeaderLst=hLst5; MaxDepth=3},
+            {HeaderLst=hLst5},
             "<ol>
                 <li>header1</li>
                 <ol>
