@@ -248,13 +248,13 @@ let testGlobal =
 let testGlobal2 =
     makeExpectoTestList id id parse "top level test part 2" [
         (
-            [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago";
-                ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; ENDLINE; HASH; WHITESPACE 1;
-                LITERAL "Header1"; ENDLINE; LITERAL "text3"; LSBRA; CARET; NUMBER "1";
-                RSBRA; LITERAL "text4"; ENDLINE; ENDLINE; LSBRA; CARET; NUMBER "1";
-                RSBRA; COMMA; LITERAL "footer1"; ENDLINE; LITERAL "text5"; LSBRA; CARET;
-                LITERAL "Eric"; RSBRA; LITERAL "text6"; ENDLINE; ENDLINE; LSBRA; CARET;
-                LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
+            [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE;
+                LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; ENDLINE;
+                HASH; WHITESPACE 1; LITERAL "Header1"; ENDLINE;
+                LITERAL "text3"; LSBRA; CARET; NUMBER "1"; RSBRA; LITERAL "text4"; ENDLINE; ENDLINE;
+                LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "footer1"; ENDLINE;
+                LITERAL "text5"; LSBRA; CARET; LITERAL "Eric"; RSBRA; LITERAL "text6"; ENDLINE; ENDLINE;
+                LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
                 LITERAL "Website"; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
                 LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title";
                 EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
@@ -264,8 +264,10 @@ let testGlobal2 =
                 MINUS; NUMBER "4"; ENDLINE],
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
                 Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
-                Paragraph [[Link (Literal "Footer1","#footnote-1"); FrmtedString (Literal "text4")]];
-                Paragraph [[Link (Literal "(Wang, 2017)","#footnot-Eric"); FrmtedString (Literal "text6")]];
+                Paragraph [[FrmtedString (Literal "text3");Reference(Literal "1","1"); FrmtedString (Literal "text4")]];
+                Paragraph [
+                    [Reference(Literal "1","1");FrmtedString (Literal ",footer1")];
+                    [FrmtedString (Literal "text5");Reference (Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);
                 Citation (
                     "Eric",Literal "(Wang, 2017)",
