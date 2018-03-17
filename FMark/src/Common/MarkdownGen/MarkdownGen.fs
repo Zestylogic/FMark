@@ -22,6 +22,7 @@ let rec mdFStr fStr =
     | Code str -> surround "`" str
     | Strong a ->  mdInlineElements a |> surround "**"
     | Emphasis e -> mdInlineElements e |> surround "*"
+    | Line l -> mdInlineElements l
 
 /// convert InlineElement list to string, with HTML tags where necessary
 /// not tail recursive because the code looks cleaner this way

@@ -149,7 +149,6 @@ let (|PickoutList|_|) toks =
     | _ -> None
 
 
-
 /// match underscore and asterisk emphasis start squence
 /// match underscore and asterisk emphasis end sequence
 /// return content of emphasis, the rest of line,
