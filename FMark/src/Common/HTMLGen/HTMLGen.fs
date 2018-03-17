@@ -27,8 +27,9 @@ and strInlineElements eles =
         | Picture (alt, url) ->
             let attrs = [("src", url); ("alt", alt)]
             attachHTMLTag ("img", attrs, false) ""
-        | Reference (ht, id) ->
+        | Reference (ht, id) ->  // style for inline referencing the footnotes and citations in the end
             ht
+            |> strFStr
             |> attachHTMLTag ("a", [("href", "#"+id)], true)
             |> attachSimpleTag "sup"
     List.fold convertHtml "" eles

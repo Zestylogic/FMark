@@ -273,8 +273,8 @@ let reallyBigTest =
         ("big HTML test",
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
                 Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
-                Paragraph [[Reference ("Footer1","footnote-1"); FrmtedString (Literal "text4")]];
-                Paragraph [[Reference ("(Wang, 2017)","footnot-Eric"); FrmtedString (Literal "text6")]];
+                Paragraph [[Reference (Literal "Footer1","footnote-1"); FrmtedString (Literal "text4")]];
+                Paragraph [[Reference (Literal "(Wang, 2017)","footnot-Eric"); FrmtedString (Literal "text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);
                 Citation (
                     "Eric",Literal "(Wang, 2017)",

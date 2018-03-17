@@ -1,6 +1,9 @@
 module ParserHelperFuncs
 open Types
 open Shared
+open Logger
+
+let logger = Logger(LogLevel.INFO)
 
 let SPACE = " "
 let NOSTRING = ""
@@ -316,6 +319,42 @@ let cutTableRows toks =
 let parseInLineElements2 ftLst toks =
     let attachInlineEle front back ele =
         [front;ele;back]
+
+    let chooseRef refId refs =
+        match refs with
+        | [] ->
+            let msg = sprintf "Reference: %A not found" refId
+            msg |> logger.Info (Some 200) |> ignore
+            msg |> Error
+        | [exactlyOne] -> exactlyOne |> Ok
+        | moreThanOne ->
+            let msg = sprintf "Reference: %A occurred more than once in reference list, take the first one" refId
+            msg |> logger.Info (Some 200) |> ignore
+            List.head moreThanOne |> Ok
+    /// find footnote in reference list, which contains both footnote and citation
+    /// returns error msg if foot is not found
+    /// returns first footnote if more than 1 is found
+    let findFN fnId refList =
+        let filterFN fnId refList =
+            let fnFilter ref =
+                match ref with
+                | Footnote (id, _) when id=fnId -> true
+                | _ -> false
+            List.filter fnFilter refList
+        filterFN fnId refList
+        |> chooseRef fnId
+    /// find citation in reference list, which contains both footnote and citation
+    /// returns error msg if foot is not found
+    /// returns first citation if more than 1 is found
+    let findCite citeId refList =
+        let filterCite fnId refList =
+            let citeFilter ref =
+                match ref with
+                | Citation (id, _, _) when id=fnId -> true
+                | _ -> false
+            List.filter citeFilter refList
+        filterCite citeId refList
+        |> chooseRef citeId
     let rec parseInLineElements' ftLst currentLine toks =
         match toks with
         | MatchSym BACKTICK (content, rtks) -> (content|> strAllToks|> Code|> FrmtedString )::currentLine, rtks
@@ -331,27 +370,18 @@ let parseInLineElements2 ftLst toks =
                 | None, None ->
                     [inlineContent]
             |> (fun x -> x@currentLine), rtks
-        | FOOTNOTE i :: rtks ->
-            let rec matchFootnote id pObjs = 
-                match pObjs with
-                | Footnote (i, _)::_ when i = id -> true
-                | _ -> false
-            let ft = matchFootnote i ftLst
-            if ft then //make into link if exist
-                [(("Footer" + string i |> Literal),"#footnote-"+string i) |> Link], rtks
-            else //just superscript if does not exist
-                ["Footer" + string i |> Literal |> FrmtedString], rtks
-        | CITATION str :: rtks ->
-            let rec matchCitation id pObjs = 
-                match pObjs with
-                | Citation (s, inLineRef, _) :: _ when s = id -> Some inLineRef
-                | _ :: tl -> matchCitation id tl
-                | [] -> None
-            let ft = matchCitation str ftLst
-            match ft with
-            | Some ref -> [Link(ref,"#footnot-"+str)], rtks
-            | None ->
-                ["Footer " + str + " not found" |> Literal |> FrmtedString], rtks
+        | FOOTNOTE i :: rtks -> // if footnote is found
+            match findFN i ftLst with
+            | Ok _ -> Reference(i |> string |> Literal, string i)::currentLine, rtks
+            | Error msg -> (msg |> Literal |> FrmtedString)::currentLine, rtks
+        | CITATION strId :: rtks ->
+            match findCite strId ftLst with
+            | Ok content ->  // if citation is found
+                match content with
+                | Citation (_, inlineContent, _) -> Reference(inlineContent, strId)::currentLine, rtks
+                | _ -> failwith "citation list contains other stuff, not possible"
+            | Error msg -> // use error msg instead
+                (msg |> Literal |> FrmtedString)::currentLine, rtks
         | _ ->
             let str = mapTok toks.[0]
             FrmtedString (Literal str)::currentLine, xOnwards 1 toks
