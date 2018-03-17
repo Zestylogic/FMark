@@ -7,7 +7,7 @@ open Expecto
 
 let id x = x
 let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPairs =
-    let makeOneTest i (inn, out, msg) = testCase (sprintf "test numer: %d" i) <| fun () ->
+    let makeOneTest i (inn, out, msg) = testCase (sprintf "Parser/test number: %d" i) <| fun () ->
         Expect.equal (inn |> inputTransform |> testFunc) (outputTransform out) msg
     listOfIOPairs
     |> List.indexed
