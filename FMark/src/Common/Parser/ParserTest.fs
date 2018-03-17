@@ -7,7 +7,7 @@ open Expecto
 
 let id x = x
 let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPairs =
-    let makeOneTest i (inn, out, msg) = testCase (sprintf "test numer: %d" i) <| fun () ->
+    let makeOneTest i (inn, out, msg) = testCase (sprintf "Parser/test number: %d" i) <| fun () ->
         Expect.equal (inn |> inputTransform |> testFunc) (outputTransform out) msg
     listOfIOPairs
     |> List.indexed
@@ -265,7 +265,7 @@ let testGlobal2 =
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
                 Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
                 Paragraph [[Link (Literal "Footer1","#footnote-1"); FrmtedString (Literal "text4")]];
-                Paragraph [[Link (Literal "(Wang, 2017)","#footnot-Eric"); FrmtedString (Literal "text6")]];
+                Paragraph [[Link (Literal "(Wang, 2017)","#footnote-Eric"); FrmtedString (Literal "text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);
                 Citation (
                     "Eric",Literal "(Wang, 2017)",

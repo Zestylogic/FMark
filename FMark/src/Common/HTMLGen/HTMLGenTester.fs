@@ -7,7 +7,7 @@ open Expecto
 
 let id x = x
 let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPairs =
-    let makeOneTest i (inn, out, msg) = testCase (sprintf "test numer: %d" i) <| fun () ->
+    let makeOneTest i (inn, out, msg) = testCase (sprintf "HTMLGEN/test number: %d" i) <| fun () ->
         Expect.equal (inn |> inputTransform |> testFunc) (outputTransform out) msg
     listOfIOPairs
     |> List.indexed
@@ -274,10 +274,10 @@ let reallyBigTest =
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
                 Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
                 Paragraph [[Reference ("Footer1","footnote-1"); FrmtedString (Literal "text4")]];
-                Paragraph [[Reference ("(Wang, 2017)","footnot-Eric"); FrmtedString (Literal "text6")]];
+                Paragraph [[Reference ("(Wang, 2017)","footnote-Eric"); FrmtedString (Literal "text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);
                 Citation (
-                    "Eric",Literal "(Wang, 2017)",
+                    "footnote-Eric",Literal "(Wang, 2017)",
                     [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
                     FrmtedString (Literal "\"Not a real website.\" ");
                     FrmtedString (Literal "Accessed March 4, 2018. ");
@@ -285,7 +285,7 @@ let reallyBigTest =
                 )
             ]),
             ["<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>big HTML test</title></head>";
-            "<body><p>text1#text2</p><h1 id=\"Header10\">Header1</h1><p><a href=\"#footnote-1\">Footer1</a>text4</p><p><a href=\"#footnot-Eric\">(Wang, 2017)</a>text6</p><p id=\"#footnote-1\">footer1</p><p id=\"#footnote-Eric\">Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p>";
+            "<body><p>text1#text2</p><h1 id=\"Header10\">Header1</h1><p><a href=\"#footnote-1\">Footer1</a>text4</p><p><a href=\"#footnote-Eric\">(Wang, 2017)</a>text6</p><p id=\"#footnote-1\">footer1</p><p id=\"#footnote-Eric\">Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p>";
             "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>";
             "</body>"],
             "wow very big"

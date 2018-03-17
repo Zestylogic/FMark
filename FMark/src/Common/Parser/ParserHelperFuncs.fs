@@ -349,7 +349,7 @@ let parseInLineElements2 ftLst toks =
                 | [] -> None
             let ft = matchCitation str ftLst
             match ft with
-            | Some ref -> [Link(ref,"#footnot-"+str)], rtks
+            | Some ref -> [Link(ref,"#footnote-"+str)], rtks
             | None ->
                 ["Footer " + str + " not found" |> Literal |> FrmtedString], rtks
         | _ ->
