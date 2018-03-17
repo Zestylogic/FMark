@@ -9,7 +9,9 @@ type TEmphasis = UNDER | STAR // underscore and asterisk
 
 type ParagraphState = {Par: Token list; ReToks: Token list; ParMatched: bool}
 
-/// delete leading ENDLINEs and return the rest
+type FormatStyle = STRONG | EM | SEM
+
+/// delete leading ENDLINEs and retur the rest
 let rec deleteLeadingENDLINEs toks =
     match toks with
     | ENDLINE:: tks -> deleteLeadingENDLINEs tks
@@ -149,29 +151,28 @@ let (|PickoutList|_|) toks =
     | _ -> None
 
 
-
-/// match underscore and asterisk emphasis start squence
-/// match underscore and asterisk emphasis end sequence
-/// return content of emphasis, the rest of line,
-/// and the necessary edge InlineElement
-/// e.g. ` _i_`, the edge InlineElements are `Some(FrmtedString(Literal " "))` and `None`
-let (|MatchEm|_|) toks =
+let (|MatchTemplate|_|) strongOrEmOrBoth toks =
+    let (asteriskFormatter, underscoreFormatter) =
+        match strongOrEmOrBoth with
+        | STRONG -> DASTERISK, DUNDERSCORE
+        | EM -> ASTERISK, UNDERSCORE
+        | SEM -> TASTERISK, TUNDERSCORE
     let attachInlineEle front back = Option.map (fun (x,y) -> x,y,front,back)
     match toks with
-    | WHITESPACE _:: UNDERSCORE:: WHITESPACE _:: _ -> None      // not em
-    | WHITESPACE frontWhite:: UNDERSCORE:: potential ->
+    | WHITESPACE _:: whatSym:: WHITESPACE _:: _ when whatSym=underscoreFormatter -> None      // not em
+    | WHITESPACE frontWhite:: whatSym:: potential when whatSym=underscoreFormatter ->
         let frontLiteral = String.replicate frontWhite " " |> Literal |> FrmtedString |> Some
         let rec endFinder content toks =
             match toks with
             | [] -> None
-            | WHITESPACE _:: UNDERSCORE:: WHITESPACE _:: rtks -> // keep finding
+            | WHITESPACE _:: whatSym:: WHITESPACE _:: rtks when whatSym=underscoreFormatter -> // keep finding
                 endFinder (List.append content toks.[0..2]) rtks
-            | _:: UNDERSCORE:: WHITESPACE backWhite:: rtks ->
+            | _:: whatSym:: WHITESPACE backWhite:: rtks when whatSym=underscoreFormatter ->
                 let backLiteral = String.replicate backWhite " " |> Literal |> FrmtedString |> Some
                 (List.append content [List.head toks], rtks)
                 |> Some
                 |> attachInlineEle frontLiteral backLiteral
-            | _::[UNDERSCORE] ->
+            | _::[whatSym] when whatSym=underscoreFormatter ->
                 (List.append content [List.head toks], [])
                 |> Some
                 |> attachInlineEle frontLiteral None
@@ -179,14 +180,14 @@ let (|MatchEm|_|) toks =
                 xOnwards 1 toks
                 |> endFinder (List.append content [toks.[0]])
         endFinder [] potential
-    | ASTERISK:: WHITESPACE _:: _ -> None // not asterisk em
-    | ASTERISK:: potential ->
+    | whatSym:: WHITESPACE _:: _ when whatSym=asteriskFormatter -> None // not asterisk em
+    | whatSym:: potential when whatSym=asteriskFormatter ->
         let rec endFinder content toks =
             match toks with
             | [] -> None
-            | WHITESPACE _:: ASTERISK:: rtks -> // keep finding
+            | WHITESPACE _:: whatSym:: rtks when whatSym=asteriskFormatter -> // keep finding
                 endFinder (List.append content toks.[0..1]) rtks
-            | _:: ASTERISK:: rtks ->
+            | _:: whatSym:: rtks when whatSym=asteriskFormatter ->
                 (List.append content [List.head toks], rtks)
                 |> Some
                 |> attachInlineEle None None
@@ -194,6 +195,32 @@ let (|MatchEm|_|) toks =
                 xOnwards 1 toks
                 |> endFinder (List.append content [toks.[0]])
         endFinder [] potential
+    | _ -> None
+
+
+/// match underscore and asterisk emphasis start squence
+/// match underscore and asterisk emphasis end sequence
+/// return content of emphasis, the rest of line,
+/// and the necessary edge InlineElement
+/// e.g. ` _i_`, the edge InlineElements are `Some(FrmtedString(Literal " "))` and `None`
+let (|MatchEm|_|) toks =
+    match toks with
+    | MatchTemplate EM result -> Some result
+    | _ -> None
+
+/// match underscore and asterisk strong start squence
+/// match underscore and asterisk strong end sequence
+/// return content of strong, the rest of line,
+/// and the necessary edge InlineElement
+/// e.g. ` __i__`, the edge InlineElements are `Some(FrmtedString(Literal " "))` and `None`
+let (|MatchStrong|_|) toks =
+    match toks with
+    | MatchTemplate STRONG result -> Some result
+    | _ -> None
+
+let (|MatchStrongAndEm|_|) toks =
+    match toks with
+    | MatchTemplate SEM result -> Some result
     | _ -> None
 
 /// match new paragraph sequence
@@ -317,21 +344,34 @@ let cutTableRows toks =
 let parseInLineElements2 ftLst toks =
     let attachInlineEle front back ele =
         [front;ele;back]
+    let genFormat (currentLine, inlineContent, frontLiteral, backLiteral) =
+        match frontLiteral, backLiteral with
+            | Some fl, Some bl ->
+                [bl;inlineContent;fl]
+            | Some fl, None ->
+                [inlineContent;fl]
+            | None, Some bl ->
+                [bl;inlineContent]
+            | None, None ->
+                [inlineContent]
+        |> (fun x -> x@currentLine)
+    let makeList x = [x]
     let rec parseInLineElements' ftLst currentLine toks =
         match toks with
         | MatchSym BACKTICK (content, rtks) -> (content|> strAllToks|> Code|> FrmtedString )::currentLine, rtks
+        | MatchStrongAndEm (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent =
+                parseInLines [] content |> Strong |> FrmtedString |> makeList |> Emphasis |> FrmtedString
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
+        | MatchStrong (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent = (parseInLines [] content |> Strong |> FrmtedString)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
         | MatchEm (content, rtks, frontLiteral, backLiteral) ->
             let inlineContent = (parseInLines [] content |> Emphasis |> FrmtedString)
-            match frontLiteral, backLiteral with
-                | Some fl, Some bl ->
-                    [bl;inlineContent;fl]
-                | Some fl, None ->
-                    [inlineContent;fl]
-                | None, Some bl ->
-                    [bl;inlineContent]
-                | None, None ->
-                    [inlineContent]
-            |> (fun x -> x@currentLine), rtks
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
         | FOOTNOTE i :: rtks ->
             let rec matchFootnote id pObjs = 
                 match pObjs with
