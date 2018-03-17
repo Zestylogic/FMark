@@ -31,8 +31,9 @@ and strInlineElements eles =
 /// process Markdown paragraph
 let strParagraph lines =
     let folder pLinesStr line =
-        pLinesStr + strInlineElements line
+        pLinesStr + strInlineElements line + NewLineStr
     List.fold folder "" lines
+    |> (fun x -> x.Trim()) // remove leading and trailing whitespaces and CRLFs
     |> attachSimpleTag "p"
 
 
@@ -88,21 +89,18 @@ let rec strList list =
         |> attachSimpleTag listTag
 
 /// process header
-let strHeader header =
+let strHeader (header,id) =
     match header with
     | {HeaderName=line;Level=lv} ->
         let tagName = "h" + string(lv)
         line
         |> strInlineElements
-        |> attachSimpleTag tagName
+        |> attachHTMLTag (tagName, ["id", id], true)
 
-/// process inline footnotes
-let strInlineFootnote fnId =
-    let idStr = match fnId with | FtID i -> string i | RefID s -> string s
-    idStr
-    |> attachHTMLTag ("a", ["href", "#footnote-"+idStr], true)
-    |> attachSimpleTag "sup"
-
+/// process footnotes
+let strFootnote (id, s) =
+    strInlineElements s
+    |> attachHTMLTag ("p", ["id", "#footnote-"+id], true)
 
 let (|MatchHeaderAndSubHeader|_|) hds =
     match hds with
@@ -115,8 +113,6 @@ let (|MatchHeaderAndSubHeader|_|) hds =
 /// process table of contents
 
 let strToC (toc:Ttoc) =
-    let displaySingleHeader headerName =
-        headerName |> strInlineElements // can insert unique id for linking
     let appendListItem s i =
         {s with ListItem = i::(s.ListItem)}
     let fstAppendListItem s i = 
@@ -128,15 +124,12 @@ let strToC (toc:Ttoc) =
             sprintf "Append to nested: %A" appendee |> dLogger.Debug None
             {s with ListItem = NestedList({l with ListItem = appendee::l.ListItem})::tail}
         // otherwise if the latest element on the list isn't a nested list, just append
-        | _ ->
-            sprintf "Create nested with: %A" appendee |> dLogger.Debug None 
-            appendee |> appendListItem s
-    
+        | _ -> sprintf "Create nested with: %A" appendee |> dLogger.Debug None 
+               appendee |> appendListItem s
     let appendToNestedD n (s:TList) appendee =
         let getNest = function 
                 | NestedList(l) -> l 
                 | _ -> failwith "Invalid depth."
-        
         let rec appendToNestedD' n s =
             let recurse = function
                 | head::tail -> ((appendToNestedD' (n-1) (head |> getNest)).ListItem)@tail
@@ -144,13 +137,11 @@ let strToC (toc:Ttoc) =
             match (n,s) with
             | (n,s) when n > 0 ->
                 {s with ListItem = recurse s.ListItem}
-
             | (0,s) -> (appendee |> appendToNested s)
             | (n,_) when n < 0 -> failwith "Negative depth, shouldn't happen."
             | _ -> failwithf "n is: %i, s is: %A" n s
         appendToNestedD' n s
-
-    // Maybe convert header list into a list item
+    // Convert header list into a list item
     let fold (s:(TList*int)) =
         function
         |  {HeaderName=headerName; Level=lv} when lv = 1
@@ -168,7 +159,6 @@ let strToC (toc:Ttoc) =
         | {HeaderName=headerName; Level=lv} when lv < snd s
             ->  StringItem(headerName) |> appendToNestedD (lv-2) (fst s),lv
         | _ -> s
-    
     let rec revList (l:TList) =
         let rec revListItemList (li:TListItem list) =
             let revRecurse = function 
@@ -177,50 +167,11 @@ let strToC (toc:Ttoc) =
             List.map revRecurse li
             |> List.rev
         {l with ListItem=List.rev (revListItemList l.ListItem)}
-
-    //sprintf "%A" (toc.HeaderLst) |> dLogger.Debug None
     List.fold fold ({Depth=1; ListItem=[]; ListType=OL},1) (toc.HeaderLst)
     |> fst
     |> (fun l -> {l with ListItem=List.rev l.ListItem})
     |> revList
     |> strList
-    // For each header in the list, print it out as a list element
-    //let folder' maxLv s (header:THeader) =
-    //    // match header with
-    //    // | {HeaderName=str; Level=headerLv}
-
-    //    ""
-    //let folder = folder' (toc.MaxDepth)
-    //List.fold folder "" toc.HeaderLst
-
-    //let rec tocMany currentLv maxLv headers pStr =
-    //    match headers with
-    //    | {HeaderName=headerName; Level=headerLv}::rHds ->
-    //        match headerLv with
-    //        | hlv when hlv = currentLv ->
-    //            match headers with
-    //            | MatchHeaderAndSubHeader (fstHd, rHds) ->
-    //                let (cStr, rHds) =
-    //                    match fstHd |> strInlineElements |> tocMany currentLv+1 maxLv rHds with
-    //                    | Ok (cStr, rHds) -> (cStr, rHds)
-    //                    | Error
-    //                //pStr + (
-    //                    
-    //                //    |> attachSimpleTag "li")
-    //                
-    //            | _ -> pStr + (headerName |> strInlineElements) |> tocMany currentLv maxLv rHds |> Ok
-    //        | hlv when hlv 
-
-
-
-/// gather footnotes for end of page display
-let gatherFootnotes pObjs =
-    let footnotesFilter pObj =
-        match pObj with
-        | Footnote _ -> true
-        | _ -> false
-    List.filter footnotesFilter pObjs
-
 
 /// process HTML body part
 let strBody pObjs =
@@ -232,9 +183,36 @@ let strBody pObjs =
         | CodeBlock (c, l) -> attachHTMLTag ("code", [("language", mapLang l)], true) c
         | Table rows -> strTable rows
         | List l -> strList l
-        | Header h -> strHeader h
-        | Footnote (fnId, _) -> strInlineFootnote fnId
+        | Header (h,s) -> strHeader (h,s)
+        | Footnote (i,s) -> strFootnote ((string i), s)
+        | Citation (i,_,s) -> strFootnote (i, s)
         | ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
 
+
+/// generate HTML head
+let genHead htmlTitle =
+    let metaData =
+        [
+            [("name", "viewport");("content", "width=device-width")]
+        ]
+    let genMetadata pStr md =
+        pStr + attachMetaTag "meta" md
+    List.fold genMetadata "" metaData
+    + attachSimpleTag "title" htmlTitle
+    + "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>"
+    |> attachSimpleTag "head"
+
+/// generate HTML body
+let genBody pObjs =
+    strBody pObjs
+
+let HTMLify title s = 
+    attachMetaTag "!DOCTYPE" ["html", ""]
+    + genHead title
+    + (s|>attachSimpleTag "body")
+
+/// top level HTMLGen
+let genHTML (htmlTitle,pObjs) =
+    genBody pObjs |> (HTMLify htmlTitle)

@@ -1,12 +1,8 @@
 module Main
-open System
-open Fable.Core
-open Fable.Core.JsInterop
-open Fable.Import.Browser
 open Types
 open FMark
 
-let processMarkdownString (str:string) = 
-    str.Split [|'\n'|] 
+let processMarkdownString fileDir str =
+    str
     |> Array.toList
-    |> processString HTML
+    |> processString fileDir HTML

@@ -2,6 +2,7 @@ module Shared
 
 open Types
 open Logger
+open System.Text.RegularExpressions
 
 // Helpers
 
@@ -32,7 +33,8 @@ let (|CharTok|_|) tok =
 let mapTok = function
     | CharTok s -> s
     | CODEBLOCK _ -> "CODEBLOCK"
-    | FOOTER _ -> sprintf "FOOTER found"
+    | FOOTNOTE _ -> sprintf "FOOTNOTE found"
+    | CITATION _ -> sprintf "CITATION found"
     | HEADER n -> sprintf "HEADER %d" n
     | NUMBER s -> s
     | LITERAL s -> s
@@ -58,6 +60,8 @@ let sOnwards s str = if String.length str > s then str.[s..] else ""
 let removeChars lst s =
             let folder (s:string) x = s.Replace(x,"")
             List.fold folder s lst
+let replaceChars pat (rep:string) s =
+    Regex.Replace(s,pat,rep)
 let removeWhitespace (s:string) = 
     s |> removeChars ["\n";"\t";"\r";" "]
 let sharedLog = Logger(LogLevel.WARNING)

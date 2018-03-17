@@ -99,8 +99,17 @@ let parseExp toks =
         match toks with
         | FirstPat x -> Some x
         | _ -> None
+    // Add other options to cells
+    //let (|Option|_|) toks =
+    //    match toks with
+    //    | NUMBER(i)::COMMA::after ->   // Number of decimal places
+    //    | NUMBER(i)::EQUAL::LITERAL("dp")::COMMA::after ->  // Number of decimal places
+
     match List.rev toks with 
-    | Expression (exp,[]) -> Ok exp
+    | NUMBER(i)::COMMA::rest -> match rest with
+                                | Expression (exp,[]) -> (exp,i|>int) |> DPExp |> Ok
+                                | _ ->  sprintf "Not valid expression %A" toks |> Error
+    | Expression (exp,[]) -> (exp,-1) |> DPExp |> Ok                  
     | _ ->  sprintf "Not valid expression %A" toks |> Error
 
 let parseExpression toks = 
@@ -113,12 +122,15 @@ let parseExpression toks =
 
 // ################## TEST FUNCTIONS ####################
 // Recursively evaluate expression AST. CellRef will need access to whole table, this is used to test everything else
-let rec evalExpTest e = 
+let evalExpTest (e:TExpr) =
+    let rec evalExpTest' (e:Expr) = 
+        match e with
+        | BinExp(f,x,y) -> f (evalExpTest'(x)) (evalExpTest'(y))
+        | Op (Float(x)) -> x
+        | _ -> 13.0
     match e with
-    | BinExp(f,x,y) -> f (evalExpTest(x)) (evalExpTest(y))
-    | Op (Float(x)) -> x
-    | _ -> 13.0
-
+    | DPExp(exp,dp) when dp < 0 -> evalExpTest' exp
+    | DPExp(exp,dp) -> evalExpTest' exp |> round dp
 // Test evaluation without table
 let parseExpTest (toks:Token list) =
     whitespaceFilter toks // Remove whitespace

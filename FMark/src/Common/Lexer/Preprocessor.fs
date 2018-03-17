@@ -1,35 +1,25 @@
 module Preprocessor
 
-open System
-
+open FileIO
 open Shared
 open LexerShared
+
+// --------------------------------------------------
+// Tokenizer
+// --------------------------------------------------
 
 /// Token type for the preprocessor macros
 type Token =
     | LITERAL of string
     | MACRO | OPENDEF | CLOSEDEF | OPENEVAL | CLOSEEVAL | LBRA | RBRA
-    | SEMICOLON | ENDLINE | BSLASH
-
-/// Type of the parser elements
-type Parser =
-    | MacroDefinition of Macro
-    | MacroSubstitution of Sub
-    | ParseText of content: string
-    | ParseNewLine
-
-/// Type for a macro
-and Macro = {Name: string; Args: string list; Body: Parser list}
-
-/// Type for a substitution
-and Sub = {Name: string; Args: string list; Raw: string}
+    | SEMICOLON | ENDLINE | BSLASH | INCLUDE
 
 /// Character list for the preprocessor
 let charList = ["{%", OPENDEF; "%}", CLOSEDEF; "{{", OPENEVAL
                 "}}", CLOSEEVAL; "(", LBRA; ")", RBRA; ";", SEMICOLON;
                 "\\", BSLASH]
 
-let keywordList = ["macro", MACRO]
+let keywordList = ["macro", MACRO; "include", INCLUDE]
 
 /// Check if a LITERAL is exclusively whitespace 
 let (|WhiteSpace|NonWhiteSpace|) = function
@@ -82,6 +72,69 @@ let tokenize str =
 /// Tokenizes a list of strings and returns them as a single list of tokens
 let tokenizeList = List.collect tokenize
 
+// --------------------------------------------------
+// Parser
+// --------------------------------------------------
+
+/// ArgumentList used in the substitution
+type Argument<'T> = 'T list
+
+/// Type for a macro
+type Macro<'T> = {Name: string; Args: string list; Body: 'T list}
+
+/// Type for a substitution
+type Sub<'T> = {Name: string; Args: Argument<'T> list; Raw: string}
+
+/// Type of the parser elements
+type Parser =
+    | MacroDefinition of Macro<Parser>
+    | MacroSubstitution of Sub<Parser>
+    | IncludeStatement of link: string
+    | ParseText of content: string
+    | ParseNewLine
+
+/// Return a parser list until it reaches the token
+let findParseUntil otok ctok parser =
+    let rec findParseUntil' count parser retlist =
+        match parser with
+        | t :: tl when t = ctok && count = 1 ->
+            Some (retlist |> List.rev, tl)
+        | t :: tl when t = ctok ->
+            t :: retlist |> findParseUntil' (count - 1) tl
+        | t :: tl when t = otok ->
+            t :: retlist |> findParseUntil' (count + 1) tl
+        | t :: tl ->
+            t :: retlist |> findParseUntil' count tl
+        | [] -> None
+    findParseUntil' 1 parser []
+
+/// Splits a list on a specific element
+let splitList esctok cltok tok list =
+    let rec splitList' curr final list =
+        match list with
+        | a :: tl when a = esctok ->
+            match findParseUntil esctok cltok tl with
+            | Some (l, tl) ->
+                splitList' (CLOSEEVAL :: (List.rev (a :: l)) @ curr) final tl
+            | _ ->
+                splitList' (a :: curr) final tl
+        | a :: tl when a = tok ->
+            splitList' [] (List.rev curr :: final) tl
+        | a :: tl ->
+            splitList' (a :: curr) final tl
+        | [] ->
+            List.rev curr :: final |> List.rev
+    splitList' [] [] list
+
+let splitListEval = splitList OPENEVAL CLOSEEVAL SEMICOLON
+
+/// Strips whitespace from a token list
+let stripWhiteSpace = function
+    | WhiteSpace :: tl | tl ->
+        match List.rev tl with
+        | WhiteSpace :: tl | tl ->
+            List.rev tl
+
 /// Returns if the start of the list of tokens matches a keyword
 let (|KeyWord|_|) =
     let listCheckExists t list =
@@ -101,7 +154,7 @@ let (|KeyWord|_|) =
 /// (arg 1; arg 2)
 /// (arg1)
 /// ()
-let (|ArgList|_|) =
+let (|ParamList|_|) =
     /// Matches if there is a list of literals, and returns all of them until it reaches
     /// a Token that is not a literal
     let rec (|NameList|_|) = function
@@ -128,13 +181,25 @@ let (|ArgList|_|) =
             Some (nl, tl)
         | _ -> None
 
+let (|ArgList|_|) = function
+    WhiteSpace :: tl | tl ->
+        match tl with
+        | LBRA :: tl ->
+            match findParseUntil LBRA RBRA tl with
+            | Some (p, tl) ->
+                Some (splitListEval p |> List.map stripWhiteSpace, tl)
+            | _ -> None
+        | WhiteSpace :: tl ->
+            Some ([], tl)
+        | _ -> None
+
 /// Matches a literal, which will be the name of the function, which can be followed by
 /// an argument list
 let (|Function|_|) = function
     | WhiteSpace :: LITERAL n :: tl ->
         match tl with
-        | ArgList (nl, WhiteSpace :: tl)
-        | ArgList (nl, tl) ->
+        | ParamList (nl, WhiteSpace :: tl)
+        | ParamList (nl, tl) ->
             Some (n, nl, tl)
         | WhiteSpace :: t
         | t ->
@@ -168,6 +233,15 @@ let (|SChar|_|) tok =
     |> Map.ofList
     |> mapTryFind tok
 
+/// Include statement match
+let (|Include|_|) = function
+    | OPENEVAL :: WhiteSpace :: tl | OPENEVAL :: tl ->
+        match tl with
+        | INCLUDE :: WhiteSpace :: LITERAL link :: WhiteSpace :: CLOSEEVAL :: tl
+        | INCLUDE :: WhiteSpace :: LITERAL link :: CLOSEEVAL :: tl -> Some (link, tl)
+        | _ -> None
+    | _ -> None
+
 /// Parses a Token list into a Parser list
 let parse tList =
 
@@ -192,7 +266,10 @@ let parse tList =
             let p, tl' = parse' (Some CLOSEDEF) tl []
             pRec MacroDefinition {Name=a; Args=b; Body=List.rev p} tl'
         | EvalDef (n, args, tl), _ ->
-            pRec MacroSubstitution {Name=n; Args=args; Raw=getRaw tList |> tokToString} tl
+            let args' = List.map ((fun a -> parse' None a []) >> (fun (a, _) -> List.rev a)) args
+            pRec MacroSubstitution {Name=n; Args=args'; Raw=getRaw tList |> tokToString} tl
+        | Include (link, tl), _ ->
+            pRec IncludeStatement link tl
         | ENDLINE :: tl, _ ->
             pRec id ParseNewLine tl
         | WhiteSpace :: a :: tl, Some e | a :: tl, Some e when e = a ->
@@ -210,23 +287,27 @@ let parse tList =
     let p, _ = parse' None tList []
     List.rev p
 
+// --------------------------------------------------
+// Evaluation
+// --------------------------------------------------
+
 /// Evaluates and strips macros from the markdown, and also evaluates macro substitutions
 /// by seeing which macros are in scope or if the substitution is a parameter.
 /// This supports shadowing of previously defined macros, and scopes can be defined
 /// by declaring a macro inside another macro
-let evaluate pList =
+let evaluateWithDir fileDir pList =
 
     /// Makes an empty parmeter list for the current parameters, so that they
     /// are not substituted
-    let makeEmptyParam args: Map<string, string option> =
+    let makeEmptyParam args: Map<string, Argument<Parser> option> =
         List.replicate (List.length args) None
         |> List.zip args
         |> Map.ofList
 
     /// Add a parameter to a parameter map
-    let addParam p (macro: Macro) args =
+    let addParam p (macro: Macro<Parser>) args =
         List.zip macro.Args args
-        |> List.fold (fun (s: Map<string, string option>) (a, b) -> s.Add(a, Some b)) p
+        |> List.fold (fun (s: Map<string, Argument<Parser> option>) (a, b) -> s.Add(a, Some b)) p
 
     /// Make a Macro record type
     let makeMacro n args p =
@@ -238,28 +319,28 @@ let evaluate pList =
 
     /// Evaluates and creates a new simplified Parser list with all the macros stripped
     /// and substitutions evaluated
-    let rec evalulate' pList newPList param (scope: Map<string, Macro>) =
+    let rec evaluate' pList newPList param (scope: Map<string, Macro<Parser>>) =
 
         /// Function for use with different currying that the original
-        let evalulateInv' pList newPList scope param =
-            evalulate' pList newPList param scope
+        let evaluateInv' pList newPList scope param =
+            evaluate' pList newPList param scope
 
         /// Evaluate without adding any values to the param or scope maps
-        let evalulate'' pList list =
-            evalulate' pList (list @ newPList) param scope
+        let evaluate'' pList list =
+            evaluate' pList (list @ newPList) param scope
 
         match pList with
         | MacroDefinition {Name=n; Args=args; Body=p} :: tl ->
             makeEmptyParam args
-            |> evalulateInv' p [] scope
+            |> evaluateInv' p [] scope
             |> makeMacro n args
             |> mapAdd scope n
-            |> evalulate' tl newPList param
+            |> evaluate' tl newPList param
         | MacroSubstitution {Name=n; Args=args; Raw=raw} as ms :: tl ->
             let eval =
                 match param.TryFind n with
                 | Some (Some x) ->
-                    [ParseText x]
+                    evaluate' x [] param scope |> List.rev
                 | Some _ ->
                     [ms]
                 | _ ->
@@ -268,17 +349,28 @@ let evaluate pList =
                         m.Body
                     | Some m ->
                         addParam param m args
-                        |> evalulateInv' m.Body [] scope
+                        |> evaluateInv' m.Body [] scope
                         |> List.rev
                     | _ ->
                         [ParseText raw]
-            evalulate'' tl eval
-
+            evaluate'' tl eval
+        | IncludeStatement link :: tl ->
+            let addDir str =
+                match str with
+                | RegexMatch "^\\/" _ -> str
+                | _ -> fileDir + str
+            addDir link
+            |> readFilePath
+            |> tokenizeList
+            |> parse
+            |> (fun a -> evaluate' (a @ tl) newPList param scope)
         | p :: tl ->
-            evalulate'' tl [p]
+            evaluate'' tl [p]
         | _ -> newPList
-    evalulate' pList [] Map.empty<string, string option> Map.empty<string, Macro>
+    evaluate' pList [] Map.empty<string, Argument<Parser> option> Map.empty<string, Macro<Parser>>
     |> List.rev
+
+let evaluate = evaluateWithDir ""
 
 /// Converts a Parser list to a string
 let parserToString pList =
@@ -302,21 +394,29 @@ let toStringList pList =
 
 /// perform the parsing, evaluation, while stripping the last endline which is redundant
 /// as it was added by the tokenizer
-let pETS =
+let pETS dir =
     let stripLastEndline l =
         match List.rev l with
-        | [ParseNewLine] as e ->
-            e
-        | ParseNewLine :: r ->
-            List.rev r
+        | [ParseNewLine] as e -> e
+        | ParseNewLine :: r -> List.rev r
         | _ -> l
-    parse >> evaluate >> stripLastEndline
+    parse >> evaluateWithDir dir >> stripLastEndline
+
+// --------------------------------------------------
+// Public API
+//--------------------------------------------------
 
 /// Preprocess a string and output a string with the macro evaluated
 let preprocess =
-    tokenize >> pETS >> parserToString
+    tokenize >> pETS "" >> parserToString
+
+let preprocessWithDir dir =
+    tokenize >> pETS dir >> parserToString
 
 /// Preprocess a list of strings which is returned as a list of strings with the
 /// macro evaluated
 let preprocessList =
-    List.collect tokenize >> pETS >> toStringList
+    List.collect tokenize >> pETS "" >> toStringList
+
+let preprocessListWithDir dir =
+    List.collect tokenize >> pETS dir >> toStringList

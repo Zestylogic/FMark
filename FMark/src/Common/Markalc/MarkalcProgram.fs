@@ -5,7 +5,10 @@ open MarkalcTest
 [<EntryPoint>]
 let markalcMain argv =
     printfn "Running tests..."
-    Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore 
-    // printfn "Updated TESTS.md document with \'Should pass\' tests."
-    // testMarkdown true
-    0 // return an integer exit code
+    Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig argv
+    |> function
+    | 0 ->
+        // printfn "Updated TESTS.md document with \'Should pass\' tests."
+        // testMarkdown true
+        0
+    | _ -> 1

@@ -1,7 +1,6 @@
 module ParserHelperFuncs
 open Types
 open Shared
-open System.Threading
 
 let SPACE = " "
 let NOSTRING = ""
@@ -118,6 +117,7 @@ let (|MatchSym|_|) sym toks =
         | None -> None
     | _ -> None
 
+
 /// match paragraph
 /// return paragraph contents, w/o trailing ENDLINE,
 /// and the rest tokens, w/o leading ENDLINE
@@ -132,11 +132,23 @@ let (|PickoutParagraph|_|) toks =
             else
                 match tok with
                 | ENDLINE when List.head par = ENDLINE -> {Par=List.tail par;ReToks=reToks;ParMatched=true}
+                | HEADER _ -> {Par=par;ReToks=tok::reToks;ParMatched=true}
                 | _ -> {state with Par=tok::par}
         let initState = {Par=[];ReToks=[];ParMatched=false}
         match List.fold folder initState toks with
         | {Par=par;ReToks=reToks} ->
             (par |> List.rev, reToks |> List.rev |> deleteLeadingENDLINEs) |> Some
+
+/// match lists
+let (|PickoutList|_|) toks =
+    match toks with
+    | [] -> None
+    | ASTERISK:: WHITESPACE _:: _ | MINUS:: WHITESPACE _:: _ // unordered list
+    | NUMBER _:: DOT:: WHITESPACE _:: _ ->  // ordered list
+        match toks with
+        | PickoutParagraph result -> Some result
+        | _ -> None
+    | _ -> None
 
 
 let (|MatchTemplate|_|) strongOrEmOrBoth toks =
@@ -327,3 +339,73 @@ let cutTableRows toks =
             let row, rtks = cutFirstLine toks
             cutTableRow' (row::rows) rtks
     cutTableRow' [] toks
+
+/// parse inline text, including links and pictures, terminates when nothing left
+let parseInLineElements2 ftLst toks =
+    let attachInlineEle front back ele =
+        [front;ele;back]
+    let genFormat (currentLine, inlineContent, frontLiteral, backLiteral) =
+        match frontLiteral, backLiteral with
+            | Some fl, Some bl ->
+                [bl;inlineContent;fl]
+            | Some fl, None ->
+                [inlineContent;fl]
+            | None, Some bl ->
+                [bl;inlineContent]
+            | None, None ->
+                [inlineContent]
+        |> (fun x -> x@currentLine)
+    let makeList x = [x]
+    let rec parseInLineElements' ftLst currentLine toks =
+        match toks with
+        | MatchSym BACKTICK (content, rtks) -> (content|> strAllToks|> Code|> FrmtedString )::currentLine, rtks
+        | MatchStrongAndEm (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent =
+                parseInLines [] content |> Strong |> FrmtedString |> makeList |> Emphasis |> FrmtedString
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
+        | MatchStrong (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent = (parseInLines [] content |> Strong |> FrmtedString)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
+        | MatchEm (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent = (parseInLines [] content |> Emphasis |> FrmtedString)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
+        | FOOTNOTE i :: rtks ->
+            let rec matchFootnote id pObjs = 
+                match pObjs with
+                | Footnote (i, _)::_ when i = id -> true
+                | _ -> false
+            let ft = matchFootnote i ftLst
+            if ft then //make into link if exist
+                [(("Footer" + string i |> Literal),"#footnote-"+string i) |> Link], rtks
+            else //just superscript if does not exist
+                ["Footer" + string i |> Literal |> FrmtedString], rtks
+        | CITATION str :: rtks ->
+            let rec matchCitation id pObjs = 
+                match pObjs with
+                | Citation (s, inLineRef, _) :: _ when s = id -> Some inLineRef
+                | _ :: tl -> matchCitation id tl
+                | [] -> None
+            let ft = matchCitation str ftLst
+            match ft with
+            | Some ref -> [Link(ref,"#footnot-"+str)], rtks
+            | None ->
+                ["Footer " + str + " not found" |> Literal |> FrmtedString], rtks
+        | _ ->
+            let str = mapTok toks.[0]
+            FrmtedString (Literal str)::currentLine, xOnwards 1 toks
+    and parseInLines currentLine toks =
+        match toks with
+        | [] -> []
+        | _ ->
+            let (newLine, retoks) = parseInLineElements' ftLst currentLine toks
+            match retoks with
+            | [] -> newLine |> List.rev
+            | _ ->
+                parseInLines newLine retoks
+                |> combineLiterals
+    parseInLines [] toks
+
+let parseInLineElements toks = parseInLineElements2 [] toks

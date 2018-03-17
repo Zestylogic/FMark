@@ -7,8 +7,6 @@ type Language =
     | C
     | Empty
 
-type ID = FtID of int | RefID of string
-
 type Token =
     | CODEBLOCK of string * Language
     | LITERAL of string
@@ -18,12 +16,13 @@ type Token =
     | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
     | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
     | RCBRA | BACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT | SEMICOLON
-    | HEADER of int
-    | FOOTER of ID
+    | HEADER of int | FOOTNOTE of int | CITATION of string
 
 type TFrmtedString =
-    | Strong of InlineElement list | Emphasis of InlineElement list
-    | Literal of string | Code of string
+    | Strong of InlineElement list
+    | Emphasis of InlineElement list
+    | Literal of string
+    | Code of string
 and InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
@@ -53,22 +52,23 @@ type PRow =
     | PCells of PCell list * Header:bool
 
 type RefFrmt = IEEE | Harvard | Chicago
-
-// date support for access later
-type Ref = {Author: Token list option; Title: Token list option;
-            Year: int option; URL: string option; Access: Token list option}
+type RefType = Book | Website
+type Ref = {Cat: RefType option; Author: Token list option; Title: Token list option;
+            Year: int option; AccessDate: (int * int * int) option
+            URL: string option}
 
 type ParsedObj =
     | CodeBlock of string * Language
-    | Header of THeader
+    | Header of THeader * string
     | ContentTable of Ttoc
     | List of TList
     | Paragraph of TLine list
     | Quote of TLine
     | Table of PRow list
     | PreTable of Content: Token list list
-    | Footnote of ID * TLine
-
+    | Footnote of int * TLine
+    | Citation of string * TFrmtedString * TLine //ID,Inline,End of doc
+    
 type Cell with 
     member c.GetToks = match c with 
                            | Contents(toks,_,_) -> toks

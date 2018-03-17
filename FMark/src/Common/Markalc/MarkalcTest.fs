@@ -6,6 +6,9 @@ open Markalc
 open Expression
 open Expecto.ExpectoFsCheck
 open Expecto
+let EQTest func fname name inp outp =
+    testCase name <| fun () ->
+    Expect.equal (func inp) outp (sprintf "%s" fname)
 
 // ####################### DATA ###################
 let expressionData = [
@@ -41,10 +44,16 @@ let expressionData = [
     27.0 |> Ok; // For test evaluation function without table CellRefs evaluate to 13.0
     "Test left associativity with extra whitespace",
     "2 -4 +6 -1 -1- 0 +8",
-    10.0 |> Ok
+    10.0 |> Ok;
     "Pow precendence test",
     "2 ^4 +6 -1 -1- 0 +8",
-    28.0 |> Ok
+    28.0 |> Ok;
+    "Decimal place test",
+    "1/3,2",
+    0.33 |> Ok;
+    "Decimal place test 3dp",
+    "1/3,3",
+    0.333 |> Ok
 ]
 let parseDefaultRowData = [
     "All Pipes",
@@ -114,6 +123,17 @@ let ans head a b c = Cells ([Contents (a,head,Left)  ;
                             Contents (c,head,Right) ], head)
 
 let fullTestData = [
+    "No content after header pipe",
+    ["|"; "---|";],
+    [Cells([Contents ([],true,NoAlign);],true)] |> Ok;
+    "No content after pipe",
+    ["hi"; "---|";"|"; ],
+    [Cells([Contents ([LITERAL("hi")],true,NoAlign);],true);
+     Cells([Contents ([],false,NoAlign);],false)] |> Ok;
+    "Two empty pipes",
+    ["hi|you"; "---|---";"||"; ],
+    [Cells([Contents ([LITERAL("hi")],true,NoAlign);Contents ([LITERAL("you")],true,NoAlign)],true);
+     Cells([Contents ([],false,NoAlign);Contents ([],false,NoAlign)],false)] |> Ok;
     "Single cell table no header pipe",
     ["=2+2"; "---|"; ],
     [Cells([Contents ([NUMBER("4")],true,NoAlign);],true)] |> Ok;
@@ -126,6 +146,9 @@ let fullTestData = [
     "Single row table",
     ["=2+2|header2|header3"; align; ],
     [ans true [NUMBER "4"] [LITERAL "header2"] [LITERAL "header3"]] |> Ok;
+    "Deciaml point test",
+    ["=1/3,2|=[0,0]*3|=[0,0],5"; align; ],
+    [ans true [NUMBER "0.33"] [NUMBER "1"] [NUMBER "0.33333"]] |> Ok;
     "Full evaluation test with cell references",
     ["=2+2|header2|header3"; align;
      "=[0,0]+1|tesdfst|stduff";
@@ -189,9 +212,6 @@ let fullTestData = [
      ans false [NUMBER "5"] [NUMBER "19"] [NUMBER "12"]] |> Ok;
 ]
 // ####################### FUNCTIONS #####################
-let EQTest func fname name inp outp =
-    testCase name <| fun () ->
-    Expect.equal (func inp) outp (sprintf "%s" fname)
 let addTestList test name dataTransform data = 
     (List.map (dataTransform >> (unfoldTuple3 test)) data)
     |> Expecto.Tests.testList name
@@ -216,7 +236,7 @@ let testMarkdown print =
                     (printTestMarkdown "Basic table parse" (getFst3 basicTableData)) +
                     (printTestMarkdown "Full Markalc test" (getFst3 fullTestData))
     // printToFile "TESTS.md" //sprintf "%s" |>
-    if print then IOFuncs.printToFile "TESTS.md" testTable else ()
+    if print then FileIO.writeToFile "TESTS.md" testTable else ()
 let funcList = [( % ),"%";( ** ),"^";( + ),"+";( - ),"-"; ( * ),"*"; ( / ),"/"]
 let expressionPropertyTest op = 
     testProperty (sprintf "Num %A Num is Num %A Num" op op) <|

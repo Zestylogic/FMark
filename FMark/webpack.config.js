@@ -21,12 +21,15 @@ var isProduction = process.argv.indexOf("-p") >= 0;
 console.log("Bundling for " + (isProduction ? "production" : "development") + "...");
 
 module.exports = {
+  target: 'node',
   devtool: "source-map",
   entry: resolve('./src/FMarkFable/FMarkFable.fsproj'),
-  output: {
-    filename: 'bundle.js',
-    path: resolve('./js/'),
-  },
+    output: {
+        library: 'fmark',
+        libraryTarget: "umd",
+        filename: "fmark.js",
+        path: path.resolve(__dirname, 'js')
+    },
   module: {
     rules: [
       {

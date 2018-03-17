@@ -1,0 +1,40 @@
+# FMark Example
+
+## Table of contents
+
+%%TOC
+
+## Macros
+
+{% macro make_table(00;01;02;10;11;12;20;21;22) 
+
+|{{00}}|{{01}}|{{02}}|
+|---|---|---|
+|{{10}}|{{11}}|{{12}}|
+|{{20}}|{{21}}|{{22}}|
+
+%}
+
+{% macro default_table(10';11';12';20';21';22')
+{{ make_table(default;table;contents;{{10'}};{{11'}};{{12'}};{{20'}};{{21'}};{{22'}}) }}
+%}
+
+<br>
+{{ default_table(hi;my;name;is;geroge;hi) }}
+
+## Including files
+
+{{ include test.fmark }}
+
+## Spreadsheet functionality
+
+|This|is|FMark|
+|---|---|---|
+|=5|=3|=SUM{[1,0]:[1,1]}|
+|=5%3|=[1,0]*[1,1]/((7-4)+2)|=AVG{[1,0]:[1,2]}|
+
+## LateX maths
+$$2* \begin{pmatrix} 
+x_{00} & x_{01} & x_{01} \newline 
+x_{10} & x_{11} & x_{11} \newline 
+x_{20} & x_{21} & x_{21} \end{pmatrix}$$

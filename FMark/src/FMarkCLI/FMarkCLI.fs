@@ -2,64 +2,81 @@ module FMarkCLI
 
 open Types
 open Argu
-open System
-open System.Text.RegularExpressions
+open Logger
+open Shared
+open Expecto
+
+let mutable testResult = 0
+let setTestResult i =
+    testResult <- i
 
 type CLIArguments =
     | [<MainCommand;AltCommandLine("-i")>] Input of path:string
-    | [<AltCommandLine("-s")>] Stdin of text:string
     | [<AltCommandLine("-o")>] Output of path:string
-    | [<AltCommandLine("-l")>] Loglevel of level:int
+    | [<AltCommandLine("-l")>] Loglevel of LogLevel
     | [<AltCommandLine("-f")>] Format of OutFormat
-    | [<AltCommandLine("-t")>] Test
-
+    | [<AltCommandLine("-t")>] Test of sequential:bool option
 with
     interface IArgParserTemplate with
         member s.Usage =
             match s with
             | Input _ -> "specify input file path."
-            | Stdin _ -> "using tool with stdin"
             | Output _ -> "specify output file path."
-            | Loglevel _ -> "set the log level  ('3:DEBUG', '2:INFO', '1:WARNING', '0:ERROR')."
+            | Loglevel _ -> "set the log level  ('0:DEBUG', '1:INFO', '2:WARNING', '3:ERROR' ,'4:FATAL')."
             | Format _ -> "specify format, by default: html."
             | Test _ -> "run CI tests."
 
 let ifFlagRunTests (r:ParseResults<CLIArguments>) =
-    r.TryGetResult(Test) |> function | Some(_) -> true | None(_) -> false
-    |> function
-    | true -> Expecto.Tests.runTestsInAssembly Expecto.Tests.defaultConfig [||] |> ignore
-    | false -> ()
+    r.TryGetResult(Test) |> function 
+    | Some(s) -> s |> function
+                      | Some(true) -> 
+                        globLog.Info (Some 30) "Running tests sequentially."
+                        Tests.runTestsInAssembly defaultConfig [|"--sequenced"|] |> setTestResult
+                      | _ -> 
+                        globLog.Info (Some 33) "Running tests in parallel."
+                        Tests.runTestsInAssembly defaultConfig [||] |> setTestResult
+    | None(_) -> ()
+    r
 
 let ifFileReadFrom (r:ParseResults<CLIArguments>) =
-    let readLines filePath = System.IO.File.ReadLines(filePath)
-    // If Input is present
     r.TryGetResult(Input) 
     |> function 
-    | Some(fname) -> Some(readLines fname |> Seq.toList,fname)
+    | Some(fname) -> Some(FileIO.readFilePath fname,fname)
     | None(_) -> None
 
-[<EntryPoint>]
-let main argv =
-    printfn "Welcome to FMark!"
-    let errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
+let setLoggerLevel (r:ParseResults<CLIArguments>)=
+    r.GetResult(Loglevel,defaultValue=LogLevel.FATAL)
+    |> function | l -> globLog <- Logger(l) // update the global logger with the new log value
+    r
+let welcomeMsg a =
+    globLog.Info None "Welcome to FMark!"
+    a
+let logArgs (r:ParseResults<CLIArguments>) =
+    sprintf "Got parse results %A" <| r.GetAllResults()
+    |> globLog.Info None
+    r
+let processCLI argv =
+    let errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some System.ConsoleColor.Red)
     let parser = ArgumentParser.Create<CLIArguments>(programName = "FMark", errorHandler = errorHandler)
+    // Get command line options
     let results = parser.ParseCommandLine argv
-
-    printfn "Got parse results %A" <| results.GetAllResults()
-    ifFlagRunTests results
-
-    // ############## EXAMPLE, NEEDS TIDYING UP ################
-    match ifFileReadFrom results with
-    | None(_) -> ()
+    results
+    |> setLoggerLevel // Set logger level
+    |> welcomeMsg
+    |> logArgs
+    |> ifFlagRunTests
+    |> ifFileReadFrom
+    |> function
+    | None(_) -> () // Do nothing
     | Some(instr,fname) -> 
-        let replaceChars pat (rep:string) s =
-            Regex.Replace(s,pat,rep)
-        let format = results.GetResult(Format,defaultValue = HTML )
-        let defaultOutfile = if format=HTML then replaceChars ".md" ".html" fname  else replaceChars ".md" "1.md" fname
+        let format = results.GetResult(Format,defaultValue = HTML)  // Find out format and output file name, convert.
+        let defaultOutfile = if format=HTML then replaceChars "\.[a-zA-Z]+$" ".html" fname else replaceChars "\.[a-zA-Z]+$" "1.md" fname
         let outFile = results.GetResult(Output,defaultValue=defaultOutfile)
-        FMark.processString format instr
+        FMark.processString "" format instr
         |> function
             | Ok(s)
-            | Error(s) -> IOFuncs.printToFile outFile s
-
-    0
+            | Error(s) -> FileIO.writeToFile outFile s
+[<EntryPoint>]
+let main argv =
+    processCLI argv
+    testResult // Return test result as exit code, if no tests ran it will default to 0

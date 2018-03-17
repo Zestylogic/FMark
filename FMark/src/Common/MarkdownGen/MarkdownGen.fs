@@ -19,13 +19,13 @@ let surround pat str =
 let rec mdFStr fStr =
     match fStr with
     | Literal str -> str
-    | Code str -> surround "\`" str
+    | Code str -> surround "`" str
     | Strong a ->  mdInlineElements a |> surround "**"
     | Emphasis e -> mdInlineElements e |> surround "*"
 
 /// convert InlineElement list to string, with HTML tags where necessary
 /// not tail recursive because the code looks cleaner this way
-and mdInlineElements eles =
+and mdInlineElements' b eles =
     let braSurround = surround "("
     let sbraSurround = surround "["
     let convertMd pStr ele =
@@ -34,8 +34,8 @@ and mdInlineElements eles =
         | FrmtedString fStr -> mdFStr fStr
         | Link (ht, url) -> (mdFStr ht |> sbraSurround) + (url |> braSurround)
         | Picture (alt, url) -> (alt |> sbraSurround |> sprintf "!%s" ) +  (url |> braSurround)
-    List.fold convertMd "" eles
-
+    List.fold convertMd (sprintf "%s" b) eles
+and mdInlineElements = mdInlineElements' ""
 
 /// process Markdown paragraph
 let mdParagraph lines =
@@ -85,14 +85,18 @@ let mdTable (rows: PRow list) =
 /// recursively process a list
 let rec mdList list =
     let mdListItem ord tab (pStr,pCount) li =
+            let makeTabs num = 
+                if num <= 0 then "" else String.replicate num "\t"
             let retFold s = pStr + s, pCount + 1;
             match li with
             | StringItem(line) -> mdInlineElements line |> (fun s -> 
-                if ord 
-                then 
-                    sprintf "%s%i. %s\n" (String.replicate tab "\t") pCount s
+                match ord,s with
+                | _,"" -> ""
+                | true,_ -> 
+                    sprintf "%s%i. %s\n" (makeTabs tab) pCount s
                     |> logPassN logger.Debug
-                else sprintf "%s- %s\n" (String.replicate tab "\t") s) |> retFold
+                | false,_ -> 
+                    sprintf "%s- %s\n" (makeTabs tab) s) |> retFold
             | NestedList(list) -> mdList list |> retFold
             
     match list with
@@ -114,11 +118,11 @@ let mdBody pObjs =
         pStr +
         match pObj with
         | Paragraph p -> mdParagraph p
-        //| Quote q -> mdInlineElements q
+        | Quote q -> mdInlineElements' ">" q
         | CodeBlock (c, l) -> surround "```" (mapLang l + "\n" + c + "\n")
         | Table rows -> mdTable rows
         | List l -> mdList l |> sprintf "%s\n"
-        | Header h -> mdHeader h
+        | Header (h,s) -> mdHeader h //#### DO SOMETHING WITH STRING HERE
         //| Footnote (fnId, _) -> mdInlineFootnote fnId
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs

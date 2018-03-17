@@ -55,7 +55,7 @@ let paragraphTests =
         );
         (
             [[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]],
-            "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>", "indent test"
+            "<p>Go go go!<a href=\"brokenURL\">broken link</a>"+NewLineStr+"Come!</p>", "indent test"
         );
     ]
 
@@ -123,25 +123,35 @@ let listTests =
 let headerTests =
     makeExpectoTestList id id strHeader "header tests" [
         (
-            {HeaderName=[FrmtedString(Literal "header")]; Level=1},
-            "<h1>header</h1>", "h1"
+            ({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1"),
+            "<h1 id=\"header1\">header</h1>", "h1"
         );
         (
-            {HeaderName=[FrmtedString(Literal "header")]; Level=2},
-            "<h2>header</h2>", "h2"
+            ({HeaderName=[FrmtedString(Literal "header")]; Level=2},"header2"),
+            "<h2 id=\"header2\">header</h2>", "h2"
         );
     ]
 
 [<Tests>]
-let inlineFootnoteTests =
-    makeExpectoTestList id id strInlineFootnote "inline footnote tests" [
+let footnoteTests =
+    makeExpectoTestList id id strFootnote "footnote tests" [
         (
-            FtID 3,
-            "<sup><a href=\"#footnote-3\">3</a></sup>", "footer 3"
+            (string 3, [FrmtedString (Literal "footer3")]),
+            "<p id=\"#footnote-3\">footer3</p>", "footer 3"
         );
         (
-            RefID "abcd",
-            "<sup><a href=\"#footnote-abcd\">abcd</a></sup>", "footer string"
+            ("abcd",[FrmtedString (Literal "footer3")]),
+            "<p id=\"#footnote-abcd\">footer3</p>", "footer string"
+        );
+    ]
+
+[<Tests>]
+let ``HTML head generation test``=
+    makeExpectoTestList id id genHead "HTML head generation test" [
+        (
+            "tiny title",
+            "<head><meta name=\"viewport\" content=\"width=device-width\"><title>tiny title</title><script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head>",
+            "simple header"
         );
     ]
 
@@ -239,7 +249,7 @@ let fullBodyTests =
     makeExpectoTestList id catStr strBody "full body tests" [
         (
             [
-                Header{HeaderName=[FrmtedString(Literal "header")]; Level=1};
+                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1");
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
                         NestedList{ListType=OL;ListItem=
@@ -249,10 +259,51 @@ let fullBodyTests =
                 Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ],
-            ["<h1>header</h1>";
+            ["<h1 id=\"header1\">header</h1>";
             "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>";
             "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
-            "<p>Go go go!<a href=\"brokenURL\">broken link</a>Come!</p>"]
+            "<p>Go go go!<a href=\"brokenURL\">broken link</a>";NewLineStr;"Come!</p>"]
             , "the bodyshop"
         );
+    ]
+
+[<Tests>]
+let reallyBigTest =
+    makeExpectoTestList id id genHTML "inherited big test" [
+        ("big HTML test",
+            [Paragraph [[FrmtedString (Literal "text1#text2")]];
+                Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
+                Paragraph [[Link (Literal "Footer1","#footnote-1"); FrmtedString (Literal "text4")]];
+                Paragraph [[Link (Literal "(Wang, 2017)","#footnot-Eric"); FrmtedString (Literal "text6")]];
+                Footnote (1,[FrmtedString (Literal "footer1")]);
+                Citation (
+                    "Eric",Literal "(Wang, 2017)",
+                    [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
+                    FrmtedString (Literal "\"Not a real website.\" ");
+                    FrmtedString (Literal "Accessed March 4, 2018. ");
+                    Link (Literal "www.example.com/website","www.example.com/website")]
+                )
+            ]),"<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>big HTML test</title><script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head><body><p>text1#text2</p><h1 id=\"Header10\">Header1</h1><p><a href=\"#footnote-1\">Footer1</a>text4</p><p><a href=\"#footnot-Eric\">(Wang, 2017)</a>text6</p><p id=\"#footnote-1\">footer1</p><p id=\"#footnote-Eric\">Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p></body>",
+        "wow very big"
+    ]
+
+
+
+[<Tests>]
+let ``global simple test`` =
+    makeExpectoTestList id id genHTML "top level genHTML test" [
+        ("FMarkToHtml first release",
+            [
+                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1");
+                List{ListType=UL;ListItem=
+                    [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
+                        NestedList{ListType=OL;ListItem=
+                        [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];
+                        Depth=2} ];
+                    Depth=1};
+                Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
+                Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
+            ]),
+        sprintf "<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>FMarkToHtml first release</title><script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head><body><h1 id=\"header1\">header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>%sCome!</p></body>" NewLineStr,
+         "all in one"
     ]

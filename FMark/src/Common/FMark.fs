@@ -2,15 +2,18 @@ module FMark
 
 open Types
 
-let preLexParse = 
-    Preprocessor.preprocessList
+let addEndlines t =
+    ENDLINE::ENDLINE::t
+let preLexParse dir = 
+    Preprocessor.preprocessListWithDir dir
     >> Lexer.lexList
+    >> addEndlines
     >> Parser.parse
-let processString' formatFunc =
-    preLexParse >> Result.map formatFunc
 
-let processString format =
+let processString' dir formatFunc =
+    preLexParse dir >> Result.map formatFunc
+
+let processString dir format =
     match format with
-    | f when f = HTML -> processString' (HTMLGen.strBody)
-    | f when f = Markdown -> processString' (MarkdownGen.mdBody)
-    | _ -> failwithf "Invalid format type generated, this should not be possible."
+    | HTML -> processString' dir (fun x -> HTMLGen.genHTML (dir,x))
+    | Markdown -> processString' dir MarkdownGen.mdBody
