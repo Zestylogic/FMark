@@ -134,14 +134,14 @@ let headerTests =
 
 [<Tests>]
 let footnoteTests =
-    makeExpectoTestList id id strFootnote "footnote tests" [
+    makeExpectoTestList id id strRef "footnote tests" [
         (
             (string 3, [FrmtedString (Literal "footer3")]),
-            "<p id=\"#footnote-3\">footer3</p>", "footer 3"
+            "<p id=\"3\">[3] footer3</p>", "footer 3"
         );
         (
             ("abcd",[FrmtedString (Literal "footer3")]),
-            "<p id=\"#footnote-abcd\">footer3</p>", "footer string"
+            "<p id=\"abcd\">[abcd] footer3</p>", "footer string"
         );
     ]
 
@@ -273,8 +273,8 @@ let reallyBigTest =
         ("big HTML test",
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
                 Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
-                Paragraph [[Link (Literal "Footer1","#footnote-1"); FrmtedString (Literal "text4")]];
-                Paragraph [[Link (Literal "(Wang, 2017)","#footnot-Eric"); FrmtedString (Literal "text6")]];
+                Paragraph [[Reference ("Footer1","footnote-1"); FrmtedString (Literal "text4")]];
+                Paragraph [[Reference ("(Wang, 2017)","footnot-Eric"); FrmtedString (Literal "text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);
                 Citation (
                     "Eric",Literal "(Wang, 2017)",
@@ -283,7 +283,7 @@ let reallyBigTest =
                     FrmtedString (Literal "Accessed March 4, 2018. ");
                     Link (Literal "www.example.com/website","www.example.com/website")]
                 )
-            ], None),
+            ]),
             ["<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>big HTML test</title></head>";
             "<body><p>text1#text2</p><h1 id=\"Header10\">Header1</h1><p><a href=\"#footnote-1\">Footer1</a>text4</p><p><a href=\"#footnot-Eric\">(Wang, 2017)</a>text6</p><p id=\"#footnote-1\">footer1</p><p id=\"#footnote-Eric\">Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p>";
             "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>";
@@ -307,7 +307,7 @@ let ``global simple test`` =
                     Depth=1};
                 Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
-            ], None),
+            ]),
         ["<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\">";
         "<title>FMarkToHtml first release</title>";
         "</head>";

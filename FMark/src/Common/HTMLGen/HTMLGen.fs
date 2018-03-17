@@ -101,10 +101,12 @@ let strHeader (header,id) =
         |> strInlineElements
         |> attachHTMLTag (tagName, ["id", id], true)
 
-/// process footnotes
-let strFootnote (id, s) =
-    strInlineElements s
-    |> attachHTMLTag ("p", ["id", "#footnote-"+id], true)
+/// process references
+/// id: the href id used in inline referencing
+/// content: of TLine type, to be displayed at the end of HTML doc
+let strRef (id, content) =
+    "["+id+"] " + strInlineElements content
+    |> attachHTMLTag ("p", ["id", id], true)
 
 let (|MatchHeaderAndSubHeader|_|) hds =
     match hds with
@@ -188,8 +190,8 @@ let strBody pObjs =
         | Table rows -> strTable rows
         | List l -> strList l
         | Header (h,s) -> strHeader (h,s)
-        | Footnote (i,s) -> strFootnote ((string i), s)
-        | Citation (i,_,s) -> strFootnote (i, s)
+        | Footnote (i,s) -> strRef ((string i), s)
+        | Citation (i,_,s) -> strRef (i, s)
         | ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
@@ -209,13 +211,8 @@ let genHead htmlTitle =
     |> attachSimpleTag "head"
 
 /// generate HTML body
-let genBody (pObjs,toc) =
+let genBody (pObjs) =
     strBody pObjs
-    + // insert table of contents
-    match toc with
-    | Some x -> 
-        strToC x
-    | None -> ""
     // insert javascript in the end of HTML doc to make page rendering faster
     +
     attachHTMLTag ("script",
@@ -228,7 +225,7 @@ let genBody (pObjs,toc) =
 
 
 /// top level HTMLGen
-let genHTML (htmlTitle, pObjs, toc:Ttoc option) =
+let genHTML (htmlTitle, pObjs) =
     attachMetaTag "!DOCTYPE" ["html", ""]
     + genHead htmlTitle
-    + genBody (pObjs,toc)
+    + genBody (pObjs)
