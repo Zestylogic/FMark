@@ -67,7 +67,7 @@ type ParsedObj =
     | Quote of TLine
     | Table of PRow list
     | PreTable of Content: Token list list
-    | Footnote of int * TLine
+    | Footnote of int * TLine           // inline id, end of doc
     | Citation of string * TFrmtedString * TLine //ID,Inline,End of doc
     
 type Cell with 
