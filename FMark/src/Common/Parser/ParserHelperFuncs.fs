@@ -409,16 +409,8 @@ let parseInLineElements2 ftLst toks =
             , rtks
         | MatchEm (content, rtks, frontLiteral, backLiteral) ->
             let inlineContent = (parseInLines [] content |> Emphasis |> FrmtedString)
-            match frontLiteral, backLiteral with
-                | Some fl, Some bl ->
-                    [bl;inlineContent;fl]
-                | Some fl, None ->
-                    [inlineContent;fl]
-                | None, Some bl ->
-                    [bl;inlineContent]
-                | None, None ->
-                    [inlineContent]
-            |> (fun x -> x@currentLine), rtks
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
         | FOOTNOTE i :: rtks ->
             let rec matchFootnote id pObjs = 
                 match pObjs with
