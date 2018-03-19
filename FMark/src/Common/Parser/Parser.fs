@@ -19,6 +19,7 @@ let rec parseCode toks =
     | e ->  sharedLog.Warn None (sprintf "%A" e)
             ("\\`", xOnwards 1 toks) |> Ok
 
+
 /// parse a paragraph which counts for contents in  `<p>`
 /// parseParagraph eats 2>= ENDLINEs
 let parseParagraph ftLst toks =
