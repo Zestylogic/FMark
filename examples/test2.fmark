@@ -1,3 +1,0 @@
-{% macro test2Macro
-This is defined in test2.fmark
-%}

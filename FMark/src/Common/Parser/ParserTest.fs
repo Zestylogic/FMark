@@ -7,7 +7,7 @@ open Expecto
 
 let id x = x
 let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPairs =
-    let makeOneTest i (inn, out, msg) = testCase (sprintf "test numer: %d" i) <| fun () ->
+    let makeOneTest i (inn, out, msg) = testCase (sprintf "Parser/test number: %d" i) <| fun () ->
         Expect.equal (inn |> inputTransform |> testFunc) (outputTransform out) msg
     listOfIOPairs
     |> List.indexed
@@ -157,6 +157,51 @@ let emphasisTest =
     ]
 
 [<Tests>]
+let ``strong test for parseInLineElements`` =
+    makeExpectoTestList id id parseInLineElements "strong test for parseInLineElements" [
+        (
+            [LITERAL "I"; WHITESPACE 2; DUNDERSCORE; LITERAL "am"; DUNDERSCORE],
+            [FrmtedString(Literal "I  "); FrmtedString(Strong([FrmtedString (Literal "am")]))],
+            "literal and underscore strong literal"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 2; DASTERISK; LITERAL "am"; DASTERISK],
+            [FrmtedString(Literal "I  "); FrmtedString(Strong([FrmtedString (Literal "am")]))],
+            "literal and asterisk strong literal"
+        );
+        (
+            [LITERAL "I";DASTERISK; LITERAL "am"; DASTERISK],
+            [FrmtedString(Literal "I"); FrmtedString(Strong([FrmtedString (Literal "am")]))],
+            "literal and asterisk strong literal, w/o space"
+        );
+        (
+            [LITERAL "I"; DASTERISK; LITERAL "am"; ASTERISK],
+            [FrmtedString(Literal "I**am*")],
+            "unmatched double asterisk"
+        );
+        (
+            [LITERAL "I"; DASTERISK; LITERAL "am"; ASTERISK; LITERAL "Commodo";DASTERISK],
+            [FrmtedString(Literal "I"); FrmtedString(Strong([FrmtedString (Literal "am*Commodo")]))],
+            "unmatched double asterisk, with asterisk inside"
+        );
+    ]
+
+[<Tests>]
+let ``strong and em test for parseInLineElements`` =
+    makeExpectoTestList id id parseInLineElements "strong and em test for parseInLineElements" [
+        (
+            [LITERAL "I"; WHITESPACE 2; TUNDERSCORE; LITERAL "am"; TUNDERSCORE],
+            [FrmtedString(Literal "I  "); FrmtedString(Emphasis[FrmtedString(Strong([FrmtedString (Literal "am")]))])],
+            "literal and underscore strong and em literal"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 2; TASTERISK; LITERAL "am"; TASTERISK],
+            [FrmtedString(Literal "I  "); FrmtedString(Emphasis[FrmtedString(Strong([FrmtedString (Literal "am")]))])],
+            "literal and asterisk strong and em literal"
+        );
+    ]
+
+[<Tests>]
 let ``multiparagraph emphasis test`` =
     makeExpectoTestList id id (parseParagraph []) "multiparagraph emphasis test" [
         (
@@ -180,6 +225,7 @@ let ``multiparagraph emphasis test`` =
             "nested emphasis"
         );
     ]
+
 
 [<Tests>]
 let parseParagraphTest =
@@ -245,39 +291,70 @@ let testGlobal =
     ]
 
 [<Tests>]
-let testGlobal2 =
-    makeExpectoTestList id id parse "top level test part 2" [
-        (
-            [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago";
-                ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; ENDLINE; HASH; WHITESPACE 1;
-                LITERAL "Header1"; ENDLINE; LITERAL "text3"; LSBRA; CARET; NUMBER "1";
-                RSBRA; LITERAL "text4"; ENDLINE; ENDLINE; LSBRA; CARET; NUMBER "1";
-                RSBRA; COMMA; LITERAL "footer1"; ENDLINE; LITERAL "text5"; LSBRA; CARET;
-                LITERAL "Eric"; RSBRA; LITERAL "text6"; ENDLINE; ENDLINE; LSBRA; CARET;
-                LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
+let ``reference tests`` =
+    let refToks =
+        [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "footer1"; ENDLINE;
+            LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
                 LITERAL "Website"; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
                 LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title";
                 EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
                 EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
                 WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
                 LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
-                MINUS; NUMBER "4"; ENDLINE],
-            [Paragraph [[FrmtedString (Literal "text1#text2")]];
-                Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
-                Paragraph [[Link (Literal "Footer1","#footnote-1"); FrmtedString (Literal "text4")]];
-                Paragraph [[Link (Literal "(Wang, 2017)","#footnot-Eric"); FrmtedString (Literal "text6")]];
-                Footnote (1,[FrmtedString (Literal "footer1")]);
-                Citation (
+                MINUS; NUMBER "4"; ENDLINE]
+    let refStyleToks = [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE]
+    let refPobjs =
+        [
+            Footnote (1,[FrmtedString (Literal "footer1")]);
+            Citation (
                     "Eric",Literal "(Wang, 2017)",
                     [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
                     FrmtedString (Literal "\"Not a real website.\" ");
                     FrmtedString (Literal "Accessed March 4, 2018. ");
                     Link (Literal "www.example.com/website","www.example.com/website")]
-                )
-            ]
-            |> Ok, "Inherited big test"
-        )
-    ]        
+            )]
+    makeExpectoTestList id makeOk parse "top level reference tests" [
+        (
+            refStyleToks
+            @[LSBRA; CARET; NUMBER "1"; RSBRA]
+            @refToks,
+            [Paragraph [[Reference (Literal "1","1")]]]@refPobjs,
+            "just 1 footnote"
+        );
+        (
+            refStyleToks
+            @[LSBRA; CARET; LITERAL "Eric"; RSBRA]
+            @refToks,
+            [Paragraph [[Reference (Literal "(Wang, 2017)","Eric")]]]@refPobjs,
+            "just 1 citation"
+        );
+        (
+            refStyleToks
+            @[LITERAL "text3"; LSBRA; CARET; NUMBER "1"; RSBRA; LITERAL "text4"]
+            @refToks,
+            [Paragraph [[FrmtedString (Literal "text3");Reference (Literal "1","1"); FrmtedString (Literal "text4")]]]@refPobjs,
+            "Literal and 1 footnote"
+
+        );
+        (
+            refStyleToks
+            @[LITERAL "text5"; LSBRA; CARET; LITERAL "Eric"; RSBRA; LITERAL "text6"]
+            @refToks,
+            [Paragraph [[FrmtedString (Literal "text5");Reference (Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]]]@refPobjs,
+            "Literal and 1 citation"
+        );
+        (
+            refStyleToks
+            @[LITERAL "text3"; LSBRA; CARET; NUMBER "1"; RSBRA; LITERAL "text4";ENDLINE]
+            @[LITERAL "text5"; LSBRA; CARET; LITERAL "Eric"; RSBRA; LITERAL "text6"]
+            @refToks,
+            [Paragraph [
+                    [FrmtedString (Literal "text3");Reference (Literal "1","1"); FrmtedString (Literal "text4")];
+                    [FrmtedString (Literal "text5");Reference (Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]
+                ]]@refPobjs,
+            "multiline, 1 footnote, 1 citation"
+        );
+    ]
 
 
 [<Tests>]
@@ -292,6 +369,17 @@ let ``multiparagraph misc test`` =
             [ENDLINE; LITERAL "feet"],
             ([Paragraph[[FrmtedString(Literal "feet")]]])|>Ok,
             "paragraph starting with one ENDLINE"
+        );
+    ]
+
+
+[<Tests>]
+let ``symbols test`` =
+    makeExpectoTestList id id parse "symbols test" [
+        (
+            [ENDLINE;COMMA;HASH;PIPE;BACKTICK;LBRA;UNDERSCORE;LSBRA],
+            ([Paragraph[[FrmtedString(Literal ",#|`(_[")]]])|>Ok,
+            "paragraph starting with two ENDLINEs"
         );
     ]
 
@@ -396,6 +484,60 @@ let ``parse list test`` =
 let ``parse list test global`` =
     let makeOkAndList x = [x |> List] |> Ok
     makeExpectoTestList deleteTrailingENDLINEs makeOkAndList parse "parse list global test" listTestData
+
+[<Tests>]
+let ``TOC tests`` =
+    let makeOkList = fun x -> [x] |> Ok
+    let tocTok = [PERCENT;PERCENT;LITERAL"TOC"]
+    let endline = [ENDLINE]
+    let h1Tok = [HASH;WHITESPACE 1;LITERAL "h1"]
+    let twoEndlines = endline@endline
+    let parsedToc = ContentTable ({HeaderLst=[]})
+    let h1THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h10")]; Level = 1}
+    let h1THeader2 = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h11")]; Level = 1}
+
+    let h1ContentTable =
+        ContentTable
+            {HeaderLst =
+                [
+                h1THeader
+                ]
+            }
+    let h1ContentTable2 =
+        ContentTable
+            {HeaderLst =
+                [
+                h1THeader;h1THeader2
+                ]
+            }
+    let h1ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h10")
+    let h1ParsedObj2 = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h11")
+
+    makeExpectoTestList id makeOk parse "TOC tests"[
+        (
+            tocTok,
+            [parsedToc],
+            "no header in the doc"
+        );
+        (
+            tocTok@twoEndlines@h1Tok,
+            [h1ContentTable]@[h1ParsedObj],
+            "TOC in the front, followed by h1"
+        );
+        (
+            tocTok@twoEndlines@h1Tok@twoEndlines@h1Tok,
+            [h1ContentTable2]@[h1ParsedObj]@[h1ParsedObj2],
+            "TOC in the front, followed by 2 h1"
+        );
+        (
+            h1Tok@twoEndlines@tocTok@twoEndlines@h1Tok,
+            [h1ParsedObj]@[h1ContentTable2]@[h1ParsedObj2],
+            "TOC in the middle of 2 h1"
+        )
+
+    ]
+
+
 //let allTestsWithExpecto() =
 //    runTestsInAssembly defaultConfig [||]
 //let runParserTest =

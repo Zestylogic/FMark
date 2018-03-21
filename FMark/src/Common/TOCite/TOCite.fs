@@ -47,7 +47,7 @@ let tocGen' tokenLst maxDepth =
 
 // call this when ParsedObj wanted
 let tocGen tLst maxD =
-    {MaxDepth = maxD; HeaderLst = tocGen' tLst maxD |> fun (x,_)->x}
+    {HeaderLst = tocGen' tLst maxD |> fun (x,_)->x}
 
 // --------------------------------------------------------------------------------
 // parse footnotes with parseInLineElements

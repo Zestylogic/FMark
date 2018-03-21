@@ -19,8 +19,7 @@
 {{ make_table(default;table;contents;{{10'}};{{11'}};{{12'}};{{20'}};{{21'}};{{22'}}) }}
 %}
 
-<br>
-{{ default_table(hi;my;name;is;geroge;hi) }}
+{{ default_table(hi;my;name;is;FMark;hi) }}
 
 ## Including files
 
@@ -31,7 +30,63 @@
 |This|is|FMark|
 |---|---|---|
 |=5|=3|=SUM{[1,0]:[1,1]}|
-|=[2,2]*3|=[1,0]*[1,1]/((7-4)+2)|=AVG{[1,0]:[1,2]},2|
+|=5%3|=[1,0]*[1,1]/((7-4)+2)|=AVG{[1,0]:[1,2]},2|
+
+## Standard Markdown
+
+### Styling
+
+*Emphasis* or _Emphasis_
+
+**Bold** or __bold__
+
+***Both*** or ___both___
+
+Note: _underscores_ must have a space on either side.
+
+# Heading 1
+
+## Heading 2
+
+### Heading 3
+
+#### Heading 4
+
+##### Heading 5
+
+##### Heading 6
+
+### Lists
+
+Ordered List:
+
+1. First
+2. Second
+    1. Nested First
+    2. Nested Second
+3. Third
+
+Unordered List:
+
+* First
+* Second
+    * Nested First
+    * Nested Second
+* Third
+
+Unordered List 2:
+
+- First
+- Second
+    - Nested First
+    - Nested Second
+- Third
+
+### Links
+
+[Google](www.google.com)
+
+![image](test_img.jpg)
 
 ## LateX maths
 $$2* \begin{pmatrix} 

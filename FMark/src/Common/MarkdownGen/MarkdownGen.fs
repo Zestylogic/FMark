@@ -22,6 +22,7 @@ let rec mdFStr fStr =
     | Code str -> surround "`" str
     | Strong a ->  mdInlineElements a |> surround "**"
     | Emphasis e -> mdInlineElements e |> surround "*"
+    | Line l -> mdInlineElements l
 
 /// convert InlineElement list to string, with HTML tags where necessary
 /// not tail recursive because the code looks cleaner this way
@@ -34,6 +35,7 @@ and mdInlineElements' b eles =
         | FrmtedString fStr -> mdFStr fStr
         | Link (ht, url) -> (mdFStr ht |> sbraSurround) + (url |> braSurround)
         | Picture (alt, url) -> (alt |> sbraSurround |> sprintf "!%s" ) +  (url |> braSurround)
+        | Reference (ht, _) -> ("^" + mdFStr ht) |> sbraSurround
     List.fold convertMd (sprintf "%s" b) eles
 and mdInlineElements = mdInlineElements' ""
 
