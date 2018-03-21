@@ -134,23 +134,23 @@ let strToC (toc: Ttoc) =
 
     let rec parseHdsIntoList level (headers: THeader list) =
         let depth = (List.head headers).Level
-        let headerFolder (currentLv, listItems, (skipNo: int option), currentLine) header =
+        let headerFolder (currentLv, listItems, (skipNo: int option), currentHdNo) header =
             match skipNo with
             | None ->
                 match header.Level with
-                | level when level=currentLv ->
-                    (currentLv, StringItem(header.HeaderName)::listItems, None, currentLine+1)
-                | level when level>currentLv ->
+                | hdLv when hdLv=currentLv ->
+                    (currentLv, StringItem(header.HeaderName)::listItems, None, currentHdNo+1)
+                | hdLv when hdLv>currentLv ->
                     let (listItem, skip) =
-                        xOnwards currentLine headers
+                        xOnwards currentHdNo headers
                         |> getCurrentHeaders (currentLv+1) []
                         |> parseHdsIntoList (currentLv+1)
-                    (currentLv, NestedList(listItem)::listItems, skip |> excludeSelfSkip, currentLine+1)
+                    (currentLv, NestedList(listItem)::listItems, skip |> excludeSelfSkip, currentHdNo+1)
                 | _ -> failwith "list item level < current level, not possible"
             | Some skip ->
                 match skip with
-                | 1 -> (currentLv, listItems, None, currentLine+1)
-                | n when n>1 -> (currentLv, listItems, Some (n-1), currentLine+1)
+                | 1 -> (currentLv, listItems, None, currentHdNo+1)
+                | n when n>1 -> (currentLv, listItems, Some (n-1), currentHdNo+1)
                 | _ -> failwith "negative or zero skip number, not possible"
         List.fold headerFolder (level, [], None, 0) headers
         |> (fun (_, lis, _, _) ->
