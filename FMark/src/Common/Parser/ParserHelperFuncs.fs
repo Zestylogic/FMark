@@ -1,6 +1,9 @@
 module ParserHelperFuncs
 open Types
 open Shared
+open Logger
+
+let logger = Logger(LogLevel.INFO)
 
 let SPACE = " "
 let NOSTRING = ""
@@ -9,7 +12,9 @@ type TEmphasis = UNDER | STAR // underscore and asterisk
 
 type ParagraphState = {Par: Token list; ReToks: Token list; ParMatched: bool}
 
-/// delete leading ENDLINEs and return the rest
+type FormatStyle = STRONG | EM | SEM
+
+/// delete leading ENDLINEs and retur the rest
 let rec deleteLeadingENDLINEs toks =
     match toks with
     | ENDLINE:: tks -> deleteLeadingENDLINEs tks
@@ -149,29 +154,28 @@ let (|PickoutList|_|) toks =
     | _ -> None
 
 
-
-/// match underscore and asterisk emphasis start squence
-/// match underscore and asterisk emphasis end sequence
-/// return content of emphasis, the rest of line,
-/// and the necessary edge InlineElement
-/// e.g. ` _i_`, the edge InlineElements are `Some(FrmtedString(Literal " "))` and `None`
-let (|MatchEm|_|) toks =
+let (|MatchTemplate|_|) strongOrEmOrBoth toks =
+    let (asteriskFormatter, underscoreFormatter) =
+        match strongOrEmOrBoth with
+        | STRONG -> DASTERISK, DUNDERSCORE
+        | EM -> ASTERISK, UNDERSCORE
+        | SEM -> TASTERISK, TUNDERSCORE
     let attachInlineEle front back = Option.map (fun (x,y) -> x,y,front,back)
     match toks with
-    | WHITESPACE _:: UNDERSCORE:: WHITESPACE _:: _ -> None      // not em
-    | WHITESPACE frontWhite:: UNDERSCORE:: potential ->
+    | WHITESPACE _:: whatSym:: WHITESPACE _:: _ when whatSym=underscoreFormatter -> None      // not em
+    | WHITESPACE frontWhite:: whatSym:: potential when whatSym=underscoreFormatter ->
         let frontLiteral = String.replicate frontWhite " " |> Literal |> FrmtedString |> Some
         let rec endFinder content toks =
             match toks with
             | [] -> None
-            | WHITESPACE _:: UNDERSCORE:: WHITESPACE _:: rtks -> // keep finding
+            | WHITESPACE _:: whatSym:: WHITESPACE _:: rtks when whatSym=underscoreFormatter -> // keep finding
                 endFinder (List.append content toks.[0..2]) rtks
-            | _:: UNDERSCORE:: WHITESPACE backWhite:: rtks ->
+            | _:: whatSym:: WHITESPACE backWhite:: rtks when whatSym=underscoreFormatter ->
                 let backLiteral = String.replicate backWhite " " |> Literal |> FrmtedString |> Some
                 (List.append content [List.head toks], rtks)
                 |> Some
                 |> attachInlineEle frontLiteral backLiteral
-            | _::[UNDERSCORE] ->
+            | _::[whatSym] when whatSym=underscoreFormatter ->
                 (List.append content [List.head toks], [])
                 |> Some
                 |> attachInlineEle frontLiteral None
@@ -179,14 +183,14 @@ let (|MatchEm|_|) toks =
                 xOnwards 1 toks
                 |> endFinder (List.append content [toks.[0]])
         endFinder [] potential
-    | ASTERISK:: WHITESPACE _:: _ -> None // not asterisk em
-    | ASTERISK:: potential ->
+    | whatSym:: WHITESPACE _:: _ when whatSym=asteriskFormatter -> None // not asterisk em
+    | whatSym:: potential when whatSym=asteriskFormatter ->
         let rec endFinder content toks =
             match toks with
             | [] -> None
-            | WHITESPACE _:: ASTERISK:: rtks -> // keep finding
+            | WHITESPACE _:: whatSym:: rtks when whatSym=asteriskFormatter -> // keep finding
                 endFinder (List.append content toks.[0..1]) rtks
-            | _:: ASTERISK:: rtks ->
+            | _:: whatSym:: rtks when whatSym=asteriskFormatter ->
                 (List.append content [List.head toks], rtks)
                 |> Some
                 |> attachInlineEle None None
@@ -194,6 +198,32 @@ let (|MatchEm|_|) toks =
                 xOnwards 1 toks
                 |> endFinder (List.append content [toks.[0]])
         endFinder [] potential
+    | _ -> None
+
+
+/// match underscore and asterisk emphasis start squence
+/// match underscore and asterisk emphasis end sequence
+/// return content of emphasis, the rest of line,
+/// and the necessary edge InlineElement
+/// e.g. ` _i_`, the edge InlineElements are `Some(FrmtedString(Literal " "))` and `None`
+let (|MatchEm|_|) toks =
+    match toks with
+    | MatchTemplate EM result -> Some result
+    | _ -> None
+
+/// match underscore and asterisk strong start squence
+/// match underscore and asterisk strong end sequence
+/// return content of strong, the rest of line,
+/// and the necessary edge InlineElement
+/// e.g. ` __i__`, the edge InlineElements are `Some(FrmtedString(Literal " "))` and `None`
+let (|MatchStrong|_|) toks =
+    match toks with
+    | MatchTemplate STRONG result -> Some result
+    | _ -> None
+
+let (|MatchStrongAndEm|_|) toks =
+    match toks with
+    | MatchTemplate SEM result -> Some result
     | _ -> None
 
 /// match new paragraph sequence
@@ -314,45 +344,88 @@ let cutTableRows toks =
     cutTableRow' [] toks
 
 /// parse inline text, including links and pictures, terminates when nothing left
-let parseInLineElements2 ftLst toks =
+let parseInLineElements2 refLst toks =
     let attachInlineEle front back ele =
         [front;ele;back]
+
+    let chooseRef refId refs =
+        match refs with
+        | [] ->
+            let msg = sprintf "[Reference: %A not found!]" refId
+            msg |> logger.Info (Some 200) |> ignore
+            msg |> Error
+        | [exactlyOne] -> exactlyOne |> Ok
+        | moreThanOne ->
+            let msg = sprintf "Reference: %A occurred more than once in reference list, take the first one." refId
+            msg |> logger.Info (Some 200) |> ignore
+            List.head moreThanOne |> Ok
+    /// find footnote in reference list, which contains both footnote and citation
+    /// returns error msg if foot is not found
+    /// returns first footnote if more than 1 is found
+    let findFN fnId refList =
+        let filterFN fnId refList =
+            let fnFilter ref =
+                match ref with
+                | Footnote (id, _) when id=fnId -> true
+                | _ -> false
+            List.filter fnFilter refList
+        filterFN fnId refList
+        |> chooseRef fnId
+    /// find citation in reference list, which contains both footnote and citation
+    /// returns error msg if foot is not found
+    /// returns first citation if more than 1 is found
+    let findCite citeId refList =
+        let filterCite fnId refList =
+            let citeFilter ref =
+                match ref with
+                | Citation (id, _, _) when id=fnId -> true
+                | _ -> false
+            List.filter citeFilter refList
+        filterCite citeId refList
+        |> chooseRef citeId
+    let genFormat (currentLine, inlineContent, frontLiteral, backLiteral) =
+        match frontLiteral, backLiteral with
+            | Some fl, Some bl ->
+                [bl;inlineContent;fl]
+            | Some fl, None ->
+                [inlineContent;fl]
+            | None, Some bl ->
+                [bl;inlineContent]
+            | None, None ->
+                [inlineContent]
+        |> (fun x -> x@currentLine)
+    let makeList x = [x]
     let rec parseInLineElements' ftLst currentLine toks =
         match toks with
         | MatchSym BACKTICK (content, rtks) -> (content|> strAllToks|> Code|> FrmtedString )::currentLine, rtks
+        | MatchStrongAndEm (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent =
+                parseInLines [] content |> Strong |> FrmtedString |> makeList |> Emphasis |> FrmtedString
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
+        | MatchStrong (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent = (parseInLines [] content |> Strong |> FrmtedString)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
         | MatchEm (content, rtks, frontLiteral, backLiteral) ->
             let inlineContent = (parseInLines [] content |> Emphasis |> FrmtedString)
-            match frontLiteral, backLiteral with
-                | Some fl, Some bl ->
-                    [bl;inlineContent;fl]
-                | Some fl, None ->
-                    [inlineContent;fl]
-                | None, Some bl ->
-                    [bl;inlineContent]
-                | None, None ->
-                    [inlineContent]
-            |> (fun x -> x@currentLine), rtks
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
         | FOOTNOTE i :: rtks ->
-            let rec matchFootnote id pObjs = 
-                match pObjs with
-                | Footnote (i, _)::_ when i = id -> true
-                | _ -> false
-            let ft = matchFootnote i ftLst
-            if ft then //make into link if exist
-                [(("Footer" + string i |> Literal),"#footnote-"+string i) |> Link], rtks
-            else //just superscript if does not exist
-                ["Footer" + string i |> Literal |> FrmtedString], rtks
+            let idStr = string i
+            match findFN i ftLst with
+            | Ok _ -> // ok if found at least one reference in refLst
+                [(Literal idStr, idStr) |> Reference]@currentLine, rtks
+            | Error msg -> // error if no reference is found in refLst
+                [msg |> Literal |> FrmtedString], rtks
         | CITATION str :: rtks ->
-            let rec matchCitation id pObjs = 
-                match pObjs with
-                | Citation (s, inLineRef, _) :: _ when s = id -> Some inLineRef
-                | _ :: tl -> matchCitation id tl
-                | [] -> None
-            let ft = matchCitation str ftLst
-            match ft with
-            | Some ref -> [Link(ref,"#footnot-"+str)], rtks
-            | None ->
-                ["Footer " + str + " not found" |> Literal |> FrmtedString], rtks
+            match findCite str ftLst with
+            | Ok ref -> // ok if found at least one reference in refLst
+                match ref with
+                | Citation (id, hyperText, _) -> [(hyperText, id) |> Reference]@currentLine, rtks
+                | _ -> failwith "non-citation in citation list"
+            | Error msg -> // error if no reference is found in refLst
+                [msg |> Literal |> FrmtedString], rtks
         | _ ->
             let str = mapTok toks.[0]
             FrmtedString (Literal str)::currentLine, xOnwards 1 toks
@@ -360,7 +433,7 @@ let parseInLineElements2 ftLst toks =
         match toks with
         | [] -> []
         | _ ->
-            let (newLine, retoks) = parseInLineElements' ftLst currentLine toks
+            let (newLine, retoks) = parseInLineElements' refLst currentLine toks
             match retoks with
             | [] -> newLine |> List.rev
             | _ ->
