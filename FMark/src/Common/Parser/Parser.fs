@@ -83,9 +83,9 @@ let parseList toks =
         let (level, retoks) = takeAwayWhiteSpaces toks
         match retoks with
         | ASTERISK:: WHITESPACE _:: _ | MINUS:: WHITESPACE _:: _ -> // unordered list
-            (UL, level, xOnwards 2 retoks) |> Some
-        | NUMBER _:: DOT:: WHITESPACE _:: _ ->  // ordered list
-            (OL, level, xOnwards 3 retoks) |> Some
+            (UL, level, None, xOnwards 2 retoks) |> Some
+        | NUMBER no:: DOT:: WHITESPACE _:: _ ->  // ordered list
+            (OL, level, no|>int|>Some, xOnwards 3 retoks) |> Some
         | _ -> None
 
     let getLIContent toks =
@@ -93,20 +93,20 @@ let parseList toks =
         | GetLIContent result -> result |> Ok
         | _ ->
             let (level, retoks) = takeAwayWhiteSpaces toks
-            (UL, level, retoks) |> Error
+            (UL, level, None, retoks) |> Error
 
     /// get all list items in current item level and sub lists
     let rec getCurrentList level listItems lines =
         match lines with
         | line:: reLines ->
             match line |> getLIContent |> ignoreError with
-            | (_, liLevel, _) when liLevel >= level -> // list item and sub list item
+            | (_, liLevel, _, _) when liLevel >= level -> // list item and sub list item
                 getCurrentList level (line::listItems) reLines
             | _ -> listItems |> List.rev
         | [] -> listItems |> List.rev
 
     let rec parseList' level lines =
-        let (listType, depth, _) =
+        let (listType, depth, startNo, _) =
             match List.head lines |> getLIContent with
             | Ok result -> result
             | Error result ->
@@ -116,10 +116,10 @@ let parseList toks =
             match skipNo with
             | None ->
                 match line |> getLIContent |> ignoreError with
-                | (_, level, content) when level=currentLv ->
+                | (_, level, _, content) when level=currentLv ->
                     let tLine = content |> parseInLineElements
                     (currentLv, StringItem(tLine)::listItems, None, currentLine+1)
-                | (_, level, _) when level>currentLv ->
+                | (_, level, _, _) when level>currentLv ->
                     let (listItem, skip) =
                         xOnwards currentLine lines
                         |> getCurrentList (currentLv+1) []
@@ -137,7 +137,7 @@ let parseList toks =
                 match List.length lines with
                 | 0 -> None
                 | n -> Some n
-            {ListType=listType; ListItem=lis |> List.rev; Depth=depth}, doSkip)
+            {ListType=listType; ListItem=lis |> List.rev; Depth=depth; StartNo=startNo}, doSkip)
     toks
     |> trimENDLINEs
     |> cutIntoLines
