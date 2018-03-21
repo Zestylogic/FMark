@@ -14,6 +14,7 @@ let rec strFStr fStr =
     | Code str -> str |> attachSimpleTag "code"
     | Strong a -> strInlineElements a |> attachSimpleTag "strong"
     | Emphasis e -> strInlineElements e |> attachSimpleTag "em"
+    | Line l -> strInlineElements l
 
 /// convert InlineElement list to string, with HTML tags where necessary
 /// not tail recursive because the code looks cleaner this way
@@ -26,6 +27,11 @@ and strInlineElements eles =
         | Picture (alt, url) ->
             let attrs = [("src", url); ("alt", alt)]
             attachHTMLTag ("img", attrs, false) ""
+        | Reference (ht, id) ->  // style for inline referencing the footnotes and citations in the end
+            ht
+            |> strFStr
+            |> attachHTMLTag ("a", [("href", "#"+id)], true)
+            |> attachSimpleTag "sup"
     List.fold convertHtml "" eles
 
 /// process Markdown paragraph
@@ -97,10 +103,12 @@ let strHeader (header,id) =
         |> strInlineElements
         |> attachHTMLTag (tagName, ["id", id], true)
 
-/// process footnotes
-let strFootnote (id, s) =
-    strInlineElements s
-    |> attachHTMLTag ("p", ["id", "#footnote-"+id], true)
+/// process references
+/// id: the href id used in inline referencing
+/// content: of TLine type, to be displayed at the end of HTML doc
+let strRef (id, content) =
+    "["+id+"] " + strInlineElements content
+    |> attachHTMLTag ("p", ["id", id], true)
 
 let (|MatchHeaderAndSubHeader|_|) hds =
     match hds with
@@ -184,8 +192,8 @@ let strBody pObjs =
         | Table rows -> strTable rows
         | List l -> strList l
         | Header (h,s) -> strHeader (h,s)
-        | Footnote (i,s) -> strFootnote ((string i), s)
-        | Citation (i,_,s) -> strFootnote (i, s)
+        | Footnote (i,s) -> strRef ((string i), s)
+        | Citation (i,_,s) -> strRef (i, s)
         | ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
@@ -201,18 +209,25 @@ let genHead htmlTitle =
         pStr + attachMetaTag "meta" md
     List.fold genMetadata "" metaData
     + attachSimpleTag "title" htmlTitle
-    + "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>"
+    
     |> attachSimpleTag "head"
 
 /// generate HTML body
-let genBody pObjs =
+let genBody (pObjs) =
     strBody pObjs
+    // insert javascript in the end of HTML doc to make page rendering faster
+    +
+    attachHTMLTag ("script",
+        [
+            ("type", "text/javascript");
+            ("async", "");
+            ("src", "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML")
+        ], true) ""
+    |> attachSimpleTag "body"
 
-let HTMLify title s = 
-    attachMetaTag "!DOCTYPE" ["html", ""]
-    + genHead title
-    + (s|>attachSimpleTag "body")
 
 /// top level HTMLGen
-let genHTML (htmlTitle,pObjs) =
-    genBody pObjs |> (HTMLify htmlTitle)
+let genHTML (htmlTitle, pObjs) =
+    attachMetaTag "!DOCTYPE" ["html", ""]
+    + genHead htmlTitle
+    + genBody (pObjs)

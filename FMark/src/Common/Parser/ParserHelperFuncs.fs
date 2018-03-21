@@ -1,6 +1,9 @@
 module ParserHelperFuncs
 open Types
 open Shared
+open Logger
+
+let logger = Logger(LogLevel.INFO)
 
 let SPACE = " "
 let NOSTRING = ""
@@ -341,9 +344,45 @@ let cutTableRows toks =
     cutTableRow' [] toks
 
 /// parse inline text, including links and pictures, terminates when nothing left
-let parseInLineElements2 ftLst toks =
+let parseInLineElements2 refLst toks =
     let attachInlineEle front back ele =
         [front;ele;back]
+
+    let chooseRef refId refs =
+        match refs with
+        | [] ->
+            let msg = sprintf "[Reference: %A not found!]" refId
+            msg |> logger.Info (Some 200) |> ignore
+            msg |> Error
+        | [exactlyOne] -> exactlyOne |> Ok
+        | moreThanOne ->
+            let msg = sprintf "Reference: %A occurred more than once in reference list, take the first one." refId
+            msg |> logger.Info (Some 200) |> ignore
+            List.head moreThanOne |> Ok
+    /// find footnote in reference list, which contains both footnote and citation
+    /// returns error msg if foot is not found
+    /// returns first footnote if more than 1 is found
+    let findFN fnId refList =
+        let filterFN fnId refList =
+            let fnFilter ref =
+                match ref with
+                | Footnote (id, _) when id=fnId -> true
+                | _ -> false
+            List.filter fnFilter refList
+        filterFN fnId refList
+        |> chooseRef fnId
+    /// find citation in reference list, which contains both footnote and citation
+    /// returns error msg if foot is not found
+    /// returns first citation if more than 1 is found
+    let findCite citeId refList =
+        let filterCite fnId refList =
+            let citeFilter ref =
+                match ref with
+                | Citation (id, _, _) when id=fnId -> true
+                | _ -> false
+            List.filter citeFilter refList
+        filterCite citeId refList
+        |> chooseRef citeId
     let genFormat (currentLine, inlineContent, frontLiteral, backLiteral) =
         match frontLiteral, backLiteral with
             | Some fl, Some bl ->
@@ -373,26 +412,20 @@ let parseInLineElements2 ftLst toks =
             genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
             , rtks
         | FOOTNOTE i :: rtks ->
-            let rec matchFootnote id pObjs = 
-                match pObjs with
-                | Footnote (i, _)::_ when i = id -> true
-                | _ -> false
-            let ft = matchFootnote i ftLst
-            if ft then //make into link if exist
-                [(("Footer" + string i |> Literal),"#footnote-"+string i) |> Link], rtks
-            else //just superscript if does not exist
-                ["Footer" + string i |> Literal |> FrmtedString], rtks
+            let idStr = string i
+            match findFN i ftLst with
+            | Ok _ -> // ok if found at least one reference in refLst
+                [(Literal idStr, idStr) |> Reference]@currentLine, rtks
+            | Error msg -> // error if no reference is found in refLst
+                [msg |> Literal |> FrmtedString], rtks
         | CITATION str :: rtks ->
-            let rec matchCitation id pObjs = 
-                match pObjs with
-                | Citation (s, inLineRef, _) :: _ when s = id -> Some inLineRef
-                | _ :: tl -> matchCitation id tl
-                | [] -> None
-            let ft = matchCitation str ftLst
-            match ft with
-            | Some ref -> [Link(ref,"#footnot-"+str)], rtks
-            | None ->
-                ["Footer " + str + " not found" |> Literal |> FrmtedString], rtks
+            match findCite str ftLst with
+            | Ok ref -> // ok if found at least one reference in refLst
+                match ref with
+                | Citation (id, hyperText, _) -> [(hyperText, id) |> Reference]@currentLine, rtks
+                | _ -> failwith "non-citation in citation list"
+            | Error msg -> // error if no reference is found in refLst
+                [msg |> Literal |> FrmtedString], rtks
         | _ ->
             let str = mapTok toks.[0]
             FrmtedString (Literal str)::currentLine, xOnwards 1 toks
@@ -400,7 +433,7 @@ let parseInLineElements2 ftLst toks =
         match toks with
         | [] -> []
         | _ ->
-            let (newLine, retoks) = parseInLineElements' ftLst currentLine toks
+            let (newLine, retoks) = parseInLineElements' refLst currentLine toks
             match retoks with
             | [] -> newLine |> List.rev
             | _ ->

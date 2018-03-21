@@ -21,17 +21,19 @@ type Token =
 type TFrmtedString =
     | Strong of InlineElement list
     | Emphasis of InlineElement list
+    | Line of InlineElement list
     | Literal of string
     | Code of string
 and InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
     | Picture of Alt: string * URL: string
+    | Reference of HyperText: TFrmtedString * ID: string
 type TLine = InlineElement list
 
 type THeader = {HeaderName: TLine; Level: int}
 
-type Ttoc = {MaxDepth: int; HeaderLst: THeader list}
+type Ttoc = {HeaderLst: THeader list}
 
 type TListType = | UL | OL
 type TList = {ListType: TListType; ListItem: TListItem list; Depth: int}
@@ -59,14 +61,14 @@ type Ref = {Cat: RefType option; Author: Token list option; Title: Token list op
 
 type ParsedObj =
     | CodeBlock of string * Language
-    | Header of THeader * string
+    | Header of THeader * string // content of header, HTML id for linking
     | ContentTable of Ttoc
     | List of TList
     | Paragraph of TLine list
     | Quote of TLine
     | Table of PRow list
     | PreTable of Content: Token list list
-    | Footnote of int * TLine
+    | Footnote of int * TLine           // inline id, end of doc
     | Citation of string * TFrmtedString * TLine //ID,Inline,End of doc
     
 type Cell with 

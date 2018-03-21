@@ -7,7 +7,7 @@ open Expecto
 
 let id x = x
 let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPairs =
-    let makeOneTest i (inn, out, msg) = testCase (sprintf "test numer: %d" i) <| fun () ->
+    let makeOneTest i (inn, out, msg) = testCase (sprintf "HTMLGEN/test number: %d" i) <| fun () ->
         Expect.equal (inn |> inputTransform |> testFunc) (outputTransform out) msg
     listOfIOPairs
     |> List.indexed
@@ -134,14 +134,14 @@ let headerTests =
 
 [<Tests>]
 let footnoteTests =
-    makeExpectoTestList id id strFootnote "footnote tests" [
+    makeExpectoTestList id id strRef "footnote tests" [
         (
             (string 3, [FrmtedString (Literal "footer3")]),
-            "<p id=\"#footnote-3\">footer3</p>", "footer 3"
+            "<p id=\"3\">[3] footer3</p>", "footer 3"
         );
         (
             ("abcd",[FrmtedString (Literal "footer3")]),
-            "<p id=\"#footnote-abcd\">footer3</p>", "footer string"
+            "<p id=\"abcd\">[abcd] footer3</p>", "footer string"
         );
     ]
 
@@ -150,7 +150,7 @@ let ``HTML head generation test``=
     makeExpectoTestList id id genHead "HTML head generation test" [
         (
             "tiny title",
-            "<head><meta name=\"viewport\" content=\"width=device-width\"><title>tiny title</title><script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head>",
+            "<head><meta name=\"viewport\" content=\"width=device-width\"><title>tiny title</title></head>",
             "simple header"
         );
     ]
@@ -179,7 +179,7 @@ let TOCTests =
                       ;{HeaderName=[FrmtedString(Literal "header5")]; Level=1}]
     makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents test" [
         (
-            {HeaderLst=hLst1; MaxDepth=3},
+            {HeaderLst=hLst1},
             "<ol>
                 <li>header1</li>
                 <li>header2</li>
@@ -188,7 +188,7 @@ let TOCTests =
             "Simple TOC test, all same level"
         );
         (
-            {HeaderLst=hLst2; MaxDepth=3},
+            {HeaderLst=hLst2},
             "<ol>
                 <li>header1</li>
                 <li>header2</li>
@@ -200,7 +200,7 @@ let TOCTests =
             "Simple TOC test, one header2"
         );
         (
-            {HeaderLst=hLst3; MaxDepth=3},
+            {HeaderLst=hLst3},
             "<ol>
                 <li>header1</li>
                 <ol>
@@ -214,7 +214,7 @@ let TOCTests =
             "Harder TOC test, two header 2s and a header 3"
         );
         (
-            {HeaderLst=hLst4; MaxDepth=3},
+            {HeaderLst=hLst4},
             "<ol>
                 <li>header1</li>
                 <ol>
@@ -228,7 +228,7 @@ let TOCTests =
             "Deep then shallow TOC"
         );
         (
-            {HeaderLst=hLst5; MaxDepth=3},
+            {HeaderLst=hLst5},
             "<ol>
                 <li>header1</li>
                 <ol>
@@ -269,29 +269,39 @@ let fullBodyTests =
 
 [<Tests>]
 let reallyBigTest =
-    makeExpectoTestList id id genHTML "inherited big test" [
+    makeExpectoTestList id catStr genHTML "inherited big test" [
         ("big HTML test",
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
                 Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
-                Paragraph [[Link (Literal "Footer1","#footnote-1"); FrmtedString (Literal "text4")]];
-                Paragraph [[Link (Literal "(Wang, 2017)","#footnot-Eric"); FrmtedString (Literal "text6")]];
+                Paragraph [[Reference (Literal "Footer1","footnote-1"); FrmtedString (Literal "text4")]];
+                Paragraph [[Reference (Literal "(Wang, 2017)","footnote-Eric"); FrmtedString (Literal "text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);
                 Citation (
-                    "Eric",Literal "(Wang, 2017)",
+                    "footnote-Eric",Literal "(Wang, 2017)",
                     [FrmtedString (Literal "Eric Wang. "); FrmtedString (Literal "2017. ");
                     FrmtedString (Literal "\"Not a real website.\" ");
                     FrmtedString (Literal "Accessed March 4, 2018. ");
                     Link (Literal "www.example.com/website","www.example.com/website")]
                 )
-            ]),"<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>big HTML test</title><script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head><body><p>text1#text2</p><h1 id=\"Header10\">Header1</h1><p><a href=\"#footnote-1\">Footer1</a>text4</p><p><a href=\"#footnot-Eric\">(Wang, 2017)</a>text6</p><p id=\"#footnote-1\">footer1</p><p id=\"#footnote-Eric\">Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p></body>",
-        "wow very big"
+            ]),
+            ["<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>big HTML test</title></head>";
+            "<body>";
+            "<p>text1#text2</p>";
+            "<h1 id=\"Header10\">Header1</h1>";
+            "<p><sup><a href=\"#footnote-1\">Footer1</a></sup>text4</p>";
+            "<p><sup><a href=\"#footnote-Eric\">(Wang, 2017)</a></sup>text6</p>";
+            "<p id=\"1\">[1] footer1</p>";
+            "<p id=\"footnote-Eric\">[footnote-Eric] Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p>";
+            "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>";
+            "</body>"],
+            "wow very big"
     ]
 
 
 
 [<Tests>]
 let ``global simple test`` =
-    makeExpectoTestList id id genHTML "top level genHTML test" [
+    makeExpectoTestList id catStr genHTML "top level genHTML test" [
         ("FMarkToHtml first release",
             [
                 Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1");
@@ -304,6 +314,12 @@ let ``global simple test`` =
                 Table[PCells([CellLine([FrmtedString(Literal "head")], true, Left);CellLine([FrmtedString(Literal "head")], true, Right)], true)];
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ]),
-        sprintf "<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\"><title>FMarkToHtml first release</title><script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head><body><h1 id=\"header1\">header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>%sCome!</p></body>" NewLineStr,
+        ["<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\">";
+        "<title>FMarkToHtml first release</title>";
+        "</head>";
+        "<body><h1 id=\"header1\">header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>";
+        NewLineStr;"Come!</p>";
+        "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>";
+        "</body>"] ,
          "all in one"
     ]
