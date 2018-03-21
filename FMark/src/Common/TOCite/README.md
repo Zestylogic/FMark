@@ -1,12 +1,25 @@
-# PreParser
+# Preparser
 
 `preParse: Token list -> THeader list * ParsedObj list * Token list`
+
+Parses the headers and footers before the main parser to allow easy
+relative linking to table of contents and end of page citations,
+respectively.
+
+Takes input from lexer, and extracts the [running marginals](https://english.stackexchange.com/questions/24060/what-word-defines-a-category-suited-for-both-header-and-footer)
+from the token list. The headers are parsed into `THeader`s and an
+uniquely ID'ed token will be inserted back into the token list to
+indicate where they were extracted from.
+The footers similarly parsed into `ParsedObj`s and have an ID'ed
+token inserted into the token list.
+Theses two lists and the token list without the running marginals
+are then tupled together and returned.
 
 ## Token list
 Headers and footers replaced by
 * `HEADER 0` -> headers with their order of appearance
-* `FOOTER(FtID 0)` -> simple footer with their given ID
-* `FOOTER(RefID "John")` -> references with their given ID
+* `FOOTNOTE 0` -> simple footer with their given ID
+* `CITATION "John"` -> references with their given ID
 These are inserted back to provide positional information to the main
 parser, allowing relative linking and other nice things.
 
@@ -16,11 +29,13 @@ their appearance.
 
 ## ParsedObj list
 Both simple footers and references are given as `Footnote (ID * TLine)`
-in the `ParsedObj list`. The two are differenciated by the type of their
-`ID`. Simple footers have `int` and references have `string`. In writing,
-this will be `[^1]` and `[^John]`.
+and `Citation (ID * TFrmtedString * TLine)` in the `ParsedObj list`.
+`TFrmtedString` in `Citation` is used to store how the inline part
+should be rendered. This allows all style information to be hidden
+from the main parser.
 
 ### Simple Footers
+Simple footers have numerical IDs.
 ```
 this is inline[^1], and so on.
 
@@ -28,41 +43,64 @@ this is inline[^1], and so on.
       this line as well.
 But not this line.
 ```
+The body will show up with a superscripted link:
+> this is inline<sup>1</sup> , and so on.
+>
+> But not this line.
+
+The footer texts will be collected at the end of the document.
+> 1: this is the text to explain such line. this line as well.
 
 ### References
+Styled references have alphabetic IDs.
 
-Supported data fields: author, title, year, url, access.
+Supported rendering styles:
 
-Supported rendering styles: Harvard - book, Harvard - website
+||Chicago|Harvard|IEEE|
+|---|---|---|---|
+|Book|Yes|Yes|-|
+|Website|Yes|Yes|-|
 
-Todo list:
-- [ ] Chapter of a book, e-Book
-- [ ] Multiple authors
-- [ ] show n.d. when date not available in Chicago
+Supported data fields
 
+|Field|Explanation|
+|---|---|
+|type|`'Book'` or `'Website'`|
+|author|Author with surname at the end|
+|title|Title|
+|year|The year it is written|
+|url|Address for website|
+|access|Date of access for websites, in `yyyy-mm-dd` format|
+
+Pick a style at the beginning, or it will default to Harvard.
 ```
 %%Style = Harvard
+```
 
+Then follow `field1= data1, field2= data2, ...` to use references.
+```
 This is a citation[^Zifan]. This is another[^Eric] one.
 
-[^Zifan], author= Zifan Wang, title= Not a real book, year= 2018
-[^Eric], author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 2018-3-4
+[^Zifan], type= Book, author= Zifan Wang, title= Not a real book, year= 2018
+[^Eric], type= Website, author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 2018-3-4
 ```
-How it should show up with Harvard:
 
-This is a citation(Wang, 2018). This is another(Wang, 2017) one.
+With Harvard, it will look like this:
+> This is a citation(Wang, 2018). This is another(Wang, 2017) one.
 
-Wang, Z. (2018) *Not a real book*.
-
-Wang, E. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
+At the end of the document:
+> Wang, Z. (2018) *Not a real book*.
+> 
+> Wang, E. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
 
 if Chicago style is chosen:
 
-This is a citation(Wang 2018). This is another(Wang 2017) one.
+> This is a citation(Wang 2018). This is another(Wang 2017) one.
 
-Zifan Wang. 2018. *Not a real book*.
-
-Eric Wang. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
+At the end of the document:
+> Zifan Wang. 2018. *Not a real book*.
+> 
+> Eric Wang. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
 
 
 ---

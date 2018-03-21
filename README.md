@@ -26,9 +26,10 @@ Source ───> │ Lex and Preprocessor│ ───> Token list ───> �
 ```
 
 1. [Lexer and Preprocessor](FMark/src/Common/Lexer/README.md)
-2. [TOCite: Table of Contents and Citations](FMark/src/Common/TOCite/README.md)
+2. [TOCite: Preparsing headers and footers](FMark/src/Common/TOCite/README.md)
 3. [Markalc: Spreadsheet functionality](FMark/src/Common/Markalc/README.md)
 4. [Main Parser](FMark/src/Common/Parser/README.md)
+5. [HTML Generator](FMark/src/Common/HTMLGen/README.md)
 
 ## Specification
 
@@ -155,11 +156,96 @@ Functions support Range Cell References: `[0,0]:[2,0]` will evaluate to `[0,0],[
 
 ## Table of Contents
 
-To be written up.
+Table of Contents can be build anywhere with `%%TOC`. Relative linking is supported,
+clicking an item from the contents table will jump to the respective header when viewed
+in html.
+
+|Feature|Example|Exaplanation
+|---|---|---|
+|depth|`%%TOC depth=3`|Build a TOC with headers level less than 3
+|exclude|`%%TOC excludes=["Appendix","Acknowledgement"]`|Exclude headers with name `Appendix` and `Acknowledgement`|
+
+Multiple features can be stacked with `,` like so:
+
+`%%TOC depth=3, excludes=["Appendix","Acknowledgement"]`
+
+_TODO: show an example?_
 
 ## Citations
 
-To be written up.
+FMark supports simple footers and styled references.
+
+### Simple Footers
+
+Simple footers have numerical IDs.
+```
+this is inline[^1], and so on.
+
+[^1], this is the text to explain such line.
+      this line as well.
+But not this line.
+```
+The body will show up with a superscripted link:
+> this is inline<sup>1</sup> , and so on.
+>
+> But not this line.
+
+The footer texts will be collected at the end of the document.
+> 1: this is the text to explain such line. this line as well.
+
+### Styled References
+
+Styled references have alphabetic IDs.
+
+Supported rendering styles:
+
+||Chicago|Harvard|IEEE|
+|---|---|---|---|
+|Book|Yes|Yes|-|
+|Website|Yes|Yes|-|
+
+Supported data fields
+
+|Field|Explanation|
+|---|---|
+|type|`'Book'` or `'Website'`|
+|author|Author with surname at the end|
+|title|Title|
+|year|The year it is written|
+|url|Address for website|
+|access|Date of access for websites, in `yyyy-mm-dd` format|
+
+Pick a style at the beginning, or it will default to Harvard.
+```
+%%Style = Harvard
+```
+
+Then follow `field1= data1, field2= data2, ...` to use references.
+```
+This is a citation[^Zifan]. This is another[^Eric] one.
+
+[^Zifan], type= Book, author= Zifan Wang, title= Not a real book, year= 2018
+[^Eric], type= Website, author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 2018-3-4
+```
+
+With Harvard, it will look like this:
+> This is a citation(Wang, 2018). This is another(Wang, 2017) one.
+
+At the end of the document:
+> Wang, Z. (2018) *Not a real book*.
+> 
+> Wang, E. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
+
+if Chicago style is chosen:
+
+> This is a citation(Wang 2018). This is another(Wang 2017) one.
+
+At the end of the document:
+> Zifan Wang. 2018. *Not a real book*.
+> 
+> Eric Wang. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
+
+
 
 ## TODO
 - [ ] Write up formatting for Table of Contents and Citations
