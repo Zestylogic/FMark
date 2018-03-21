@@ -29,7 +29,7 @@ let (|HTMLStartTag|_|) = (|RegexMatch|_|) "^<([a-zA-Z]+)\\s*.*?>"
 
 let (|HTMLEndTag|_|) = (|RegexMatch|_|) "^<\\/([a-zA-Z]+)\\s*.*?>"
 
-let (|HTMLSingleton|_|) = (|RegexMatch|_|) "^<([a-zA-Z]+)\\s*.*?(?:\\/>|>)"
+let (|HTMLSingleton|_|) = (|RegexMatch|_|) "^<([a-zA-Z]+)\\s*.*?\\/>|>"
 
 let (|CodeBlockStart|_|) = (|GroupMatch|_|) "^```+\\s*([a-zA-Z0-9+\\-_]*)"
 
@@ -54,7 +54,7 @@ let nextToken state s =
             (LITERAL s, r), InHTMLTag (tag, d)
     | HTMLSingleton (s, _, r), _ ->
         (LITERAL s, r), state
-    | RegexMatch ".*?(?=<)" (s, _, r), InHTMLTag (t, d) ->
+    | RegexMatch ".*?<" (s, _, r), InHTMLTag (t, d) ->
         (LITERAL s, r), InHTMLTag (t, d)
     | CharacterTok n, _ -> n, state
     | RegexMatch @"^\s+" (m, _, s), _ ->
