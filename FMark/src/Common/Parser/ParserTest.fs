@@ -4,7 +4,6 @@ open Types
 open ParserHelperFuncs
 open Parser
 open Expecto
-open System.Net.Mail
 
 let id x = x
 let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPairs =
