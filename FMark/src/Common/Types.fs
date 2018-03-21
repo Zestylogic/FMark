@@ -36,7 +36,7 @@ type THeader = {HeaderName: TLine; Level: int}
 type Ttoc = {HeaderLst: THeader list}
 
 type TListType = | UL | OL
-type TList = {ListType: TListType; ListItem: TListItem list; Depth: int}
+type TList = {ListType: TListType; ListItem: TListItem list; Depth: int; StartNo: int option}
 and TListItem = NestedList of TList | StringItem of TLine
 
 type Alignment = Centre | Right | Left | NoAlign
