@@ -251,7 +251,7 @@ let FAILINGTOCTests =
                       ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
                       ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3}]  
 
-    makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents test" [
+    makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents failing test" [
         (
             {HeaderLst=hLst6},
                 "<ol>
@@ -264,7 +264,7 @@ let FAILINGTOCTests =
     		            </ol>
     	            </ol>
                 </ol>",
-                "Pyramid test"
+                "Two level 3 headers test"
             );]
 
 [<Tests>]
