@@ -4,6 +4,7 @@ open Types
 open ParserHelperFuncs
 open Parser
 open Expecto
+open System.Net.Mail
 
 let id x = x
 let makeExpectoTestList inputTransform outputTransform testFunc name listOfIOPairs =
@@ -537,6 +538,37 @@ let ``TOC tests`` =
 
     ]
 
+[<Tests>]
+let ``picture and links tests`` =
+    let hyperTextToks = [LITERAL "hyper"]
+    let urlToks = [LITERAL "tmikey.tech"]
+    makeExpectoTestList id id parseInLineElements "picture and links parseInLineElements test" [
+        [LSBRA]@hyperTextToks@[RSBRA;LBRA]@urlToks@[RBRA],
+        [Link(Line([FrmtedString(Literal "hyper")]), "tmikey.tech")],
+        "1 link";
+        [EXCLAMATION;LSBRA]@hyperTextToks@[RSBRA;LBRA]@urlToks@[RBRA],
+        [Picture("hyper", "tmikey.tech")],
+        "1 picture";
+        [EXCLAMATION;LSBRA]@hyperTextToks@[LBRA]@urlToks@[RBRA],
+        [FrmtedString (Literal "![hyper(tmikey.tech)")],
+        "1 invalid picture, unclosed square bracket";
+        [LSBRA]@hyperTextToks@[RSBRA;LBRA]@urlToks,
+        [FrmtedString (Literal "[hyper](tmikey.tech")],
+        "1 invalid link, unclosed round bracket"
+    ]
+
+[<Tests>]
+let ``picture and links top level tests`` =
+    let hyperTextToks = [LITERAL "hyper"]
+    let urlToks = [LITERAL "tmikey.tech"]
+    makeExpectoTestList id makeOk parse "picture and links top level parse test" [
+        [LSBRA]@hyperTextToks@[RSBRA;LBRA]@urlToks@[RBRA],
+        [Paragraph[[Link(Line([FrmtedString(Literal "hyper")]), "tmikey.tech")]]],
+        "1 link";
+        [EXCLAMATION;LSBRA]@hyperTextToks@[RSBRA;LBRA]@urlToks@[RBRA],
+        [Paragraph[[Picture("hyper", "tmikey.tech")]]],
+        "1 picture"
+    ]
 
 //let allTestsWithExpecto() =
 //    runTestsInAssembly defaultConfig [||]
