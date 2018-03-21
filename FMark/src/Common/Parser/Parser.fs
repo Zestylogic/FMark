@@ -206,10 +206,10 @@ and parseItemList hdLst ftLst toks : Result<ParsedObj list * option<Token list>,
 /// Unparsed Tokens will be in the returned in the Error message.
 let parse toks =
     // insert two endlines at the beginning to make header in the first line work
-    let (hd, ft, rtoks) = preParser (ENDLINE::ENDLINE::toks)
-    parseItemList hd ft rtoks
+    let (hds, refs, rtoks) = preParser (ENDLINE::ENDLINE::toks)
+    parseItemList hds refs rtoks
     |> Result.bind (fun (pobjs, retoks) ->
         match retoks with
         | None -> pobjs |> Ok
         | Some retoks -> sprintf "Some unparsed tokens: %A" retoks |> Error)
-    |> Result.map (fun pObjs -> List.append pObjs ft)
+    |> Result.map (fun pObjs -> List.append pObjs refs)
