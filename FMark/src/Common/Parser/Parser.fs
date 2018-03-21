@@ -205,7 +205,8 @@ and parseItemList hdLst ftLst toks : Result<ParsedObj list * option<Token list>,
 /// `parse` will either return result monad with either `ParsedObj list` or a string of Error message.
 /// Unparsed Tokens will be in the returned in the Error message.
 let parse toks =
-    let (hd, ft, rtoks) = preParser toks
+    // insert two endlines at the beginning to make header in the first line work
+    let (hd, ft, rtoks) = preParser (ENDLINE::ENDLINE::toks)
     parseItemList hd ft rtoks
     |> Result.bind (fun (pobjs, retoks) ->
         match retoks with
