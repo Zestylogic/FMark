@@ -171,13 +171,18 @@ let TOCTests =
                       ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
                       ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
                       ;{HeaderName=[FrmtedString(Literal "header4")]; Level=1}]
-    
+
     let hLst5 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
                       ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
                       ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
                       ;{HeaderName=[FrmtedString(Literal "header4")]; Level=2}
                       ;{HeaderName=[FrmtedString(Literal "header5")]; Level=1}]
-                
+
+    let hLst6 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3}]
+
     makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents test" [
         (
             {HeaderLst=hLst1},
@@ -243,15 +248,6 @@ let TOCTests =
             </ol>",
             "Pyramid test"
         );
-    ]
-[<Tests>]
-let FAILINGTOCTests =
-    let hLst6 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
-                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
-                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
-                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3}]
-
-    makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents failing test" [
         (
             {HeaderLst=hLst6},
                 "<ol>
@@ -265,7 +261,8 @@ let FAILINGTOCTests =
                     </ol>
                 </ol>",
                 "Two level 3 headers test"
-            );]
+            );
+    ]
 
 [<Tests>]
 let fullBodyTests =
