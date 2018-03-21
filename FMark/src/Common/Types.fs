@@ -61,7 +61,7 @@ type Ref = {Cat: RefType option; Author: Token list option; Title: Token list op
 
 type ParsedObj =
     | CodeBlock of string * Language
-    | Header of THeader * string
+    | Header of THeader * string // content of header, HTML id for linking
     | ContentTable of Ttoc
     | List of TList
     | Paragraph of TLine list
