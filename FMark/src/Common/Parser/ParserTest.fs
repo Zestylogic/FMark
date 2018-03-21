@@ -413,48 +413,49 @@ let listTestData =
     let asLiToks = [ASTERISK;WHITESPACE 1;LITERAL "li1";ENDLINE]
     let muLiToks = [MINUS;WHITESPACE 1;LITERAL "li1";ENDLINE]
     let noLiToks = [NUMBER "1";DOT;WHITESPACE 1;LITERAL "li1";ENDLINE]
+    let no2LiToks = [NUMBER "2";DOT;WHITESPACE 1;LITERAL "li1";ENDLINE]
     let invalidNOliToks = [LITERAL "li1";ENDLINE]
-    let ulPObj = {ListType=UL; ListItem=[liPObj]; Depth=0}
-    let olPObj = {ListType=OL; ListItem=[liPObj]; Depth=0}
+    let ulPObj = {ListType=UL; ListItem=[liPObj]; Depth=0; StartNo=None}
+    let olPObj = {ListType=OL; ListItem=[liPObj]; Depth=0; StartNo=Some 1}
     [
         (
             asLiToks,
-            {ListType=UL; ListItem=[liPObj]; Depth=0},
+            ulPObj,
             "simple UL"
         );
         (
             asLiToks@asLiToks,
-            {ListType=UL; ListItem=[liPObj;liPObj]; Depth=0},
+            {ulPObj with ListItem=[liPObj;liPObj]},
             "simple 2 li UL"
         );
         (
             asLiToks@[WHITESPACE 2]@asLiToks@[WHITESPACE 2]@asLiToks,
-            {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]})]; Depth=0},
+            {ulPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]})]},
             "UL, 1 li, 2 sub li"
         );
         (
             asLiToks@[WHITESPACE 2]@asLiToks@[WHITESPACE 2]@asLiToks@asLiToks,
-            {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {ulPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "UL, 1 li, 2 sub li"
         );
         (
             asLiToks@[WHITESPACE 2]@asLiToks@asLiToks,
-            {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1});liPObj]; Depth=0},
+            {ulPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1});liPObj]},
             "UL, 2 li, 1 sub li"
         );
         (
             muLiToks@[WHITESPACE 2]@muLiToks@[WHITESPACE 2]@asLiToks@asLiToks,
-            {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {ulPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "UL, 1 li, 2 sub li, minus and asterisk mixed"
         );
         (
             noLiToks@[WHITESPACE 2]@noLiToks@[WHITESPACE 2]@noLiToks@noLiToks,
-            {ListType=OL; ListItem=[liPObj;NestedList({olPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {olPObj with ListItem=[liPObj;NestedList({olPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "OL, 1 li, 2 sub li"
         );
         (
             noLiToks@[WHITESPACE 2]@asLiToks@[WHITESPACE 2]@noLiToks@noLiToks,
-            {ListType=OL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {olPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "OL with sub UL, 1 li, 2 sub li"
         );
         (
@@ -464,14 +465,14 @@ let listTestData =
         );
         (
             noLiToks@[WHITESPACE 2]@invalidNOliToks@[WHITESPACE 2]@noLiToks@noLiToks,
-            {ListType=OL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {olPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "OL with sub UL, 1 li, 2 sub li begin with invalid list item"
         );
         (
             noLiToks@[WHITESPACE 2]@asLiToks@[WHITESPACE 4]@noLiToks@noLiToks,
-            {ListType=OL;
+            {olPObj with
                 ListItem=[liPObj;
-                    NestedList({ulPObj with Depth=1;ListItem=[liPObj;NestedList({olPObj with Depth=2})]});liPObj]; Depth=0},
+                    NestedList({ulPObj with Depth=1;ListItem=[liPObj;NestedList({olPObj with Depth=2})]});liPObj]},
             "OL, two nested lists"
         );
     ]
