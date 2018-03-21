@@ -1,12 +1,25 @@
-# PreParser
+# Preparser
 
 `preParse: Token list -> THeader list * ParsedObj list * Token list`
+
+Parses the headers and footers before the main parser to allow easy
+relative linking to table of contents and end of page citations,
+respectively.
+
+Takes input from lexer, and extracts the [running marginals](https://english.stackexchange.com/questions/24060/what-word-defines-a-category-suited-for-both-header-and-footer)
+from the token list. The headers are parsed into `THeader`s and an
+uniquely ID'ed token will be inserted back into the token list to
+indicate where they were extracted from.
+The footers similarly parsed into `ParsedObj`s and have an ID'ed
+token inserted into the token list.
+Theses two lists and the token list without the running marginals
+are then tupled together and returned.
 
 ## Token list
 Headers and footers replaced by
 * `HEADER 0` -> headers with their order of appearance
-* `FOOTER(FtID 0)` -> simple footer with their given ID
-* `FOOTER(RefID "John")` -> references with their given ID
+* `FOOTNOTE 0` -> simple footer with their given ID
+* `CITATION "John"` -> references with their given ID
 These are inserted back to provide positional information to the main
 parser, allowing relative linking and other nice things.
 
@@ -16,9 +29,10 @@ their appearance.
 
 ## ParsedObj list
 Both simple footers and references are given as `Footnote (ID * TLine)`
-in the `ParsedObj list`. The two are differenciated by the type of their
-`ID`. Simple footers have `int` and references have `string`. In writing,
-this will be `[^1]` and `[^John]`.
+and `Citation (ID * TFrmtedString * TLine)` in the `ParsedObj list`.
+`TFrmtedString` in `Citation` is used to store how the inline part
+should be rendered. This allows all style information to be hidden
+from the main parser.
 
 ### Simple Footers
 Simple footers have numerical IDs.
