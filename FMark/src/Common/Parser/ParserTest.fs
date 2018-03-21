@@ -434,6 +434,16 @@ let listTestData =
             "UL, 1 li, 2 sub li"
         );
         (
+            no2LiToks@noLiToks@noLiToks,
+            {olPObj with ListItem=[liPObj;liPObj;liPObj]; StartNo=Some 2},
+            "OL, start with 2"
+        );
+        (
+            no2LiToks@[WHITESPACE 2]@no2LiToks@[WHITESPACE 2]@no2LiToks@asLiToks,
+            {olPObj with StartNo=Some 2; ListItem=[liPObj;NestedList({olPObj with Depth=1; StartNo=Some 2; ListItem=[liPObj;liPObj]});liPObj]},
+            "OL, 1 li, 2 sub OL li"
+        );
+        (
             asLiToks@[WHITESPACE 2]@asLiToks@[WHITESPACE 2]@asLiToks@asLiToks,
             {ulPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "UL, 1 li, 2 sub li"
