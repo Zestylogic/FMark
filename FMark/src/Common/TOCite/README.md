@@ -21,6 +21,7 @@ in the `ParsedObj list`. The two are differenciated by the type of their
 this will be `[^1]` and `[^John]`.
 
 ### Simple Footers
+Simple footers have numerical IDs.
 ```
 this is inline[^1], and so on.
 
@@ -28,41 +29,64 @@ this is inline[^1], and so on.
       this line as well.
 But not this line.
 ```
+The body will show up with a superscripted link:
+> this is inline<sup>1</sup> , and so on.
+>
+> But not this line.
+
+The footer texts will be collected at the end of the document.
+> 1: this is the text to explain such line. this line as well.
 
 ### References
+Styled references have alphabetic IDs.
 
-Supported data fields: author, title, year, url, access.
+Supported rendering styles:
 
-Supported rendering styles: Harvard - book, Harvard - website
+||Chicago|Harvard|IEEE|
+|---|---|---|---|
+|Book|Yes|Yes|-|
+|Website|Yes|Yes|-|
 
-Todo list:
-- [ ] Chapter of a book, e-Book
-- [ ] Multiple authors
-- [ ] show n.d. when date not available in Chicago
+Supported data fields
 
+|Field|Explanation|
+|---|---|
+|type|`'Book'` or `'Website'`|
+|author|Author with surname at the end|
+|title|Title|
+|year|The year it is written|
+|url|Address for website|
+|access|Date of access for websites, in `yyyy-mm-dd` format|
+
+Pick a style at the beginning, or it will default to Harvard.
 ```
 %%Style = Harvard
+```
 
+Then follow `field1= data1, field2= data2, ...` to use references.
+```
 This is a citation[^Zifan]. This is another[^Eric] one.
 
-[^Zifan], author= Zifan Wang, title= Not a real book, year= 2018
-[^Eric], author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 2018-3-4
+[^Zifan], type= Book, author= Zifan Wang, title= Not a real book, year= 2018
+[^Eric], type= Website, author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 2018-3-4
 ```
-How it should show up with Harvard:
 
-This is a citation(Wang, 2018). This is another(Wang, 2017) one.
+With Harvard, it will look like this:
+> This is a citation(Wang, 2018). This is another(Wang, 2017) one.
 
-Wang, Z. (2018) *Not a real book*.
-
-Wang, E. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
+At the end of the document:
+> Wang, Z. (2018) *Not a real book*.
+> 
+> Wang, E. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
 
 if Chicago style is chosen:
 
-This is a citation(Wang 2018). This is another(Wang 2017) one.
+> This is a citation(Wang 2018). This is another(Wang 2017) one.
 
-Zifan Wang. 2018. *Not a real book*.
-
-Eric Wang. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
+At the end of the document:
+> Zifan Wang. 2018. *Not a real book*.
+> 
+> Eric Wang. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
 
 
 ---

@@ -185,7 +185,7 @@ this is inline[^1], and so on.
       this line as well.
 But not this line.
 ```
-The body will show up as:
+The body will show up with a superscripted link:
 > this is inline<sup>1</sup> , and so on.
 >
 > But not this line.
