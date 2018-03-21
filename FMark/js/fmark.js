@@ -10015,7 +10015,7 @@ var _HTMLEndTag___ = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_co
 
 
 var _HTMLSingleton___ = Object(__WEBPACK_IMPORTED_MODULE_4__nuget_packages_fable_core_1_3_11_fable_core_CurriedLambda__["a" /* default */])(function (str) {
-    return Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^<([a-zA-Z]+)\\s*.*?\\/>|>", str);
+    return Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^<([a-zA-Z]+)\\s*.*?(\\/>|>)", str);
 });
 
 
@@ -10133,7 +10133,7 @@ function nextToken(state, s) {
                                 } else {
                                     var $var4 = void 0;
 
-                                    var activePatternResult800 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])(".*?<", matchValue[0]);
+                                    var activePatternResult800 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])(".*?(?=<)", matchValue[0]);
 
                                     if (activePatternResult800 != null) {
                                         if (matchValue[1].tag === 2) {
