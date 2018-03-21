@@ -456,6 +456,60 @@ let ``parse list test`` =
 let ``parse list test global`` =
     let makeOkAndList x = [x |> List] |> Ok
     makeExpectoTestList deleteTrailingENDLINEs makeOkAndList parse "parse list global test" listTestData
+
+[<Tests>]
+let ``TOC tests`` =
+    let makeOkList = fun x -> [x] |> Ok
+    let tocTok = [PERCENT;PERCENT;LITERAL"TOC"]
+    let endline = [ENDLINE]
+    let h1Tok = [HASH;WHITESPACE 1;LITERAL "h1"]
+    let twoEndlines = endline@endline
+    let parsedToc = ContentTable ({HeaderLst=[]})
+    let h1THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h10")]; Level = 1}
+    let h1THeader2 = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h11")]; Level = 1}
+
+    let h1ContentTable =
+        ContentTable
+            {HeaderLst =
+                [
+                h1THeader
+                ]
+            }
+    let h1ContentTable2 =
+        ContentTable
+            {HeaderLst =
+                [
+                h1THeader;h1THeader2
+                ]
+            }
+    let h1ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h10")
+    let h1ParsedObj2 = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h11")
+
+    makeExpectoTestList id makeOk parse "TOC tests"[
+        (
+            tocTok,
+            [parsedToc],
+            "no header in the doc"
+        );
+        (
+            tocTok@twoEndlines@h1Tok,
+            [h1ContentTable]@[h1ParsedObj],
+            "TOC in the front, followed by h1"
+        );
+        (
+            tocTok@twoEndlines@h1Tok@twoEndlines@h1Tok,
+            [h1ContentTable2]@[h1ParsedObj]@[h1ParsedObj2],
+            "TOC in the front, followed by 2 h1"
+        );
+        (
+            h1Tok@twoEndlines@tocTok@twoEndlines@h1Tok,
+            [h1ParsedObj]@[h1ContentTable2]@[h1ParsedObj2],
+            "TOC in the middle of 2 h1"
+        )
+
+    ]
+
+
 //let allTestsWithExpecto() =
 //    runTestsInAssembly defaultConfig [||]
 //let runParserTest =
