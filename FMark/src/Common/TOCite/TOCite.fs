@@ -4,20 +4,20 @@ open RefParse
 open ParserHelperFuncs
 
 // --------------------------------------------------------------------------------
-let parseFooterInHeader tokLst =
+let mountedInLineParser tokLst =
     //only simple footer in header
-    let rec parseFooterInHeader' toParse tLst =
+    let rec mountedInLineParser' toParse tLst =
         match tLst with
         | FOOTNOTE i::tl ->
             let s = string i
             parseInLineElements toParse :: [Reference (Literal s, "footnote-"+s)]
-                :: parseFooterInHeader' [] tl
-        | CITATION _::tl -> parseFooterInHeader' toParse tl
-        | a::tl -> parseFooterInHeader' (a::toParse) tl
+                :: mountedInLineParser' [] tl
+        | CITATION _::tl -> mountedInLineParser' toParse tl
+        | a::tl -> mountedInLineParser' (a::toParse) tl
         | [] -> [parseInLineElements toParse]
     tokLst
     |> List.rev
-    |> parseFooterInHeader' []
+    |> mountedInLineParser' []
     |> List.rev
     |> List.reduce List.append
 
@@ -41,9 +41,9 @@ let rec tocParse tocLst depth index : THeader list * Token list =
         | Some i ->
             let (h,t) = List.splitAt i tl
             tocParse t 0 (index+1)
-            |> fun (x,y) -> {HeaderName = parseFooterInHeader h; Level = depth}::x, ENDLINE::ENDLINE::(HEADER index)::y
+            |> fun (x,y) -> {HeaderName = mountedInLineParser h; Level = depth}::x, ENDLINE::ENDLINE::(HEADER index)::y
         | None ->
-            [{HeaderName = parseFooterInHeader tl; Level = depth}], [ENDLINE;ENDLINE;HEADER index]
+            [{HeaderName = mountedInLineParser tl; Level = depth}], [ENDLINE;ENDLINE;HEADER index]
     // hash without whitespace, need to rebuild hash
     | a::tl when depth > 0 ->
         tocParse tl 0 index
