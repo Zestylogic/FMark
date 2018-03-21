@@ -145,7 +145,8 @@ let parseList toks =
     |> fst
 
 
-// Match TOC token
+/// Match TOC token
+/// match "%%TOC"
 let (|MatchTOC|_|) hdList toks =
     let createLinks (hdList:THeader list) =
         let makeRelLink i (h:THeader) =
