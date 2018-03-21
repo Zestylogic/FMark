@@ -415,8 +415,8 @@ let listTestData =
     let noLiToks = [NUMBER "1";DOT;WHITESPACE 1;LITERAL "li1";ENDLINE]
     let no2LiToks = [NUMBER "2";DOT;WHITESPACE 1;LITERAL "li1";ENDLINE]
     let invalidNOliToks = [LITERAL "li1";ENDLINE]
-    let ulPObj = {ListType=UL; ListItem=[liPObj]; Depth=0; StartNo=None}
-    let olPObj = {ListType=OL; ListItem=[liPObj]; Depth=0; StartNo=Some 1}
+    let ulPObj = {ListType=UL; ListItem=[liPObj]; Depth=0}
+    let olPObj = {ListType=OL 1; ListItem=[liPObj]; Depth=0}
     [
         (
             asLiToks,
@@ -435,12 +435,12 @@ let listTestData =
         );
         (
             no2LiToks@noLiToks@noLiToks,
-            {olPObj with ListItem=[liPObj;liPObj;liPObj]; StartNo=Some 2},
+            {olPObj with ListType=OL 2; ListItem=[liPObj;liPObj;liPObj]},
             "OL, start with 2"
         );
         (
             no2LiToks@[WHITESPACE 2]@no2LiToks@[WHITESPACE 2]@no2LiToks@asLiToks,
-            {olPObj with StartNo=Some 2; ListItem=[liPObj;NestedList({olPObj with Depth=1; StartNo=Some 2; ListItem=[liPObj;liPObj]});liPObj]},
+            {olPObj with ListType=OL 2; ListItem=[liPObj;NestedList({olPObj with ListType=OL 2; Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "OL, 1 li, 2 sub OL li"
         );
         (

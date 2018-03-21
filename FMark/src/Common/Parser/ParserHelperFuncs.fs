@@ -270,7 +270,7 @@ let (|MatchQuote|_|) toks =
 /// return list type and Token list after start sequence
 let (|MatchList|_|) toks =
     match toks with
-    | NUMBER _:: DOT:: WHITESPACE _:: toks' -> (OL, toks') |> Some
+    | NUMBER no:: DOT:: WHITESPACE _:: toks' -> (OL (no|>int), toks') |> Some
     | ASTERISK:: WHITESPACE _:: toks' -> (UL, toks') |> Some
     | _ -> None
 
