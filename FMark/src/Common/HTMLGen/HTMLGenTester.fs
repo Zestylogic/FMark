@@ -255,14 +255,14 @@ let FAILINGTOCTests =
         (
             {HeaderLst=hLst6},
                 "<ol>
-                	<li>header1</li>
-                	<ol>
-                		<li>header2</li>
-                		<ol>
-                			<li>header3</li>
-                			<li>header4</li>
-    		            </ol>
-    	            </ol>
+                    <li>header1</li>
+                    <ol>
+                        <li>header2</li>
+                        <ol>
+                            <li>header3</li>
+                            <li>header4</li>
+                        </ol>
+                    </ol>
                 </ol>",
                 "Two level 3 headers test"
             );]
