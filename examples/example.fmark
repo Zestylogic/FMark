@@ -86,7 +86,7 @@ Unordered List 2:
 
 [Google](www.google.com)
 
-![Image!](test.png)
+![image](test_img.jpg)
 
 ## LateX maths
 $$2* \begin{pmatrix} 
