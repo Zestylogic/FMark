@@ -4,6 +4,22 @@ open RefParse
 open ParserHelperFuncs
 
 // --------------------------------------------------------------------------------
+let parseFooterInHeader tokLst =
+    //only simple footer in header
+    let rec parseFooterInHeader' toParse tLst =
+        match tLst with
+        | FOOTNOTE i::tl ->
+            let s = string i
+            parseInLineElements toParse :: [Reference (Literal s, "footnote-"+s)]
+                :: parseFooterInHeader' [] tl
+        | CITATION _::tl -> parseFooterInHeader' toParse tl
+        | a::tl -> parseFooterInHeader' (a::toParse) tl
+        | [] -> [parseInLineElements toParse]
+    tokLst
+    |> List.rev
+    |> parseFooterInHeader' []
+    |> List.rev
+    |> List.reduce List.append
 
 let rec tocParse tocLst depth index : THeader list * Token list =
     // Detect hashes with whitespace after it
@@ -25,10 +41,10 @@ let rec tocParse tocLst depth index : THeader list * Token list =
         | Some i ->
             let (h,t) = List.splitAt i tl
             tocParse t 0 (index+1)
-            |> fun (x,y) -> {HeaderName = parseInLineElements h; Level = depth}::x, ENDLINE::ENDLINE::(HEADER index)::y
+            |> fun (x,y) -> {HeaderName = parseFooterInHeader h; Level = depth}::x, ENDLINE::ENDLINE::(HEADER index)::y
         | None ->
-            [{HeaderName = parseInLineElements tl; Level = depth}], [ENDLINE;ENDLINE;HEADER index]
-    //hash without whitespace, need to rebuild hash
+            [{HeaderName = parseFooterInHeader tl; Level = depth}], [ENDLINE;ENDLINE;HEADER index]
+    // hash without whitespace, need to rebuild hash
     | a::tl when depth > 0 ->
         tocParse tl 0 index
         |> fun (x,y) -> x, List.append (fakehash depth |> List.rev) (a::y)
@@ -110,6 +126,6 @@ let citeGen' tLst =
     ftLst,tLst
 
 let preParser tLst =
-    tocGen' tLst 0
-    |> fun (x,y) -> x, citeGen' y
-    |> fun (x,(y,z)) -> x, y, z
+    citeGen' tLst
+    |> fun (x,y) -> x, tocGen' y 0
+    |> fun (x,(y,z)) -> y, x, z
