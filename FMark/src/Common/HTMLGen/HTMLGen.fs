@@ -4,8 +4,6 @@ open Types
 open Shared
 open Logger
 open HTMLGenHelpers
-open System.Net.Http.Headers
-
 let dLogger = Logger(LogLevel.WARNING)
 
 /// convert TFrmtedString to string, with HTML tags where necessary
