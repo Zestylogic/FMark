@@ -84,11 +84,12 @@ Unordered List 2:
 
 ### Links
 
-[Google](www.google.com)
-
+[Google](http://www.google.com)
+<!-- Images produce correct HTML but don't display in VS Code-->
 ![image](test_img.jpg)
 
 ## LateX maths
+
 $$2* \begin{pmatrix} 
 x_{00} & x_{01} & x_{01} \newline 
 x_{10} & x_{11} & x_{11} \newline 
