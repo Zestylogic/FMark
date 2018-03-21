@@ -415,14 +415,14 @@ let parseInLineElements2 refLst toks =
             let idStr = string i
             match findFN i ftLst with
             | Ok _ -> // ok if found at least one reference in refLst
-                [(Literal idStr, idStr) |> Reference], rtks
+                [(Literal idStr, idStr) |> Reference]@currentLine, rtks
             | Error msg -> // error if no reference is found in refLst
                 [msg |> Literal |> FrmtedString], rtks
         | CITATION str :: rtks ->
             match findCite str ftLst with
             | Ok ref -> // ok if found at least one reference in refLst
                 match ref with
-                | Citation (id, hyperText, _) -> [(hyperText, id) |> Reference], rtks
+                | Citation (id, hyperText, _) -> [(hyperText, id) |> Reference]@currentLine, rtks
                 | _ -> failwith "non-citation in citation list"
             | Error msg -> // error if no reference is found in refLst
                 [msg |> Literal |> FrmtedString], rtks
