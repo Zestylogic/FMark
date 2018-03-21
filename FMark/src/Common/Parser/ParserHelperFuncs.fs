@@ -344,7 +344,7 @@ let cutTableRows toks =
     cutTableRow' [] toks
 
 /// parse inline text, including links and pictures, terminates when nothing left
-let parseInLineElements2 ftLst toks =
+let parseInLineElements2 refLst toks =
     let attachInlineEle front back ele =
         [front;ele;back]
 
@@ -412,26 +412,20 @@ let parseInLineElements2 ftLst toks =
             genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
             , rtks
         | FOOTNOTE i :: rtks ->
-            let rec matchFootnote id pObjs = 
-                match pObjs with
-                | Footnote (i, _)::_ when i = id -> true
-                | _ -> false
-            let ft = matchFootnote i ftLst
-            if ft then //make into link if exist
-                [(("Footer" + string i |> Literal),"#footnote-"+string i) |> Link], rtks
-            else //just superscript if does not exist
-                ["Footer" + string i |> Literal |> FrmtedString], rtks
+            let idStr = string i
+            match findFN i ftLst with
+            | Ok _ -> // ok if found at least one reference in refLst
+                [(Literal idStr, idStr) |> Reference], rtks
+            | Error msg -> // error if no reference is found in refLst
+                [msg |> Literal |> FrmtedString], rtks
         | CITATION str :: rtks ->
-            let rec matchCitation id pObjs = 
-                match pObjs with
-                | Citation (s, inLineRef, _) :: _ when s = id -> Some inLineRef
-                | _ :: tl -> matchCitation id tl
-                | [] -> None
-            let ft = matchCitation str ftLst
-            match ft with
-            | Some ref -> [Link(ref,"#footnot-"+str)], rtks
-            | None ->
-                ["Footer " + str + " not found" |> Literal |> FrmtedString], rtks
+            match findCite str ftLst with
+            | Ok ref -> // ok if found at least one reference in refLst
+                match ref with
+                | Citation (id, hyperText, _) -> [(hyperText, id) |> Reference], rtks
+                | _ -> failwith "non-citation in citation list"
+            | Error msg -> // error if no reference is found in refLst
+                [msg |> Literal |> FrmtedString], rtks
         | _ ->
             let str = mapTok toks.[0]
             FrmtedString (Literal str)::currentLine, xOnwards 1 toks
@@ -439,7 +433,7 @@ let parseInLineElements2 ftLst toks =
         match toks with
         | [] -> []
         | _ ->
-            let (newLine, retoks) = parseInLineElements' ftLst currentLine toks
+            let (newLine, retoks) = parseInLineElements' refLst currentLine toks
             match retoks with
             | [] -> newLine |> List.rev
             | _ ->
