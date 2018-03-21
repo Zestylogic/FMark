@@ -90,9 +90,14 @@ let rec strList list =
             )
     match list with
     | {ListType=lt; ListItem=liS} ->
-        let listTag = if lt=UL then "ul" else "ol"
-        List.fold strListItem "" liS
-        |> attachSimpleTag listTag
+        match lt with
+        | UL ->
+            List.fold strListItem "" liS
+            |> attachSimpleTag "ul"
+        | OL startNo ->
+            List.fold strListItem "" liS
+            |> attachHTMLTag ("ol", ["start", startNo|>string], true)
+        
 
 /// process header
 let strHeader (header,id) =
@@ -157,7 +162,7 @@ let strToC (toc:Ttoc) =
             -> StringItem(headerName) |> fstAppendListItem s,lv
         // If lv is > previous level, create nested list
         | {HeaderName=headerName; Level=lv} when lv > snd s
-            ->  NestedList({ListType=OL;ListItem=[StringItem(headerName)];Depth=snd s})
+            ->  NestedList({ListType=OL 1;ListItem=[StringItem(headerName)];Depth=snd s})
                 |> appendToNestedD 0 (fst s), lv
         // Append to current nested list
         | {HeaderName=headerName; Level=lv} when lv = snd s
@@ -175,7 +180,7 @@ let strToC (toc:Ttoc) =
             List.map revRecurse li
             |> List.rev
         {l with ListItem=List.rev (revListItemList l.ListItem)}
-    List.fold fold ({Depth=1; ListItem=[]; ListType=OL},1) (toc.HeaderLst)
+    List.fold fold ({Depth=1; ListItem=[]; ListType=OL 1},1) (toc.HeaderLst)
     |> fst
     |> (fun l -> {l with ListItem=List.rev l.ListItem})
     |> revList
