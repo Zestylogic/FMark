@@ -300,6 +300,7 @@ let testGlobal2 =
                 LITERAL "text3"; LSBRA; CARET; NUMBER "1"; RSBRA; LITERAL "text4"; ENDLINE; ENDLINE;
                 LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "footer1"; ENDLINE;
                 LITERAL "text5"; LSBRA; CARET; LITERAL "Eric"; RSBRA; LITERAL "text6"; ENDLINE; ENDLINE;
+                // end of doc references
                 LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
                 LITERAL "Website"; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
                 LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title";
