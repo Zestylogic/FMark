@@ -177,6 +177,7 @@ let TOCTests =
                       ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
                       ;{HeaderName=[FrmtedString(Literal "header4")]; Level=2}
                       ;{HeaderName=[FrmtedString(Literal "header5")]; Level=1}]
+                
     makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents test" [
         (
             {HeaderLst=hLst1},
@@ -243,6 +244,28 @@ let TOCTests =
             "Pyramid test"
         );
     ]
+[<PTests>]
+let FAILINGTOCTests =
+    let hLst6 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3}]  
+
+    makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents failing test" [
+        (
+            {HeaderLst=hLst6},
+                "<ol>
+                	<li>header1</li>
+                	<ol>
+                		<li>header2</li>
+                		<ol>
+                			<li>header3</li>
+                			<li>header4</li>
+    		            </ol>
+    	            </ol>
+                </ol>",
+                "Two level 3 headers test"
+            );]
 
 [<Tests>]
 let fullBodyTests =
