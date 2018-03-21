@@ -98,7 +98,11 @@ let listTests =
     makeExpectoTestList id id strList "list tests" [
         (
             {ListType=OL 1;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
-            "<ol><li>first</li></ol>", "ol, 1 li"
+            "<ol start=\"1\"><li>first</li></ol>", "ol, 1 li"
+        );
+        (
+            {ListType=OL 10;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
+            "<ol start=\"10\"><li>first</li></ol>", "ol, 1 li, startNo with 10"
         );
         (
             {ListType=UL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
@@ -115,7 +119,7 @@ let listTests =
                 NestedList{ListType=OL 1;ListItem=
                 [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=2} ];
             Depth=1},
-            "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>", "ol inside ul"
+            "<ul><li>first</li><li>second</li><ol start=\"1\"><li>first</li><li>second</li></ol></ul>", "ol inside ul"
         );
     ]
 
@@ -252,16 +256,16 @@ let TOCTests =
         );
         (
             {HeaderLst=hLst6},
-                "<ol>
-                    <li>header1</li>
-                    <ol>
-                        <li>header2</li>
-                        <ol>
-                            <li>header3</li>
-                            <li>header4</li>
-                        </ol>
-                    </ol>
-                </ol>",
+                "<ol start=\"1\">
+					<li>header1</li>
+					<ol start=\"1\">
+						<li>header2</li>
+						<ol start=\"1\">
+							<li>header3</li>
+							<li>header4</li>
+						</ol>
+					</ol>
+				</ol>",
                 "Two level 3 headers test"
             );
     ]
@@ -282,7 +286,7 @@ let fullBodyTests =
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ],
             ["<h1 id=\"header1\">header</h1>";
-            "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>";
+            "<ul><li>first</li><li>second</li><ol start=\"1\"><li>first</li><li>second</li></ol></ul>";
             "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
             "<p>Go go go!<a href=\"brokenURL\">broken link</a>";NewLineStr;"Come!</p>"]
             , "the bodyshop"
