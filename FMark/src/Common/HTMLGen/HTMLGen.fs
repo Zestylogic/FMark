@@ -4,7 +4,6 @@ open Types
 open Shared
 open Logger
 open HTMLGenHelpers
-
 let dLogger = Logger(LogLevel.WARNING)
 
 /// convert TFrmtedString to string, with HTML tags where necessary
@@ -125,65 +124,48 @@ let (|MatchHeaderAndSubHeader|_|) hds =
 
 /// process table of contents
 
-let strToC (toc:Ttoc) =
-    let appendListItem s i =
-        {s with ListItem = i::(s.ListItem)}
-    let fstAppendListItem s i = 
-        appendListItem (fst s) i
-    let appendToNested (s:TList) appendee =
-        // if List.head fst s is a nested list, append to that list
-        match s.ListItem with
-        | NestedList(l)::tail -> 
-            sprintf "Append to nested: %A" appendee |> dLogger.Debug None
-            {s with ListItem = NestedList({l with ListItem = appendee::l.ListItem})::tail}
-        // otherwise if the latest element on the list isn't a nested list, just append
-        | _ -> sprintf "Create nested with: %A" appendee |> dLogger.Debug None 
-               appendee |> appendListItem s
-    let appendToNestedD n (s:TList) appendee =
-        let getNest = function 
-                | NestedList(l) -> l 
-                | _ -> failwith "Invalid depth."
-        let rec appendToNestedD' n s =
-            let recurse = function
-                | head::tail -> ((appendToNestedD' (n-1) (head |> getNest)).ListItem)@tail
-                | [] -> failwithf "List shouldn't be empty: %A" s
-            match (n,s) with
-            | (n,s) when n > 0 ->
-                {s with ListItem = recurse s.ListItem}
-            | (0,s) -> (appendee |> appendToNested s)
-            | (n,_) when n < 0 -> failwith "Negative depth, shouldn't happen."
-            | _ -> failwithf "n is: %i, s is: %A" n s
-        appendToNestedD' n s
-    // Convert header list into a list item
-    let fold (s:(TList*int)) =
-        function
-        |  {HeaderName=headerName; Level=lv} when lv = 1
-        // If header has depth 1, put it in the main list
-            -> StringItem(headerName) |> fstAppendListItem s,lv
-        // If lv is > previous level, create nested list
-        | {HeaderName=headerName; Level=lv} when lv > snd s
-            ->  NestedList({ListType=OL 1;ListItem=[StringItem(headerName)];Depth=snd s})
-                |> appendToNestedD 0 (fst s), lv
-        // Append to current nested list
-        | {HeaderName=headerName; Level=lv} when lv = snd s
-            -> sprintf "Append: %A %i" headerName lv |> dLogger.Debug None
-               StringItem(headerName) |> appendToNested (fst s),lv
-        
-        | {HeaderName=headerName; Level=lv} when lv < snd s
-            ->  StringItem(headerName) |> appendToNestedD (lv-2) (fst s),lv
-        | _ -> s
-    let rec revList (l:TList) =
-        let rec revListItemList (li:TListItem list) =
-            let revRecurse = function 
-                | NestedList(l)->NestedList({l with ListItem=(revListItemList l.ListItem)})
-                | l -> l
-            List.map revRecurse li
-            |> List.rev
-        {l with ListItem=List.rev (revListItemList l.ListItem)}
-    List.fold fold ({Depth=1; ListItem=[]; ListType=OL 1},1) (toc.HeaderLst)
+let strToC (toc: Ttoc) =
+    let excludeSelfSkip x = match x with | None -> None | Some 1 -> None | Some n -> Some (n-1)
+    /// get all list items in current item level and sub lists
+    let rec getCurrentHeaders currentLv hdListItems headers =
+        match headers with
+        | header:: reHeaders ->
+            match header.Level with
+            | hdLv when currentLv <= hdLv -> // list item and sub list item
+                getCurrentHeaders currentLv (header::hdListItems) reHeaders
+            | _ -> hdListItems |> List.rev
+        | [] -> hdListItems |> List.rev
+
+    let rec parseHdsIntoList level (headers: THeader list) =
+        let depth = (List.head headers).Level
+        let headerFolder (currentLv, listItems, (skipNo: int option), currentHdNo) header =
+            match skipNo with
+            | None ->
+                match header.Level with
+                | hdLv when hdLv=currentLv ->
+                    (currentLv, StringItem(header.HeaderName)::listItems, None, currentHdNo+1)
+                | hdLv when hdLv>currentLv ->
+                    let (listItem, skip) =
+                        xOnwards currentHdNo headers
+                        |> getCurrentHeaders (currentLv+1) []
+                        |> parseHdsIntoList (currentLv+1)
+                    (currentLv, NestedList(listItem)::listItems, skip |> excludeSelfSkip, currentHdNo+1)
+                | _ -> failwith "list item level < current level, not possible"
+            | Some skip ->
+                match skip with
+                | 1 -> (currentLv, listItems, None, currentHdNo+1)
+                | n when n>1 -> (currentLv, listItems, Some (n-1), currentHdNo+1)
+                | _ -> failwith "negative or zero skip number, not possible"
+        List.fold headerFolder (level, [], None, 0) headers
+        |> (fun (_, lis, _, _) ->
+            let doSkip =
+                match List.length headers with
+                | 0 -> None
+                | n -> Some n
+            {ListType=OL 1; ListItem=lis |> List.rev; Depth=depth}, doSkip)
+    toc.HeaderLst
+    |> parseHdsIntoList 1
     |> fst
-    |> (fun l -> {l with ListItem=List.rev l.ListItem})
-    |> revList
     |> strList
 
 /// process HTML body part
