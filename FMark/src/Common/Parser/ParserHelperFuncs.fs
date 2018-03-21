@@ -329,6 +329,34 @@ let (|MatchTableFormater|_|) toks =
     | (p,m) when p>0 && m>2 -> Some(rtks)
     | _ -> None
 
+/// match link
+let (|MatchLink|_|) toks =
+    let returnWhenRSBRALBRA toks =
+        let rec concrete (content, toks) =
+            match toks with
+            | [] -> None
+            | RSBRA::LBRA::rtks -> (List.rev content, rtks) |> Some
+            | _ -> (List.head toks::content, List.tail toks) |> concrete
+        concrete ([], toks)
+    let returnWhenRBRA toks =
+        let rec whatName (content, toks) =
+            match toks with
+            | [] -> None
+            | RBRA::rtks -> (List.rev content, rtks) |> Some
+            | _ -> (List.head toks::content, List.tail toks) |> whatName
+        whatName ([], toks)
+    match toks with
+    | LSBRA::rtks ->
+        match returnWhenRSBRALBRA rtks with
+        | Some (hyperTextToks, remains) ->
+            match returnWhenRBRA remains with
+            | Some (urlToks, retoks) ->
+                (hyperTextToks, urlToks, retoks) |> Some
+            | None -> None
+        | None -> None
+    | _ -> None
+
+
 /// cut Tokens into Token list list for Table parsing
 /// terminates when [] or two continuous ENDLINEs
 /// return Token list list,
@@ -411,6 +439,14 @@ let parseInLineElements2 refLst toks =
             let inlineContent = (parseInLines [] content |> Emphasis |> FrmtedString)
             genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
             , rtks
+        | MatchLink (hyperTextToks, urlToks, rtks) ->
+            let hyperText = parseInLines [] hyperTextToks |> Line
+            let url = strAllToks urlToks
+            [(hyperText, url) |> Link]@currentLine, rtks
+        | EXCLAMATION:: MatchLink (hyperTextToks, urlToks, rtks) ->
+            let hyperText = hyperTextToks |> strAllToks
+            let url = strAllToks urlToks
+            [(hyperText, url) |> Picture]@currentLine, rtks
         | FOOTNOTE i :: rtks ->
             let idStr = string i
             match findFN i ftLst with
