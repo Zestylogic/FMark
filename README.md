@@ -9,6 +9,8 @@ Namely:
 - Table of Contents generation
 - Citations and footnotes
 
+See [example.fmark](examples/example.fmark) for usage examples.
+
 # How to use
 
 ## FMark Plugin
