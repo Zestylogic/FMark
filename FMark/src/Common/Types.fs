@@ -29,8 +29,8 @@ and InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
     | Picture of Alt: string * URL: string
-    | InlineCitationof HyperText: TFrmtedString * ID: string
-    | Foot of HyperText: TFrmtedString * ID: string
+    | InlineCitation of HyperText: TFrmtedString * ID: string
+    | InlineFootnote of HyperText: TFrmtedString * ID: string
 
 type TLine = InlineElement list
 
