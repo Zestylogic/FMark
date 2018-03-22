@@ -515,12 +515,17 @@ let ``parse list test global`` =
 let ``TOC tests`` =
     let makeOkList = fun x -> [x] |> Ok
     let tocTok = [PERCENT;PERCENT;LITERAL"TOC"]
+    let tocTokMisc = tocTok@[WHITESPACE 1;LITERAL "nothing"]
+    let tocDepthTok = tocTok@[WHITESPACE 1;LITERAL"depth";EQUAL;NUMBER "2"]
     let endline = [ENDLINE]
     let h1Tok = [HASH;WHITESPACE 1;LITERAL "h1"]
+    let h2Tok = [HASH;HASH;WHITESPACE 1;LITERAL "h2"]
+    let h3Tok = [HASH;HASH;HASH;WHITESPACE 1;LITERAL "h3"]
     let twoEndlines = endline@endline
     let parsedToc = ContentTable ({HeaderLst=[]})
     let h1THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h10")]; Level = 1}
     let h1THeader2 = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h11")]; Level = 1}
+    let h2THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h2")],"#h21")]; Level = 2}
 
     let h1ContentTable =
         ContentTable
@@ -536,14 +541,28 @@ let ``TOC tests`` =
                 h1THeader;h1THeader2
                 ]
             }
+    let h12ContentTable =
+        ContentTable
+            {HeaderLst =
+                [
+                h1THeader;h2THeader
+                ]
+            }
     let h1ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h10")
     let h1ParsedObj2 = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h11")
+    let h2ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h2")];Level = 2},"h21")
+    let h3ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h3")];Level = 3},"h32")
 
     makeExpectoTestList id makeOk parse "TOC tests"[
         (
             tocTok,
             [parsedToc],
             "no header in the doc"
+        );
+        (
+            tocTokMisc,
+            [parsedToc],
+            "no header in the doc, unrcognized text after %%TOC"
         );
         (
             tocTok@twoEndlines@h1Tok,
@@ -559,8 +578,17 @@ let ``TOC tests`` =
             h1Tok@twoEndlines@tocTok@twoEndlines@h1Tok,
             [h1ParsedObj]@[h1ContentTable2]@[h1ParsedObj2],
             "TOC in the middle of 2 h1"
-        )
-
+        );
+        (
+            tocDepthTok@twoEndlines@h1Tok@twoEndlines@h2Tok@twoEndlines@h3Tok,
+            [h12ContentTable]@[h1ParsedObj]@[h2ParsedObj]@[h3ParsedObj],
+            "TOC, h1, h2, h3, depth=2"
+        );
+        (
+            tocDepthTok@[WHITESPACE 4; MINUS]@twoEndlines@h1Tok@twoEndlines@h2Tok@twoEndlines@h3Tok,
+            [h12ContentTable]@[h1ParsedObj]@[h2ParsedObj]@[h3ParsedObj],
+            "TOC, h1, h2, h3, depth=2, unrcognized text"
+        );
     ]
 
 [<Tests>]
