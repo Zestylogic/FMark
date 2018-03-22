@@ -51,6 +51,19 @@ A reference implementation of the simple markdown can be found [here](http://spe
 * Two spaces as one level of indentation.
 * A tab, `\t` character will be interpreted as four spaces, therefore two levels of indentation.
 
+### Paragraphs
+
+A paragraph is some characters that does not match:
+* CodeBlock
+* Header
+* ContentTable
+* List
+* Quote
+* Table
+* Reference
+
+It terminates with two endlines. Any elements mentions above cannot exist in a paragraph. Otherwise, they will become normal text, and will not be rendered as expected.
+
 # Markdown extensions (not included in standard Markdown)
 
 ## Macros
