@@ -157,14 +157,26 @@ let (|MatchTOC|_|) hdList toks =
         let linksLst = List.mapi makeRelLink hdList
         {HeaderLst=linksLst}
     let filterHeaders d hdLst =
-        // TODO: filter headers according to depth
-        hdLst
+        let headerFilter hd =
+            hd.Level <= d
+        List.filter headerFilter hdLst
 
     match toks with
     //| PERCENT::PERCENT::LITERAL("TOC")::// Options
+    | PERCENT::PERCENT::LITERAL("TOC")::WHITESPACE _::LITERAL"depth"::EQUAL::NUMBER noStr::rst ->
+        // filter out headers with level > depth
+        // ignore the rest tokens in this line
+        let depth = noStr|>int
+        (
+            hdList
+            |>filterHeaders depth
+            |> createLinks
+            ,
+            rst|>cutFirstLine|>snd
+        ) |> Some
     | PERCENT::PERCENT::LITERAL("TOC")::rst ->
-        // No depth specified
-       (createLinks hdList, rst)
+        // No depth specified, ignore the rest tokens in this line
+       (createLinks hdList, rst|>cutFirstLine|>snd)
         |> Some
     | _ -> None
 
