@@ -294,15 +294,15 @@ let testGlobal =
 let ``reference tests`` =
     let refToks =
         [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "footer1"; ENDLINE;
-            LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
-                LITERAL "Website"; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
+            LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1;
+                LITERAL "Website"; COMMA; LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1;
                 LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title";
-                EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
-                EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
+                WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
+                WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; WHITESPACE 1; EQUAL;
                 WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
-                LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+                LITERAL "access"; WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
                 MINUS; NUMBER "4"; ENDLINE]
-    let refStyleToks = [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE]
+    let refStyleToks = [PERCENT; PERCENT; LITERAL "Style"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE]
     let refPobjs =
         [
             Footnote (1,[FrmtedString (Literal "footer1")]);
