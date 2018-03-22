@@ -22,6 +22,7 @@ type TFrmtedString =
     | Strong of InlineElement list
     | Emphasis of InlineElement list
     | Line of InlineElement list
+    | Strike of InlineElement list
     | Literal of string
     | Code of string
 and InlineElement =
