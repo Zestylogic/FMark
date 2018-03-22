@@ -58,7 +58,21 @@ Source ───> │ Lex and Preprocessor│ ───> Token list ───> �
 4. [Main Parser](FMark/src/Common/Parser/README.md)
 5. [HTML Generator](FMark/src/Common/HTMLGen/README.md)
 
-## Specification
+# Vanilla Markdown 
+
+## Implemented
+- HTML passthrough
+- Lists
+- Links (relative links within file don't work in VSCode, use `Create HTML File` and preview that.)
+- Images (images don't work in VSCode, use `Create HTML File` and preview that.)
+- Headers
+- Styling (bold, italic, bold and italic, strikethrough)
+- Paragraphs
+- Quotes
+- Code blocks
+- Tables
+
+## Design decisions
 
 ### Lists
 
@@ -77,6 +91,17 @@ Source ───> │ Lex and Preprocessor│ ───> Token list ───> �
 
 * All headers must be preceded by two endlines, with an exception made for the first line in a file.
 
+`\n\n# header\n` is a header, otherwise unless the header is the first line in a file it won't be processed as a header.
+
+### Styling
+
+* When using underscores for styling, there must be a space (or endline on the right) on either side in order for it to be recognised.
+* Asterisks for styling work as usual.
+
+e.g.
+
+`[ ]_em_[ ]`, `[ ]__a strong__[ ]`, or `[ ]_em_$`, `[ ]__a strong__$`
+
 ### Paragraphs
 
 A paragraph is some characters that does not match:
@@ -89,6 +114,8 @@ A paragraph is some characters that does not match:
 * Reference
 
 It terminates with two endlines. Any elements mentions above cannot exist in a paragraph. Otherwise, they will become normal text, and will not be rendered as expected.
+
+
 
 # Markdown extensions (not included in 'vanilla' Markdown)
 
