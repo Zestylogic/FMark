@@ -38,6 +38,32 @@ at [CommonMark](http://spec.commonmark.org/0.27/).
 
 A reference implementation of the simple markdown can be found [here](http://spec.commonmark.org/dingus/).
 
+### Lists
+
+* A list ends with two endlines, i.e., `\r\n\r\n`
+* List items are separated by one endline
+* List type is determined by the first item.
+  * `NUMBER ; DOT` will be ordered list
+  * ` - ` or ` * ` will be unordered list
+* If the first item does not start with `NUMDER;DOT;Space| "- " | "* "`, the list type will be default to unordered list
+* Ordered list start number is determined by the first item
+  * The subsequent counting is `+1` for each list item
+* Two spaces as one level of indentation.
+* A tab, `\t` character will be interpreted as four spaces, therefore two levels of indentation.
+
+### Paragraphs
+
+A paragraph is some characters that does not match:
+* CodeBlock
+* Header
+* ContentTable
+* List
+* Quote
+* Table
+* Reference
+
+It terminates with two endlines. Any elements mentions above cannot exist in a paragraph. Otherwise, they will become normal text, and will not be rendered as expected.
+
 # Markdown extensions (not included in standard Markdown)
 
 ## Macros
@@ -174,6 +200,10 @@ _TODO: show an example?_
 ## Citations
 
 FMark supports simple footers and styled references.
+
+* If multiple citations with the same reference ID is found, the first citation will be used inline.
+  * One `[^fmark]` inline, and two `[^fmark], some author`. The first will be used.
+* Reference to non-exist citation will result in `"[Reference: %refID not found!]"` in the HTML generated.
 
 ### Simple Footers
 

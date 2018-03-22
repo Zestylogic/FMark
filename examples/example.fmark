@@ -104,20 +104,23 @@ x_{20} & x_{21} & x_{21} \end{pmatrix}$$
 
 Here are some[^1] words, and more words[^2].
 
-[^2], A few lines to explain the words.
-      Another line to explain the words.
+### Simple footnote[^3] accepted in headers
 
-[^1], We should probably sort them by ID numbers.
+[^2], A few lines to _explain_ the words. 
+      Another line to **explain** the words.
+
+[^1], Footnotes are sorted by ID numbers.
+
+[^3], I'm a footnote in a header!
 
 ### References
 
 All footnotes are collected and displayed at the end of the document[^Eric].
 The style of references are set at the top of the document.
 
-[^Eric], type= Book, author= Not Eric, year= 2018, title= An Introduction to FMark
+[^Eric], type = Book, author = Not Eric, year = 2018, title = An Introduction to FMark
 
 Note: Simple footnotes takes numerical IDs, and references need alphabetical IDs.
 
-# Other things
+Look the footers are rendered in order below this line.
 
-Look the footers are rendered below this.
