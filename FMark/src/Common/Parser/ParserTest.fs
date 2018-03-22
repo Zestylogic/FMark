@@ -202,6 +202,21 @@ let ``strong and em test for parseInLineElements`` =
     ]
 
 [<Tests>]
+let ``strikethrough test for parseInLineElements`` =
+    makeExpectoTestList id id parseInLineElements "strikethrough test for parseInLineElements" [
+        (
+            [LITERAL "I"; WHITESPACE 2; DTILDE; LITERAL "am"; DTILDE],
+            [FrmtedString(Literal "I  "); FrmtedString(Strike[FrmtedString (Literal "am")])],
+            "literal and strike literal"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 2; DTILDE; LITERAL "am"],
+            [FrmtedString(Literal "I  ~~am")],
+            "literal and unclosed strike literal"
+        );
+    ]
+
+[<Tests>]
 let ``multiparagraph emphasis test`` =
     makeExpectoTestList id id (parseParagraph []) "multiparagraph emphasis test" [
         (

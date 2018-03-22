@@ -14,6 +14,7 @@ let rec strFStr fStr =
     | Strong a -> strInlineElements a |> attachSimpleTag "strong"
     | Emphasis e -> strInlineElements e |> attachSimpleTag "em"
     | Line l -> strInlineElements l
+    | Strike l -> strInlineElements l |> attachSimpleTag "del"
 
 /// convert InlineElement list to string, with HTML tags where necessary
 /// not tail recursive because the code looks cleaner this way
