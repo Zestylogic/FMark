@@ -66,7 +66,7 @@ let tocGen tLst maxD =
     {HeaderLst = tocGen' tLst maxD |> fun (x,_)->x}
 
 // --------------------------------------------------------------------------------
-// parse footnotes with parseInLineElements
+// /parse footnotes with parseInLineElements
 let citeParseIn tocLst =
     let rec citeParseIn' toParse tail =
         match tail with
@@ -77,7 +77,7 @@ let citeParseIn tocLst =
     citeParseIn' [] tocLst
     |> fun (x,y) -> x |> List.rev |> parseInLineElements, y
 
-// main citation parser
+/// main citation parser
 let rec citeParse' style tocLst :ParsedObj list*Token list =
     let recFitFt (a,b) c =
         citeParse' style b
