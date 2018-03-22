@@ -12,7 +12,7 @@ type TEmphasis = UNDER | STAR // underscore and asterisk
 
 type ParagraphState = {Par: Token list; ReToks: Token list; ParMatched: bool}
 
-type FormatStyle = STRONG | EM | SEM
+type FormatStyle = STRONG | EM | SEM | STRIKE
 
 /// delete leading ENDLINEs and retur the rest
 let rec deleteLeadingENDLINEs toks =
@@ -160,6 +160,7 @@ let (|MatchTemplate|_|) strongOrEmOrBoth toks =
         | STRONG -> DASTERISK, DUNDERSCORE
         | EM -> ASTERISK, UNDERSCORE
         | SEM -> TASTERISK, TUNDERSCORE
+        | STRIKE -> DTILDE, DTILDE
     let attachInlineEle front back = Option.map (fun (x,y) -> x,y,front,back)
     match toks with
     | WHITESPACE _:: whatSym:: WHITESPACE _:: _ when whatSym=underscoreFormatter -> None      // not em
@@ -226,6 +227,11 @@ let (|MatchStrongAndEm|_|) toks =
     | MatchTemplate SEM result -> Some result
     | _ -> None
 
+let (|MatchStrike|_|) toks =
+    match toks with
+    | MatchTemplate STRIKE result -> Some result
+    | _ -> None
+
 /// match new paragraph sequence
 /// return Token list after EDNLINEs
 let (|MatchNewParagraph|_|) toks =
@@ -270,7 +276,7 @@ let (|MatchQuote|_|) toks =
 /// return list type and Token list after start sequence
 let (|MatchList|_|) toks =
     match toks with
-    | NUMBER _:: DOT:: WHITESPACE _:: toks' -> (OL, toks') |> Some
+    | NUMBER no:: DOT:: WHITESPACE _:: toks' -> (OL (no|>int), toks') |> Some
     | ASTERISK:: WHITESPACE _:: toks' -> (UL, toks') |> Some
     | _ -> None
 
@@ -437,6 +443,10 @@ let parseInLineElements2 refLst toks =
             , rtks
         | MatchEm (content, rtks, frontLiteral, backLiteral) ->
             let inlineContent = (parseInLines [] content |> Emphasis |> FrmtedString)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
+            , rtks
+        | MatchStrike (content, rtks, frontLiteral, backLiteral) ->
+            let inlineContent = (parseInLines [] content |> Strike |> FrmtedString)
             genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
             , rtks
         | MatchLink (hyperTextToks, urlToks, rtks) ->

@@ -22,6 +22,7 @@ type TFrmtedString =
     | Strong of InlineElement list
     | Emphasis of InlineElement list
     | Line of InlineElement list
+    | Strike of InlineElement list
     | Literal of string
     | Code of string
 and InlineElement =
@@ -35,7 +36,7 @@ type THeader = {HeaderName: TLine; Level: int}
 
 type Ttoc = {HeaderLst: THeader list}
 
-type TListType = | UL | OL
+type TListType = | UL | OL of startNo:int
 type TList = {ListType: TListType; ListItem: TListItem list; Depth: int}
 and TListItem = NestedList of TList | StringItem of TLine
 

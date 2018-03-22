@@ -202,6 +202,21 @@ let ``strong and em test for parseInLineElements`` =
     ]
 
 [<Tests>]
+let ``strikethrough test for parseInLineElements`` =
+    makeExpectoTestList id id parseInLineElements "strikethrough test for parseInLineElements" [
+        (
+            [LITERAL "I"; WHITESPACE 2; DTILDE; LITERAL "am"; DTILDE],
+            [FrmtedString(Literal "I  "); FrmtedString(Strike[FrmtedString (Literal "am")])],
+            "literal and strike literal"
+        );
+        (
+            [LITERAL "I"; WHITESPACE 2; DTILDE; LITERAL "am"],
+            [FrmtedString(Literal "I  ~~am")],
+            "literal and unclosed strike literal"
+        );
+    ]
+
+[<Tests>]
 let ``multiparagraph emphasis test`` =
     makeExpectoTestList id id (parseParagraph []) "multiparagraph emphasis test" [
         (
@@ -294,15 +309,15 @@ let testGlobal =
 let ``reference tests`` =
     let refToks =
         [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "footer1"; ENDLINE;
-            LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
-                LITERAL "Website"; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
+            LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1;
+                LITERAL "Website"; COMMA; LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1;
                 LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title";
-                EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
-                EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
+                WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
+                WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; WHITESPACE 1; EQUAL;
                 WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
-                LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+                LITERAL "access"; WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
                 MINUS; NUMBER "4"; ENDLINE]
-    let refStyleToks = [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE]
+    let refStyleToks = [PERCENT; PERCENT; LITERAL "RefStyle"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE]
     let refPobjs =
         [
             Footnote (1,[FrmtedString (Literal "footer1")]);
@@ -413,48 +428,59 @@ let listTestData =
     let asLiToks = [ASTERISK;WHITESPACE 1;LITERAL "li1";ENDLINE]
     let muLiToks = [MINUS;WHITESPACE 1;LITERAL "li1";ENDLINE]
     let noLiToks = [NUMBER "1";DOT;WHITESPACE 1;LITERAL "li1";ENDLINE]
+    let no2LiToks = [NUMBER "2";DOT;WHITESPACE 1;LITERAL "li1";ENDLINE]
     let invalidNOliToks = [LITERAL "li1";ENDLINE]
     let ulPObj = {ListType=UL; ListItem=[liPObj]; Depth=0}
-    let olPObj = {ListType=OL; ListItem=[liPObj]; Depth=0}
+    let olPObj = {ListType=OL 1; ListItem=[liPObj]; Depth=0}
     [
         (
             asLiToks,
-            {ListType=UL; ListItem=[liPObj]; Depth=0},
+            ulPObj,
             "simple UL"
         );
         (
             asLiToks@asLiToks,
-            {ListType=UL; ListItem=[liPObj;liPObj]; Depth=0},
+            {ulPObj with ListItem=[liPObj;liPObj]},
             "simple 2 li UL"
         );
         (
             asLiToks@[WHITESPACE 2]@asLiToks@[WHITESPACE 2]@asLiToks,
-            {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]})]; Depth=0},
+            {ulPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]})]},
             "UL, 1 li, 2 sub li"
         );
         (
+            no2LiToks@noLiToks@noLiToks,
+            {olPObj with ListType=OL 2; ListItem=[liPObj;liPObj;liPObj]},
+            "OL, start with 2"
+        );
+        (
+            no2LiToks@[WHITESPACE 2]@no2LiToks@[WHITESPACE 2]@no2LiToks@asLiToks,
+            {olPObj with ListType=OL 2; ListItem=[liPObj;NestedList({olPObj with ListType=OL 2; Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
+            "OL, 1 li, 2 sub OL li"
+        );
+        (
             asLiToks@[WHITESPACE 2]@asLiToks@[WHITESPACE 2]@asLiToks@asLiToks,
-            {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {ulPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "UL, 1 li, 2 sub li"
         );
         (
             asLiToks@[WHITESPACE 2]@asLiToks@asLiToks,
-            {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1});liPObj]; Depth=0},
+            {ulPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1});liPObj]},
             "UL, 2 li, 1 sub li"
         );
         (
             muLiToks@[WHITESPACE 2]@muLiToks@[WHITESPACE 2]@asLiToks@asLiToks,
-            {ListType=UL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {ulPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "UL, 1 li, 2 sub li, minus and asterisk mixed"
         );
         (
             noLiToks@[WHITESPACE 2]@noLiToks@[WHITESPACE 2]@noLiToks@noLiToks,
-            {ListType=OL; ListItem=[liPObj;NestedList({olPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {olPObj with ListItem=[liPObj;NestedList({olPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "OL, 1 li, 2 sub li"
         );
         (
             noLiToks@[WHITESPACE 2]@asLiToks@[WHITESPACE 2]@noLiToks@noLiToks,
-            {ListType=OL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {olPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "OL with sub UL, 1 li, 2 sub li"
         );
         (
@@ -464,14 +490,14 @@ let listTestData =
         );
         (
             noLiToks@[WHITESPACE 2]@invalidNOliToks@[WHITESPACE 2]@noLiToks@noLiToks,
-            {ListType=OL; ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]; Depth=0},
+            {olPObj with ListItem=[liPObj;NestedList({ulPObj with Depth=1; ListItem=[liPObj;liPObj]});liPObj]},
             "OL with sub UL, 1 li, 2 sub li begin with invalid list item"
         );
         (
             noLiToks@[WHITESPACE 2]@asLiToks@[WHITESPACE 4]@noLiToks@noLiToks,
-            {ListType=OL;
+            {olPObj with
                 ListItem=[liPObj;
-                    NestedList({ulPObj with Depth=1;ListItem=[liPObj;NestedList({olPObj with Depth=2})]});liPObj]; Depth=0},
+                    NestedList({ulPObj with Depth=1;ListItem=[liPObj;NestedList({olPObj with Depth=2})]});liPObj]},
             "OL, two nested lists"
         );
     ]
@@ -489,12 +515,17 @@ let ``parse list test global`` =
 let ``TOC tests`` =
     let makeOkList = fun x -> [x] |> Ok
     let tocTok = [PERCENT;PERCENT;LITERAL"TOC"]
+    let tocTokMisc = tocTok@[WHITESPACE 1;LITERAL "nothing"]
+    let tocDepthTok = tocTok@[WHITESPACE 1;LITERAL"depth";EQUAL;NUMBER "2"]
     let endline = [ENDLINE]
     let h1Tok = [HASH;WHITESPACE 1;LITERAL "h1"]
+    let h2Tok = [HASH;HASH;WHITESPACE 1;LITERAL "h2"]
+    let h3Tok = [HASH;HASH;HASH;WHITESPACE 1;LITERAL "h3"]
     let twoEndlines = endline@endline
     let parsedToc = ContentTable ({HeaderLst=[]})
     let h1THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h10")]; Level = 1}
     let h1THeader2 = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h11")]; Level = 1}
+    let h2THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h2")],"#h21")]; Level = 2}
 
     let h1ContentTable =
         ContentTable
@@ -510,14 +541,28 @@ let ``TOC tests`` =
                 h1THeader;h1THeader2
                 ]
             }
+    let h12ContentTable =
+        ContentTable
+            {HeaderLst =
+                [
+                h1THeader;h2THeader
+                ]
+            }
     let h1ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h10")
     let h1ParsedObj2 = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h11")
+    let h2ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h2")];Level = 2},"h21")
+    let h3ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h3")];Level = 3},"h32")
 
     makeExpectoTestList id makeOk parse "TOC tests"[
         (
             tocTok,
             [parsedToc],
             "no header in the doc"
+        );
+        (
+            tocTokMisc,
+            [parsedToc],
+            "no header in the doc, unrcognized text after %%TOC"
         );
         (
             tocTok@twoEndlines@h1Tok,
@@ -533,8 +578,17 @@ let ``TOC tests`` =
             h1Tok@twoEndlines@tocTok@twoEndlines@h1Tok,
             [h1ParsedObj]@[h1ContentTable2]@[h1ParsedObj2],
             "TOC in the middle of 2 h1"
-        )
-
+        );
+        (
+            tocDepthTok@twoEndlines@h1Tok@twoEndlines@h2Tok@twoEndlines@h3Tok,
+            [h12ContentTable]@[h1ParsedObj]@[h2ParsedObj]@[h3ParsedObj],
+            "TOC, h1, h2, h3, depth=2"
+        );
+        (
+            tocDepthTok@[WHITESPACE 4; MINUS]@twoEndlines@h1Tok@twoEndlines@h2Tok@twoEndlines@h3Tok,
+            [h12ContentTable]@[h1ParsedObj]@[h2ParsedObj]@[h3ParsedObj],
+            "TOC, h1, h2, h3, depth=2, unrcognized text"
+        );
     ]
 
 [<Tests>]
