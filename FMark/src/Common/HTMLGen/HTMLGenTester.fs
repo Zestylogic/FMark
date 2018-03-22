@@ -303,8 +303,8 @@ let reallyBigTest =
         ("big HTML test",
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
                 Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
-                Paragraph [[Reference (Literal "Footer1","footnote-1"); FrmtedString (Literal "text4")]];
-                Paragraph [[Reference (Literal "(Wang, 2017)","footnote-Eric"); FrmtedString (Literal "text6")]];
+                Paragraph [[Foot (Literal "Footer1","footnote-1"); FrmtedString (Literal "text4")]];
+                Paragraph [[Cite (Literal "(Wang, 2017)","footnote-Eric"); FrmtedString (Literal "text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);
                 Citation (
                     "footnote-Eric",Literal "(Wang, 2017)",
@@ -318,7 +318,7 @@ let reallyBigTest =
             "<body>";
             "<p>text1#text2</p>";
             "<h1 id=\"Header10\">Header1</h1>";
-            "<p><sup><a href=\"#footnote-1\">Footer1</a></sup>text4</p>";
+            "<p><a href=\"#footnote-1\">Footer1</a>text4</p>";
             "<p><sup><a href=\"#footnote-Eric\">(Wang, 2017)</a></sup>text6</p>";
             "<p id=\"1\">[1] footer1</p>";
             "<p id=\"footnote-Eric\">[footnote-Eric] Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p>";

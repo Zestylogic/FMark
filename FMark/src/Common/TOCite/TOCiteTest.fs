@@ -87,7 +87,7 @@ let testDataHd = [
     [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "text1"; FOOTNOTE 3; LITERAL "text2"],
     (
         [{HeaderName = [FrmtedString (Literal "text1");
-                        Reference (Literal "3","footnote-3");
+                        Foot (Literal "3","footnote-3");
                         FrmtedString (Literal "text2");
                        ]; Level = 1;}],
         [ENDLINE;ENDLINE;HEADER 0]
