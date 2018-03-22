@@ -31,9 +31,9 @@ and strInlineElements eles =
         | Picture (alt, url) ->
             let attrs = [("src", url); ("alt", alt)]
             attachHTMLTag ("img", attrs, false) ""
-        | InlineCitation (ht, id) ->  // style for inline referencing the footnotes and citations in the end
-            refPrint false (ht,id)
-        | InlineFootnote (hr, id) -> refPrint true (ht,id)
+        // style for inline referencing the footnotes and citations in the end
+        | InlineCitation (ht, id) -> refPrint false (ht,id)
+        | InlineFootnote (ht, id) -> refPrint true (ht,id)
     List.fold convertHtml "" eles
 
 /// process Markdown paragraph
@@ -182,7 +182,7 @@ let strBody pObjs =
         | Table rows -> strTable rows
         | List l -> strList l
         | Header (h,s) -> strHeader (h,s)
-        | Footnote (i,s) -> strRef ((string i), s)
+        | InlineFootnotenote (i,s) -> strRef ((string i), s)
         | Citation (i,_,s) -> strRef (i, s)
         | ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
