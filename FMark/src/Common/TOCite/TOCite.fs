@@ -10,7 +10,7 @@ let mountedInLineParser tokLst =
         match tLst with
         | FOOTNOTE i::tl ->
             let s = string i
-            parseInLineElements toParse :: [Reference (Literal s, "footnote-"+s)]
+            parseInLineElements toParse :: [InlineFootnote (Literal s, "footnote-"+s)]
                 :: mountedInLineParser' [] tl
         | CITATION _::tl -> mountedInLineParser' toParse tl
         | a::tl -> mountedInLineParser' (a::toParse) tl
