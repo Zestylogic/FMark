@@ -182,7 +182,7 @@ let strBody pObjs =
         | Table rows -> strTable rows
         | List l -> strList l
         | Header (h,s) -> strHeader (h,s)
-        | InlineFootnotenote (i,s) -> strRef ((string i), s)
+        | Footnote (i,s) -> strRef ((string i), s)
         | Citation (i,_,s) -> strRef (i, s)
         | ContentTable toc -> strToC toc
         | _ -> sprintf "%A is not implemented" pObj
