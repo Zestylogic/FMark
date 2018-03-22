@@ -201,6 +201,10 @@ _TODO: show an example?_
 
 FMark supports simple footers and styled references.
 
+* If multiple citations with the same reference ID is found, the first citation will be used inline.
+  * One `[^fmark]` inline, and two `[^fmark], some author`. The first will be used.
+* Reference to non-exist citation will result in `"[Reference: %refID not found!]"` in the HTML generated.
+
 ### Simple Footers
 
 Simple footers have numerical IDs.
