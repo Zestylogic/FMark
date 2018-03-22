@@ -99,7 +99,7 @@ let bodyTableTests =
 let listTests =
     makeExpectoTestList id id mdList "list tests" [
         (
-            {ListType=OL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
+            {ListType=OL 1;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
             "1. first\n", "ol, 1 li"
         );
         (
@@ -108,16 +108,16 @@ let listTests =
         );
         (
             {ListType=UL;ListItem=
-            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=1},
+            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=1;},
             "- first\n- second\n", "ul, 2 li"
         );
         (
-            {ListType=OL;ListItem=
-            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=1},
+            {ListType=OL 1;ListItem=
+            [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=1;},
             "1. first\n2. second\n", "ol, 2 li"
         );
         (
-            {ListType=OL;ListItem=
+            {ListType=OL 1;ListItem=
             [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];NestedList{ListType=UL;ListItem=
                 [StringItem[FrmtedString(Literal "third")]; StringItem[FrmtedString(Literal "fourth")] ];Depth=2}  ];Depth=1},
             "1. first\n2. second\n\t- third\n\t- fourth\n", "ol, 2 li, nested 1 ul"
@@ -125,7 +125,7 @@ let listTests =
         (
             {ListType=UL;ListItem=
             [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
-                NestedList{ListType=OL;ListItem=
+                NestedList{ListType=OL 1;ListItem=
                 [StringItem[FrmtedString(Literal "third")]; StringItem[FrmtedString(Literal "fourth")] ];Depth=2} ];
             Depth=1},
             "- first\n- second\n\t1. third\n\t2. fourth\n", "ol inside ul"
@@ -163,7 +163,7 @@ let fullBodyTests =
                 Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"HEADER STRING NOT IMPLEMENTED");
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
-                        NestedList{ListType=OL;ListItem=
+                        NestedList{ListType=OL 1;ListItem=
                         [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];
                         Depth=2} ];
                     Depth=1};
