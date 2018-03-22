@@ -31,9 +31,9 @@ and strInlineElements eles =
         | Picture (alt, url) ->
             let attrs = [("src", url); ("alt", alt)]
             attachHTMLTag ("img", attrs, false) ""
-        | Cite (ht, id) ->  // style for inline referencing the footnotes and citations in the end
+        | InlineCitation (ht, id) ->  // style for inline referencing the footnotes and citations in the end
             refPrint false (ht,id)
-        | Foot (hr, id) -> refPrint true (ht,id)
+        | InlineFootnote (hr, id) -> refPrint true (ht,id)
     List.fold convertHtml "" eles
 
 /// process Markdown paragraph

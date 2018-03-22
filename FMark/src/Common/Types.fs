@@ -29,7 +29,7 @@ and InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
     | Picture of Alt: string * URL: string
-    | Cite of HyperText: TFrmtedString * ID: string
+    | InlineCitationof HyperText: TFrmtedString * ID: string
     | Foot of HyperText: TFrmtedString * ID: string
 
 type TLine = InlineElement list

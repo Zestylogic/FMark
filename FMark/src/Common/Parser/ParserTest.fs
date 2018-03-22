@@ -333,21 +333,21 @@ let ``reference tests`` =
             refStyleToks
             @[LSBRA; CARET; NUMBER "1"; RSBRA]
             @refToks,
-            [Paragraph [[Foot (Literal "1","1")]]]@refPobjs,
+            [Paragraph [[InlineFootnote(Literal "1","1")]]]@refPobjs,
             "just 1 footnote"
         );
         (
             refStyleToks
             @[LSBRA; CARET; LITERAL "Eric"; RSBRA]
             @refToks,
-            [Paragraph [[Cite (Literal "(Wang, 2017)","Eric")]]]@refPobjs,
+            [Paragraph [[InlineCitation(Literal "(Wang, 2017)","Eric")]]]@refPobjs,
             "just 1 citation"
         );
         (
             refStyleToks
             @[LITERAL "text3"; LSBRA; CARET; NUMBER "1"; RSBRA; LITERAL "text4"]
             @refToks,
-            [Paragraph [[FrmtedString (Literal "text3");Foot (Literal "1","1"); FrmtedString (Literal "text4")]]]@refPobjs,
+            [Paragraph [[FrmtedString (Literal "text3");InlineFootnote(Literal "1","1"); FrmtedString (Literal "text4")]]]@refPobjs,
             "Literal and 1 footnote"
 
         );
@@ -355,7 +355,7 @@ let ``reference tests`` =
             refStyleToks
             @[LITERAL "text5"; LSBRA; CARET; LITERAL "Eric"; RSBRA; LITERAL "text6"]
             @refToks,
-            [Paragraph [[FrmtedString (Literal "text5");Cite (Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]]]@refPobjs,
+            [Paragraph [[FrmtedString (Literal "text5");InlineCitation(Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]]]@refPobjs,
             "Literal and 1 citation"
         );
         (
@@ -364,8 +364,8 @@ let ``reference tests`` =
             @[LITERAL "text5"; LSBRA; CARET; LITERAL "Eric"; RSBRA; LITERAL "text6"]
             @refToks,
             [Paragraph [
-                    [FrmtedString (Literal "text3");Foot (Literal "1","1"); FrmtedString (Literal "text4")];
-                    [FrmtedString (Literal "text5");Cite (Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]
+                    [FrmtedString (Literal "text3");InlineFootnote(Literal "1","1"); FrmtedString (Literal "text4")];
+                    [FrmtedString (Literal "text5");InlineCitation(Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]
                 ]]@refPobjs,
             "multiline, 1 footnote, 1 citation"
         );
