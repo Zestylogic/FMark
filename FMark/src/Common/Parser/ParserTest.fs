@@ -317,7 +317,7 @@ let ``reference tests`` =
                 WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
                 LITERAL "access"; WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
                 MINUS; NUMBER "4"; ENDLINE]
-    let refStyleToks = [PERCENT; PERCENT; LITERAL "Style"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE]
+    let refStyleToks = [PERCENT; PERCENT; LITERAL "RefStyle"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE]
     let refPobjs =
         [
             Footnote (1,[FrmtedString (Literal "footer1")]);
