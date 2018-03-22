@@ -1,4 +1,4 @@
-# FMark
+# FMark [![Build Status](https://travis-ci.org/ymherklotz/FMark.svg?branch=master)](https://travis-ci.org/ymherklotz/FMark)
 FSharp markdown implementation with additional functionality.
 
 Namely:
@@ -8,8 +8,6 @@ Namely:
 - Spreadsheet functionality
 - Table of Contents generation
 - Citations and footnotes
-
-[![Build Status](https://travis-ci.org/ymherklotz/FMark.svg?branch=master)](https://travis-ci.org/ymherklotz/FMark)
 
 # How to use
 
