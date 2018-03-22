@@ -90,9 +90,14 @@ let rec strList list =
             )
     match list with
     | {ListType=lt; ListItem=liS} ->
-        let listTag = if lt=UL then "ul" else "ol"
-        List.fold strListItem "" liS
-        |> attachSimpleTag listTag
+        match lt with
+        | UL ->
+            List.fold strListItem "" liS
+            |> attachSimpleTag "ul"
+        | OL startNo ->
+            List.fold strListItem "" liS
+            |> attachHTMLTag ("ol", ["start", startNo|>string], true)
+        
 
 /// process header
 let strHeader (header,id) =
@@ -119,6 +124,7 @@ let (|MatchHeaderAndSubHeader|_|) hds =
     | _ -> None
 
 /// process table of contents
+
 let strToC (toc: Ttoc) =
     let excludeSelfSkip x = match x with | None -> None | Some 1 -> None | Some n -> Some (n-1)
     /// get all list items in current item level and sub lists
@@ -157,7 +163,7 @@ let strToC (toc: Ttoc) =
                 match List.length headers with
                 | 0 -> None
                 | n -> Some n
-            {ListType=OL; ListItem=lis |> List.rev; Depth=depth}, doSkip)
+            {ListType=OL 1; ListItem=lis |> List.rev; Depth=depth}, doSkip)
     toc.HeaderLst
     |> parseHdsIntoList 1
     |> fst

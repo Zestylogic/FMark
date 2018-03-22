@@ -101,8 +101,12 @@ let bodyTableTests =
 let listTests =
     makeExpectoTestList id id strList "list tests" [
         (
-            {ListType=OL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
-            "<ol><li>first</li></ol>", "ol, 1 li"
+            {ListType=OL 1;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
+            "<ol start=\"1\"><li>first</li></ol>", "ol, 1 li"
+        );
+        (
+            {ListType=OL 10;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
+            "<ol start=\"10\"><li>first</li></ol>", "ol, 1 li, startNo with 10"
         );
         (
             {ListType=UL;ListItem=[StringItem[FrmtedString(Literal "first")]];Depth=1},
@@ -116,10 +120,10 @@ let listTests =
         (
             {ListType=UL;ListItem=
             [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
-                NestedList{ListType=OL;ListItem=
+                NestedList{ListType=OL 1;ListItem=
                 [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];Depth=2} ];
             Depth=1},
-            "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>", "ol inside ul"
+            "<ul><li>first</li><li>second</li><ol start=\"1\"><li>first</li><li>second</li></ol></ul>", "ol inside ul"
         );
     ]
 
@@ -187,83 +191,85 @@ let TOCTests =
                       ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
                       ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3}]
 
-    makeExpectoTestList id Shared.removeWhitespace strToC "Table of contents test" [
+    makeExpectoTestList id (Shared.removeChars ["\t";"\n";"\r"]) strToC "Table of contents test" [
+        // tabs to make better formats
+        // spaces needs to be preserved, e.g. ol start="1"
         (
             {HeaderLst=hLst1},
-            "<ol>
-                <li>header1</li>
-                <li>header2</li>
-                <li>header3</li>
-             </ol>",
+            "<ol start=\"1\">
+				<li>header1</li>
+				<li>header2</li>
+				<li>header3</li>
+			</ol>",
             "Simple TOC test, all same level"
         );
         (
             {HeaderLst=hLst2},
-            "<ol>
-                <li>header1</li>
-                <li>header2</li>
-                <li>header3</li>
-                <ol>
-                    <li>header4</li>
-                </ol>
-             </ol>",
+            "<ol start=\"1\">
+				<li>header1</li>
+				<li>header2</li>
+				<li>header3</li>
+				<ol start=\"1\">
+					<li>header4</li>
+				</ol>
+			</ol>",
             "Simple TOC test, one header2"
         );
         (
             {HeaderLst=hLst3},
-            "<ol>
-                <li>header1</li>
-                <ol>
-                    <li>header2</li>
-                    <li>header3</li>
-                    <ol>
-                        <li>header4</li>
-                    </ol>
-                </ol>
-            </ol>",
+            "<ol start=\"1\">
+				<li>header1</li>
+				<ol start=\"1\">
+					<li>header2</li>
+					<li>header3</li>
+					<ol start=\"1\">
+						<li>header4</li>
+					</ol>
+				</ol>
+			</ol>",
             "Harder TOC test, two header 2s and a header 3"
         );
         (
             {HeaderLst=hLst4},
-            "<ol>
-                <li>header1</li>
-                <ol>
-                    <li>header2</li>
-                    <ol>
-                        <li>header3</li>
-                    </ol>
-                </ol>
-                <li>header4</li>
-            </ol>",
+            "<ol start=\"1\">
+				<li>header1</li>
+				<ol start=\"1\">
+					<li>header2</li>
+					<ol start=\"1\">
+						<li>header3</li>
+					</ol>
+				</ol>
+				<li>header4</li>
+			</ol>",
             "Deep then shallow TOC"
         );
         (
             {HeaderLst=hLst5},
-            "<ol>
-                <li>header1</li>
-                <ol>
-                    <li>header2</li>
-                    <ol>
-                        <li>header3</li>
-                    </ol>
-                    <li>header4</li>
-                </ol>
-                <li>header5</li>
-            </ol>",
+            "<ol start=\"1\">
+				<li>header1</li>
+				<ol start=\"1\">
+					<li>header2</li>
+					<ol start=\"1\">
+						<li>header3</li>
+					</ol>
+					<li>header4</li>
+				</ol>
+				<li>header5</li>
+			</ol>",
             "Pyramid test"
         );
         (
             {HeaderLst=hLst6},
-                "<ol>
-                    <li>header1</li>
-                    <ol>
-                        <li>header2</li>
-                        <ol>
-                            <li>header3</li>
-                            <li>header4</li>
-                        </ol>
-                    </ol>
-                </ol>",
+                "<ol start=\"1\">
+					<li>header1</li>
+					<ol start=\"1\">
+						<li>header2</li>
+						<ol start=\"1\">
+							<li>header3</li>
+							<li>header4</li>
+						</ol>
+					</ol>
+				</ol>",
                 "Two level 3 headers test"
             );
     ]
@@ -276,7 +282,7 @@ let fullBodyTests =
                 Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1");
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
-                        NestedList{ListType=OL;ListItem=
+                        NestedList{ListType=OL 1;ListItem=
                         [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];
                         Depth=2} ];
                     Depth=1};
@@ -284,7 +290,7 @@ let fullBodyTests =
                 Paragraph[[FrmtedString((Literal "Go go go!")); Link(Literal "broken link", "brokenURL")]; [FrmtedString(Literal "Come!")]]
             ],
             ["<h1 id=\"header1\">header</h1>";
-            "<ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul>";
+            "<ul><li>first</li><li>second</li><ol start=\"1\"><li>first</li><li>second</li></ol></ul>";
             "<table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table>";
             "<p>Go go go!<a href=\"brokenURL\">broken link</a>";NewLineStr;"Come!</p>"]
             , "the bodyshop"
@@ -331,7 +337,7 @@ let ``global simple test`` =
                 Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1");
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
-                        NestedList{ListType=OL;ListItem=
+                        NestedList{ListType=OL 1;ListItem=
                         [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")] ];
                         Depth=2} ];
                     Depth=1};
@@ -341,7 +347,7 @@ let ``global simple test`` =
         ["<!DOCTYPE html><head><meta name=\"viewport\" content=\"width=device-width\">";
         "<title>FMarkToHtml first release</title>";
         "</head>";
-        "<body><h1 id=\"header1\">header</h1><ul><li>first</li><li>second</li><ol><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>";
+        "<body><h1 id=\"header1\">header</h1><ul><li>first</li><li>second</li><ol start=\"1\"><li>first</li><li>second</li></ol></ul><table><thead><tr><th align=\"left\">head</th><th align=\"right\">head</th></tr></thead><tbody></tbody></table><p>Go go go!<a href=\"brokenURL\">broken link</a>";
         NewLineStr;"Come!</p>";
         "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>";
         "</body>"] ,
