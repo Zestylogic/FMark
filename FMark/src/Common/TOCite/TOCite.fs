@@ -111,7 +111,10 @@ let rec styleParse rLst tocLst =
         | "IEEE" -> Some IEEE
         | _ -> None  // use default
     match tocLst with
-    | ENDLINE::PERCENT::PERCENT::LITERAL "RefStyle"::WHITESPACE _ ::EQUAL::WHITESPACE _ ::LITERAL lit::tl ->
+    | ENDLINE::PERCENT::PERCENT::LITERAL "RefStyle"::WHITESPACE _ ::EQUAL::WHITESPACE _ ::LITERAL lit::tl
+    | ENDLINE::PERCENT::PERCENT::LITERAL "RefStyle"::EQUAL::WHITESPACE _ ::LITERAL lit::tl
+    | ENDLINE::PERCENT::PERCENT::LITERAL "RefStyle"::WHITESPACE _ ::EQUAL::LITERAL lit::tl
+    | ENDLINE::PERCENT::PERCENT::LITERAL "RefStyle"::EQUAL::LITERAL lit::tl ->
         stylify lit, List.append rLst tl
     | a::tl -> styleParse (a::rLst) tl
     | [] -> None, rLst
