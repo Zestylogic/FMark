@@ -84,8 +84,8 @@ let parseList toks =
         match retoks with
         | ASTERISK:: WHITESPACE _:: _ | MINUS:: WHITESPACE _:: _ -> // unordered list
             (UL, level, xOnwards 2 retoks) |> Some
-        | NUMBER _:: DOT:: WHITESPACE _:: _ ->  // ordered list
-            (OL, level, xOnwards 3 retoks) |> Some
+        | NUMBER no:: DOT:: WHITESPACE _:: _ ->  // ordered list
+            (OL (no|>int), level, xOnwards 3 retoks) |> Some
         | _ -> None
 
     let getLIContent toks =

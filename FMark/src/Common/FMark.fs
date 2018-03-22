@@ -2,12 +2,9 @@ module FMark
 
 open Types
 
-let addEndlines t =
-    ENDLINE::ENDLINE::t
 let preLexParse dir = 
     Preprocessor.preprocessListWithDir dir
     >> Lexer.lexList
-    >> addEndlines
     >> Parser.parse
 
 let processString' dir formatFunc =
