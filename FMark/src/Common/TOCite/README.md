@@ -25,7 +25,23 @@ parser, allowing relative linking and other nice things.
 
 ## THeader list
 List of all headers found in the document, arranged by order of
-their appearance.
+their appearance. This is used to render headers with links in the
+main parser, and also table of contents.
+
+### Table of Contents
+Build with `%%TOC`, with optional argument `depth`
+
+For example,
+```
+Paragraph 1 Oh look a butterfly!
+
+%%TOC depth=3
+
+Paragraph 2 Oh noes it flew away :(
+```
+will build a table of content between paragraph 1 and 2, and only
+contain headers of level 1 2, and 3.
+
 
 ## ParsedObj list
 Both simple footers and references are given as `Footnote (ID * TLine)`
@@ -72,17 +88,18 @@ Supported data fields
 |url|Address for website|
 |access|Date of access for websites, in `yyyy-mm-dd` format|
 
-Pick a style at the beginning, or it will default to Harvard.
+Pick a style with `%%Style`, or it will default to Harvard.
 ```
 %%Style = Harvard
 ```
 
-Then follow `field1= data1, field2= data2, ...` to use references.
+Then follow `field1=data1, field2=data2, ...` to use references. 
+Spaces around equal signs is allowed.
 ```
 This is a citation[^Zifan]. This is another[^Eric] one.
 
-[^Zifan], type= Book, author= Zifan Wang, title= Not a real book, year= 2018
-[^Eric], type= Website, author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 2018-3-4
+[^Zifan], type = Book, author = Zifan Wang, title = Not a real book, year = 2018
+[^Eric], type=Website, author=Eric Wang, title=Not a real website, year=2017 url=www.example.com/website access=2018-3-4
 ```
 
 With Harvard, it will look like this:
