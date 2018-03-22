@@ -97,9 +97,9 @@ Supported data fields
 |url|Address for website|
 |access|Date of access for websites, in `yyyy-mm-dd` format|
 
-Pick a style with `%%Style`, or it will default to Harvard.
+Pick a style with `%%RefStyle`, or it will default to Harvard.
 ```
-%%Style = Harvard
+%%RefStyle = Harvard
 ```
 
 Then follow `field1=data1, field2=data2, ...` to use references. 
