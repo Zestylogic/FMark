@@ -103,7 +103,7 @@ let rec citeParse' style tocLst :ParsedObj list*Token list =
         |> fun (x,y) -> x, t::y
     | [] -> [], []
 
-let rec styleParse tocLst =
+let rec styleParse rLst tocLst =
     let stylify str =
         match str with
         | "Harvard" -> Some Harvard
@@ -111,14 +111,15 @@ let rec styleParse tocLst =
         | "IEEE" -> Some IEEE
         | _ -> None  // use default
     match tocLst with
-    | PERCENT::PERCENT::LITERAL "Style"::EQUAL::WHITESPACE _ ::LITERAL lit::tl -> stylify lit, tl
-    | _::tl -> styleParse tl
-    | [] -> None,[]
+    | ENDLINE::PERCENT::PERCENT::LITERAL "Style"::WHITESPACE _ ::EQUAL::WHITESPACE _ ::LITERAL lit::tl ->
+        stylify lit, List.append rLst tl
+    | a::tl -> styleParse (a::rLst) tl
+    | [] -> None, rLst
 
 //type change and sorting
 // might change now that there are string IDs
 let citeGen' tLst =
-    let style,tl = styleParse tLst
+    let style,tl = styleParse [] tLst
     let ftLst,tLst =
         match style with
         | Some s -> citeParse' s tl

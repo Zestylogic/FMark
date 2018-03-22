@@ -170,25 +170,26 @@ let refParser style tLst =
             | _ -> None, tail
 
         match tLst with
-        | LITERAL "type"::EQUAL::WHITESPACE _::LITERAL t::tl -> 
+        | LITERAL "type"::WHITESPACE _::EQUAL::WHITESPACE _::LITERAL t::tl -> 
             match t with
             | "Book" -> refPar' {refData with Cat = Some Book} tl
             | "Website" -> refPar' {refData with Cat = Some Website} tl
             | _ -> refPar' refData tl
-        | LITERAL "author"::EQUAL::WHITESPACE _::tl ->
+        | LITERAL "author"::WHITESPACE _::EQUAL::WHITESPACE _::tl ->
             refParse' [] tl
             |> fun (x,y) -> refPar' {refData with Author = Some x} y
-        | LITERAL "title"::EQUAL::WHITESPACE _::tl ->
+        | LITERAL "title"::WHITESPACE _::EQUAL::WHITESPACE _::tl ->
             refParse' [] tl
             |> fun (x,y) -> refPar' {refData with Title = Some x} y
-        | LITERAL "year"::EQUAL::WHITESPACE _::NUMBER a::tl ->
+        | LITERAL "year"::WHITESPACE _::EQUAL::WHITESPACE _::NUMBER a::tl ->
             refPar' {refData with Year = Some (int a)} tl
-        | LITERAL "url"::EQUAL::WHITESPACE _::LITERAL s::tl ->
+        | LITERAL "url"::WHITESPACE _::EQUAL::WHITESPACE _::LITERAL s::tl ->
             refPar' {refData with URL = Some s} tl
-        | LITERAL "access"::EQUAL::WHITESPACE _::tl ->
+        | LITERAL "access"::WHITESPACE _::EQUAL::WHITESPACE _::tl ->
             dateFormat tl
             |> fun (x,y) -> refPar' {refData with AccessDate = x} y
-        | ENDLINE::tl -> refData,tl
+        | ENDLINE::ENDLINE::tl -> refData,tl
+        | ENDLINE::tl -> refPar' refData tl
         | _::tl -> refPar' refData tl
         | [] -> refData, []
     tLst    
