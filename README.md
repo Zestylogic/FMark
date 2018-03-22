@@ -314,7 +314,11 @@ Pick a style with `%%RefStyle`, or it will default to Harvard.
 %%RefStyle = Harvard
 ```
 
-Then follow `field1= data1, field2= data2, ...` to use references.
+Then follow `field1=data1, field2=data2, ...` to use references.
+
+Spaces around equal sign are allowed, so `f = d`, `f= d`, `f =d` or `f=d`
+all have the same effect.
+
 ```
 This is a citation[^Mark]. This is another[^FMark] one.
 
