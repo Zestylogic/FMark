@@ -66,7 +66,7 @@ let tocGen tLst maxD =
     {HeaderLst = tocGen' tLst maxD |> fun (x,_)->x}
 
 // --------------------------------------------------------------------------------
-// parse footnotes with parseInLineElements
+// /parse footnotes with parseInLineElements
 let citeParseIn tocLst =
     let rec citeParseIn' toParse tail =
         match tail with
@@ -77,7 +77,7 @@ let citeParseIn tocLst =
     citeParseIn' [] tocLst
     |> fun (x,y) -> x |> List.rev |> parseInLineElements, y
 
-// main citation parser
+/// main citation parser
 let rec citeParse' style tocLst :ParsedObj list*Token list =
     let recFitFt (a,b) c =
         citeParse' style b
@@ -103,27 +103,38 @@ let rec citeParse' style tocLst :ParsedObj list*Token list =
         |> fun (x,y) -> x, t::y
     | [] -> [], []
 
-let rec styleParse tocLst =
-    let stylify str =
-        match str with
-        | "Harvard" -> Some Harvard
-        | "Chicago" -> Some Chicago
-        | "IEEE" -> Some IEEE
-        | _ -> None  // use default
-    match tocLst with
-    | PERCENT::PERCENT::LITERAL "Style"::EQUAL::WHITESPACE _ ::LITERAL lit::tl -> stylify lit, tl
-    | _::tl -> styleParse tl
-    | [] -> None,[]
+let styleParse rLst tocLst =
+    let rec styleParse' rLst tocLst =
+        let stylify str =
+            match str with
+            | "Harvard" -> Some Harvard
+            | "Chicago" -> Some Chicago
+            | "IEEE" -> Some IEEE
+            | _ -> None  // use default
+        match tocLst with
+        | ENDLINE::PERCENT::PERCENT::LITERAL "RefStyle"::AgnoEqual tail ->
+            match tail with
+            | LITERAL lit::tl -> stylify lit, List.append (List.rev rLst) tl
+            | _ -> styleParse' (tocLst.Head::rLst) tocLst.Tail
+        | a::tl -> styleParse' (a::rLst) tl
+        | [] -> None, rLst
+    styleParse' rLst tocLst
 
 //type change and sorting
 // might change now that there are string IDs
 let citeGen' tLst =
-    let style,tl = styleParse tLst
+    let style,tl = styleParse [] tLst
     let ftLst,tLst =
         match style with
         | Some s -> citeParse' s tl
         | None -> citeParse' Harvard tLst // use harvard as default style
-    ftLst,tLst
+    let sortFt ft1 ft2 =
+        match ft1,ft2 with
+        | Footnote (i,_), Footnote (j,_) -> i-j
+        | Citation _, Footnote _ -> 1
+        | Footnote _, Citation _ -> -1
+        | _, _ -> 0
+    List.sortWith sortFt ftLst, tLst
 
 let preParser tLst =
     citeGen' tLst

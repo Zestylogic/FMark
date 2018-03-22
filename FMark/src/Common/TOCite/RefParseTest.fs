@@ -38,51 +38,51 @@ let dateTests =
 let testDataRefHarvard =
     [
     "Harvard Author only",
-    [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+    [LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Wang"],
     Harvard,
     (Literal "(Wang)",[FrmtedString (Literal "Wang, "); FrmtedString (Literal "Z. ")]);
 
     "Harvard Author with multiple given names",
-    [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+    [LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"],
     Harvard,
     (Literal "(Wang)",[FrmtedString (Literal "Wang, "); FrmtedString (Literal "E. ");
         FrmtedString (Literal "Z. ")]);
 
     "Harvard Title only",
-    [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"],
+    [LITERAL "title";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book1"],
     Harvard,
     (Literal "(n.d.)",[FrmtedString (Emphasis [FrmtedString (Literal "Book1. ")])]);
 
     "Harvard Title with multiple words",
-    [LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
+    [LITERAL "title";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
         LITERAL "Subtitle"],
     Harvard,
     (Literal "(n.d.)",[FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle. ")])]);
 
     "Harvard Year only",
-    [LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"],
+    [LITERAL "year";WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"],
     Harvard,
     (Literal "(2018)",[FrmtedString (Literal "(2018) ")]);
 
     "Harvard URL only",
-    [LITERAL "url";EQUAL; WHITESPACE 1; LITERAL "www.example.com"],
+    [LITERAL "url";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "www.example.com"],
     Harvard,
     (Literal "(n.d.)",[FrmtedString (Literal "Available from: ");
         Link (Literal "www.example.com","www.example.com");
         FrmtedString (Literal " ")]);
 
     "Harvard Access date only",
-    [LITERAL "access";EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+    [LITERAL "access";WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
         MINUS; NUMBER "8"],
     Harvard,
     (Literal "(n.d.)",[FrmtedString (Literal "[Accessed 8th March 2018]. ")]);
 
     "Harvard Book reference",
-    [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
-        LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
-        LITERAL "Not a real book"; COMMA; LITERAL "year"; EQUAL; WHITESPACE 1;
+    [LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+        LITERAL "Wang"; COMMA; LITERAL "title"; WHITESPACE 1; EQUAL; WHITESPACE 1;
+        LITERAL "Not a real book"; COMMA; LITERAL "year"; WHITESPACE 1; EQUAL; WHITESPACE 1;
         NUMBER "2018"],
     Harvard,
     (
@@ -93,12 +93,12 @@ let testDataRefHarvard =
     )
 
     "Harvard Website reference",
-    [LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Eric"; WHITESPACE 1;
-        LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
-        LITERAL "Not a real website"; COMMA; LITERAL "year"; EQUAL;
-        WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
+    [LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Eric"; WHITESPACE 1;
+        LITERAL "Wang"; COMMA; LITERAL "title"; WHITESPACE 1; EQUAL; WHITESPACE 1;
+        LITERAL "Not a real website"; COMMA; LITERAL "year"; WHITESPACE 1; EQUAL;
+        WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; WHITESPACE 1; EQUAL;
         WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
-        LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "2";
+        LITERAL "access"; WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "2";
         MINUS; NUMBER "4"],
     Harvard,
     (
@@ -116,56 +116,56 @@ let testDataRefHarvard =
 let testDataRefChicago =
     [
     "Chicago Author only",
-    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
-        LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+    [LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Wang"],
     Chicago,
     (Literal "(Wang)",[FrmtedString (Literal "Zifan Wang. ")]);
 
     "Chicago Author with multiple given names",
-    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
-        LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+    [LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
         LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"],
     Chicago,
     (Literal "(Wang)",[FrmtedString (Literal "Zifan Eric Wang. ")]);
 
     "Chicago Title only",
-    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
-        LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"],
+    [LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "title";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book1"],
     Chicago,
     (Literal "(n.d.)",[FrmtedString (Emphasis [FrmtedString (Literal "Book1. ")])]);
 
     "Chicago Title with multiple words",
-    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
-        LITERAL "title";EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
+    [LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "title";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book1"; WHITESPACE 1;
         LITERAL "Subtitle"],
     Chicago,
     (Literal "(n.d.)",[FrmtedString (Emphasis [FrmtedString (Literal "Book1 Subtitle. ")])]);
 
     "Chicago Year only",
-    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
-        LITERAL "year";EQUAL; WHITESPACE 1; NUMBER "2018"],
+    [LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "year";WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"],
     Chicago,
     (Literal "(2018)",[FrmtedString (Literal "2018. ")]);
 
     "Chicago URL only",
-    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
-        LITERAL "url";EQUAL; WHITESPACE 1; LITERAL "www.example.com"],
+    [LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
+        LITERAL "url";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "www.example.com"],
     Chicago,
     (Literal "(n.d.)",[Link (Literal "www.example.com","www.example.com")]);
 
     "Chicago Access date only",
-    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
-        LITERAL "access";EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "8";
+    [LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
+        LITERAL "access";WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "8";
         MINUS; NUMBER "8"],
     Chicago,
     (Literal "(n.d.)",[FrmtedString (Literal "Accessed August 8, 2018. ")]);
 
     "Chicago Book reference",
-    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
-        LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
-        LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
-        LITERAL "Not a real book"; COMMA; LITERAL "year"; EQUAL; WHITESPACE 1;
+    [LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Book"; COMMA;
+        LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Zifan"; WHITESPACE 1;
+        LITERAL "Wang"; COMMA; LITERAL "title"; WHITESPACE 1; EQUAL; WHITESPACE 1;
+        LITERAL "Not a real book"; COMMA; LITERAL "year"; WHITESPACE 1; EQUAL; WHITESPACE 1;
         NUMBER "2018"],
     Chicago,
     (
@@ -175,13 +175,13 @@ let testDataRefChicago =
     );
 
     "Chicago Website reference",
-    [LITERAL "type";EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
-        LITERAL "author"; EQUAL; WHITESPACE 1; LITERAL "Eric"; WHITESPACE 1;
-        LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL; WHITESPACE 1;
-        LITERAL "Not a real website"; COMMA; LITERAL "year"; EQUAL;
-        WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
+    [LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Website"; COMMA;
+        LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Eric"; WHITESPACE 1;
+        LITERAL "Wang"; COMMA; LITERAL "title"; WHITESPACE 1; EQUAL; WHITESPACE 1;
+        LITERAL "Not a real website"; COMMA; LITERAL "year"; WHITESPACE 1; EQUAL;
+        WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; WHITESPACE 1; EQUAL;
         WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
-        LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+        LITERAL "access"; WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
         MINUS; NUMBER "4"],
     Chicago,
     (
