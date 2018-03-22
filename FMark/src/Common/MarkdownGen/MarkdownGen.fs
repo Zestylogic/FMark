@@ -1,4 +1,5 @@
 module MarkdownGen
+// MarkdownGen is only used for some property-based testing and is not ready for use for anything else.
 
 open Types
 open Shared
@@ -6,7 +7,7 @@ open Logger
 
 let logger = Logger(LogLevel.INFO)
 
-// retunr string surrounded by pat
+// return string surrounded by pat
 let surround pat str =
     let pat2 = match pat with
                | "(" -> ")"
@@ -36,7 +37,9 @@ and mdInlineElements' b eles =
         | FrmtedString fStr -> mdFStr fStr
         | Link (ht, url) -> (mdFStr ht |> sbraSurround) + (url |> braSurround)
         | Picture (alt, url) -> (alt |> sbraSurround |> sprintf "!%s" ) +  (url |> braSurround)
-        | Reference (ht, _) -> ("^" + mdFStr ht) |> sbraSurround
+        | InlineCitation (ht, _) ->
+        | InlineFootnote (ht, _) -> ("^" + mdFStr ht) |> sbraSurround
+        | _ -> "not implemented in MarkdownGen"
     List.fold convertMd (sprintf "%s" b) eles
 and mdInlineElements = mdInlineElements' ""
 
