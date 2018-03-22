@@ -29,7 +29,7 @@ their appearance. This is used to render headers with links in the
 main parser, and also table of contents.
 
 ### Table of Contents
-Build with `%%TOC`, with optional argument `depth`
+Build with `%%TOC`, with optional argument `depth` and `exclude`
 
 For example,
 ```
@@ -39,8 +39,13 @@ Paragraph 1 Oh look a butterfly!
 
 Paragraph 2 Oh noes it flew away :(
 ```
-will build a table of content between paragraph 1 and 2, and only
+This will build a table of content between paragraph 1 and 2, and only
 contain headers of level 1 2, and 3.
+
+```
+%%TOC depth=3, excludes=["Appendix","Acknowledgement"]
+```
+This table of content will exclude headers with the specified name.
 
 
 ## ParsedObj list
@@ -49,6 +54,10 @@ and `Citation (ID * TFrmtedString * TLine)` in the `ParsedObj list`.
 `TFrmtedString` in `Citation` is used to store how the inline part
 should be rendered. This allows all style information to be hidden
 from the main parser.
+
+The list is sorted, with footnotes in order of their numerical IDs first,
+References in order of apperance after. Thus the order each explanatory
+text comes in the fmark file does not matter.
 
 ### Simple Footers
 Simple footers have numerical IDs.
@@ -118,7 +127,6 @@ At the end of the document:
 > Mark Smith. 2018. *Not a real book*.
 > 
 > FMark Smith. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
-
 
 ---
 # ALL INFORMATION AFTER THIS MAYBE OUTDATED
