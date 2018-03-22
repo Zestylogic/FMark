@@ -265,6 +265,10 @@ FMark supports simple footers and styled references.
   * One `[^fmark]` inline, and two `[^fmark], some author`. The first will be used.
 * Reference to non-exist citation will result in `"[Reference: %refID not found!]"` in the HTML generated.
 
+* The list is sorted, with footnotes in order of their numerical IDs first,
+References in order of apperance after. Thus the order each explanatory text
+comes in the fmark file does not matter.
+
 ### Simple Footers
 
 Simple footers have numerical IDs.
@@ -305,9 +309,9 @@ Supported data fields
 |url|Address for website|
 |access|Date of access for websites, in `yyyy-mm-dd` format|
 
-Pick a style at the beginning, or it will default to Harvard.
+Pick a style with `%%RefStyle`, or it will default to Harvard.
 ```
-%%Style = Harvard
+%%RefStyle = Harvard
 ```
 
 Then follow `field1= data1, field2= data2, ...` to use references.
