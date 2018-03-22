@@ -2,7 +2,7 @@
 # FMark Example
 
 ## Table of contents
-
+<!-- Relative links do not work in VS code, use Create HTML File. -->
 %%TOC
 
 ## Macros
@@ -42,6 +42,8 @@
 **Bold** or __bold__
 
 ***Both*** or ___both___
+
+~~strikethrough~~
 
 Note: _underscores_ must have a space on either side.
 
@@ -86,8 +88,16 @@ Unordered List 2:
 ### Links
 
 [Google](http://www.google.com)
+
 <!-- Images produce correct HTML but don't display in VS Code-->
 ![image](test_img.jpg)
+
+<!-- Relative links do not work in VS code, use Create HTML File -->
+<a href="#this-header"> Relative link. </a>
+
+### HTML passthrough
+<!-- HTML is left unchanged. -->
+<h2 id="this-header"><a href="broken-link"> A broken link. </a></h2>
 
 ## LateX maths
 
