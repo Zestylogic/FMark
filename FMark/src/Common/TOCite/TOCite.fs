@@ -103,20 +103,22 @@ let rec citeParse' style tocLst :ParsedObj list*Token list =
         |> fun (x,y) -> x, t::y
     | [] -> [], []
 
-let rec styleParse rLst tocLst =
-    let stylify str =
-        match str with
-        | "Harvard" -> Some Harvard
-        | "Chicago" -> Some Chicago
-        | "IEEE" -> Some IEEE
-        | _ -> None  // use default
-    match tocLst with
-    | ENDLINE::PERCENT::PERCENT::LITERAL "RefStyle"::AgnoEqual tail ->
-        match tail with
-        | LITERAL lit::tl -> stylify lit, List.append rLst tl
-        | _ -> styleParse (tocLst.Head::rLst) tocLst.Tail
-    | a::tl -> styleParse (a::rLst) tl
-    | [] -> None, rLst
+let styleParse rLst tocLst =
+    let rec styleParse' rLst tocLst =
+        let stylify str =
+            match str with
+            | "Harvard" -> Some Harvard
+            | "Chicago" -> Some Chicago
+            | "IEEE" -> Some IEEE
+            | _ -> None  // use default
+        match tocLst with
+        | ENDLINE::PERCENT::PERCENT::LITERAL "RefStyle"::AgnoEqual tail ->
+            match tail with
+            | LITERAL lit::tl -> stylify lit, List.append (List.rev rLst) tl
+            | _ -> styleParse' (tocLst.Head::rLst) tocLst.Tail
+        | a::tl -> styleParse' (a::rLst) tl
+        | [] -> None, rLst
+    styleParse' rLst tocLst
 
 //type change and sorting
 // might change now that there are string IDs

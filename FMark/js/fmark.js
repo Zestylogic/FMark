@@ -7621,12 +7621,12 @@ function _MatchTable___(toks) {
         }(Object(__WEBPACK_IMPORTED_MODULE_7__Markalc_Markalc_fs__["a" /* parseEvaluateTable */])(tupledArg[0]));
     };
 
-    var activePatternResult1491 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["c" /* $7C$MatchTableHead$7C$_$7C$ */])(toks);
+    var activePatternResult1493 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["c" /* $7C$MatchTableHead$7C$_$7C$ */])(toks);
 
-    if (activePatternResult1491 != null) {
-        var activePatternResult1490 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["b" /* $7C$MatchTableFormater$7C$_$7C$ */])(Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1491));
+    if (activePatternResult1493 != null) {
+        var activePatternResult1492 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["b" /* $7C$MatchTableFormater$7C$_$7C$ */])(Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1493));
 
-        if (activePatternResult1490 != null) {
+        if (activePatternResult1492 != null) {
             return tableTransform(Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["h" /* cutTableRows */])(toks));
         } else {
             return null;
@@ -7705,10 +7705,10 @@ function parseList(toks) {
     };
 
     var getLIContent = function getLIContent(toks_3) {
-        var activePatternResult1505 = _GetLIContent___(toks_3);
+        var activePatternResult1507 = _GetLIContent___(toks_3);
 
-        if (activePatternResult1505 != null) {
-            return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1505));
+        if (activePatternResult1507 != null) {
+            return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1507));
         } else {
             var patternInput_1 = takeAwayWhiteSpaces(toks_3);
             return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["q" /* TListType */](0), patternInput_1[0], patternInput_1[1]]);
@@ -7825,10 +7825,10 @@ function _MatchTOC___(hdList, toks) {
 function parseItem(hdLst, ftLst, rawToks) {
     var toks = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["i" /* deleteLeadingENDLINEs */])(rawToks);
 
-    var activePatternResult1543 = _MatchTOC___(hdLst, toks);
+    var activePatternResult1545 = _MatchTOC___(hdLst, toks);
 
-    if (activePatternResult1543 != null) {
-        return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["h" /* ParsedObj */](2, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1543)[0]), Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1543)[1]]);
+    if (activePatternResult1545 != null) {
+        return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["h" /* ParsedObj */](2, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1545)[0]), Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1545)[1]]);
     } else {
         var $var5 = void 0;
 
@@ -7836,19 +7836,19 @@ function parseItem(hdLst, ftLst, rawToks) {
             if (toks.head.tag === 0) {
                 $var5 = [0, toks.head.data[0], toks.head.data[1], toks.tail];
             } else {
-                var activePatternResult1540 = _MatchTable___(toks);
+                var activePatternResult1542 = _MatchTable___(toks);
 
-                if (activePatternResult1540 != null) {
-                    $var5 = [1, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1540)[0], Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1540)[1]];
+                if (activePatternResult1542 != null) {
+                    $var5 = [1, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1542)[0], Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1542)[1]];
                 } else {
                     $var5 = [2];
                 }
             }
         } else {
-            var activePatternResult1541 = _MatchTable___(toks);
+            var activePatternResult1543 = _MatchTable___(toks);
 
-            if (activePatternResult1541 != null) {
-                $var5 = [1, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1541)[0], Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1541)[1]];
+            if (activePatternResult1543 != null) {
+                $var5 = [1, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1543)[0], Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1543)[1]];
             } else {
                 $var5 = [2];
             }
@@ -7862,10 +7862,10 @@ function parseItem(hdLst, ftLst, rawToks) {
                 return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [$var5[1], $var5[2]]);
 
             case 2:
-                var activePatternResult1539 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["a" /* $7C$MatchQuote$7C$_$7C$ */])(toks);
+                var activePatternResult1541 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["a" /* $7C$MatchQuote$7C$_$7C$ */])(toks);
 
-                if (activePatternResult1539 != null) {
-                    return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["h" /* ParsedObj */](5, Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["k" /* parseInLineElements2 */])(ftLst, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1539)[0])), Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1539)[1]]);
+                if (activePatternResult1541 != null) {
+                    return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["h" /* ParsedObj */](5, Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["k" /* parseInLineElements2 */])(ftLst, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1541)[0])), Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1541)[1]]);
                 } else {
                     var $var6 = void 0;
 
@@ -7873,19 +7873,19 @@ function parseItem(hdLst, ftLst, rawToks) {
                         if (toks.head.tag === 37) {
                             $var6 = [0, toks.head.data, toks.tail];
                         } else {
-                            var activePatternResult1537 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["d" /* $7C$PickoutList$7C$_$7C$ */])(toks);
+                            var activePatternResult1539 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["d" /* $7C$PickoutList$7C$_$7C$ */])(toks);
 
-                            if (activePatternResult1537 != null) {
-                                $var6 = [1, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1537)[0], Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1537)[1]];
+                            if (activePatternResult1539 != null) {
+                                $var6 = [1, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1539)[0], Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1539)[1]];
                             } else {
                                 $var6 = [2];
                             }
                         }
                     } else {
-                        var activePatternResult1538 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["d" /* $7C$PickoutList$7C$_$7C$ */])(toks);
+                        var activePatternResult1540 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["d" /* $7C$PickoutList$7C$_$7C$ */])(toks);
 
-                        if (activePatternResult1538 != null) {
-                            $var6 = [1, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1538)[0], Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1538)[1]];
+                        if (activePatternResult1540 != null) {
+                            $var6 = [1, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1540)[0], Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1540)[1]];
                         } else {
                             $var6 = [2];
                         }
@@ -7899,10 +7899,10 @@ function parseItem(hdLst, ftLst, rawToks) {
                             return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["h" /* ParsedObj */](3, parseList($var6[1])), $var6[2]]);
 
                         case 2:
-                            var activePatternResult1536 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["e" /* $7C$PickoutParagraph$7C$_$7C$ */])(toks);
+                            var activePatternResult1538 = Object(__WEBPACK_IMPORTED_MODULE_4__ParserHelperFuncs_fs__["e" /* $7C$PickoutParagraph$7C$_$7C$ */])(toks);
 
-                            if (activePatternResult1536 != null) {
-                                return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [parseParagraph(ftLst, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1536)[0]), Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1536)[1]]);
+                            if (activePatternResult1538 != null) {
+                                return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](0, [parseParagraph(ftLst, Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1538)[0]), Object(__WEBPACK_IMPORTED_MODULE_8_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1538)[1]]);
                             } else {
                                 return new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Result__["b" /* default */](1, Object(__WEBPACK_IMPORTED_MODULE_2__Shared_fs__["g" /* removeChars */])(Object(__WEBPACK_IMPORTED_MODULE_1_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["h" /* ofArray */])(["[", "]"]), Object(__WEBPACK_IMPORTED_MODULE_3_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_String__["h" /* toText */])(Object(__WEBPACK_IMPORTED_MODULE_3_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_String__["b" /* printf */])("Parse item did not match: %A"))(toks)));
                             }
@@ -9368,34 +9368,38 @@ function citeParse_(style, tocLst) {
 
 
 function styleParse(rLst, tocLst) {
-    styleParse: while (true) {
-        var stylify = function stylify(str) {
-            if (str === "Harvard") {
-                return new __WEBPACK_IMPORTED_MODULE_2__Types_fs__["j" /* RefFrmt */](1);
-            } else if (str === "Chicago") {
-                return new __WEBPACK_IMPORTED_MODULE_2__Types_fs__["j" /* RefFrmt */](2);
-            } else if (str === "IEEE") {
-                return new __WEBPACK_IMPORTED_MODULE_2__Types_fs__["j" /* RefFrmt */](0);
-            } else {
-                return null;
-            }
-        };
+    var styleParse_ = function styleParse_(rLst_1, tocLst_1) {
+        styleParse_: while (true) {
+            var stylify = function stylify(str) {
+                if (str === "Harvard") {
+                    return new __WEBPACK_IMPORTED_MODULE_2__Types_fs__["j" /* RefFrmt */](1);
+                } else if (str === "Chicago") {
+                    return new __WEBPACK_IMPORTED_MODULE_2__Types_fs__["j" /* RefFrmt */](2);
+                } else if (str === "IEEE") {
+                    return new __WEBPACK_IMPORTED_MODULE_2__Types_fs__["j" /* RefFrmt */](0);
+                } else {
+                    return null;
+                }
+            };
 
-        var $var8 = void 0;
+            var $var8 = void 0;
 
-        if (tocLst.tail != null) {
-            if (tocLst.head.tag === 32) {
-                if (tocLst.tail.tail != null) {
-                    if (tocLst.tail.head.tag === 35) {
-                        if (tocLst.tail.tail.tail != null) {
-                            if (tocLst.tail.tail.head.tag === 35) {
-                                if (tocLst.tail.tail.tail.tail != null) {
-                                    if (tocLst.tail.tail.tail.head.tag === 1) {
-                                        if (tocLst.tail.tail.tail.head.data === "RefStyle") {
-                                            var activePatternResult1463 = Object(__WEBPACK_IMPORTED_MODULE_8__RefParse_fs__["a" /* $7C$AgnoEqual$7C$_$7C$ */])(tocLst.tail.tail.tail.tail);
+            if (tocLst_1.tail != null) {
+                if (tocLst_1.head.tag === 32) {
+                    if (tocLst_1.tail.tail != null) {
+                        if (tocLst_1.tail.head.tag === 35) {
+                            if (tocLst_1.tail.tail.tail != null) {
+                                if (tocLst_1.tail.tail.head.tag === 35) {
+                                    if (tocLst_1.tail.tail.tail.tail != null) {
+                                        if (tocLst_1.tail.tail.tail.head.tag === 1) {
+                                            if (tocLst_1.tail.tail.tail.head.data === "RefStyle") {
+                                                var activePatternResult1463 = Object(__WEBPACK_IMPORTED_MODULE_8__RefParse_fs__["a" /* $7C$AgnoEqual$7C$_$7C$ */])(tocLst_1.tail.tail.tail.tail);
 
-                                            if (activePatternResult1463 != null) {
-                                                $var8 = [0, Object(__WEBPACK_IMPORTED_MODULE_5_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1463)];
+                                                if (activePatternResult1463 != null) {
+                                                    $var8 = [0, Object(__WEBPACK_IMPORTED_MODULE_5_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult1463)];
+                                                } else {
+                                                    $var8 = [1];
+                                                }
                                             } else {
                                                 $var8 = [1];
                                             }
@@ -9423,35 +9427,35 @@ function styleParse(rLst, tocLst) {
             } else {
                 $var8 = [1];
             }
-        } else {
-            $var8 = [1];
+
+            switch ($var8[0]) {
+                case 0:
+                    var $var9 = $var8[1].tail != null ? $var8[1].head.tag === 1 ? [0, $var8[1].head.data, $var8[1].tail] : [1] : [1];
+
+                    switch ($var9[0]) {
+                        case 0:
+                            return [stylify($var9[1]), Object(__WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(Object(__WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["j" /* reverse */])(rLst_1), $var9[2])];
+
+                        case 1:
+                            rLst_1 = new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](Object(__WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(tocLst_1), rLst_1);
+                            tocLst_1 = Object(__WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["m" /* tail */])(tocLst_1);
+                            continue styleParse_;
+                    }
+
+                case 1:
+                    if (tocLst_1.tail == null) {
+                        return [null, rLst_1];
+                    } else {
+                        rLst_1 = new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](tocLst_1.head, rLst_1);
+                        tocLst_1 = tocLst_1.tail;
+                        continue styleParse_;
+                    }
+
+            }
         }
+    };
 
-        switch ($var8[0]) {
-            case 0:
-                var $var9 = $var8[1].tail != null ? $var8[1].head.tag === 1 ? [0, $var8[1].head.data, $var8[1].tail] : [1] : [1];
-
-                switch ($var9[0]) {
-                    case 0:
-                        return [stylify($var9[1]), Object(__WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["a" /* append */])(rLst, $var9[2])];
-
-                    case 1:
-                        rLst = new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](Object(__WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(tocLst), rLst);
-                        tocLst = Object(__WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["m" /* tail */])(tocLst);
-                        continue styleParse;
-                }
-
-            case 1:
-                if (tocLst.tail == null) {
-                    return [null, rLst];
-                } else {
-                    rLst = new __WEBPACK_IMPORTED_MODULE_0_C_Users_Qieer_nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](tocLst.head, rLst);
-                    tocLst = tocLst.tail;
-                    continue styleParse;
-                }
-
-        }
-    }
+    return styleParse_(rLst, tocLst);
 }
 
 function citeGen_(tLst) {
