@@ -38,6 +38,19 @@ at [CommonMark](http://spec.commonmark.org/0.27/).
 
 A reference implementation of the simple markdown can be found [here](http://spec.commonmark.org/dingus/).
 
+### Lists
+
+* A list ends with two endlines, i.e., `\r\n\r\n`
+* List items are separated by one endline
+* List type is determined by the first item.
+  * `NUMBER ; DOT` will be ordered list
+  * ` - ` or ` * ` will be unordered list
+* If the first item does not start with `NUMDER;DOT;Space| "- " | "* "`, the list type will be default to unordered list
+* Ordered list start number is determined by the first item
+  * The subsequent counting is `+1` for each list item
+* Two spaces as one level of indentation.
+* A tab, `\t` character will be interpreted as four spaces, therefore two levels of indentation.
+
 # Markdown extensions (not included in standard Markdown)
 
 ## Macros
