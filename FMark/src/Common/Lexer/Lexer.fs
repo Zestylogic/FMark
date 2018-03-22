@@ -25,11 +25,21 @@ let (|MatchLang|_|) = function
     | RegexMatch "(p|P)ython" _ -> Some Python | RegexMatch "F#|fsharp|f#" _ -> Some FSharp
     | RegexMatch "(C|c)(\\+\\+|pp)" _ -> Some CPP | RegexMatch "C|c" _ -> Some C | _ -> Some Empty
 
+let (|InList|_|) lst el =
+    match List.exists ((=) el) lst with
+    | true -> Some el
+    | _ -> None
+
 let (|HTMLStartTag|_|) = (|RegexMatch|_|) "^<([a-zA-Z]+)\\s*.*?>"
+
+
 
 let (|HTMLEndTag|_|) = (|RegexMatch|_|) "^<\\/([a-zA-Z]+)\\s*.*?>"
 
-let (|HTMLSingleton|_|) = (|RegexMatch|_|) "^<([a-zA-Z]+)\\s*.*?(\\/>|>)"
+let (|HTMLSingleton|_|) = function
+    | RegexMatch "^<([a-zA-Z]+)\\s*.*?(?:\\/>|>)" (s, [InList htmlSingleton g], r) ->
+        Some (s, r)
+    | _ -> None
 
 let (|CodeBlockStart|_|) = (|GroupMatch|_|) "^```+\\s*([a-zA-Z0-9+\\-_]*)"
 
@@ -37,6 +47,8 @@ let (|CodeBlockStart|_|) = (|GroupMatch|_|) "^```+\\s*([a-zA-Z0-9+\\-_]*)"
 let nextToken state s =
     match s, state with
     | EscapedCharTok n, _ -> n, state
+    | HTMLSingleton (s, r), Normal ->
+        (LITERAL s, r), Normal
     | HTMLStartTag (s, [t], r), Normal ->
         (LITERAL s, r), InHTMLTag (t, 1)
     | HTMLStartTag (s, [t], r), InHTMLTag (tag, d) ->
@@ -46,19 +58,16 @@ let nextToken state s =
             (LITERAL s, r), InHTMLTag (tag, d)
     | HTMLEndTag (s, [t], r), InHTMLTag (tag, d) ->
         if t = tag then
-            if d = 1 then
-                (LITERAL s, r), Normal
-            else
-                (LITERAL s, r), InHTMLTag (tag, d-1)
-        else
-            (LITERAL s, r), InHTMLTag (tag, d)
-    | HTMLSingleton (s, _, r), _ ->
-        (LITERAL s, r), state
-    | RegexMatch ".*?(?=<)" (s, _, r), InHTMLTag (t, d) ->
+            if d = 1 then (LITERAL s, r), Normal
+            else (LITERAL s, r), InHTMLTag (tag, d-1)
+        else (LITERAL s, r), InHTMLTag (tag, d)
+    | RegexMatch "^.+?(?=<)" (s, _, r), InHTMLTag (t, d) ->
+        (LITERAL s, r), InHTMLTag (t, d)
+    | RegexMatch "^.*" (s, _, r), InHTMLTag (t, d) ->
         (LITERAL s, r), InHTMLTag (t, d)
     | CharacterTok n, _ -> n, state
     | RegexMatch @"^\s+" (m, _, s), _ ->
-        (Shared.replaceChars "\t" "  " m 
+        (replaceChars "\t" "  " m 
         |> String.length |> WHITESPACE, s), state
     | RegexMatch "^[0-9]+" (m, _, s), _->
         (NUMBER m, s), state
