@@ -437,7 +437,8 @@ let parseInLineElements2 refLst toks =
         match toks with
         | MatchSym BACKTICK (content, rtks) -> (content|> strAllToks|> Code|> FrmtedString )::currentLine, rtks
         | MatchStrongAndEm (content, rtks, frontLiteral, backLiteral) ->
-            styleHelper (Strong << FrmtedString << makeList << Emphasis) (content, rtks, frontLiteral, backLiteral)
+            let inlineContent = (parseInLines [] content |> Strong |> FrmtedString |> makeList |> Emphasis |> FrmtedString)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral), rtks
         | MatchStrong (content, rtks, frontLiteral, backLiteral) ->
             styleHelper Strong (content, rtks, frontLiteral, backLiteral)
         | MatchEm (content, rtks, frontLiteral, backLiteral) ->
