@@ -33,6 +33,10 @@ let strInlineElementsTests =
             "<em>Go go go!</em>", "em tag"
         );
         (
+            [FrmtedString(Strike([FrmtedString(Literal "Go go go!")]))],
+            "<del>Go go go!</del>", "del tag"
+        );
+        (
             [Link(Emphasis([FrmtedString(Literal "Go go go!")]), "www.google.co.uk")],
             "<a href=\"www.google.co.uk\"><em>Go go go!</em></a>", "a tag"
         );
