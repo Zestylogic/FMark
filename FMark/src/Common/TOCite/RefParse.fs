@@ -152,6 +152,14 @@ let ref2TLine format ref:TLine =
             urlGen Harvard ref.URL; dateGen Harvard ref.AccessDate]
         |> List.reduce List.append
 
+let (|AgnoEqual|_|) = function
+    | WHITESPACE _::EQUAL::WHITESPACE _::tl
+    | WHITESPACE _::EQUAL::tl
+    | EQUAL::WHITESPACE _::tl
+    | EQUAL::tl ->
+        Some tl
+    | _ -> None
+
 // parses a single reference entry
 // This probably should never see ENDLINE
 let refParser style tLst =
@@ -169,16 +177,8 @@ let refParser style tLst =
                 Some (int y, int m, int d), tl
             | _ -> None, tail
 
-        let (|Field|_|) = function
-            | LITERAL f::WHITESPACE _::EQUAL::WHITESPACE _::tl
-            | LITERAL f::WHITESPACE _::EQUAL::tl
-            | LITERAL f::EQUAL::WHITESPACE _::tl
-            | LITERAL f::EQUAL::tl ->
-                Some (f, tl)
-            | _ -> None
-
         match tLst with
-        | Field (f,tl) ->
+        | LITERAL f::AgnoEqual tl ->
             match f with
             | "type" ->
                 match tl with
