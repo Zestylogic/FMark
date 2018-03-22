@@ -156,12 +156,12 @@ let testDataFt = [
         [LITERAL "text3"; ENDLINE]
     );
 
-    "Footer texts no sorting",
+    "Footer texts with sorting",
     [LSBRA; CARET; NUMBER "3"; RSBRA; COMMA; LITERAL "text3"; ENDLINE;
         LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "text1"; ENDLINE],
     (
-        [Footnote (3,[FrmtedString (Literal "text3")]);
-            Footnote (1,[FrmtedString (Literal "text1")])],
+        [Footnote (1,[FrmtedString (Literal "text1")]);
+            Footnote (3,[FrmtedString (Literal "text3")])],
         []
     )
 

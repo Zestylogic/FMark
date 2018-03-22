@@ -1,3 +1,5 @@
+%%Style= Harvard
+
 # FMark Example
 
 ## Table of contents
@@ -94,3 +96,27 @@ $$2* \begin{pmatrix}
 x_{00} & x_{01} & x_{01} \newline 
 x_{10} & x_{11} & x_{11} \newline 
 x_{20} & x_{21} & x_{21} \end{pmatrix}$$
+
+## Footers
+
+### Simple footnote
+
+Here are some[^1] words, and more words[^2].
+
+[^2], A few lines to explain the words.
+      Another line to explain the words.
+
+[^1], We should probably sort them by ID numbers.
+
+### References
+
+All footnotes are collected and displayed at the end of the document[^Eric].
+The style of references are set at the top of the document.
+
+[^Eric], type= Book, author= Not Eric, year= 2018, title= An Introduction to FMark
+
+Note: Simple footnotes takes numerical IDs, and references need alphabetical IDs.
+
+# Other things
+
+Look the footers are rendered below this.

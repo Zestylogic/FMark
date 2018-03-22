@@ -123,7 +123,13 @@ let citeGen' tLst =
         match style with
         | Some s -> citeParse' s tl
         | None -> citeParse' Harvard tLst // use harvard as default style
-    ftLst,tLst
+    let sortFt ft1 ft2 =
+        match ft1,ft2 with
+        | Footnote (i,_), Footnote (j,_) -> i-j
+        | Citation _, Footnote _ -> 1
+        | Footnote _, Citation _ -> -1
+        | _, _ -> 0
+    List.sortWith sortFt ftLst, tLst
 
 let preParser tLst =
     citeGen' tLst
