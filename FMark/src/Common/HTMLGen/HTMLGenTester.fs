@@ -319,7 +319,7 @@ let reallyBigTest =
             "<p>text1#text2</p>";
             "<h1 id=\"Header10\">Header1</h1>";
             "<p><a href=\"#footnote-1\">Footer1</a>text4</p>";
-            "<p><sup><a href=\"#footnote-Eric\">(Wang, 2017)</a></sup>text6</p>";
+            "<p><a href=\"#footnote-Eric\">(Wang, 2017)</a>text6</p>";
             "<p id=\"1\">[1] footer1</p>";
             "<p id=\"footnote-Eric\">[footnote-Eric] Eric Wang. 2017. \"Not a real website.\" Accessed March 4, 2018. <a href=\"www.example.com/website\">www.example.com/website</a></p>";
             "<script type=\"text/javascript\" async src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>";
