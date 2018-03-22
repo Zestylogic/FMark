@@ -103,7 +103,7 @@ let rec mdList list =
             
     match list with
     | {ListType=lt; ListItem=liS; Depth=d} ->
-        let ord = lt=OL
+        let ord = match lt with | OL _ -> true | UL -> false
         List.fold (mdListItem ord (d-1)) ("",1) liS
         |> fst
 
