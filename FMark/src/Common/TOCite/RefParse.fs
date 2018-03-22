@@ -152,6 +152,14 @@ let ref2TLine format ref:TLine =
             urlGen Harvard ref.URL; dateGen Harvard ref.AccessDate]
         |> List.reduce List.append
 
+let (|Assign|_|) = function
+    | LITERAL field::WHITESPACE _::EQUAL::WHITESPACE _::tl
+    | LITERAL field::WHITESPACE _::EQUAL::tl
+    | LITERAL field::EQUAL::WHITESPACE _::tl
+    | LITERAL field::EQUAL::tl ->
+        Some (field, tl)
+    | _ -> None
+
 // parses a single reference entry
 // This probably should never see ENDLINE
 let refParser style tLst =
@@ -170,24 +178,31 @@ let refParser style tLst =
             | _ -> None, tail
 
         match tLst with
-        | LITERAL "type"::WHITESPACE _::EQUAL::WHITESPACE _::LITERAL t::tl -> 
-            match t with
-            | "Book" -> refPar' {refData with Cat = Some Book} tl
-            | "Website" -> refPar' {refData with Cat = Some Website} tl
+        | Assign (f,tl) ->
+            match f with
+            | "type" ->
+                match tl with
+                | LITERAL "Book"::tl -> refPar' {refData with Cat = Some Book} tl
+                | LITERAL "Website":: tl -> refPar' {refData with Cat = Some Website} tl
+                | _ -> refPar' refData tl
+            | "author" ->
+                refParse' [] tl
+                |> fun (x,y) -> refPar' {refData with Author = Some x} y
+            | "title" ->
+                refParse' [] tl
+                |> fun (x,y) -> refPar' {refData with Title = Some x} y
+            | "year" ->
+                match tl with
+                | NUMBER a::tl -> refPar' {refData with Year = Some (int a)} tl
+                | _ -> refPar' refData tl
+            | "url" ->
+                match tl with
+                | LITERAL s::tl -> refPar' {refData with URL = Some s} tl
+                | _ -> refPar' refData tl
+            | "access" ->
+                dateFormat tl
+                |> fun (x,y) -> refPar' {refData with AccessDate = x} y
             | _ -> refPar' refData tl
-        | LITERAL "author"::WHITESPACE _::EQUAL::WHITESPACE _::tl ->
-            refParse' [] tl
-            |> fun (x,y) -> refPar' {refData with Author = Some x} y
-        | LITERAL "title"::WHITESPACE _::EQUAL::WHITESPACE _::tl ->
-            refParse' [] tl
-            |> fun (x,y) -> refPar' {refData with Title = Some x} y
-        | LITERAL "year"::WHITESPACE _::EQUAL::WHITESPACE _::NUMBER a::tl ->
-            refPar' {refData with Year = Some (int a)} tl
-        | LITERAL "url"::WHITESPACE _::EQUAL::WHITESPACE _::LITERAL s::tl ->
-            refPar' {refData with URL = Some s} tl
-        | LITERAL "access"::WHITESPACE _::EQUAL::WHITESPACE _::tl ->
-            dateFormat tl
-            |> fun (x,y) -> refPar' {refData with AccessDate = x} y
         | ENDLINE::ENDLINE::tl -> refData,tl
         | ENDLINE::tl -> refPar' refData tl
         | _::tl -> refPar' refData tl
