@@ -156,27 +156,110 @@ let (|MatchTOC|_|) hdList toks =
             //{h with HeaderName = Link((h.HeaderName), sprintf "#HEADER%i" i)} // Link of HyperText: TFrmtedString * URL: string
         let linksLst = List.mapi makeRelLink hdList
         {HeaderLst=linksLst}
-    let filterHeaders d hdLst =
-        let headerFilter hd =
-            hd.Level <= d
-        List.filter headerFilter hdLst
+    let filterHeadersByDepth depthOption hdList =
+        match depthOption with
+        | Some d ->
+            let headerFilter hd =
+                hd.Level <= d
+            List.filter headerFilter hdList
+        | None -> hdList
+
+    let filterHeadersByName hdExListOption hdList =
+        match hdExListOption with
+        | Some hdExList ->
+            let filterOutHeaders hdList hdToExclude =
+                let hdTLine = hdToExclude |> parseInLineElements
+                let headerFilter hd =
+                    hd.HeaderName <> hdTLine
+                List.filter headerFilter hdList
+            List.fold filterOutHeaders hdList hdExList
+        | None -> hdList
+
+    let splitToksAt sep toks : Token list list =
+        let rec split (toksList, toks) =
+            match toks with
+            | [] ->
+                // delete empty list
+                match toksList with
+                | []::retoksList -> retoksList
+                | _ -> toksList
+                |> List.rev
+            | sym::rtks when sym=sep ->
+                (
+                    []::toksList, rtks )
+                |> split
+            | tok::rtks ->
+                (
+                    (tok::(List.head toksList))::(List.tail toksList), rtks )
+                |> split
+        split ([[]], toks)
+        |> List.map List.rev
+
+
+    let trimWhitespaces toks =
+        let rec trimer toks =
+            match toks with
+            | WHITESPACE _::retoks -> trimer retoks
+            | _ -> toks
+        toks
+        |> trimer
+        |> List.rev
+        |> trimer
+        |> List.rev
+
+    ///  (maxDepth option, hdExList option)
+    let parseTOCparameters toks =
+        let parmFields = splitToksAt COMMA toks
+        let (|MatchRSBRA|_|) toks =
+            let rec matcher (pToks, toks) =
+                match toks with
+                | [] -> None
+                | RSBRA::_ -> pToks |> List.rev |> Some
+                | tk::rst -> (tk::pToks, rst) |> matcher
+            matcher ([], toks)
+        let parmsFolder (maxDepth, hdExList) parm =
+            match parm |> trimWhitespaces with
+            | LITERAL"depth"::EQUAL::NUMBER noStr::_ ->
+                noStr |> int |> Some, hdExList
+            | LITERAL"excludes"::EQUAL::LSBRA::rst ->
+                let newHdExList =
+                    match rst with
+                    | MatchRSBRA exList ->
+                        exList
+                        |> splitToksAt SEMICOLON
+                        |> List.map (fun x -> x |> trimWhitespaces)
+                        |> Some
+                    | _ -> None
+                printfn "hdExList:%A" newHdExList
+                maxDepth, newHdExList
+            | _ -> maxDepth, hdExList
+        // state: (maxDepth, hdExList)
+        List.fold parmsFolder (None, None) parmFields
+
+
 
     match toks with
     //| PERCENT::PERCENT::LITERAL("TOC")::// Options
-    | PERCENT::PERCENT::LITERAL("TOC")::WHITESPACE _::LITERAL"depth"::EQUAL::NUMBER noStr::rst ->
-        // filter out headers with level > depth
-        // ignore the rest tokens in this line
-        let depth = noStr|>int
+    // | PERCENT::PERCENT::LITERAL("TOC")::WHITESPACE _::LITERAL"depth"::EQUAL::NUMBER noStr::rst ->
+    //     // filter out headers with level > depth
+    //     // ignore the rest tokens in this line
+    //     let depth = noStr|>int
+    //     (
+    //         hdList
+    //         |>filterHeaders depth
+    //         |> createLinks
+    //         ,
+    //         rst|>cutFirstLine|>snd
+    //     ) |> Some
+    | PERCENT::PERCENT::LITERAL("TOC")::rst ->
+        let (tocLine, retoks) = rst|>cutFirstLine
+        let (maxDepth, hdExList) = parseTOCparameters tocLine
         (
             hdList
-            |>filterHeaders depth
-            |> createLinks
-            ,
-            rst|>cutFirstLine|>snd
-        ) |> Some
-    | PERCENT::PERCENT::LITERAL("TOC")::rst ->
-        // No depth specified, ignore the rest tokens in this line
-       (createLinks hdList, rst|>cutFirstLine|>snd)
+        |> filterHeadersByDepth maxDepth
+        |> filterHeadersByName hdExList
+        |> createLinks
+            ,retoks)
         |> Some
     | _ -> None
 
