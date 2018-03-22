@@ -96,28 +96,28 @@ Pick a style with `%%Style`, or it will default to Harvard.
 Then follow `field1=data1, field2=data2, ...` to use references. 
 Spaces around equal signs is allowed.
 ```
-This is a citation[^Zifan]. This is another[^Eric] one.
+This is a citation[^Mark]. This is another[^FMark] one.
 
-[^Zifan], type = Book, author = Zifan Wang, title = Not a real book, year = 2018
-[^Eric], type=Website, author=Eric Wang, title=Not a real website, year=2017 url=www.example.com/website access=2018-3-4
+[^Mark], type = Book, author = Mark Smith, title = Not a real book, year = 2018
+[^FMark], type=Website, author=FMark Smith, title=Not a real website, year=2017 url=www.example.com/website access=2018-3-4
 ```
 
 With Harvard, it will look like this:
-> This is a citation(Wang, 2018). This is another(Wang, 2017) one.
+> This is a citation(Smith, 2018). This is another(Smith, 2017) one.
 
 At the end of the document:
-> Wang, Z. (2018) *Not a real book*.
+> Smith, M. (2018) *Not a real book*.
 > 
-> Wang, E. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
+> Smith, F. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
 
 if Chicago style is chosen:
 
-> This is a citation(Wang 2018). This is another(Wang 2017) one.
+> This is a citation(Smith 2018). This is another(Smith 2017) one.
 
 At the end of the document:
-> Zifan Wang. 2018. *Not a real book*.
+> Mark Smith. 2018. *Not a real book*.
 > 
-> Eric Wang. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
+> FMark Smith. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
 
 
 ---

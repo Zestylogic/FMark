@@ -3,7 +3,7 @@
 
 ## Table of contents
 <!-- Relative links do not work in VS code, use Create HTML File. -->
-%%TOC
+%%TOC depth=3
 
 ## Macros
 
@@ -125,12 +125,11 @@ Here are some[^1] words, and more words[^2].
 
 ### References
 
-All footnotes are collected and displayed at the end of the document[^Eric].
+All footnotes are collected and displayed at the end of the document[^Smith].
 The style of references are set at the top of the document.
 
-[^Eric], type = Book, author = Not Eric, year = 2018, title = An Introduction to FMark
+[^Smith], type = Book, author = FMark Smith, year = 2018, title = An Introduction to FMark
 
 Note: Simple footnotes takes numerical IDs, and references need alphabetical IDs.
 
 Look the footers are rendered in order below this line.
-
