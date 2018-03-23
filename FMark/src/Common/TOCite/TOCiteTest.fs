@@ -8,14 +8,14 @@ let testDataHd = [
     "Basic Test",
     [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"],
     (
-        [{HeaderName = [FrmtedString (Literal "H1")]; Level = 1; RefID = "";}],
+        [{HeaderName = [FrmtedString (Literal "H1")]; Level = 1; RefID = "H10";}],
         [ENDLINE;ENDLINE;HEADER 0]
     );
 
     "Depth Test",
     [ENDLINE;ENDLINE; HASH; HASH; HASH; WHITESPACE 1; LITERAL "h3"],
     (
-        [{HeaderName = [FrmtedString (Literal "h3")]; Level = 3; RefID = "";}],
+        [{HeaderName = [FrmtedString (Literal "h3")]; Level = 3; RefID = "h30";}],
         [ENDLINE;ENDLINE;HEADER 0]
     );
 
@@ -36,7 +36,7 @@ let testDataHd = [
     "Hash character support within header text",
     [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"; HASH; WHITESPACE 1; LITERAL "H2"],
     (
-        [{HeaderName = [FrmtedString (Literal "H1# H2")]; Level = 1; RefID = "";}],
+        [{HeaderName = [FrmtedString (Literal "H1# H2")]; Level = 1; RefID = "H1#_H20";}],
         [ENDLINE;ENDLINE;HEADER 0]
     );
 
@@ -44,7 +44,7 @@ let testDataHd = [
     [LITERAL "text1"; ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "H1"; ENDLINE;ENDLINE;
         LITERAL "text2"; ENDLINE],
     (
-        [{HeaderName = [FrmtedString (Literal "H1")]; Level = 1; RefID = "";}],
+        [{HeaderName = [FrmtedString (Literal "H1")]; Level = 1; RefID = "H10";}],
         [LITERAL "text1"; ENDLINE;ENDLINE;HEADER 0; ENDLINE;ENDLINE; LITERAL "text2"; ENDLINE]
     );
 
@@ -52,8 +52,8 @@ let testDataHd = [
     [ENDLINE;ENDLINE; HASH; HASH; WHITESPACE 1; LITERAL "h1"; ENDLINE;ENDLINE;
         HASH; WHITESPACE 1; LITERAL "h2"],
     (
-        [{HeaderName = [FrmtedString (Literal "h1")]; Level = 2; RefID = "";};
-            {HeaderName = [FrmtedString (Literal "h2")]; Level = 1; RefID = "";}],
+        [{HeaderName = [FrmtedString (Literal "h1")]; Level = 2; RefID = "h10";};
+            {HeaderName = [FrmtedString (Literal "h2")]; Level = 1; RefID = "h21";}],
         [ENDLINE;ENDLINE;HEADER 0; ENDLINE;ENDLINE;HEADER 1]
     )
 
@@ -61,7 +61,7 @@ let testDataHd = [
     [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"; ASTERISK],
     (
         [{HeaderName = [FrmtedString (Literal "NotBold");
-            FrmtedString (Emphasis [FrmtedString (Literal "bold")])]; Level = 1; RefID = "";}],
+            FrmtedString (Emphasis [FrmtedString (Literal "bold")])]; Level = 1; RefID = "NotBoldbold0";}],
         [ENDLINE;ENDLINE;HEADER 0]
     );
         
@@ -70,16 +70,16 @@ let testDataHd = [
         ENDLINE;ENDLINE; LITERAL "This is a Paragraph"; ENDLINE;ENDLINE; HASH; HASH; HASH; WHITESPACE 3;
         ASTERISK; LITERAL "Another Title"; ASTERISK; ENDLINE],
     (
-        [{HeaderName =[FrmtedString (Literal "h1h2")]; Level = 2; RefID = "";};
+        [{HeaderName =[FrmtedString (Literal "h1h2")]; Level = 2; RefID = "h1h20";};
             {HeaderName = [FrmtedString (Emphasis [FrmtedString (Literal "Another Title")])];
-            Level = 3; RefID = "";}],
+            Level = 3; RefID = "Another_Title1";}],
         [ENDLINE;ENDLINE;HEADER 0; ENDLINE;ENDLINE; LITERAL "This is a Paragraph"; ENDLINE;ENDLINE;HEADER 1; ENDLINE]
     );
 
     "Unclosed emphasis in header text",
     [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "NotBold"; ASTERISK; LITERAL "bold"],
     (
-        [{HeaderName = [FrmtedString (Literal "NotBold*bold")]; Level = 1; RefID = "";}],
+        [{HeaderName = [FrmtedString (Literal "NotBold*bold")]; Level = 1; RefID = "NotBold*bold0";}],
         [ENDLINE;ENDLINE;HEADER 0]
     );
 
@@ -89,7 +89,7 @@ let testDataHd = [
         [{HeaderName = [FrmtedString (Literal "text1");
                         InlineFootnote(Literal "3","footnote-3");
                         FrmtedString (Literal "text2");
-                       ]; Level = 1; RefID = "";}],
+                       ]; Level = 1; RefID = "text10";}],
         [ENDLINE;ENDLINE;HEADER 0]
     )
 
@@ -216,7 +216,7 @@ let testDataFull =
         LITERAL "access"; WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
         MINUS; NUMBER "4"; ENDLINE],
     (
-        [{HeaderName = [FrmtedString (Literal "Header1")]; Level = 1; RefID = "";}],
+        [{HeaderName = [FrmtedString (Literal "Header1")]; Level = 1; RefID = "Header10";}],
         [Footnote (1,[FrmtedString (Literal "footer1")]);
             Citation (
                 "Eric",
