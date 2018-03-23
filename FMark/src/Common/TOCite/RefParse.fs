@@ -218,14 +218,3 @@ let refParse style tocLst =
     match tocLst with
     | PickoutParagraph (tk,rtok) -> refParser style tk |> fun (a,b) -> a,b,rtok
     | _ -> refParser style tocLst |> fun (a,b) -> a,b,[]
-
-
-
-(*     let ind = tocLst |> List.tryFindIndex (fun x -> x = ENDLINE)
-    match ind with
-    | Some i ->
-        let (h,t) = List.splitAt i tocLst
-        refParser style h |> fun (a,b) -> a,b,t.Tail
-    | None ->
-        refParser style tocLst |> fun (a,b) -> a,b,[]
- *)
