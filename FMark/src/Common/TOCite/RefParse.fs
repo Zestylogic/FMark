@@ -1,4 +1,5 @@
 module RefParse
+open ParserHelperFuncs
 open Types
 
 let monthConv m =
@@ -203,7 +204,6 @@ let refParser style tLst =
                 dateFormat tl
                 |> fun (x,y) -> refPar' {refData with AccessDate = x} y
             | _ -> refPar' refData tl
-        | ENDLINE::ENDLINE::tl -> refData,tl
         | ENDLINE::tl -> refPar' refData tl
         | _::tl -> refPar' refData tl
         | [] -> refData, []
@@ -215,10 +215,17 @@ let refParser style tLst =
 
 // parse references with refParser
 let refParse style tocLst =
-    let ind = tocLst |> List.tryFindIndex (fun x -> x = ENDLINE)
+    match tocLst with
+    | PickoutParagraph (tk,rtok) -> refParser style tk |> fun (a,b) -> a,b,rtok
+    | _ -> refParser style tocLst |> fun (a,b) -> a,b,[]
+
+
+
+(*     let ind = tocLst |> List.tryFindIndex (fun x -> x = ENDLINE)
     match ind with
     | Some i ->
         let (h,t) = List.splitAt i tocLst
         refParser style h |> fun (a,b) -> a,b,t.Tail
     | None ->
         refParser style tocLst |> fun (a,b) -> a,b,[]
+ *)
