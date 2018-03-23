@@ -230,7 +230,6 @@ let (|MatchTOC|_|) hdList toks =
                         |> List.map (fun x -> x |> trimWhitespaces)
                         |> Some
                     | _ -> None
-                printfn "hdExList:%A" newHdExList
                 maxDepth, newHdExList
             | _ -> maxDepth, hdExList
         // state: (maxDepth, hdExList)

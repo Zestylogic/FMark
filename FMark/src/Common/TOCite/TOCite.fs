@@ -53,17 +53,12 @@ let rec tocParse tocLst depth index : THeader list * Token list =
         |> fun (x,y) -> x, a::y
     | [] -> [], []
 
-let tocGen' tokenLst maxDepth =
-    match maxDepth with
-    | 0 -> tocParse tokenLst 0 0
-    | d when d > 0 ->
-        tocParse tokenLst 0 0
-        |> fun (x,y) -> List.filter (fun x -> x.Level <= d) x, y
-    | _ -> failwithf "Invalid maxDepth" // will railway this. not necessary yet
+let tocGen' tokenLst =
+    tocParse tokenLst 0 0
 
 // call this when ParsedObj wanted
-let tocGen tLst maxD =
-    {HeaderLst = tocGen' tLst maxD |> fun (x,_)->x}
+let tocGen tLst =
+    {HeaderLst = tocGen' tLst |> fun (x,_)->x}
 
 // --------------------------------------------------------------------------------
 // /parse footnotes with parseInLineElements
@@ -138,5 +133,5 @@ let citeGen' tLst =
 
 let preParser tLst =
     citeGen' tLst
-    |> fun (x,y) -> x, tocGen' y 0
+    |> fun (x,y) -> x, tocGen' y
     |> fun (x,(y,z)) -> y, x, z
