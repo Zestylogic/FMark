@@ -108,6 +108,9 @@ This is the second macro
 
 ```
 
+More complicated macros can also be created by writing html in the macros. Due to the 
+html passthrough in the lexer, the html will be copied over literally to the output html.
+
 ### Future improvements
 
 There are many features that will be introduced into the preprocessor in the future. Some of the future
