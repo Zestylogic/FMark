@@ -48,23 +48,23 @@ let nextToken state s =
     match s, state with
     | EscapedCharTok n, _ -> n, state
     | HTMLSingleton (s, r), Normal ->
-        (LITERAL s, r), Normal
+        (HTMLLIT s, r), Normal
     | HTMLStartTag (s, [t], r), Normal ->
-        (LITERAL s, r), InHTMLTag (t, 1)
+        (HTMLLIT s, r), InHTMLTag (t, 1)
     | HTMLStartTag (s, [t], r), InHTMLTag (tag, d) ->
         if t = tag then
-            (LITERAL s, r), InHTMLTag (tag, d+1)
+            (HTMLLIT s, r), InHTMLTag (tag, d+1)
         else
-            (LITERAL s, r), InHTMLTag (tag, d)
+            (HTMLLIT s, r), InHTMLTag (tag, d)
     | HTMLEndTag (s, [t], r), InHTMLTag (tag, d) ->
         if t = tag then
-            if d = 1 then (LITERAL s, r), Normal
-            else (LITERAL s, r), InHTMLTag (tag, d-1)
-        else (LITERAL s, r), InHTMLTag (tag, d)
+            if d = 1 then (HTMLLIT s, r), Normal
+            else (HTMLLIT s, r), InHTMLTag (tag, d-1)
+        else (HTMLLIT s, r), InHTMLTag (tag, d)
     | RegexMatch "^.+?(?=<)" (s, _, r), InHTMLTag (t, d) ->
-        (LITERAL s, r), InHTMLTag (t, d)
+        (HTMLLIT s, r), InHTMLTag (t, d)
     | RegexMatch "^.*" (s, _, r), InHTMLTag (t, d) ->
-        (LITERAL s, r), InHTMLTag (t, d)
+        (HTMLLIT s, r), InHTMLTag (t, d)
     | CharacterTok n, _ -> n, state
     | RegexMatch @"^\s+" (m, _, s), _ ->
         (replaceChars "\t" "  " m 
@@ -102,7 +102,7 @@ let returnTokens = function
     | _, InCodeBlock (s, l) ->
         [CODEBLOCK (s, l); ENDLINE]
     | tok, InHTMLTag (str, _) ->
-        tok @ [LITERAL str; ENDLINE]
+        tok @ [HTMLLIT str; ENDLINE]
     | tok, _ ->
         tok
 
