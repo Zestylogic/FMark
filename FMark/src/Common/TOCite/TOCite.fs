@@ -1,5 +1,6 @@
 module TOCite
 open Types
+open Shared
 open RefParse
 open ParserHelperFuncs
 
@@ -21,6 +22,15 @@ let mountedInLineParser tokLst =
     |> List.rev
     |> List.reduce List.append
 
+/// strip header to a minimal string for id purposes
+let headerIDGen id hdLine =
+    let rec headerIDGen' hdLine =
+        match hdLine with
+        | FrmtedString (Literal a)::tl -> a + headerIDGen' tl
+        | FrmtedString (Emphasis a)::tl -> (headerIDGen' a) + (headerIDGen' tl)
+        | _ -> ""
+    (headerIDGen' hdLine |> replaceChars "\ " "_") + string id
+
 let rec tocParse tocLst depth index : THeader list * Token list =
     // Detect hashes with whitespace after it
     // printf "tocParse %A\n%A\n" depth tocLst
@@ -40,10 +50,12 @@ let rec tocParse tocLst depth index : THeader list * Token list =
         match ind with
         | Some i ->
             let (h,t) = List.splitAt i tl
+            let hName = mountedInLineParser h
             tocParse t 0 (index+1)
-            |> fun (x,y) -> {HeaderName = mountedInLineParser h; Level = depth}::x, ENDLINE::ENDLINE::(HEADER index)::y
+            |> fun (x,y) -> {HeaderName = hName; Level = depth; RefID = (headerIDGen index hName)}::x, ENDLINE::ENDLINE::(HEADER index)::y
         | None ->
-            [{HeaderName = mountedInLineParser tl; Level = depth}], [ENDLINE;ENDLINE;HEADER index]
+            let hName = mountedInLineParser tl
+            [{HeaderName = hName; Level = depth; RefID = (headerIDGen index hName)}], [ENDLINE;ENDLINE;HEADER index]
     // hash without whitespace, need to rebuild hash
     | a::tl when depth > 0 ->
         tocParse tl 0 index

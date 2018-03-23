@@ -35,7 +35,7 @@ and InlineElement =
 
 type TLine = InlineElement list
 
-type THeader = {HeaderName: TLine; Level: int}
+type THeader = {HeaderName: TLine; Level: int; RefID: string}
 
 type Ttoc = {HeaderLst: THeader list}
 
@@ -65,7 +65,7 @@ type Ref = {Cat: RefType option; Author: Token list option; Title: Token list op
 
 type ParsedObj =
     | CodeBlock of string * Language
-    | Header of THeader * string // content of header, HTML id for linking
+    | Header of THeader
     | ContentTable of Ttoc
     | List of TList
     | Paragraph of TLine list
