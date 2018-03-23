@@ -27,20 +27,20 @@ with
             | Test _ -> "run CI tests."
 
 let ifFlagRunTests (r:ParseResults<CLIArguments>) =
-    r.TryGetResult(Test) |> function 
+    r.TryGetResult(Test) |> function
     | Some(s) -> s |> function
-                      | Some(true) -> 
+                      | Some(true) ->
                         globLog.Info (Some 30) "Running tests sequentially."
                         Tests.runTestsInAssembly defaultConfig [|"--sequenced"|] |> setTestResult
-                      | _ -> 
+                      | _ ->
                         globLog.Info (Some 33) "Running tests in parallel."
                         Tests.runTestsInAssembly defaultConfig [||] |> setTestResult
     | None(_) -> ()
     r
 
 let ifFileReadFrom (r:ParseResults<CLIArguments>) =
-    r.TryGetResult(Input) 
-    |> function 
+    r.TryGetResult(Input)
+    |> function
     | Some(fname) -> Some(FileIO.readFilePath fname,fname)
     | None(_) -> None
 
@@ -51,10 +51,12 @@ let setLoggerLevel (r:ParseResults<CLIArguments>)=
 let welcomeMsg a =
     globLog.Info None "Welcome to FMark!"
     a
+
 let logArgs (r:ParseResults<CLIArguments>) =
     sprintf "Got parse results %A" <| r.GetAllResults()
     |> globLog.Info None
     r
+
 let processCLI argv =
     let errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some System.ConsoleColor.Red)
     let parser = ArgumentParser.Create<CLIArguments>(programName = "FMark", errorHandler = errorHandler)
@@ -68,7 +70,7 @@ let processCLI argv =
     |> ifFileReadFrom
     |> function
     | None(_) -> () // Do nothing
-    | Some(instr,fname) -> 
+    | Some(instr,fname) ->
         let format = results.GetResult(Format,defaultValue = HTML)  // Find out format and output file name, convert.
         let defaultOutfile = if format=HTML then replaceChars "\.[a-zA-Z]+$" ".html" fname else replaceChars "\.[a-zA-Z]+$" "1.md" fname
         let outFile = results.GetResult(Output,defaultValue=defaultOutfile)
@@ -76,6 +78,7 @@ let processCLI argv =
         |> function
             | Ok(s)
             | Error(s) -> FileIO.writeToFile outFile s
+
 [<EntryPoint>]
 let main argv =
     processCLI argv

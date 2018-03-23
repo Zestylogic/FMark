@@ -39,7 +39,6 @@ and mdInlineElements' b eles =
         | Picture (alt, url) -> (alt |> sbraSurround |> sprintf "!%s" ) +  (url |> braSurround)
         | InlineCitation (ht, _)
         | InlineFootnote (ht, _) -> ("^" + mdFStr ht) |> sbraSurround
-        | _ -> "not implemented in MarkdownGen"
     List.fold convertMd (sprintf "%s" b) eles
 and mdInlineElements = mdInlineElements' ""
 
