@@ -430,25 +430,21 @@ let parseInLineElements2 refLst toks =
         |> (fun x -> x@currentLine)
     let makeList x = [x]
     let rec parseInLineElements' ftLst currentLine toks =
+        let styleHelper style (content, rtks, frontLiteral, backLiteral) = 
+            let inlineContent = (parseInLines [] content |> style |> FrmtedString)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral), rtks
+
         match toks with
         | MatchSym BACKTICK (content, rtks) -> (content|> strAllToks|> Code|> FrmtedString )::currentLine, rtks
         | MatchStrongAndEm (content, rtks, frontLiteral, backLiteral) ->
-            let inlineContent =
-                parseInLines [] content |> Strong |> FrmtedString |> makeList |> Emphasis |> FrmtedString
-            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
-            , rtks
+            let inlineContent = (parseInLines [] content |> Strong |> FrmtedString |> makeList |> Emphasis |> FrmtedString)
+            genFormat (currentLine, inlineContent, frontLiteral, backLiteral), rtks
         | MatchStrong (content, rtks, frontLiteral, backLiteral) ->
-            let inlineContent = (parseInLines [] content |> Strong |> FrmtedString)
-            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
-            , rtks
+            styleHelper Strong (content, rtks, frontLiteral, backLiteral)
         | MatchEm (content, rtks, frontLiteral, backLiteral) ->
-            let inlineContent = (parseInLines [] content |> Emphasis |> FrmtedString)
-            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
-            , rtks
+            styleHelper Emphasis (content, rtks, frontLiteral, backLiteral)
         | MatchStrike (content, rtks, frontLiteral, backLiteral) ->
-            let inlineContent = (parseInLines [] content |> Strike |> FrmtedString)
-            genFormat (currentLine, inlineContent, frontLiteral, backLiteral)
-            , rtks
+            styleHelper Strike (content, rtks, frontLiteral, backLiteral)
         | MatchLink (hyperTextToks, urlToks, rtks) ->
             let hyperText = parseInLines [] hyperTextToks |> Line
             let url = strAllToks urlToks
@@ -461,14 +457,14 @@ let parseInLineElements2 refLst toks =
             let idStr = string i
             match findFN i ftLst with
             | Ok _ -> // ok if found at least one reference in refLst
-                [(Literal idStr, idStr) |> Reference]@currentLine, rtks
+                [(Literal idStr, idStr) |> InlineFootnote]@currentLine, rtks
             | Error msg -> // error if no reference is found in refLst
                 [msg |> Literal |> FrmtedString], rtks
         | CITATION str :: rtks ->
             match findCite str ftLst with
             | Ok ref -> // ok if found at least one reference in refLst
                 match ref with
-                | Citation (id, hyperText, _) -> [(hyperText, id) |> Reference]@currentLine, rtks
+                | Citation (id, hyperText, _) -> [(hyperText, id) |> InlineCitation]@currentLine, rtks
                 | _ -> failwith "non-citation in citation list"
             | Error msg -> // error if no reference is found in refLst
                 [msg |> Literal |> FrmtedString], rtks

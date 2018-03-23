@@ -29,7 +29,9 @@ and InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
     | Picture of Alt: string * URL: string
-    | Reference of HyperText: TFrmtedString * ID: string
+    | InlineCitation of HyperText: TFrmtedString * ID: string
+    | InlineFootnote of HyperText: TFrmtedString * ID: string
+
 type TLine = InlineElement list
 
 type THeader = {HeaderName: TLine; Level: int}

@@ -87,7 +87,7 @@ let testDataHd = [
     [ENDLINE;ENDLINE; HASH; WHITESPACE 1; LITERAL "text1"; FOOTNOTE 3; LITERAL "text2"],
     (
         [{HeaderName = [FrmtedString (Literal "text1");
-                        Reference (Literal "3","footnote-3");
+                        InlineFootnote(Literal "3","footnote-3");
                         FrmtedString (Literal "text2");
                        ]; Level = 1;}],
         [ENDLINE;ENDLINE;HEADER 0]
@@ -113,9 +113,9 @@ let testDataFt = [
     );
 
     "Basic reference text",
-    [LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
-        LITERAL "Zifan"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title"; EQUAL;
-        WHITESPACE 1; LITERAL "Not a real book"; COMMA; LITERAL "year"; EQUAL;
+    [LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "author";WHITESPACE 1; EQUAL; WHITESPACE 1;
+        LITERAL "Zifan"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title"; WHITESPACE 1; EQUAL;
+        WHITESPACE 1; LITERAL "Not a real book"; COMMA; LITERAL "year"; WHITESPACE 1; EQUAL;
         WHITESPACE 1; LITERAL "2018"; ENDLINE],
     (
         [Citation ("Eric", Literal "(Wang)", [FrmtedString (Literal "Wang, ");
@@ -156,12 +156,12 @@ let testDataFt = [
         [LITERAL "text3"; ENDLINE]
     );
 
-    "Footer texts no sorting",
+    "Footer texts with sorting",
     [LSBRA; CARET; NUMBER "3"; RSBRA; COMMA; LITERAL "text3"; ENDLINE;
         LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "text1"; ENDLINE],
     (
-        [Footnote (3,[FrmtedString (Literal "text3")]);
-            Footnote (1,[FrmtedString (Literal "text1")])],
+        [Footnote (1,[FrmtedString (Literal "text1")]);
+            Footnote (3,[FrmtedString (Literal "text3")])],
         []
     )
 
@@ -201,19 +201,19 @@ let testDataFull =
     )
 
     "Stupidly big test",
-    [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago";
+    [ENDLINE; PERCENT; PERCENT; LITERAL "RefStyle"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Chicago";
         ENDLINE; LITERAL "text1"; HASH; LITERAL "text2"; ENDLINE; ENDLINE; HASH; WHITESPACE 1;
         LITERAL "Header1"; ENDLINE; LITERAL "text3"; LSBRA; CARET; NUMBER "1";
         RSBRA; LITERAL "text4"; ENDLINE; ENDLINE; LSBRA; CARET; NUMBER "1";
         RSBRA; COMMA; LITERAL "footer1"; ENDLINE; LITERAL "text5"; LSBRA; CARET;
         LITERAL "Eric"; RSBRA; LITERAL "text6"; ENDLINE; ENDLINE; LSBRA; CARET;
-        LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
-        LITERAL "Website"; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
+        LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1;
+        LITERAL "Website"; COMMA; LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1;
         LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title";
-        EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
-        EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
+        WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
+        WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; WHITESPACE 1; EQUAL;
         WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
-        LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+        LITERAL "access"; WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
         MINUS; NUMBER "4"; ENDLINE],
     (
         [{HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;}],

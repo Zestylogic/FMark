@@ -309,15 +309,15 @@ let testGlobal =
 let ``reference tests`` =
     let refToks =
         [LSBRA; CARET; NUMBER "1"; RSBRA; COMMA; LITERAL "footer1"; ENDLINE;
-            LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";EQUAL; WHITESPACE 1;
-                LITERAL "Website"; COMMA; LITERAL "author"; EQUAL; WHITESPACE 1;
+            LSBRA; CARET; LITERAL "Eric"; RSBRA; COMMA; LITERAL "type";WHITESPACE 1; EQUAL; WHITESPACE 1;
+                LITERAL "Website"; COMMA; LITERAL "author"; WHITESPACE 1; EQUAL; WHITESPACE 1;
                 LITERAL "Eric"; WHITESPACE 1; LITERAL "Wang"; COMMA; LITERAL "title";
-                EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
-                EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; EQUAL;
+                WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Not a real website"; COMMA; LITERAL "year";
+                WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2017"; COMMA; LITERAL "url"; WHITESPACE 1; EQUAL;
                 WHITESPACE 1; LITERAL "www.example.com/website"; COMMA;
-                LITERAL "access"; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
+                LITERAL "access"; WHITESPACE 1; EQUAL; WHITESPACE 1; NUMBER "2018"; MINUS; NUMBER "3";
                 MINUS; NUMBER "4"; ENDLINE]
-    let refStyleToks = [PERCENT; PERCENT; LITERAL "Style"; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE]
+    let refStyleToks = [PERCENT; PERCENT; LITERAL "RefStyle"; WHITESPACE 1; EQUAL; WHITESPACE 1; LITERAL "Chicago"; ENDLINE]
     let refPobjs =
         [
             Footnote (1,[FrmtedString (Literal "footer1")]);
@@ -333,21 +333,21 @@ let ``reference tests`` =
             refStyleToks
             @[LSBRA; CARET; NUMBER "1"; RSBRA]
             @refToks,
-            [Paragraph [[Reference (Literal "1","1")]]]@refPobjs,
+            [Paragraph [[InlineFootnote(Literal "1","1")]]]@refPobjs,
             "just 1 footnote"
         );
         (
             refStyleToks
             @[LSBRA; CARET; LITERAL "Eric"; RSBRA]
             @refToks,
-            [Paragraph [[Reference (Literal "(Wang, 2017)","Eric")]]]@refPobjs,
+            [Paragraph [[InlineCitation(Literal "(Wang, 2017)","Eric")]]]@refPobjs,
             "just 1 citation"
         );
         (
             refStyleToks
             @[LITERAL "text3"; LSBRA; CARET; NUMBER "1"; RSBRA; LITERAL "text4"]
             @refToks,
-            [Paragraph [[FrmtedString (Literal "text3");Reference (Literal "1","1"); FrmtedString (Literal "text4")]]]@refPobjs,
+            [Paragraph [[FrmtedString (Literal "text3");InlineFootnote(Literal "1","1"); FrmtedString (Literal "text4")]]]@refPobjs,
             "Literal and 1 footnote"
 
         );
@@ -355,7 +355,7 @@ let ``reference tests`` =
             refStyleToks
             @[LITERAL "text5"; LSBRA; CARET; LITERAL "Eric"; RSBRA; LITERAL "text6"]
             @refToks,
-            [Paragraph [[FrmtedString (Literal "text5");Reference (Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]]]@refPobjs,
+            [Paragraph [[FrmtedString (Literal "text5");InlineCitation(Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]]]@refPobjs,
             "Literal and 1 citation"
         );
         (
@@ -364,8 +364,8 @@ let ``reference tests`` =
             @[LITERAL "text5"; LSBRA; CARET; LITERAL "Eric"; RSBRA; LITERAL "text6"]
             @refToks,
             [Paragraph [
-                    [FrmtedString (Literal "text3");Reference (Literal "1","1"); FrmtedString (Literal "text4")];
-                    [FrmtedString (Literal "text5");Reference (Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]
+                    [FrmtedString (Literal "text3");InlineFootnote(Literal "1","1"); FrmtedString (Literal "text4")];
+                    [FrmtedString (Literal "text5");InlineCitation(Literal "(Wang, 2017)","Eric"); FrmtedString (Literal "text6")]
                 ]]@refPobjs,
             "multiline, 1 footnote, 1 citation"
         );

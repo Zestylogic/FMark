@@ -4,7 +4,6 @@ open Types
 open Shared
 open Logger
 open HTMLGenHelpers
-let dLogger = Logger(LogLevel.WARNING)
 
 /// convert TFrmtedString to string, with HTML tags where necessary
 let rec strFStr fStr =
@@ -20,6 +19,11 @@ let rec strFStr fStr =
 /// not tail recursive because the code looks cleaner this way
 and strInlineElements eles =
     let convertHtml pStr ele =
+        let refPrint foot (ht,id) = 
+            ht
+            |> strFStr
+            |> attachHTMLTag ("a", [("href", "#"+id)], true)
+            |> (fun r -> if foot then attachSimpleTag "sup" r else r) 
         pStr +
         match ele with
         | FrmtedString fStr -> strFStr fStr
@@ -27,11 +31,9 @@ and strInlineElements eles =
         | Picture (alt, url) ->
             let attrs = [("src", url); ("alt", alt)]
             attachHTMLTag ("img", attrs, false) ""
-        | Reference (ht, id) ->  // style for inline referencing the footnotes and citations in the end
-            ht
-            |> strFStr
-            |> attachHTMLTag ("a", [("href", "#"+id)], true)
-            |> attachSimpleTag "sup"
+        // style for inline referencing the footnotes and citations in the end
+        | InlineCitation (ht, id) -> refPrint false (ht,id)
+        | InlineFootnote (ht, id) -> refPrint true (ht,id)
     List.fold convertHtml "" eles
 
 /// process Markdown paragraph
