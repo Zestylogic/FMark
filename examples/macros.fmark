@@ -1,0 +1,10 @@
+{% macro input(text)
+
+<form action="/html/tags/html_form_tag_action.cfm" method="post">
+<textarea name="comments" id="comments" style="width:92%;height:140px;padding:2%;font-size:1.2em;border:12px outset #6DB72C;">
+{{text}}
+</textarea><br>
+<input type="submit" value="Submit">
+</form>
+
+%}

@@ -74,9 +74,9 @@ let mdTable (rows: PRow list) =
                 | false ->
                     mdInlineElements line
                 |> (fun cellContent -> pStr + cellContent + "|")
-                
+
         List.fold (cellsFolder alignRow) "|" row
-    
+
     let foldRows alignRow rows =
         let rowsFolder alignRow pStr row =
             pStr + (foldCells alignRow) row + "\n"
@@ -90,20 +90,20 @@ let mdTable (rows: PRow list) =
 /// recursively process a list
 let rec mdList list =
     let mdListItem ord tab (pStr,pCount) li =
-            let makeTabs num = 
+            let makeTabs num =
                 if num <= 0 then "" else String.replicate num "\t"
-            let retFold s = pStr + s, pCount + 1;
+            let retFold s = pStr + s, pCount + 1
             match li with
-            | StringItem(line) -> mdInlineElements line |> (fun s -> 
+            | StringItem(line) -> mdInlineElements line |> (fun s ->
                 match ord,s with
                 | _,"" -> ""
-                | true,_ -> 
+                | true,_ ->
                     sprintf "%s%i. %s\n" (makeTabs tab) pCount s
                     |> logPassN logger.Debug
-                | false,_ -> 
+                | false,_ ->
                     sprintf "%s- %s\n" (makeTabs tab) s) |> retFold
             | NestedList(list) -> mdList list |> retFold
-            
+
     match list with
     | {ListType=lt; ListItem=liS; Depth=d} ->
         let ord = match lt with | OL _ -> true | UL -> false
@@ -115,7 +115,7 @@ let mdHeader header =
     match header with
     | {HeaderName=line;Level=lv} ->
         (line |> mdInlineElements)
-        |> sprintf "%s %s\n" (String.replicate lv "#") 
+        |> sprintf "%s %s\n" (String.replicate lv "#")
 
 /// process HTML body part
 let mdBody pObjs =
@@ -131,6 +131,3 @@ let mdBody pObjs =
         //| Footnote (fnId, _) -> mdInlineFootnote fnId
         | _ -> sprintf "%A is not implemented" pObj
     List.fold folder "" pObjs
-
-
-

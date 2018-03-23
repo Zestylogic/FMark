@@ -48,6 +48,7 @@ let setLoggerLevel (r:ParseResults<CLIArguments>)=
     r.GetResult(Loglevel,defaultValue=LogLevel.FATAL)
     |> function | l -> globLog <- Logger(l) // update the global logger with the new log value
     r
+
 let welcomeMsg a =
     globLog.Info None "Welcome to FMark!"
     a
@@ -69,15 +70,15 @@ let processCLI argv =
     |> ifFlagRunTests
     |> ifFileReadFrom
     |> function
-    | None(_) -> () // Do nothing
-    | Some(instr,fname) ->
-        let format = results.GetResult(Format,defaultValue = HTML)  // Find out format and output file name, convert.
-        let defaultOutfile = if format=HTML then replaceChars "\.[a-zA-Z]+$" ".html" fname else replaceChars "\.[a-zA-Z]+$" "1.md" fname
-        let outFile = results.GetResult(Output,defaultValue=defaultOutfile)
-        FMark.processString "" format instr
-        |> function
-            | Ok(s)
-            | Error(s) -> FileIO.writeToFile outFile s
+        | None(_) -> () // Do nothing
+        | Some(instr,fname) ->
+            let format = results.GetResult(Format,defaultValue = HTML)  // Find out format and output file name, convert.
+            let defaultOutfile = if format=HTML then replaceChars "\.[a-zA-Z]+$" ".html" fname else replaceChars "\.[a-zA-Z]+$" "1.md" fname
+            let outFile = results.GetResult(Output,defaultValue=defaultOutfile)
+            FMark.processString "" format instr
+            |> function
+                | Ok(s)
+                | Error(s) -> FileIO.writeToFile outFile s
 
 [<EntryPoint>]
 let main argv =
