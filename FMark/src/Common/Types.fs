@@ -25,7 +25,9 @@ type TFrmtedString =
     | Line of InlineElement list
     | Strike of InlineElement list
     | Literal of string
+    | Html of string
     | Code of string
+
 and InlineElement =
     | FrmtedString of TFrmtedString
     | Link of HyperText: TFrmtedString * URL: string
