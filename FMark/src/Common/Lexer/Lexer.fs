@@ -3,6 +3,7 @@ module Lexer
 open Types
 open Shared
 open LexerShared
+open Logger
 
 type LexerState =
     | Normal
@@ -74,7 +75,7 @@ let nextToken state s =
     | RegexMatch (literalString charList) (m, _, s), _ ->
         (LITERAL m, s), state
     | s, _ ->
-        sprintf "Unrecognised character: %A" s |> sharedLog.Warn None
+        sprintf "Unrecognised character: %A" s |> globLog.Warn None
         (toString s.[0] |> LITERAL, (sOnwards 1 s)), state
 
 /// Lexes a whole string and returns the result as a Token list

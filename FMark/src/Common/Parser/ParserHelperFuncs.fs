@@ -3,8 +3,6 @@ open Types
 open Shared
 open Logger
 
-let logger = Logger(LogLevel.INFO)
-
 let SPACE = " "
 let NOSTRING = ""
 
@@ -386,12 +384,12 @@ let parseInLineElements2 refLst toks =
         match refs with
         | [] ->
             let msg = sprintf "[Reference: %A not found!]" refId
-            msg |> logger.Info (Some 200) |> ignore
+            msg |> globLog.Info (Some 200) |> ignore
             msg |> Error
         | [exactlyOne] -> exactlyOne |> Ok
         | moreThanOne ->
             let msg = sprintf "Reference: %A occurred more than once in reference list, take the first one." refId
-            msg |> logger.Info (Some 200) |> ignore
+            msg |> globLog.Info (Some 200) |> ignore
             List.head moreThanOne |> Ok
     /// find footnote in reference list, which contains both footnote and citation
     /// returns error msg if foot is not found
