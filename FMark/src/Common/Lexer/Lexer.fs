@@ -80,8 +80,9 @@ let nextToken state s =
 /// Lexes a whole string and returns the result as a Token list
 let lexS state source =
     let rec lexS' state s tokList =
-        match s with
-        | ""-> ENDLINE :: tokList
+        match s, state with
+        | "", InHTMLTag _ -> tokList
+        | "", _ -> ENDLINE :: tokList
         | _ ->
             let (nt, st'), nstate = nextToken state s
             nt :: tokList |> lexS' nstate st'

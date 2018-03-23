@@ -329,7 +329,7 @@ let lexTest =
 
         "HTML image tag",
         "Embedding an <img src=\"https://github.com/IMAGE\"> in text",
-        [LITERAL "Embedding"; WHITESPACE 1; LITERAL "an"; WHITESPACE 1; LITERAL"<img src=\"https://github.com/IMAGE\">"
+        [LITERAL "Embedding"; WHITESPACE 1; LITERAL "an"; WHITESPACE 1; LITERAL "<img src=\"https://github.com/IMAGE\">"
          WHITESPACE 1; LITERAL "in"; WHITESPACE 1; LITERAL "text"; ENDLINE]
 
         "A lot of nested tags",
@@ -340,15 +340,15 @@ let lexTest =
 
         "Half opened tag should just be outputted",
         "<a><",
-        [LITERAL "<a>"; LITERAL "<"; ENDLINE]
+        [LITERAL "<a>"; LITERAL "<"]
 
         "Half opened with text after should be as expected",
         "<a><This text should appear as normal",
-        [LITERAL "<a>"; LITERAL "<This text should appear as normal"; ENDLINE]
+        [LITERAL "<a>"; LITERAL "<This text should appear as normal"]
 
         "Wrong html close tag should be passed through",
         "<p></>s",
-        [LITERAL "<p>"; LITERAL "</>s"; ENDLINE]
+        [LITERAL "<p>"; LITERAL "</>s"]
     ]
 
 /// Tests for the complete lexers with a string list as input
