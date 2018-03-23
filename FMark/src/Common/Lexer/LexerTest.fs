@@ -316,14 +316,16 @@ let lexTest =
         [LITERAL "<img src=\"https://github.com/IMAGE.png\" />"; ENDLINE]
 
         "HTML with non-HTML start",
-        "This is an image: <span>Hello</span>",
+        "This is an image: <span>Hello World</span>",
         [LITERAL "This"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; LITERAL "an"
          WHITESPACE 1; LITERAL "image"; COLON; WHITESPACE 1; LITERAL "<span>"
-         LITERAL "Hello"; LITERAL "</span>"; ENDLINE]
+         LITERAL "Hello World"; LITERAL "</span>"; ENDLINE]
 
         "Singleton HTML passthrough",
-        "Singleton <br> passthrough",
-        [LITERAL "Singleton"; WHITESPACE 1; LITERAL "<br>"; WHITESPACE 1; LITERAL "passthrough"; ENDLINE]
+        "Singleton <br> passthrough and more text",
+        [LITERAL "Singleton"; WHITESPACE 1; LITERAL "<br>"; WHITESPACE 1; LITERAL "passthrough"
+         WHITESPACE 1; LITERAL "and"; WHITESPACE 1; LITERAL "more"; WHITESPACE 1
+         LITERAL "text"; ENDLINE]
 
         "HTML image tag",
         "Embedding an <img src=\"https://github.com/IMAGE\"> in text",
@@ -335,6 +337,18 @@ let lexTest =
         [LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"
          LITERAL "<p>"; LITERAL " "; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"
          LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; ENDLINE]
+
+        "Half opened tag should just be outputted",
+        "<a><",
+        [LITERAL "<a>"; LITERAL "<"; ENDLINE]
+
+        "Half opened with text after should be as expected",
+        "<a><This text should appear as normal",
+        [LITERAL "<a>"; LITERAL "<This text should appear as normal"; ENDLINE]
+
+        "Wrong html close tag should be passed through",
+        "<p></>s",
+        [LITERAL "<p>"; LITERAL "</>s"; ENDLINE]
     ]
 
 /// Tests for the complete lexers with a string list as input
@@ -390,8 +404,3 @@ let preprocessorPropertyTest =
         let preprocess1 = str |> preprocess
         let preprocess2 = str |> preprocess |> preprocess
         Expect.equal preprocess1 preprocess2 ""
-
-[<Tests>]
-let lexPassThroughPropertyTest =
-    testProperty "LexPassthroughpropertytest" <| fun (s: string) ->
-        Expect.equal 1 1 ""
