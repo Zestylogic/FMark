@@ -96,7 +96,7 @@ let testDataHd = [
     ]
 
 let makeHdTest (name,inn,out) =
-    testCase name <| fun () -> Expect.equal (tocGen' inn 0) out "Unit test"
+    testCase name <| fun () -> Expect.equal (tocGen' inn) out "Unit test"
 
 [<Tests>]
 let hdTests =
