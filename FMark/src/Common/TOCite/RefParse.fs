@@ -1,4 +1,5 @@
 module RefParse
+open Shared
 open ParserHelperFuncs
 open Types
 
@@ -161,6 +162,15 @@ let (|AgnoEqual|_|) = function
         Some tl
     | _ -> None
 
+let pickOutURL toks = 
+    let rec pickOutURL' rtoks toks =
+        match toks with
+        | COMMA::tl -> rtoks, tl
+        | a::tl -> pickOutURL' (a::rtoks) tl
+        | [] -> rtoks, []
+    pickOutURL' [] toks
+    |> fun(x,y) -> strAllToks (List.rev x), y
+
 // parses a single reference entry
 // This probably should never see ENDLINE
 let refParser style tLst =
@@ -197,9 +207,8 @@ let refParser style tLst =
                 | NUMBER a::tl -> refPar' {refData with Year = Some (int a)} tl
                 | _ -> refPar' refData tl
             | "url" ->
-                match tl with
-                | LITERAL s::tl -> refPar' {refData with URL = Some s} tl
-                | _ -> refPar' refData tl
+                let (s,tail) = pickOutURL tl
+                refPar' {refData with URL = Some s} tail
             | "access" ->
                 dateFormat tl
                 |> fun (x,y) -> refPar' {refData with AccessDate = x} y
