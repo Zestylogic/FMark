@@ -3407,7 +3407,7 @@ function listTryFind(s) {
         }($var2));
     });
 }
-var charList = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["h" /* ofArray */])([["#", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](4)], ["|", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](5)], ["=", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](6)], ["-", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](7)], ["+", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](8)], ["*", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](9)], [".", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](10)], ["**", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](12)], ["***", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](13)], ["_", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](14)], ["__", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](15)], ["___", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](16)], ["~", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](17)], ["~~", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](18)], ["~~~", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](19)], ["[", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](20)], ["]", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](21)], ["(", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](22)], [")", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](23)], ["\\", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](24)], ["/", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](25)], ["<", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](26)], [">", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](27)], ["{", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](28)], ["}", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](29)], ["`", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](30)], ["!", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](31)], [":", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](33)], ["^", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](34)], ["%", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](35)], [",", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](11)]]);
+var charList = Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["h" /* ofArray */])([["#", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](4)], ["|", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](5)], ["=", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](6)], ["-", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](7)], ["+", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](8)], ["*", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](9)], [".", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](10)], ["**", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](12)], ["***", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](13)], ["_", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](14)], ["__", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](15)], ["___", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](16)], ["~", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](17)], ["~~", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](18)], ["~~~", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](19)], ["[", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](20)], ["]", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](21)], ["(", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](22)], [")", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](23)], ["\\", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](24)], ["/", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](25)], ["<", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](26)], [">", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](27)], ["{", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](28)], ["}", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](29)], ["`", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](30)], ["!", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](31)], [":", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](33)], ["^", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](34)], ["%", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](35)], [",", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](11)], [";", new __WEBPACK_IMPORTED_MODULE_5__Types_fs__["r" /* Token */](36)]]);
 var charMap = Object(__WEBPACK_IMPORTED_MODULE_0__nuget_packages_fable_core_1_3_11_fable_core_Map__["b" /* create */])(Object(__WEBPACK_IMPORTED_MODULE_2__nuget_packages_fable_core_1_3_11_fable_core_List__["f" /* map */])(function (tupledArg) {
     return invTuple(tupledArg[0], tupledArg[1]);
 }, charList), new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_Comparer__["a" /* default */](function (x, y) {
@@ -7847,7 +7847,7 @@ function _MatchTOC___(hdList, toks) {
                         tupledArg = [new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](tupledArg[1].head, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(tupledArg[0])), Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["m" /* tail */])(tupledArg[0])), tupledArg[1].tail];
                         continue split;
                     } else {
-                        throw new Error("/home/yannherklotz/Github/FMark/FMark/src/Common/Parser/Parser.fs", 180, 18);
+                        throw new Error("C:/Users/g2/Documents/EIE3/FMark-vscode/src/FMark/FMark/src/Common/Parser/Parser.fs", 180, 18);
                     }
                 } else {
                     return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["j" /* reverse */])(function () {
@@ -10582,8 +10582,14 @@ function nextToken(state, s) {
 }
 function lexS(state, source) {
     var lexS_ = function lexS_(state_1, s, tokList) {
-        if (s === "") {
-            return new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["r" /* Token */](32), tokList);
+        var matchValue = [s, state_1];
+
+        if (matchValue[0] === "") {
+            if (matchValue[1].tag === 2) {
+                return tokList;
+            } else {
+                return new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["r" /* Token */](32), tokList);
+            }
         } else {
             var patternInput = nextToken(state_1, s);
             var st_ = patternInput[0][1];
@@ -10592,16 +10598,16 @@ function lexS(state, source) {
         }
     };
 
-    var matchValue = [source, state];
+    var matchValue_1 = [source, state];
     var $var8 = void 0;
 
-    var activePatternResult825 = _CodeBlockStart___(matchValue[0]);
+    var activePatternResult825 = _CodeBlockStart___(matchValue_1[0]);
 
     if (activePatternResult825 != null) {
         var activePatternResult826 = _MatchLang___(Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult825));
 
         if (activePatternResult826 != null) {
-            if (matchValue[1].tag === 0) {
+            if (matchValue_1[1].tag === 0) {
                 $var8 = [0, Object(__WEBPACK_IMPORTED_MODULE_8__nuget_packages_fable_core_1_3_11_fable_core_Option__["b" /* getValue */])(activePatternResult826)];
             } else {
                 $var8 = [1];
@@ -10620,11 +10626,11 @@ function lexS(state, source) {
         case 1:
             var $var9 = void 0;
 
-            var activePatternResult824 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^```+", matchValue[0]);
+            var activePatternResult824 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^```+", matchValue_1[0]);
 
             if (activePatternResult824 != null) {
-                if (matchValue[1].tag === 1) {
-                    $var9 = [0, matchValue[1].data[1], matchValue[1].data[0]];
+                if (matchValue_1[1].tag === 1) {
+                    $var9 = [0, matchValue_1[1].data[1], matchValue_1[1].data[0]];
                 } else {
                     $var9 = [1];
                 }
@@ -10637,10 +10643,10 @@ function lexS(state, source) {
                     return [Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["h" /* ofArray */])([new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["r" /* Token */](0, [$var9[2], $var9[1]]), new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["r" /* Token */](32)]), new LexerState(0)];
 
                 case 1:
-                    if (matchValue[1].tag === 1) {
-                        return [new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), new LexerState(1, [matchValue[1].data[0] + source + "\n", matchValue[1].data[1]])];
+                    if (matchValue_1[1].tag === 1) {
+                        return [new __WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](), new LexerState(1, [matchValue_1[1].data[0] + source + "\n", matchValue_1[1].data[1]])];
                     } else {
-                        var activePatternResult822 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s*$", matchValue[0]);
+                        var activePatternResult822 = Object(__WEBPACK_IMPORTED_MODULE_5__LexerShared_fs__["d" /* $7C$RegexMatch$7C$_$7C$ */])("^\\s*$", matchValue_1[0]);
 
                         if (activePatternResult822 != null) {
                             return [Object(__WEBPACK_IMPORTED_MODULE_3__nuget_packages_fable_core_1_3_11_fable_core_List__["h" /* ofArray */])([new __WEBPACK_IMPORTED_MODULE_1__Types_fs__["r" /* Token */](32)]), state];
