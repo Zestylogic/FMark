@@ -43,7 +43,7 @@ This will build a table of content between paragraph 1 and 2, and only
 contain headers of level 1 2, and 3.
 
 ```
-%%TOC depth=3, excludes=["Appendix","Acknowledgement"]
+%%TOC depth=3, excludes=[Appendix;Acknowledgement]
 ```
 This table of content will exclude headers with the specified name.
 

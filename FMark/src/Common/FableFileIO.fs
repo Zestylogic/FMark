@@ -19,5 +19,5 @@ let readFilePath path =
         fs.readFileSync(path,()) 
         |> (fun s -> s.toString ())
         |> splitString
-    | false -> []
+    | false -> path |> splitString
 
