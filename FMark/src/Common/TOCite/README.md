@@ -25,7 +25,28 @@ parser, allowing relative linking and other nice things.
 
 ## THeader list
 List of all headers found in the document, arranged by order of
-their appearance.
+their appearance. This is used to render headers with links in the
+main parser, and also table of contents.
+
+### Table of Contents
+Build with `%%TOC`, with optional argument `depth` and `exclude`
+
+For example,
+```
+Paragraph 1 Oh look a butterfly!
+
+%%TOC depth=3
+
+Paragraph 2 Oh noes it flew away :(
+```
+This will build a table of content between paragraph 1 and 2, and only
+contain headers of level 1 2, and 3.
+
+```
+%%TOC depth=3, excludes=[Appendix;Acknowledgement]
+```
+This table of content will exclude headers with the specified name.
+
 
 ## ParsedObj list
 Both simple footers and references are given as `Footnote (ID * TLine)`
@@ -33,6 +54,10 @@ and `Citation (ID * TFrmtedString * TLine)` in the `ParsedObj list`.
 `TFrmtedString` in `Citation` is used to store how the inline part
 should be rendered. This allows all style information to be hidden
 from the main parser.
+
+The list is sorted, with footnotes in order of their numerical IDs first,
+References in order of apperance after. Thus the order each explanatory
+text comes in the fmark file does not matter.
 
 ### Simple Footers
 Simple footers have numerical IDs.
@@ -72,36 +97,36 @@ Supported data fields
 |url|Address for website|
 |access|Date of access for websites, in `yyyy-mm-dd` format|
 
-Pick a style at the beginning, or it will default to Harvard.
+Pick a style with `%%RefStyle`, or it will default to Harvard.
 ```
-%%Style = Harvard
+%%RefStyle = Harvard
 ```
 
-Then follow `field1= data1, field2= data2, ...` to use references.
+Then follow `field1=data1, field2=data2, ...` to use references. 
+Spaces around equal signs is allowed.
 ```
-This is a citation[^Zifan]. This is another[^Eric] one.
+This is a citation[^Mark]. This is another[^FMark] one.
 
-[^Zifan], type= Book, author= Zifan Wang, title= Not a real book, year= 2018
-[^Eric], type= Website, author= Eric Wang, title= Not a real website, year= 2017 url= www.example.com/website access= 2018-3-4
+[^Mark], type = Book, author = Mark Smith, title = Not a real book, year = 2018
+[^FMark], type=Website, author=FMark Smith, title=Not a real website, year=2017 url=www.example.com/website access=2018-3-4
 ```
 
 With Harvard, it will look like this:
-> This is a citation(Wang, 2018). This is another(Wang, 2017) one.
+> This is a citation(Smith, 2018). This is another(Smith, 2017) one.
 
 At the end of the document:
-> Wang, Z. (2018) *Not a real book*.
+> Smith, M. (2018) *Not a real book*.
 > 
-> Wang, E. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
+> Smith, F. (2017) *Not a real website*. Available from: www.example.com/website [Accessed 4th March 2018].
 
 if Chicago style is chosen:
 
-> This is a citation(Wang 2018). This is another(Wang 2017) one.
+> This is a citation(Smith 2018). This is another(Smith 2017) one.
 
 At the end of the document:
-> Zifan Wang. 2018. *Not a real book*.
+> Mark Smith. 2018. *Not a real book*.
 > 
-> Eric Wang. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
-
+> FMark Smith. 2017. "Not a real website." Accessed March 3, 2018. https://www.example.com/website
 
 ---
 # ALL INFORMATION AFTER THIS MAYBE OUTDATED

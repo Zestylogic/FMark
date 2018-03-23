@@ -3,8 +3,9 @@
 {{ include ./macros.fmark }}
 
 ## Table of contents
+<!-- Relative links do not work in VS code, use Create HTML File. -->
 
-%%TOC
+%%TOC depth=3
 
 ## Macros
 
@@ -45,6 +46,8 @@
 **Bold** or __bold__
 
 ***Both*** or ___both___
+
+~~strikethrough~~
 
 Note: _underscores_ must have a space on either side.
 
@@ -89,8 +92,16 @@ Unordered List 2:
 ### Links
 
 [Google](http://www.google.com)
+
 <!-- Images produce correct HTML but don't display in VS Code-->
 ![image](test_img.jpg)
+
+<!-- Relative links do not work in VS code, use Create HTML File -->
+<a href="#this-header"> Relative link. </a>
+
+### HTML passthrough
+<!-- HTML is left unchanged. -->
+<h2 id="this-header"><a href="broken-link"> A broken link. </a></h2>
 
 ## LateX maths
 
@@ -118,12 +129,11 @@ Here are some[^1] words, and more words[^2].
 
 ### References
 
-All footnotes are collected and displayed at the end of the document[^Eric].
+All footnotes are collected and displayed at the end of the document[^Smith].
 The style of references are set at the top of the document.
 
-[^Eric], type = Book, author = Not Eric, year = 2018, title = An Introduction to FMark
+[^Smith], type = Book, author = FMark Smith, year = 2018, title = An Introduction to FMark
 
 Note: Simple footnotes takes numerical IDs, and references need alphabetical IDs.
 
 Look the footers are rendered in order below this line.
-
