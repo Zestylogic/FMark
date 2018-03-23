@@ -345,6 +345,10 @@ let lexTest =
         "Half opened with text after should be as expected",
         "<a><This text should appear as normal",
         [LITERAL "<a>"; LITERAL "<This text should appear as normal"; ENDLINE]
+
+        "Wrong html close tag should be passed through",
+        "<p></>s",
+        [LITERAL "<p>"; LITERAL "</>s"; ENDLINE]
     ]
 
 /// Tests for the complete lexers with a string list as input
