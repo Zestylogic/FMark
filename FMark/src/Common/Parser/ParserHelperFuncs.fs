@@ -459,7 +459,7 @@ let parseInLineElements2 refLst toks =
             | Ok _ -> // ok if found at least one reference in refLst
                 [(Literal idStr, idStr) |> InlineFootnote]@currentLine, rtks
             | Error msg -> // error if no reference is found in refLst
-                [msg |> Literal |> FrmtedString], rtks
+                [msg |> Literal |> FrmtedString]@currentLine, rtks
         | CITATION str :: rtks ->
             match findCite str ftLst with
             | Ok ref -> // ok if found at least one reference in refLst
@@ -467,7 +467,7 @@ let parseInLineElements2 refLst toks =
                 | Citation (id, hyperText, _) -> [(hyperText, id) |> InlineCitation]@currentLine, rtks
                 | _ -> failwith "non-citation in citation list"
             | Error msg -> // error if no reference is found in refLst
-                [msg |> Literal |> FrmtedString], rtks
+                [msg |> Literal |> FrmtedString]@currentLine, rtks
         | _ ->
             let str = mapTok toks.[0]
             FrmtedString (Literal str)::currentLine, xOnwards 1 toks
