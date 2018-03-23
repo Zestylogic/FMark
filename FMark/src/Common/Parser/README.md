@@ -1,6 +1,6 @@
 # Project Contribution
 The Parser takes `Token list` from the Lexer(or Tokenizer) and outputs `ParsedObj list`.
-After being manipulated be other top level functions, `ParsedObj list` will then be used to generate HTML.
+After being manipulated by other top level functions, `ParsedObj list` will then be used to generate HTML.
 
 It follows [CommonMark Spec](http://spec.commonmark.org/0.28/). However, the Parser produced in individual-phased work is not a complete Markdown parser, due to limited time.
 

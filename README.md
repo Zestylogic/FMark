@@ -65,7 +65,6 @@ Source ───> │ Lex and Preprocessor│ ───> Token list ───> �
 2. [TOCite: Preparsing headers and footers](FMark/src/Common/TOCite/README.md)
 3. [Markalc: Spreadsheet functionality](FMark/src/Common/Markalc/README.md)
 4. [Main Parser](FMark/src/Common/Parser/README.md)
-5. [HTML Generator](FMark/src/Common/HTMLGen/README.md)
 
 # Vanilla Markdown 
 
