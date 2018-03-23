@@ -151,7 +151,7 @@ let (|MatchTOC|_|) hdList toks =
     let createLinks (hdList:THeader list) =
         let makeRelLink i (h:THeader) =
             let linkText = Line(h.HeaderName)
-            let linkID = headerIDGen i hdList.[i]
+            let linkID = hdList.[i].RefID
             {h with HeaderName = [Link (linkText, sprintf "#%s" linkID)]}
             //{h with HeaderName = Link((h.HeaderName), sprintf "#HEADER%i" i)} // Link of HyperText: TFrmtedString * URL: string
         let linksLst = List.mapi makeRelLink hdList
@@ -274,7 +274,7 @@ let rec parseItem (hdLst: THeader list) (ftLst: ParsedObj list) (rawToks: Token 
     | MatchQuote (content, rtks) ->
         (parseInLineElements2 ftLst content |> Quote , rtks)
         |> Ok
-    | HEADER i :: rtks -> (Header (hdLst.[i],(headerIDGen i hdLst.[i])), rtks) |> Ok
+    | HEADER i :: rtks -> (Header (hdLst.[i]), rtks) |> Ok
     | PickoutList (list, retoks) -> (parseList list |> List, retoks) |> Ok
     | PickoutParagraph (par, retoks) ->
         (parseParagraph ftLst par, retoks) |> Ok

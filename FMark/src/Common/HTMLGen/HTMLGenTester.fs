@@ -131,11 +131,11 @@ let listTests =
 let headerTests =
     makeExpectoTestList id id strHeader "header tests" [
         (
-            ({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1"),
+            ({HeaderName=[FrmtedString(Literal "header")]; Level=1; RefID="header1"}),
             "<h1 id=\"header1\">header</h1>", "h1"
         );
         (
-            ({HeaderName=[FrmtedString(Literal "header")]; Level=2},"header2"),
+            ({HeaderName=[FrmtedString(Literal "header")]; Level=2; RefID="header2"}),
             "<h2 id=\"header2\">header</h2>", "h2"
         );
     ]
@@ -165,31 +165,32 @@ let ``HTML head generation test``=
 
 [<Tests>]
 let TOCTests =
-    let hLst1 = [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
-                     ;{HeaderName=[FrmtedString(Literal "header2")]; Level=1}
-                     ;{HeaderName=[FrmtedString(Literal "header3")]; Level=1}
+    // RefID does not matter in hdLst because it exsits in HeaderName as a Link
+    let hLst1 = [{HeaderName=[FrmtedString(Literal "header1")]; Level=1; RefID="header1"}
+                     ;{HeaderName=[FrmtedString(Literal "header2")]; Level=1; RefID="header1"}
+                     ;{HeaderName=[FrmtedString(Literal "header3")]; Level=1; RefID="header1"}
                      ]
-    let hLst2 = hLst1@[{HeaderName=[FrmtedString(Literal "header4")]; Level=2}]
+    let hLst2 = hLst1@[{HeaderName=[FrmtedString(Literal "header4")]; Level=2; RefID="header1"}]
 
-    let hLst3 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
-                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
-                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=2}
-                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3}]
-    let hLst4 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
-                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
-                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
-                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=1}]
+    let hLst3 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=2; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3; RefID="header1"}]
+    let hLst4 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=1; RefID="header1"}]
 
-    let hLst5 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
-                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
-                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
-                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=2}
-                      ;{HeaderName=[FrmtedString(Literal "header5")]; Level=1}]
+    let hLst5 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=2; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header5")]; Level=1; RefID="header1"}]
 
-    let hLst6 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1}
-                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2}
-                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3}
-                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3}]
+    let hLst6 =       [{HeaderName=[FrmtedString(Literal "header1")]; Level=1; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header2")]; Level=2; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header3")]; Level=3; RefID="header1"}
+                      ;{HeaderName=[FrmtedString(Literal "header4")]; Level=3; RefID="header1"}]
 
     makeExpectoTestList id (Shared.removeChars ["\t";"\n";"\r"]) strToC "Table of contents test" [
         // tabs to make better formats
@@ -279,7 +280,7 @@ let fullBodyTests =
     makeExpectoTestList id catStr strBody "full body tests" [
         (
             [
-                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1");
+                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1; RefID="header1"});
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
                         NestedList{ListType=OL 1;ListItem=
@@ -302,7 +303,7 @@ let reallyBigTest =
     makeExpectoTestList id catStr genHTML "inherited big test" [
         ("big HTML test",
             [Paragraph [[FrmtedString (Literal "text1#text2")]];
-                Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1;},"Header10");
+                Header ({HeaderName = [FrmtedString (Literal "Header1")]; Level = 1; RefID="Header10"});
                 Paragraph [[InlineFootnote (Literal "Footer1","footnote-1"); FrmtedString (Literal "text4")]];
                 Paragraph [[InlineCitation(Literal "(Wang, 2017)","footnote-Eric"); FrmtedString (Literal "text6")]];
                 Footnote (1,[FrmtedString (Literal "footer1")]);
@@ -334,7 +335,7 @@ let ``global simple test`` =
     makeExpectoTestList id catStr genHTML "top level genHTML test" [
         ("FMarkToHtml first release",
             [
-                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"header1");
+                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1; RefID="header1"});
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
                         NestedList{ListType=OL 1;ListItem=

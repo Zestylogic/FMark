@@ -102,9 +102,9 @@ let rec strList list =
         
 
 /// process header
-let strHeader (header,id) =
+let strHeader header =
     match header with
-    | {HeaderName=line;Level=lv} ->
+    | {HeaderName=line;Level=lv; RefID=id} ->
         let tagName = "h" + string(lv)
         line
         |> strInlineElements
@@ -181,7 +181,7 @@ let strBody pObjs =
         | CodeBlock (c, l) -> attachHTMLTag ("code", [("language", mapLang l)], true) c
         | Table rows -> strTable rows
         | List l -> strList l
-        | Header (h,s) -> strHeader (h,s)
+        | Header h -> strHeader h
         | Footnote (i,s) -> strRef ((string i), s)
         | Citation (i,_,s) -> strRef (i, s)
         | ContentTable toc -> strToC toc

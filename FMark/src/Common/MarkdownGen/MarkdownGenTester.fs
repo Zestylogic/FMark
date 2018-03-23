@@ -136,11 +136,11 @@ let listTests =
 let headerTests =
     makeExpectoTestList id id mdHeader "header tests" [
         (
-            {HeaderName=[FrmtedString(Literal "header")]; Level=1},
+            {HeaderName=[FrmtedString(Literal "header")]; Level=1; RefID="header1"},
             "# header\n", "h1"
         );
         (
-            {HeaderName=[FrmtedString(Literal "header")]; Level=2},
+            {HeaderName=[FrmtedString(Literal "header")]; Level=2; RefID="header1"},
             "## header\n", "h2"
         );
     ]
@@ -160,7 +160,7 @@ let fullBodyTests =
     makeExpectoTestList id catStr mdBody "full body tests" [
         (
             [
-                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1},"HEADER STRING NOT IMPLEMENTED");
+                Header({HeaderName=[FrmtedString(Literal "header")]; Level=1; RefID="header1"});
                 List{ListType=UL;ListItem=
                     [StringItem[FrmtedString(Literal "first")]; StringItem[FrmtedString(Literal "second")];
                         NestedList{ListType=OL 1;ListItem=
