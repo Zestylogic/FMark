@@ -64,4 +64,3 @@ let replaceChars pat (rep:string) s =
     Regex.Replace(s,pat,rep)
 let removeWhitespace (s:string) = 
     s |> removeChars ["\n";"\t";"\r";" "]
-let sharedLog = Logger(LogLevel.WARNING)

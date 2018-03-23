@@ -106,4 +106,3 @@ let simpleLex txt =
 let lexY (x,y,z) = x,y|>simpleLex,z
 let round (dp:int) (f:float) =
     System.Math.Round(f,dp)
-let logger = Logger(LogLevel.INFO)

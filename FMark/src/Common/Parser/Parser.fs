@@ -16,7 +16,7 @@ let rec parseCode toks =
         parseCode toks'
         |> Result.map (fun (str, tks) ->
         mapTok tok + str, tks )
-    | e ->  sharedLog.Warn None (sprintf "%A" e)
+    | e ->  globLog.Warn None (sprintf "%A" e)
             ("\\`", xOnwards 1 toks) |> Ok
 
 
