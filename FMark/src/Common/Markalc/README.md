@@ -27,8 +27,9 @@ Calcs|39|42|
 |Addition|`a+b`|a plus b|Property based, all integer inputs.
 |Brackets|`a+(b-c)`|Specify order of operation.|Unit tested.
 |Cell References|`[0,2]`|Evaluates to contents of cell specified (row 0, col 2)|Unit tested|
-|Range Cell Ref|`[0,0]:[2,0]`|Evaluates to list of cell references.|Unit tested, not fully.|
+|Range Cell Ref|`[0,0]:[2,0]`|Evaluates to list of cell references.|Unit tested.|
 |Keyword Cell Ref|`[col=2,row=0]`|Alternative syntax, order doens't matter.|Unit tested|
+|Specify Decimal Places|`=5.333,2`|Comma then a number specifies number of decimal places.|Unit tested|
 
 ##### Cell reference behaviour
 
