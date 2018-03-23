@@ -1,16 +1,41 @@
 # FMark Example
 
-{{ include ./macros.fmark }}
-
 ## Table of contents
 <!-- Relative links do not work in VS code, use Create HTML File. -->
 
-%%TOC depth=3
+%%TOC
 
 ## Macros
 
+### Macro Example 1
+<script type="text/javascript">
+ 
+    function loadCSS(filename){
+       var file = document.createElement("link");
+       file.setAttribute("rel", "stylesheet");
+       file.setAttribute("type", "text/css");
+       file.setAttribute("href", filename);
+       document.head.appendChild(file);
+
+    }
+
+</script>
+
+{% macro input(text)
+
+<form action="/html/tags/html_form_tag_action.cfm" method="post">
+<textarea name="comments" id="comments" style="width:92%;height:140px;padding:2%;font-size:1.2em;border:12px outset #6DB72C;">
+{{text}}
+</textarea><br>
+<input type="submit" value="Submit">
+</form>
+
+%}
+
 {{ input(This is the text to be inputted into the Textbox) }}
 
+
+### Macro Example 2
 {% macro make_table(00;01;02;10;11;12;20;21;22) 
 
 |{{00}}|{{01}}|{{02}}|
@@ -61,7 +86,7 @@ Note: _underscores_ must have a space on either side.
 
 ##### Heading 5
 
-##### Heading 6
+###### Heading 6
 
 ### Lists
 
