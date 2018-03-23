@@ -5,7 +5,6 @@ open Types
 open Shared
 open Logger
 
-let logger = Logger(LogLevel.INFO)
 
 // return string surrounded by pat
 let surround pat str =
@@ -99,7 +98,7 @@ let rec mdList list =
                 | _,"" -> ""
                 | true,_ ->
                     sprintf "%s%i. %s\n" (makeTabs tab) pCount s
-                    |> logPassN logger.Debug
+                    |> logPassN globLog.Debug
                 | false,_ ->
                     sprintf "%s- %s\n" (makeTabs tab) s) |> retFold
             | NestedList(list) -> mdList list |> retFold

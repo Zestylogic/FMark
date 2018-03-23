@@ -3,6 +3,7 @@ module Expression
 
 open MarkalcShared
 open Types
+open Logger
 
 (* SUPPORTED OPERATIONS:
 BinaryExpressions (in order of precedence): 
@@ -34,10 +35,10 @@ let parseExp toks =
             | RSBRA :: NUMBER(col) :: COMMA :: NUMBER(row) :: LSBRA :: after 
                 -> ((row,col) |> makeCellReference,after) |> Some
             | RSBRA :: NUMBER(row) :: EQUAL :: LITERAL("row") :: COMMA :: NUMBER(col) :: EQUAL :: LITERAL("col") :: LSBRA :: after 
-                -> sprintf "Row:%A, Col:%A" row col |> logger.Debug None
+                -> sprintf "Row:%A, Col:%A" row col |> globLog.Debug None
                    ((row,col) |> makeCellReference,after) |> Some
             | RSBRA :: NUMBER(col) :: EQUAL :: LITERAL("col") :: COMMA :: NUMBER(row) :: EQUAL :: LITERAL("row") :: LSBRA :: after 
-                ->  sprintf "Row:%A, Col:%A" row col |> logger.Debug None
+                ->  sprintf "Row:%A, Col:%A" row col |> globLog.Debug None
                     ((row,col) |> makeCellReference,after) |> Some
             | _ -> None
         let rec (|ExpressionList|_|) = function
