@@ -221,6 +221,10 @@ let preprocessTest =
         "Calling nested macro with two arguments",
         "{% macro x(a; b) {{a}} {{b}} %} {{x(a; {{x(b; c)}})}}",
         "a b c"
+
+        "Semicolon should not change",
+        "%%TOC excludes=[h2;h22]",
+        "%%TOC excludes=[h2;h22]"
     ]
 
 /// Complete multiline tests for the preprocessor
@@ -349,6 +353,11 @@ let lexTest =
         "Wrong html close tag should be passed through",
         "<p></>s",
         [LITERAL "<p>"; LITERAL "</>s"]
+
+        "Semi colon in TOC",
+        "%%TOC excludes=[h2;h22]",
+        [PERCENT; PERCENT; LITERAL "TOC"; WHITESPACE 1; LITERAL "excludes"; EQUAL; LSBRA; LITERAL "h2"; SEMICOLON
+         LITERAL "h22"; RSBRA; ENDLINE]
     ]
 
 /// Tests for the complete lexers with a string list as input

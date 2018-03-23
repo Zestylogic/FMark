@@ -23,7 +23,7 @@ let charList = ["#", HASH; "|", PIPE; "=", EQUAL; "-", MINUS; "+", PLUS; "*", AS
                 "___", TUNDERSCORE; "~", TILDE; "~~", DTILDE; "~~~", TTILDE; "[", LSBRA
                 "]", RSBRA; "(", LBRA; ")", RBRA; @"\", BSLASH; "/", SLASH; "<", LABRA
                 ">", RABRA; "{", LCBRA; "}", RCBRA; "`", BACKTICK;
-                "!", EXCLAMATION; ":", COLON; "^", CARET; "%", PERCENT; ",", COMMA]
+                "!", EXCLAMATION; ":", COLON; "^", CARET; "%", PERCENT; ",", COMMA; ";", SEMICOLON]
 
 let charMap = charList |> List.map invTuple |> Map.ofList
 
@@ -64,4 +64,3 @@ let replaceChars pat (rep:string) s =
     Regex.Replace(s,pat,rep)
 let removeWhitespace (s:string) = 
     s |> removeChars ["\n";"\t";"\r";" "]
-let sharedLog = Logger(LogLevel.WARNING)

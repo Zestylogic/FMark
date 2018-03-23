@@ -3,8 +3,6 @@ open Types
 open Shared
 open Logger
 
-let logger = Logger(LogLevel.INFO)
-
 let SPACE = " "
 let NOSTRING = ""
 
@@ -386,12 +384,12 @@ let parseInLineElements2 refLst toks =
         match refs with
         | [] ->
             let msg = sprintf "[Reference: %A not found!]" refId
-            msg |> logger.Info (Some 200) |> ignore
+            msg |> globLog.Info (Some 200) |> ignore
             msg |> Error
         | [exactlyOne] -> exactlyOne |> Ok
         | moreThanOne ->
             let msg = sprintf "Reference: %A occurred more than once in reference list, take the first one." refId
-            msg |> logger.Info (Some 200) |> ignore
+            msg |> globLog.Info (Some 200) |> ignore
             List.head moreThanOne |> Ok
     /// find footnote in reference list, which contains both footnote and citation
     /// returns error msg if foot is not found
@@ -459,7 +457,7 @@ let parseInLineElements2 refLst toks =
             | Ok _ -> // ok if found at least one reference in refLst
                 [(Literal idStr, idStr) |> InlineFootnote]@currentLine, rtks
             | Error msg -> // error if no reference is found in refLst
-                [msg |> Literal |> FrmtedString], rtks
+                [msg |> Literal |> FrmtedString]@currentLine, rtks
         | CITATION str :: rtks ->
             match findCite str ftLst with
             | Ok ref -> // ok if found at least one reference in refLst
@@ -467,7 +465,7 @@ let parseInLineElements2 refLst toks =
                 | Citation (id, hyperText, _) -> [(hyperText, id) |> InlineCitation]@currentLine, rtks
                 | _ -> failwith "non-citation in citation list"
             | Error msg -> // error if no reference is found in refLst
-                [msg |> Literal |> FrmtedString], rtks
+                [msg |> Literal |> FrmtedString]@currentLine, rtks
         | _ ->
             let str = mapTok toks.[0]
             FrmtedString (Literal str)::currentLine, xOnwards 1 toks

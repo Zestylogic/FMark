@@ -1,4 +1,11 @@
-# Project use
+# Project Contribution
+The Parser takes `Token list` from the Lexer(or Tokenizer) and outputs `ParsedObj list`.
+After being manipulated by other top level functions, `ParsedObj list` will then be used to generate HTML.
+
+It follows [CommonMark Spec](http://spec.commonmark.org/0.28/). However, the Parser produced in individual-phased work is not a complete Markdown parser, due to limited time.
+
+In order to split work more evenly, the group has agreed that the majority of text will be parsed in this Parser,
+with the rest to be done by other team members.
 
 `parse` will either return result monad with either `ParsedObj list` or a string of Error message. Unparsed Tokens will be in the returned in the Error message.
 
