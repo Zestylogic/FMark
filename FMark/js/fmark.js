@@ -7847,7 +7847,7 @@ function _MatchTOC___(hdList, toks) {
                         tupledArg = [new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](new __WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["c" /* default */](tupledArg[1].head, Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["e" /* head */])(tupledArg[0])), Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["m" /* tail */])(tupledArg[0])), tupledArg[1].tail];
                         continue split;
                     } else {
-                        throw new Error("C:/Users/g2/Documents/EIE3/Fmark-vscode/src/FMark/FMark/src/Common/Parser/Parser.fs", 180, 18);
+                        throw new Error("C:/Users/g2/Documents/EIE3/Fmark-vscode/src/fmark/FMark/src/Common/Parser/Parser.fs", 180, 18);
                     }
                 } else {
                     return Object(__WEBPACK_IMPORTED_MODULE_1__nuget_packages_fable_core_1_3_11_fable_core_List__["j" /* reverse */])(function () {
