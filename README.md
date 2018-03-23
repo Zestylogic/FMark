@@ -13,7 +13,7 @@ See [example.fmark](examples/example.fmark) for usage examples.
 
 # How to use
 
-## FMark Plugin
+## FMark Plugin Visual Studio Code
 
 Functions:
 
@@ -125,6 +125,23 @@ A paragraph is some characters that does not match:
 
 It terminates with two endlines. Any elements mentioned above cannot exist in a paragraph. Otherwise, they will become normal text, and will not be rendered as expected.
 
+# Building
+
+To build fmark, dotnet and fable have to be installed first. To build the javascript as well, yarn or npm are needed.
+
+## Using the Build script
+
+``` shell
+# build only javascript
+build -b js
+
+# build and test every single module
+build -b testall
+
+# build js and cli
+build -b all
+```
+
 # Markdown extensions
 
 ## Macros
@@ -139,6 +156,8 @@ These are the supported constructs in the preprocessor.
 |Function Macro|`{% macro name(arg1; arg2) value %}`|Sets the Macro `name` equal to the string `value` with two parameters.|Unit Test|
 |Simple Evaluation|`{{ macro_name }}`|Evaluates the macro `macro_name` and replaces the evaluation with the evaluated body of the macro.|Unit Test|
 |Function Evaluation|`{{ macro_name(arg 1; arg 2) }}`|Evaluates the macro `macro_name` with the arguments `arg 1` and `arg 2` and replaces the evaluation with the evaluated body of the macro.|Unit Test|
+|File Include|`{{ include relative/path/to/file }}`|Includes and preprocesses a file using a relative or absolute path. The macros declared in that file will then be available in the current file|Unit Test|
+|Complex Macro Evaluation|`{{ x( {{ y( {{z}} ; Hello ) }} ; {{z}} ) }}`|Nested macro evaulations are supported. This way, default arguments can be created for other macros.|Unit Test|
 
 ### Supported Features
 
@@ -155,6 +174,38 @@ These are the features that are currently supported by the preprocessor.
 |Escaping macros|`\{% macro x y %}`|This will escape the whole macro and not evaluate it|Unit Test|
 |Escaping Subsitutions|`\{{ x }}`| will not evaluate the substitution but instead output it literally|Unit Test|
 |Outputting unmatched subsituttion|`{{ x }}` -> `{{ x }}` if not in scope|If the subsitution is not matched, it will output it as it got it|Unit Test|
+|Nested Evaluations|`{{ x( {{y}} ) }}`|Arguments can now be evaluated inside them.|Unit Test|
+
+### Usage
+
+To use the preprocessor and the lexer, a string or a list of strings can be used, depending on if there are multiple
+lines or not. For a single string, the following can be used.
+
+For string, the `preprocess` and `lex` functions.
+
+``` f#
+[<EntryPoint>]
+let main =
+    let inputString = (* Read the string *)
+
+    inputString
+    |> preprocess
+    |> lex
+    ...
+```
+
+For a list of strings, one can use the `preprocessList` and `lexList` functions.
+
+``` f#
+[<EntryPoint>]
+let main =
+    let inputStringList = (* Read the string list *)
+    
+    inputStringList
+    |> preprocessList
+    |> lexList
+    ...
+```
 
 ### Example
 
@@ -191,6 +242,45 @@ This is the second macro
 
 
 ```
+
+More complicated macros can also be created by writing html in the macros. Due to the 
+html passthrough in the lexer, the html will be copied over literally to the output html.
+
+## Lexer
+
+The lexer supports HTML pass through, which can be used to display raw html in markdown. Using this with
+macros can give very useful and interesting functions.
+
+## Interface to the Parser
+
+The interface to the parser was done using the following `Token` type, which the parser takes in 
+and can parse.
+
+``` f#
+type Token =
+    | CODEBLOCK of string * Language
+    | LITERAL of string
+    | WHITESPACE of size: int
+    | NUMBER of string
+    | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT
+    | DASTERISK | TASTERISK | UNDERSCORE | DUNDERSCORE | TUNDERSCORE | TILDE | DTILDE
+    | TTILDE | LSBRA | RSBRA | LBRA | RBRA | BSLASH | SLASH | LABRA | RABRA | LCBRA
+    | RCBRA | BACKTICK | TBACKTICK | EXCLAMATION | ENDLINE | COLON | CARET | PERCENT
+```
+
+## Features
+
+Supports escaping of all the special characters defined in [Types](/FMark/FMark/src/Common/Types.fs). This is done by adding
+a `\` in front of the character that should be escaped.
+
+Tokens that match multiple characters can also be escaped by just putting a `\` before it. For example, 
+`***` can be escaped by writing `\***`.
+
+## Extensibility
+
+It can easily be extended by adding the type of the token to `Token` above. Then the string
+has to be linked to the token by adding it as a tuple of type `string * Token` to a list called
+`charList` in the [Lexer](/FMark/FMark/src/Common/Lexer/Lexer.fs).
 
 ## Spreadsheet functionality
 Spreadsheet functions will evaluate in-place, if they are incorrectly formatted then Markalc will leave the cell unchanged as if it were normal text inside. 

@@ -162,11 +162,6 @@ It can easily be extended by adding the type of the token to `Token` above. Then
 has to be linked to the token by adding it as a tuple of type `string * Token` to a list called
 `charList` in the [Lexer](/FMark/Lexer.fs).
 
-## Missing Feature
-
-Currently, it does not return code blocks into `CODEBLOCK`, as that will be moved into the parser and removed from the 
-Token list.
-
 # Test Plan
 
 The lexer and the preprocessor were built using a test-driven manner, by writing tests first and then making them pass with
