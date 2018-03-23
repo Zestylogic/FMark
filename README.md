@@ -123,7 +123,7 @@ A paragraph is some characters that does not match:
 * Table
 * Reference
 
-It terminates with two endlines. Any elements mentions above cannot exist in a paragraph. Otherwise, they will become normal text, and will not be rendered as expected.
+It terminates with two endlines. Any elements mentioned above cannot exist in a paragraph. Otherwise, they will become normal text, and will not be rendered as expected.
 
 # Markdown extensions
 
