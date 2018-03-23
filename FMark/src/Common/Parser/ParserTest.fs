@@ -271,7 +271,7 @@ let testGlobal =
         );
         (
             [ENDLINE;ENDLINE; HASH; HASH; WHITESPACE 2; LITERAL "h2"],
-            [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2},"h20")] |>Ok, "h2 header"
+            [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2; RefID="h20"})] |>Ok, "h2 header"
         );
         (
             [HASH; HASH; LITERAL "h2"],
@@ -525,9 +525,9 @@ let ``TOC tests`` =
     let h3Tok = [HASH;HASH;HASH;WHITESPACE 1;LITERAL "h3"]
     let twoEndlines = endline@endline
     let parsedToc = ContentTable ({HeaderLst=[]})
-    let h1THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h10")]; Level = 1}
-    let h1THeader2 = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h11")]; Level = 1}
-    let h2THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h2")],"#h21")]; Level = 2}
+    let h1THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h10")]; Level = 1; RefID="h10"}
+    let h1THeader2 = {HeaderName = [Link (Line [FrmtedString (Literal "h1")],"#h11")]; Level = 1; RefID="h11"}
+    let h2THeader = {HeaderName = [Link (Line [FrmtedString (Literal "h2")],"#h21")]; Level = 2; RefID="h21"}
 
     let h1ContentTable =
         ContentTable
@@ -550,10 +550,10 @@ let ``TOC tests`` =
                 h1THeader;h2THeader
                 ]
             }
-    let h1ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h10")
-    let h1ParsedObj2 = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1},"h11")
-    let h2ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h2")];Level = 2},"h21")
-    let h3ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h3")];Level = 3},"h32")
+    let h1ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1; RefID="h10"})
+    let h1ParsedObj2 = Header ({HeaderName = [FrmtedString (Literal "h1")];Level = 1; RefID="h11"})
+    let h2ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h2")];Level = 2; RefID="h21"})
+    let h3ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h3")];Level = 3; RefID="h32"})
 
     makeExpectoTestList id makeOk parse "TOC tests"[
         (
