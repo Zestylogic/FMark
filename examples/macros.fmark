@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<div><script type="text/javascript">
  
     function loadCSS(filename){
        var file = document.createElement("link");
@@ -8,9 +8,12 @@
        document.head.appendChild(file);
 
     }
-   loadCSS("./test.css");
+   loadCSS("file:///home/yannherklotz/Github/FMark/examples/test.css");
 
 </script>
+
+<p>sdassdd</p>
+</div>
 
 {% macro input(text)
 
