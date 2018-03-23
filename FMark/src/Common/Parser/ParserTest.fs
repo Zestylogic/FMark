@@ -517,6 +517,8 @@ let ``TOC tests`` =
     let tocTok = [PERCENT;PERCENT;LITERAL"TOC"]
     let tocTokMisc = tocTok@[WHITESPACE 1;LITERAL "nothing"]
     let tocDepthTok = tocTok@[WHITESPACE 1;LITERAL"depth";EQUAL;NUMBER "2"]
+    let tocExcludeToks = [COMMA;LITERAL"excludes";EQUAL;LSBRA;LITERAL"h2";RSBRA]
+    let tocExcludePreludeToks = [COMMA;LITERAL"excludes";EQUAL;LSBRA]
     let endline = [ENDLINE]
     let h1Tok = [HASH;WHITESPACE 1;LITERAL "h1"]
     let h2Tok = [HASH;HASH;WHITESPACE 1;LITERAL "h2"]
@@ -588,6 +590,18 @@ let ``TOC tests`` =
             tocDepthTok@[WHITESPACE 4; MINUS]@twoEndlines@h1Tok@twoEndlines@h2Tok@twoEndlines@h3Tok,
             [h12ContentTable]@[h1ParsedObj]@[h2ParsedObj]@[h3ParsedObj],
             "TOC, h1, h2, h3, depth=2, unrcognized text"
+        );
+        (
+            tocDepthTok@tocExcludeToks@twoEndlines@h1Tok@twoEndlines@h2Tok@twoEndlines@h3Tok,
+            [h1ContentTable]@[h1ParsedObj]@[h2ParsedObj]@[h3ParsedObj],
+            "TOC, h1, h2, h3, depth=2, exclude h2"
+        );
+        (
+            tocTok
+            @tocExcludePreludeToks@[LITERAL"h2";SEMICOLON;LITERAL"h3"]@[RSBRA]@twoEndlines
+            @h1Tok@twoEndlines@h2Tok@twoEndlines@h3Tok,
+            [h1ContentTable]@[h1ParsedObj]@[h2ParsedObj]@[h3ParsedObj],
+            "TOC, h1, h2, h3, exclude h2 h3"
         );
     ]
 
