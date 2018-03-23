@@ -260,13 +260,11 @@ in html.
 |Feature|Example|Exaplanation
 |---|---|---|
 |depth|`%%TOC depth=3`|Build a TOC with headers level less than 3
-|exclude|`%%TOC excludes=["Appendix","Acknowledgement"]`|Exclude headers with name `Appendix` and `Acknowledgement`|
+|exclude|`%%TOC excludes=[Appendix;Acknowledgement]`|Exclude headers with name `Appendix` and `Acknowledgement`|
 
 Multiple features can be stacked with `,` like so:
 
-`%%TOC depth=3, excludes=["Appendix","Acknowledgement"]`
-
-_TODO: show an example?_
+`%%TOC depth=3, excludes=[Appendix;Acknowledgement]`
 
 ## Citations
 
