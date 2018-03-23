@@ -155,9 +155,12 @@ Here are some[^1] words, and more words[^2].
 ### References
 
 All footnotes are collected and displayed at the end of the document[^Smith].
-The style of references are set at the top of the document.
+The style of references are set at the top of the document.[^Miller]
 
 [^Smith], type = Book, author = FMark Smith, year = 2018, title = An Introduction to FMark
+
+[^Miller], type=Website, author=Markie Miller, year = 2017, title = A Website on FMark,
+access = 2018-03-22, url = www.example.com/website_on_stuff
 
 Note: Simple footnotes takes numerical IDs, and references need alphabetical IDs.
 
