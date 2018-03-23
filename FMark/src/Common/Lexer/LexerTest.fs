@@ -309,46 +309,46 @@ let lexTest =
 
         "One line html",
         "<span>This is a span element</span>",
-        [HTMLLIT "<span>"; HTMLLIT "This is a span element"; HTMLLIT "</span>"; ENDLINE]
+        [LITERAL "<span>"; LITERAL "This is a span element"; LITERAL "</span>"; ENDLINE]
 
         "Online closing html",
         "<img src=\"https://github.com/IMAGE.png\" />",
-        [HTMLLIT "<img src=\"https://github.com/IMAGE.png\" />"; ENDLINE]
+        [LITERAL "<img src=\"https://github.com/IMAGE.png\" />"; ENDLINE]
 
         "HTML with non-HTML start",
         "This is an image: <span>Hello World</span>",
         [LITERAL "This"; WHITESPACE 1; LITERAL "is"; WHITESPACE 1; LITERAL "an"
-         WHITESPACE 1; LITERAL "image"; COLON; WHITESPACE 1; HTMLLIT "<span>"
-         HTMLLIT "Hello World"; HTMLLIT "</span>"; ENDLINE]
+         WHITESPACE 1; LITERAL "image"; COLON; WHITESPACE 1; LITERAL "<span>"
+         LITERAL "Hello World"; LITERAL "</span>"; ENDLINE]
 
         "Singleton HTML passthrough",
         "Singleton <br> passthrough and more text",
-        [LITERAL "Singleton"; WHITESPACE 1; HTMLLIT "<br>"; WHITESPACE 1; LITERAL "passthrough"
+        [LITERAL "Singleton"; WHITESPACE 1; LITERAL "<br>"; WHITESPACE 1; LITERAL "passthrough"
          WHITESPACE 1; LITERAL "and"; WHITESPACE 1; LITERAL "more"; WHITESPACE 1
          LITERAL "text"; ENDLINE]
 
         "HTML image tag",
         "Embedding an <img src=\"https://github.com/IMAGE\"> in text",
-        [LITERAL "Embedding"; WHITESPACE 1; LITERAL "an"; WHITESPACE 1; HTMLLIT "<img src=\"https://github.com/IMAGE\">"
+        [LITERAL "Embedding"; WHITESPACE 1; LITERAL "an"; WHITESPACE 1; LITERAL "<img src=\"https://github.com/IMAGE\">"
          WHITESPACE 1; LITERAL "in"; WHITESPACE 1; LITERAL "text"; ENDLINE]
 
         "A lot of nested tags",
         "<p><p><p><p><p><p><p> </p></p></p></p></p></p></p>",
-        [HTMLLIT "<p>"; HTMLLIT "<p>"; HTMLLIT "<p>"; HTMLLIT "<p>"; HTMLLIT "<p>"; HTMLLIT "<p>"
-         HTMLLIT "<p>"; HTMLLIT " "; HTMLLIT "</p>"; HTMLLIT "</p>"; HTMLLIT "</p>"; HTMLLIT "</p>"
-         HTMLLIT "</p>"; HTMLLIT "</p>"; HTMLLIT "</p>"; ENDLINE]
+        [LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"; LITERAL "<p>"
+         LITERAL "<p>"; LITERAL " "; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"
+         LITERAL "</p>"; LITERAL "</p>"; LITERAL "</p>"; ENDLINE]
 
         "Half opened tag should just be outputted",
         "<a><",
-        [HTMLLIT "<a>"; HTMLLIT "<"; ENDLINE]
+        [LITERAL "<a>"; LITERAL "<"; ENDLINE]
 
         "Half opened with text after should be as expected",
         "<a><This text should appear as normal",
-        [HTMLLIT "<a>"; HTMLLIT "<This text should appear as normal"; ENDLINE]
+        [LITERAL "<a>"; LITERAL "<This text should appear as normal"; ENDLINE]
 
         "Wrong html close tag should be passed through",
         "<p></>s",
-        [HTMLLIT "<p>"; HTMLLIT "</>s"; ENDLINE]
+        [LITERAL "<p>"; LITERAL "</>s"; ENDLINE]
     ]
 
 /// Tests for the complete lexers with a string list as input
@@ -384,9 +384,9 @@ let lexListTest =
          "This should not, <span>This should not be tokenized []</span>"],
         [LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"
          WHITESPACE 1; LITERAL "be"; WHITESPACE 1; LITERAL "passed"; WHITESPACE 1
-         LITERAL "through"; ENDLINE; HTMLLIT "<div>"; HTMLLIT "This should just all be passed through, "; HTMLLIT "</div>"
+         LITERAL "through"; ENDLINE; LITERAL "<div>"; LITERAL "This should just all be passed through, "; LITERAL "</div>"
          ENDLINE; LITERAL "This"; WHITESPACE 1; LITERAL "should"; WHITESPACE 1; LITERAL "not"; COMMA; WHITESPACE 1
-         HTMLLIT "<span>"; HTMLLIT "This should not be tokenized []"; HTMLLIT "</span>"; ENDLINE]
+         LITERAL "<span>"; LITERAL "This should not be tokenized []"; LITERAL "</span>"; ENDLINE]
     ]
 
 // --------------------------------------------------

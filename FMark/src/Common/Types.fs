@@ -10,7 +10,6 @@ type Language =
 type Token =
     | CODEBLOCK of string * Language
     | LITERAL of string
-    | HTMLLIT of string
     | WHITESPACE of size: int
     | NUMBER of string
     | HASH | PIPE | EQUAL | MINUS | PLUS | ASTERISK | DOT | COMMA
@@ -25,7 +24,6 @@ type TFrmtedString =
     | Line of InlineElement list
     | Strike of InlineElement list
     | Literal of string
-    | Html of string
     | Code of string
 
 and InlineElement =
