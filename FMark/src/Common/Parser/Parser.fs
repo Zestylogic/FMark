@@ -16,7 +16,7 @@ let rec parseCode toks =
         parseCode toks'
         |> Result.map (fun (str, tks) ->
         mapTok tok + str, tks )
-    | e ->  sharedLog.Warn None (sprintf "%A" e)
+    | e ->  globLog.Warn None (sprintf "%A" e)
             ("\\`", xOnwards 1 toks) |> Ok
 
 
@@ -230,7 +230,6 @@ let (|MatchTOC|_|) hdList toks =
                         |> List.map (fun x -> x |> trimWhitespaces)
                         |> Some
                     | _ -> None
-                printfn "hdExList:%A" newHdExList
                 maxDepth, newHdExList
             | _ -> maxDepth, hdExList
         // state: (maxDepth, hdExList)
