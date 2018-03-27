@@ -19,8 +19,8 @@ description: >- # this means to ignore newlines until "baseurl:"
   Markdown parser with extensions such as Macros,
   Spreadsheet functionality, Citation and footnote
   support.
-baseurl: "/FMark" # the subpath of your site, e.g. /blog
-url: "https://www.yannherklotz.com" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://www.yannherklotz.com/FMark" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: ymherklotz
 
 # Build settings
