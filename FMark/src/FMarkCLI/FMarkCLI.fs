@@ -76,9 +76,7 @@ let processCLI argv =
             let defaultOutfile = if format=HTML then replaceChars "\.[a-zA-Z]+$" ".html" fname else replaceChars "\.[a-zA-Z]+$" "1.md" fname
             let outFile = results.GetResult(Output,defaultValue=defaultOutfile)
             FMark.processString "" format instr
-            |> function
-                | Ok(s)
-                | Error(s) -> FileIO.writeToFile outFile s
+            |> FileIO.writeToFile outFile
 
 [<EntryPoint>]
 let main argv =

@@ -259,48 +259,48 @@ let testGlobal =
     makeExpectoTestList id id parse "top level test" [
         (
            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike"],
-           [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals with spaces between"
+           [Paragraph[[FrmtedString(Literal "I am Mike")]]], "Three literals with spaces between"
         );
         (
            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike";ENDLINE],
-           [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals with endline"
+           [Paragraph[[FrmtedString(Literal "I am Mike")]]], "Three literals with endline"
         );
         (
            [LITERAL "I"; WHITESPACE 1; LITERAL "am"; WHITESPACE 1; LITERAL "Mike";ENDLINE;ENDLINE],
-           [Paragraph[[FrmtedString(Literal "I am Mike")]]] |> Ok, "Three literals and new empty paragraph"
+           [Paragraph[[FrmtedString(Literal "I am Mike")]]], "Three literals and new empty paragraph"
         );
         (
             [ENDLINE;ENDLINE; HASH; HASH; WHITESPACE 2; LITERAL "h2"],
-            [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2; RefID="h20"})] |>Ok, "h2 header"
+            [Header({HeaderName=[FrmtedString(Literal "h2")]; Level=2; RefID="h20"})], "h2 header"
         );
         (
             [HASH; HASH; LITERAL "h2"],
-            [Paragraph[[FrmtedString(Literal "##h2")]]] |>Ok, "fake h2 header"
+            [Paragraph[[FrmtedString(Literal "##h2")]]], "fake h2 header"
         );
         (
             [RABRA; LITERAL "feet"],
-            [Quote[FrmtedString(Literal "feet")]] |>Ok,
+            [Quote[FrmtedString(Literal "feet")]],
             "Simple quote"
         );
         (
             [CODEBLOCK("I am dancing at the feet of my lord", FSharp)],
-            [CodeBlock("I am dancing at the feet of my lord", FSharp)] |>Ok,
+            [CodeBlock("I am dancing at the feet of my lord", FSharp)],
             "Just CODEBLOCK"
         );
         (
             [CODEBLOCK("I am dancing at the feet of my lord", FSharp); ENDLINE; ENDLINE; LITERAL "Yes"],
             [CodeBlock("I am dancing at the feet of my lord", FSharp);
-                Paragraph[[FrmtedString(Literal "Yes")]]] |>Ok,
+                Paragraph[[FrmtedString(Literal "Yes")]]],
             "CODEBLOCK and new paragraph"
         );
         (
             [LITERAL "Yes1"; ENDLINE; ENDLINE; LITERAL "Yes2"],
-            [Paragraph[[FrmtedString(Literal "Yes1")]];Paragraph[[FrmtedString(Literal "Yes2")]]] |>Ok,
+            [Paragraph[[FrmtedString(Literal "Yes1")]];Paragraph[[FrmtedString(Literal "Yes2")]]],
             "Just ENDLINE tokens don't break parser"
         );
         (
             [WHITESPACE(6); ENDLINE; ENDLINE;ENDLINE; LITERAL "Yes2"], // TODO: If there's only whitespace in a line should maybe ignore it.
-            [Paragraph[[FrmtedString(Literal "      ")]];Paragraph[[FrmtedString(Literal "Yes2")]]] |>Ok, 
+            [Paragraph[[FrmtedString(Literal "      ")]];Paragraph[[FrmtedString(Literal "Yes2")]]],
             "Just WHITESPACE in a line don't break parser"
         );
     ]
@@ -328,7 +328,7 @@ let ``reference tests`` =
                     FrmtedString (Literal "Accessed March 4, 2018. ");
                     Link (Literal "www.example.com/website","www.example.com/website")]
             )]
-    makeExpectoTestList id makeOk parse "top level reference tests" [
+    makeExpectoTestList id id parse "top level reference tests" [
         (
             refStyleToks
             @[LSBRA; CARET; NUMBER "1"; RSBRA]
@@ -377,12 +377,12 @@ let ``multiparagraph misc test`` =
     makeExpectoTestList id id parse "multiparagraph misc test" [
         (
             [ENDLINE; ENDLINE; LITERAL "feet"],
-            ([Paragraph[[FrmtedString(Literal "feet")]]])|>Ok,
+            ([Paragraph[[FrmtedString(Literal "feet")]]]),
             "paragraph starting with two ENDLINEs"
         );
         (
             [ENDLINE; LITERAL "feet"],
-            ([Paragraph[[FrmtedString(Literal "feet")]]])|>Ok,
+            ([Paragraph[[FrmtedString(Literal "feet")]]]),
             "paragraph starting with one ENDLINE"
         );
     ]
@@ -393,7 +393,7 @@ let ``symbols test`` =
     makeExpectoTestList id id parse "symbols test" [
         (
             [ENDLINE;COMMA;HASH;PIPE;BACKTICK;LBRA;UNDERSCORE;LSBRA],
-            ([Paragraph[[FrmtedString(Literal ",#|`(_[")]]])|>Ok,
+            ([Paragraph[[FrmtedString(Literal ",#|`(_[")]]]),
             "paragraph starting with two ENDLINEs"
         );
     ]
@@ -407,17 +407,17 @@ let ``preprocess table test`` =
             [PIPE;  LITERAL "head"; PIPE; ENDLINE; PIPE; MINUS;MINUS;MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
             ([Table
                 [PCells ([CellLine ([FrmtedString(Literal "head")],true,NoAlign)],true);
-                 PCells ([CellLine ([FrmtedString(Literal "cell")],false,NoAlign)],false)]])|>Ok,
+                 PCells ([CellLine ([FrmtedString(Literal "cell")],false,NoAlign)],false)]]),
             "Sample table"
         );
         (
             [WHITESPACE 1; PIPE; ENDLINE; PIPE; MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
-            [Paragraph[[FrmtedString (Literal " |")]; [FrmtedString (Literal "|-|")];[FrmtedString (Literal "|cell|")]]]|>Ok,
+            [Paragraph[[FrmtedString (Literal " |")]; [FrmtedString (Literal "|-|")];[FrmtedString (Literal "|cell|")]]],
             "Invalid table"
         );
         (
             [WHITESPACE 1; PIPE; ENDLINE; PIPE; MINUS; MINUS;COLON; MINUS; PIPE; ENDLINE; PIPE; LITERAL "cell"; PIPE],
-            [Paragraph[[FrmtedString (Literal " |")]; [FrmtedString (Literal "|--:-|")];[FrmtedString (Literal "|cell|")]]]|>Ok,
+            [Paragraph[[FrmtedString (Literal " |")]; [FrmtedString (Literal "|--:-|")];[FrmtedString (Literal "|cell|")]]],
             "Invalid table 2"
         )
        
@@ -508,8 +508,8 @@ let ``parse list test`` =
 
 [<Tests>]
 let ``parse list test global`` =
-    let makeOkAndList x = [x |> List] |> Ok
-    makeExpectoTestList deleteTrailingENDLINEs makeOkAndList parse "parse list global test" listTestData
+    let makeLiList x = [x |> List]
+    makeExpectoTestList deleteTrailingENDLINEs makeLiList parse "parse list global test" listTestData
 
 [<Tests>]
 let ``TOC tests`` =
@@ -555,7 +555,7 @@ let ``TOC tests`` =
     let h2ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h2")];Level = 2; RefID="h21"})
     let h3ParsedObj = Header ({HeaderName = [FrmtedString (Literal "h3")];Level = 3; RefID="h32"})
 
-    makeExpectoTestList id makeOk parse "TOC tests"[
+    makeExpectoTestList id id parse "TOC tests"[
         (
             tocTok,
             [parsedToc],
@@ -628,7 +628,7 @@ let ``picture and links tests`` =
 let ``picture and links top level tests`` =
     let hyperTextToks = [LITERAL "hyper"]
     let urlToks = [LITERAL "tmikey.tech"]
-    makeExpectoTestList id makeOk parse "picture and links top level parse test" [
+    makeExpectoTestList id id parse "picture and links top level parse test" [
         [LSBRA]@hyperTextToks@[RSBRA;LBRA]@urlToks@[RBRA],
         [Paragraph[[Link(Line([FrmtedString(Literal "hyper")]), "tmikey.tech")]]],
         "1 link";

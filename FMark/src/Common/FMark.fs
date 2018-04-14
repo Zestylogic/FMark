@@ -8,7 +8,7 @@ let preLexParse dir =
     >> Parser.parse
 
 let processString' dir formatFunc =
-    preLexParse dir >> Result.map formatFunc
+    preLexParse dir >> formatFunc
 
 let processString dir format =
     match format with

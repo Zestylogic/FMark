@@ -12,14 +12,12 @@ let htmlTestData = [
     ["|h|";
     "|---|";
     "|cell|"],
-    "<table><thead><tr><th>h</th></tr></thead><tbody><tr><td>cell</td></tr></tbody></table>"
-    |>Ok
+    "<table><thead><tr><th>h</th></tr></thead><tbody><tr><td>cell</td></tr></tbody></table>";
     "Testing HTMLGen with table evaluation",
     ["|=5|header2|";
     "|------|-----|";
     "|=[0,0]+7|tesdfst|";],
-    "<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>12</td><td>tesdfst</td></tr></tbody></table>"
-    |>Ok;
+    "<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>12</td><td>tesdfst</td></tr></tbody></table>";
     // Don't know TOC format yet.
     // "Testing HTMLGen TOC",
     // ["# header1";
@@ -32,14 +30,12 @@ let htmlTestData = [
     ["|=5|header2|";
     "|------|-----|";
     "|=[0;0]+7|tesdfst|";],
-    "<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>=[0;0]+7</td><td>tesdfst</td></tr></tbody></table>"
-    |>Ok;
+    "<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>=[0;0]+7</td><td>tesdfst</td></tr></tbody></table>";
     "Invalid table cell ref, old syntax",
     ["|=5|header2|";
     "|------|-----|";
     "|=[0][0]+7|tesdfst|";],
-    "<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>=[0][0]+7</td><td>tesdfst</td></tr></tbody></table>"
-    |>Ok;
+    "<table><thead><tr><th>5</th><th>header2</th></tr></thead><tbody><tr><td>=[0][0]+7</td><td>tesdfst</td></tr></tbody></table>";
     "Empty line test",
     ["  ";
     "";
@@ -51,8 +47,8 @@ let htmlTestData = [
     "";
     "     ";
     "hello"],
-    "<p>jdkfjd</p><p>hello</p>"
-    |>Ok;
+    "<p>jdkfjd</p><p>hello</p>";
+
     "List test",
     ["* ul1";
      "* ul2";
@@ -75,7 +71,8 @@ let htmlTestData = [
         </ul>
         <li>ul3</li>
     </ul>"
-    |> Shared.removeWhitespace |>Ok;
+    |> Shared.removeWhitespace;
+
     "List test, using tabs instead",
     ["* ul1";
      "* ul2";
@@ -98,7 +95,8 @@ let htmlTestData = [
         </ul>
         <li>ul3</li>
     </ul>"
-    |> Shared.removeWhitespace |>Ok;
+    |> Shared.removeWhitespace;
+
     "List test double indent sublist",
     ["* ul1";
      "* ul2";
@@ -121,7 +119,7 @@ let htmlTestData = [
         </ul>
         <li>ul3</li>
     </ul>"
-    |> Shared.removeWhitespace |>Ok;
+    |> Shared.removeWhitespace;
     //"Pause forever",
     //["a<a><"],
     //"Why broken"|> Ok
@@ -155,6 +153,6 @@ let FMarkPropertyTest =
         sprintf "Property based test no. %i, input: %s" count str
         |> globLog.Info (Some 142) 
         count <- count + 1    
-        let preprocess1 = str |> splitStr |> (removeTrailingEndline<<takeEither<<processString "" Markdown)
-        let preprocess2 = preprocess1 |> (removeTrailingEndline<<takeEither<<processString "" Markdown<<splitStr)
+        let preprocess1 = str |> splitStr |> (removeTrailingEndline<<processString "" Markdown)
+        let preprocess2 = preprocess1 |> (removeTrailingEndline<<processString "" Markdown<<splitStr)
         Expect.equal preprocess2 preprocess1 "" // actual, expected

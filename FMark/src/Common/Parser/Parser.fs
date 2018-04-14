@@ -251,34 +251,33 @@ let (|MatchTOC|_|) hdList toks =
 /// parse supported `ParsedObj`s, turn them into a list
 /// assuming each item start at the beginning of the line
 /// the returned token head does not have 2>= ENDLINE
-let rec parseItem (hdLst: THeader list) (ftLst: ParsedObj list) (rawToks: Token list) : Result<ParsedObj * Token list, string> =
-    let toks = deleteLeadingENDLINEs rawToks
-    match toks with
-    | MatchTOC hdLst (toc,rtks) -> (ContentTable toc,rtks) |> Ok
-    | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
-    | MatchTable (rows, rtks) -> (rows, rtks) |> Ok
-    | MatchQuote (content, rtks) ->
-        (parseInLineElements2 ftLst content |> Quote , rtks)
-        |> Ok
-    | HEADER i :: rtks -> (Header (hdLst.[i]), rtks) |> Ok
-    | PickoutList (list, retoks) -> (parseList list |> List, retoks) |> Ok
-    | PickoutParagraph (par, retoks) ->
-        (parseParagraph ftLst par, retoks) |> Ok
-    | _ -> sprintf "Parse item did not match: %A" toks |> removeChars ["[";"]"] |> Error
+let parseItemList headerList footnoteList toks =
+    let rec parseItem (hdLst: THeader list) (ftLst: ParsedObj list) (toks: Token list) : Result<ParsedObj * Token list, string> =
+        match toks with
+        | MatchTOC hdLst (toc,rtks) -> (ContentTable toc,rtks) |> Ok
+        | CODEBLOCK (content, lang) :: toks' -> (CodeBlock(content, lang), toks') |> Ok
+        | MatchTable (rows, rtks) -> (rows, rtks) |> Ok
+        | MatchQuote (content, rtks) ->
+            (parseInLineElements2 ftLst content |> Quote , rtks)
+            |> Ok
+        | HEADER i :: rtks -> (Header (hdLst.[i]), rtks) |> Ok
+        | PickoutList (list, retoks) -> (parseList list |> List, retoks) |> Ok
+        | PickoutParagraph (par, retoks) ->
+            (parseParagraph ftLst par, retoks) |> Ok
+        | _ -> sprintf "Parse item did not match: %A" toks |> removeChars ["[";"]"] |> Error
 
-and parseItemList hdLst ftLst toks : Result<ParsedObj list * option<Token list>, string> =
-    match (List.isEmpty toks, not (List.exists (function | WHITESPACE(_) | ENDLINE -> false | _ -> true) toks)) with
-    | (false,false) -> 
-        parseItem hdLst ftLst toks
-        |> Result.bind (fun (pobj, re) ->
-            match List.isEmpty re with
-            | true -> ([pobj], None) |> Ok
-            | false ->
-                parseItemList hdLst ftLst re
-                |> Result.map(fun (pobjs, re') ->
-                    pobj::pobjs, re' )
-        )
-    | _ -> ([], None) |> Ok // if tokens are only whitespace or endlines, return no parsedObjs
+    and parseItemList' hdLst ftLst toks items =
+        let cleanToks = toks |> deleteLeadingENDLINEs
+        match List.isEmpty cleanToks with
+        | false ->
+            match parseItem hdLst ftLst cleanToks with
+            | Ok (pobj, retoks) ->
+                pobj::items
+                |> parseItemList' hdLst ftLst retoks
+            | Error str ->
+                (str |> Literal |> FrmtedString |> makeList |> Quote) :: items
+        | true -> items |> List.rev
+    parseItemList' headerList footnoteList toks []
 
 
 /// top-level Parser, which the user should use
@@ -288,8 +287,4 @@ let parse toks =
     // insert two endlines at the beginning to make header in the first line work
     let (hds, refs, rtoks) = preParser (ENDLINE::ENDLINE::toks)
     parseItemList hds refs rtoks
-    |> Result.bind (fun (pobjs, retoks) ->
-        match retoks with
-        | None -> pobjs |> Ok
-        | Some retoks -> sprintf "Some unparsed tokens: %A" retoks |> Error)
-    |> Result.map (fun pObjs -> List.append pObjs refs)
+    |> (fun pObjs -> List.append pObjs refs)
