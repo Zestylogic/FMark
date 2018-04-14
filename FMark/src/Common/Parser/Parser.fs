@@ -5,20 +5,6 @@ open ParserHelperFuncs
 open TOCite
 open Logger
 
-// helper functions
-
-
-/// parse inline code
-let rec parseCode toks =
-    match toks with
-    | BACKTICK::_ -> ("", toks.[1..]) |> Ok
-    | tok::toks' ->
-        parseCode toks'
-        |> Result.map (fun (str, tks) ->
-        mapTok tok + str, tks )
-    | e ->  globLog.Warn None (sprintf "%A" e)
-            ("\\`", xOnwards 1 toks) |> Ok
-
 
 /// parse a paragraph which counts for contents in  `<p>`
 /// parseParagraph eats 2>= ENDLINEs
