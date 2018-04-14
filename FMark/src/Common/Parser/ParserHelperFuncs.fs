@@ -104,6 +104,8 @@ let combineLiterals line =
     |> List.fold combiner [List.head line]
     |> List.rev
 
+let makeList x = [x]
+
 
 /// match start and end symbol for formatting
 /// return the match content, w/o the symbols
@@ -426,7 +428,6 @@ let parseInLineElements2 refLst toks =
             | None, None ->
                 [inlineContent]
         |> (fun x -> x@currentLine)
-    let makeList x = [x]
     let rec parseInLineElements' ftLst currentLine toks =
         let styleHelper style (content, rtks, frontLiteral, backLiteral) = 
             let inlineContent = (parseInLines [] content |> style |> FrmtedString)
