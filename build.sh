@@ -88,7 +88,6 @@ if [[ $BUILD = "all" ]] || [[ $BUILD = "js" ]]; then
     cd $BASE_DIR/FMark/src/FMarkFable
     dotnet restore
     dotnet fable yarn-dev
-    read -n1 -r -p "Press any key to continue..." key
     if [[ "$?" != "0" ]]; then
         exit 1
     fi
