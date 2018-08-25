@@ -1,7 +1,0 @@
-bin
-obj
-Debug
-*.cache
-*.pdb
-*.dll
-mytest.fsx
