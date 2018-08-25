@@ -12,7 +12,7 @@ function print_help {
     echo "OPTIONS:"
     echo "  -b/--build    Build a specific project, can be set to"
     echo "                fsharp, js, all, testall"
-    exit 1
+    echo "  -h/--help     Print this help menu."
 }
 
 POSITIONAL=()
@@ -26,8 +26,13 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -h|--help)
+    print_help
+    exit 0
+    ;;
     *)
     print_help
+    exit 1
     ;;
 esac
 done
@@ -38,6 +43,7 @@ fi
 
 if [[ $BUILD != "fsharp" ]] && [[ $BUILD != "js" ]] && [[ $BUILD != "all" ]] && [[ $BUILD != "testall" ]]; then
     print_help
+    exit 1
 fi
 
 echo "build set to: $BUILD"
@@ -47,7 +53,6 @@ echo ""
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [[ -z $TRAVIS_BUILD_DIR ]]; then
-    echo "Travis not detected"
     BASE_DIR=$DIR
 else
     echo "Running on travis-ci"
@@ -88,7 +93,6 @@ if [[ $BUILD = "all" ]] || [[ $BUILD = "js" ]]; then
     cd $BASE_DIR/FMark/src/FMarkFable
     dotnet restore
     dotnet fable yarn-dev
-    read -n1 -r -p "Press any key to continue..." key
     if [[ "$?" != "0" ]]; then
         exit 1
     fi
