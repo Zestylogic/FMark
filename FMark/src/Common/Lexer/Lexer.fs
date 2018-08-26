@@ -33,8 +33,6 @@ let (|InList|_|) lst el =
 
 let (|HTMLStartTag|_|) = (|RegexMatch|_|) "^<([a-zA-Z]+)\\s*.*?>"
 
-
-
 let (|HTMLEndTag|_|) = (|RegexMatch|_|) "^<\\/([a-zA-Z]+)\\s*.*?>"
 
 let (|HTMLSingleton|_|) = function
