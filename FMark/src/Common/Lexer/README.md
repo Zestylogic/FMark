@@ -1,13 +1,10 @@
 # Project Contribution
 
-The preprocessor and lexer are part of FMark, which a markdown parser in F#. This sub project contains the 
-lexer and the preprocessor for the markdown parser. The preprocessor is a completely separate parser
-which preprocesses the markdown before passing it to the lexer and finally the parser.
+The preprocessor and lexer are part of FMark, which is a markdown parser in F#. This sub project contains the lexer and the preprocessor for the markdown parser. The preprocessor is a completely separate parser which preprocesses the markdown before passing it to the lexer and finally the parser.
 
 # Preprocessor
 
-This project contains the Preprocessor for FMark. The preprocessor adds templating
-capabilities to FMark, which was inspired by [Liquid](https://shopify.github.io/liquid/).
+This project contains the Preprocessor for FMark. The preprocessor adds templating capabilities to FMark, which was inspired by [Liquid](https://shopify.github.io/liquid/).
 
 ## Specification
 
@@ -108,8 +105,7 @@ This is the second macro
 
 ```
 
-More complicated macros can also be created by writing html in the macros. Due to the 
-html passthrough in the lexer, the html will be copied over literally to the output html.
+More complicated macros can also be created by writing html in the macros. Due to the html passthrough in the lexer, the html will be copied over literally to the output html.
 
 ### Future improvements
 
