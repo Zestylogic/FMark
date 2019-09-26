@@ -47,7 +47,7 @@ Note: Markdown generation is incomplete and should only be used for property bas
 ```
 # Build/pull docker image
 docker build -f Dockerfile.run -t fmark-run .
-docker run -e "FILE_PATH=/home/examples/example.fmark" -v examples:/home/examples -it fmark-run
+docker run -e "FILE_PATH=/home/examples/example.fmark" -v $(pwd)/examples:/home/examples -it fmark-run
 ```
 
 Or create a bash function for yourself, e.g.
