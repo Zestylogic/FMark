@@ -1,7 +1,6 @@
 FROM fsharp:netcore
-RUN apt-get update && apt-get install -y gosu
-COPY FMark /home/FMark
+COPY ./FMark /fmark
 RUN touch /home/input.fm
-RUN dotnet run --project /home/FMark/src/FMarkCLI /home/test_input.fm
+RUN dotnet run --project /fmark/src/FMarkCLI /home/test_input.fm
 
-ENTRYPOINT  ["/bin/bash", "-c", "set -e && dotnet run --project /home/FMark/src/FMarkCLI ${FILE_PATH} $@"]
+ENTRYPOINT  ["/bin/bash", "-c", "set -e && dotnet run --project /fmark/src/FMarkCLI ${FILE_PATH} $@"]
