@@ -42,6 +42,32 @@ OPTIONS:
 ```
 Note: Markdown generation is incomplete and should only be used for property based testing.
 
+### Run CLI via Docker
+
+```
+# Build/pull docker image
+docker build -f Dockerfile.run -t fmark-run .
+docker run -e "FILE_PATH=/home/examples/example.fmark" -v examples:/home/examples -it fmark-run
+```
+
+Or create a bash function for yourself, e.g.
+
+```bash
+fmark () {
+  if [ -f $1 ] ; then
+    FILE_DIR=`dirname $1`
+    FILE_NAME=`basename $1`
+    CWD=`pwd`
+    shift
+    echo "Processing $FILE_NAME in $CWD/$FILE_DIR"
+    docker run -e "FILE_PATH=/home/$FILE_DIR/$FILE_NAME" -v $CWD/$FILE_DIR:/home/$FILE_DIR -it fmark-run $@
+  fi
+}
+```
+
+Note, when referring to file paths in additional arguments, must think in the context of the Docker file structure, e.g:
+
+`fmark examples/example.fmark --output /home/examples/test.html` will save to `examples/test.html`.
 
 # Modules
 
