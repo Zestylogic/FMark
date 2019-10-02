@@ -25,4 +25,9 @@ RUN apt-get install -y gosu
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
+# make home dir writable for everybody
+# containerized, no security implications
+ENV DU_HOME /home/dockeruser
+RUN mkdir -p $DU_HOME && chmod 777 $DU_HOME
+
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
