@@ -2,19 +2,33 @@
 Docker environment for FMark dev environment.
 
 ## Build the docker image
-`docker build -f Dockerfile -t fmark-dev .`
+
+run `build.sh`
 
 Requires `docker-entrypoint.sh` in current directory.
 
+The command will build a docker image with 2 tags in the same repo,
+__zestylogic/fmark-dev__,
+* current build date and time
+* "latest"
+
+So every time `build.sh` is run, the "latest" tag will be overwritten
+and a new, unique *version* number will also be generated.
+
+Then the image can be easily published to DockerHub by
+`docker push zestylogic/fmark-dev`
+given the user have access to zestylogic account
+(use `docker login`).
+
+
 ## Run the docker image
 
-```
-docker run -p 8443:8443 -e LOCAL_USER_ID=`id -u $USER` -v $(pwd)/data:/home/dockeruser/data -v $(pwd)/code:/home/dockeruser/code -dt --rm fmark-dev
-```
+From the FMark root directory, run `start-fmark_dev_env.sh`
 
 Now VS Code is available from your browser at [localhost:8443](https://localhost:8443).
 
-The `data` dir contains the vscode settings, extensions & session.
+* `docker/data` dir contains the vscode settings, extensions & session.
+* `Fmark/` dir contains the project code
 
 ## Sharing additional directories
 
