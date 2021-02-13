@@ -1,0 +1,6 @@
+FROM fsharp:netcore
+COPY ./FMark /fmark
+RUN touch /home/input.fm
+RUN dotnet run --project /fmark/src/FMarkCLI /home/test_input.fm
+
+ENTRYPOINT  ["/bin/bash", "-c", "set -e && dotnet run --project /fmark/src/FMarkCLI ${FILE_PATH} $@"]
