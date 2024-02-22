@@ -1,4 +1,4 @@
-# FMark [![Build Status](https://travis-ci.org/Zestylogic/FMark.svg?branch=master)](https://travis-ci.org/Zestylogic/FMark) by ZestyLogic 🍋♟
+# FMark by ZestyLogic 🍋♟
 FSharp markdown implementation with additional functionality.
 
 Namely:
