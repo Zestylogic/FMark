@@ -23,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="expecto" Version="5.1.2" />
     <PackageReference Include="expecto.fscheck" Version="5.1.2" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
   </ItemGroup>
 
 </Project>
