@@ -1,41 +1,12 @@
 # FMark Example
 
 ## Table of contents
-<!-- Relative links do not work in VS code, use Create HTML File. -->
 
 %%TOC depth=2
 
 ## Macros
 
 ### Macro Example 1
-<script type="text/javascript">
- 
-    function loadCSS(filename){
-       var file = document.createElement("link");
-       file.setAttribute("rel", "stylesheet");
-       file.setAttribute("type", "text/css");
-       file.setAttribute("href", filename);
-       document.head.appendChild(file);
-
-    }
-
-</script>
-
-{% macro input(text)
-
-<form action="/html/tags/html_form_tag_action.cfm" method="post">
-<textarea name="comments" id="comments" style="width:92%;height:140px;padding:2%;font-size:1.2em;border:12px outset #6DB72C;">
-{{text}}
-</textarea><br>
-<input type="submit" value="Submit">
-</form>
-
-%}
-
-{{ input(This is the text to be inputted into the Textbox) }}
-
-
-### Macro Example 2
 {% macro make_table(00;01;02;10;11;12;20;21;22) 
 
 |{{00}}|{{01}}|{{02}}|
@@ -62,58 +33,6 @@
 |=5|=3|=SUM{[1,0]:[1,1]}|
 |=5%3|=[1,0]*[1,1]/((7-4)+2)|=AVG{[1,0]:[1,2]},2|
 
-## Standard Markdown
-
-### Styling
-
-*Emphasis* or _Emphasis_
-
-**Bold** or __bold__
-
-***Both*** or ___both___
-
-~~strikethrough~~
-
-Note: _underscores_ must have a space on either side.
-
-# Heading 1
-
-## Heading 2
-
-### Heading 3
-
-#### Heading 4
-
-##### Heading 5
-
-###### Heading 6
-
-### Lists
-
-Ordered List:
-
-1. First
-2. Second
-    1. Nested First
-    2. Nested Second
-3. Third
-
-Unordered List:
-
-* First
-* Second
-    * Nested First
-    * Nested Second
-* Third
-
-Unordered List 2:
-
-- First
-- Second
-    - Nested First
-    - Nested Second
-- Third
-
 ### Links
 
 [Google](http://www.google.com)
@@ -121,7 +40,6 @@ Unordered List 2:
 <!-- Images produce correct HTML but don't display in VS Code-->
 ![image](test_img.jpg)
 
-<!-- Relative links do not work in VS code, use Create HTML File -->
 <a href="#this-header"> Relative link. </a>
 
 ### HTML passthrough
